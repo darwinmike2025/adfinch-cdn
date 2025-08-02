@@ -1,7 +1,6 @@
 (async () => {
   console.log('scrollframe.js loaded');
 
-  // 1. Get the <script> tag that loaded this file
   const currentScript = document.currentScript;
   const unitId = currentScript?.getAttribute('data-unit-id');
 
@@ -10,10 +9,9 @@
     return;
   }
 
-  // 2. Fetch config from Supabase (public read)
   const res = await fetch(`https://mynqhurabkihzyqweyet.supabase.co/rest/v1/channel_partner_units?select=config&unit_id=eq.${unitId}`, {
     headers: {
-      apikey: 'YOUR_ANON_KEY_HERE' // 🔐 Replace with actual anon key from Supabase
+      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15bnFodXJhYmtpaHp5cXdleWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTM2OTUsImV4cCI6MjA2NjY4OTY5NX0.TO-_oG0yheW-GbWx9n0fP3IJm7M_-4_Z2Jf8d4I1wBE' // ✅ REAL ANON KEY
     },
   });
 
@@ -27,7 +25,6 @@
 
   console.log('✅ Parsed config:', config);
 
-  // 3. Build ad HTML from config
   const container = document.createElement('div');
   container.style.border = '1px solid #ccc';
   container.style.padding = '16px';
@@ -51,7 +48,6 @@
     ">${config.ctaText}</a>
   `;
 
-  // 4. Append ad to page (below the script tag)
   currentScript?.parentNode?.insertBefore(container, currentScript.nextSibling);
 
   console.log('✅ ScrollFrame ad rendered successfully');
