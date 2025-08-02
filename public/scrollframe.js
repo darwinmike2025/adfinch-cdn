@@ -6,14 +6,14 @@
   const unitId = currentScript?.getAttribute('data-unit-id');
 
   if (!unitId) {
-    console.error('No data-unit-id found in embed script tag.');
+    console.error('❌ No data-unit-id found in embed script tag.');
     return;
   }
 
   // 2. Fetch config from Supabase (public read)
   const res = await fetch(`https://mynqhurabkihzyqweyet.supabase.co/rest/v1/channel_partner_units?select=config&unit_id=eq.${unitId}`, {
     headers: {
-      apikey: 'public', // ← assumes RLS is open for read-only
+      apikey: 'YOUR_ANON_KEY_HERE' // 🔐 Replace with actual anon key from Supabase
     },
   });
 
@@ -21,9 +21,11 @@
   const config = data?.[0]?.config;
 
   if (!config) {
-    console.error('No config found for unit_id:', unitId);
+    console.error('❌ No config found for unit_id:', unitId);
     return;
   }
+
+  console.log('✅ Parsed config:', config);
 
   // 3. Build ad HTML from config
   const container = document.createElement('div');
@@ -51,4 +53,6 @@
 
   // 4. Append ad to page (below the script tag)
   currentScript?.parentNode?.insertBefore(container, currentScript.nextSibling);
+
+  console.log('✅ ScrollFrame ad rendered successfully');
 })();
