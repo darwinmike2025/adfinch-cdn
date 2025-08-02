@@ -2,110 +2,87 @@
   console.log("✅ scrollframe.js loaded");
 
   const currentScript = document.currentScript;
-  const unitId = currentScript?.dataset?.unitId;
-
+  const unitId = currentScript?.getAttribute("data-unit-id");
   if (!unitId) {
-    console.error("❌ No data-unit-id found on script tag");
+    console.error("❌ No data-unit-id found in embed script tag.");
     return;
   }
 
-  const supabaseAnonKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15bnFodXJhYmtpaHp5cXdleWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTM2OTUsImV4cCI6MjA2NjY4OTY5NX0.TO-_oG0yheW-GbWx9n0fP3IJm7M_-4_Z2Jf8d4I1wBE";
+  const res = await fetch(`https://mynqhurabkihzyqweyet.supabase.co/rest/v1/channel_partner_units?select=config&unit_id=eq.${unitId}`, {
+    headers: {
+      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15bnFodXJhYmtpaHp5cXdleWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTM2OTUsImV4cCI6MjA2NjY4OTY5NX0.TO-_oG0yheW-GbWx9n0fP3IJm7M_-4_Z2Jf8d4I1wBE',
+    },
+  });
 
-  const res = await fetch(
-    `https://mynqhurabkihzyqweyet.supabase.co/rest/v1/channel_partner_units?select=config&unit_id=eq.${unitId}&is_active=eq.true`,
-    {
-      headers: {
-        apikey: supabaseAnonKey,
-      },
-    }
-  );
-
-  const result = await res.json();
-  const config = result?.[0]?.config;
-
+  const data = await res.json();
+  const config = data?.[0]?.config;
   if (!config) {
-    console.error("❌ No config found for unit:", unitId);
+    console.error("❌ No config found for unit_id:", unitId);
     return;
   }
 
   console.log("✅ Parsed config:", config);
 
-  const {
-    template_type = "investment",
-    header_config = {
-      title: "💰 Premium Investment Insights",
-      background: "#2ecc71",
-      icon: "💰",
-    },
-    navigation_enabled = true,
-    trust_indicators = ["✓ Secure Checkout", "⭐ 5-Star Rated"],
-    styling_theme = {
-      buttonColor: "#6c5ce7",
-      buttonText: "#fff",
-    },
-    imageUrl,
-    headline,
-    subheadline,
-    destinationUrl,
-    ctaText,
-  } = config;
-
   const container = document.createElement("div");
-  container.className = `scrollframe-wrapper ${template_type}`;
-  container.style.cssText = `
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    max-width: 460px;
-    margin: 30px auto;
-    font-family: Inter, sans-serif;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  container.style.maxWidth = "600px";
+  container.style.margin = "0 auto";
+  container.style.fontFamily = "Arial, sans-serif";
+  container.style.border = "1px solid #ddd";
+  container.style.borderRadius = "8px";
+  container.style.overflow = "hidden";
+  container.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+  container.style.background = config.styling_theme?.background || "#fff";
+  container.style.color = config.styling_theme?.text || "#000";
+
+  const header = `
+    <div style="background: ${config.header_config?.background || "#2ecc71"}; padding: 12px 16px; color: #fff; font-weight: bold; font-size: 16px;">
+      ${config.header_config?.icon || "💡"} ${config.header_config?.title || "Featured Offer"}
+    </div>
   `;
 
-  container.innerHTML = `
-    <div style="background: ${header_config.background}; color: #fff; padding: 14px 20px; font-weight: 600; font-size: 16px;">
-      ${header_config.icon || "💡"} ${header_config.title}
-    </div>
-    <div style="padding: 20px; background: #fff;">
-      <img src="${imageUrl}" alt="" style="width: 100%; border-radius: 6px; margin-bottom: 16px;" />
-      <h2 style="font-size: 20px; margin: 0 0 10px;">${headline}</h2>
-      <p style="font-size: 14px; color: #555; margin-bottom: 16px;">${subheadline}</p>
-      <a href="${destinationUrl}" target="_blank" style="
-        display: block;
-        text-align: center;
-        background: ${styling_theme.buttonColor};
-        color: ${styling_theme.buttonText};
-        text-decoration: none;
-        font-weight: 600;
+  const img = `
+    <img src="${config.imageUrl}" alt="Ad Image" style="width: 100%; display: block;" />
+  `;
+
+  const headline = `<h2 style="padding: 0 16px;">${config.headline}</h2>`;
+  const subheadline = `<p style="padding: 0 16px;">${config.subheadline}</p>`;
+
+  const cta = `
+    <div style="padding: 0 16px 16px;">
+      <a href="${config.destinationUrl}" target="_blank" style="
+        display: inline-block;
+        background: ${config.styling_theme?.buttonColor || "#6c5ce7"};
+        color: ${config.styling_theme?.buttonText || "#fff"};
         padding: 12px 16px;
         border-radius: 4px;
-        margin-bottom: 16px;
-      ">
-        ${ctaText}
-      </a>
-      ${
-        trust_indicators?.length
-          ? `<ul style="list-style: none; padding: 0; margin: 0; font-size: 12px; color: #888; text-align: center;">
-            ${trust_indicators
-              .map((ti) => `<li style="margin-bottom: 4px;">${ti}</li>`)
-              .join("")}
-          </ul>`
-          : ""
-      }
-      ${
-        navigation_enabled
-          ? `<div style="margin-top: 12px; text-align: center;">
-              <span style="height: 8px; width: 8px; background: #ccc; border-radius: 50%; display: inline-block; margin: 0 4px;"></span>
-              <span style="height: 8px; width: 8px; background: #ccc; border-radius: 50%; display: inline-block; margin: 0 4px;"></span>
-              <span style="height: 8px; width: 8px; background: #ccc; border-radius: 50%; display: inline-block; margin: 0 4px;"></span>
-            </div>`
-          : ""
-      }
+        text-decoration: none;
+        font-weight: bold;
+      ">${config.ctaText}</a>
     </div>
   `;
 
-  currentScript?.parentNode?.insertBefore(container, currentScript.nextSibling);
+  const trust = config.trust_indicators?.length
+    ? `<ul style="padding: 0 16px 16px; font-size: 14px;">${config.trust_indicators.map(item => `<li>${item}</li>`).join("")}</ul>`
+    : "";
 
-  console.log("✅ ScrollFrame ad rendered successfully");
+  const navDots = config.navigation_enabled
+    ? `<div style="padding: 8px 0; text-align: center;">
+        <span style="display: inline-block; width: 8px; height: 8px; background: #aaa; border-radius: 50%; margin: 0 4px;"></span>
+        <span style="display: inline-block; width: 8px; height: 8px; background: #ddd; border-radius: 50%; margin: 0 4px;"></span>
+        <span style="display: inline-block; width: 8px; height: 8px; background: #ddd; border-radius: 50%; margin: 0 4px;"></span>
+      </div>`
+    : "";
+
+  container.innerHTML = `
+    ${header}
+    ${img}
+    ${headline}
+    ${subheadline}
+    ${cta}
+    ${trust}
+    ${navDots}
+  `;
+
+  currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
+  console.log("✅ ScrollFrame rendered successfully");
 })();
