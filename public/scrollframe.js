@@ -31,6 +31,43 @@
 
   console.log("✅ CONFIG RAW:", JSON.stringify(config, null, 2));
 
+  // Tailwind color mapping
+  const tailwindColors = {
+    'emerald-600': '#059669',
+    'emerald-700': '#047857',
+    'green-500': '#10b981',
+    'green-600': '#059669',
+    'blue-600': '#2563eb',
+    'blue-700': '#1d4ed8',
+    'purple-600': '#9333ea',
+    'purple-700': '#7c3aed',
+    'red-600': '#dc2626',
+    'red-700': '#b91c1c'
+  };
+
+  // Function to parse Tailwind gradient and convert to CSS
+  const parseGradient = (gradientString) => {
+    console.log("🔍 [DEBUG] Parsing gradient:", gradientString);
+    
+    if (!gradientString || typeof gradientString !== 'string') {
+      return 'background: #10b981;'; // fallback
+    }
+    
+    // Match Tailwind gradient format: "from-emerald-600 to-green-500"
+    const match = gradientString.match(/from-([a-z]+-\d+)\s+to-([a-z]+-\d+)/);
+    
+    if (match) {
+      const fromColor = tailwindColors[match[1]] || '#10b981';
+      const toColor = tailwindColors[match[2]] || '#059669';
+      
+      console.log("🔍 [DEBUG] Converted colors:", { from: fromColor, to: toColor });
+      return `background: linear-gradient(135deg, ${fromColor}, ${toColor});`;
+    }
+    
+    // Fallback for unrecognized format
+    return 'background: #10b981;';
+  };
+
   // Check if config has slides (new multi-slide format) or is legacy single-slide
   const isMultiSlide = config.slides && Array.isArray(config.slides);
   
@@ -42,14 +79,17 @@
     template_type = "investment",
     header_config = {
       title: "💰 Premium Investment Insights",
-      background: "#2ecc71",
+      gradient: "from-emerald-600 to-green-500",
       icon: "💰",
     },
     navigation_enabled = true,
     trust_indicators = ["✓ Secure Checkout", "⭐ 5-Star Rated"],
     styling_theme = {
-      buttonColor: "#6c5ce7",
-      buttonText: "#fff",
+      primary: "emerald",
+      accent: "white",
+      text: "white",
+      buttonColor: "#10b981",
+      buttonText: "#ffffff",
     },
     auto_advance = true,
     slide_duration = 5000,
@@ -60,13 +100,17 @@
     subheadline,
     destinationUrl,
     ctaText,
+    body,
   } = config;
+
+  console.log("✅ HEADER CONFIG:", header_config);
 
   // For legacy configs, create a single slide array
   const slideData = isMultiSlide ? slides : [{
     imageUrl,
     headline,
     subheadline,
+    body,
     destinationUrl,
     ctaText,
   }];
@@ -95,10 +139,15 @@
         <div style="width: 100%; max-height: 220px; overflow: hidden;">
           <img src="${slide?.imageUrl || ''}" alt="Ad Image" style="width: 100%; height: auto; object-fit: cover; display: block;" />
         </div>
-        <div style="padding: 12px 16px;">
-          <h3 style="margin: 0 0 8px 0; font-size: 18px; font-weight: bold;">${slide?.headline || ''}</h3>
-          <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.4; color: #555;">${slide?.subheadline || ''}</p>
-          <a href="${slide?.destinationUrl || '#'}" target="_blank" style="
+         <div style="padding: 12px 16px;">
+           <h3 style="margin: 0 0 8px 0; font-size: 18px; font-weight: bold;">${slide?.headline || ''}</h3>
+           <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.4; color: #555;">${slide?.subheadline || ''}</p>
+           ${slide?.body ? `
+             <div style="margin: 0 0 16px 0; font-size: 13px; line-height: 1.5; color: #666; text-align: left;">
+               ${slide.body}
+             </div>
+           ` : ''}
+           <a href="${slide?.destinationUrl || '#'}" target="_blank" style="
             display: inline-block;
             background: ${styling_theme?.buttonColor || '#6c5ce7'};
             color: ${styling_theme?.buttonText || '#fff'};
@@ -247,9 +296,23 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   `;
 
+  // Create header background using dynamic gradient parsing
+  const getHeaderBackground = () => {
+    console.log("🔍 [DEBUG] getHeaderBackground called with header_config:", header_config);
+    
+    if (header_config && header_config.gradient) {
+      console.log("🔍 [DEBUG] Using database gradient:", header_config.gradient);
+      return parseGradient(header_config.gradient);
+    }
+    
+    // Fallback
+    console.log("🔍 [DEBUG] Using fallback background color");
+    return 'background: #10b981;';
+  };
+
   // Initial render
   container.innerHTML = `
-    <div style="background: ${header_config.background}; color: #fff; padding: 14px 20px; font-weight: 600; font-size: 16px;">
+    <div style="${getHeaderBackground()}; color: #fff; padding: 14px 20px; font-weight: 600; font-size: 16px;">
       ${header_config.icon || "💡"} ${header_config.title}
     </div>
     <div style="padding: 20px; background: #fff;">
