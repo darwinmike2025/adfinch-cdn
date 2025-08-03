@@ -23,6 +23,11 @@
 
   console.log("✅ Parsed config:", config);
 
+  const isMulti = Array.isArray(config.slides);
+  const slides = isMulti ? config.slides : [config];
+  let current = 0;
+  let timer;
+
   const container = document.createElement("div");
   container.style.maxWidth = "600px";
   container.style.margin = "0 auto";
@@ -34,54 +39,80 @@
   container.style.background = config.styling_theme?.background || "#fff";
   container.style.color = config.styling_theme?.text || "#000";
 
-  const header = `
-    <div style="background: ${config.header_config?.background || "#2ecc71"}; padding: 12px 16px; color: #fff; font-weight: bold; font-size: 16px;">
-      ${config.header_config?.icon || "💡"} ${config.header_config?.title || "Featured Offer"}
-    </div>
-  `;
+  function renderSlide(index) {
+    const slide = slides[index];
+    if (!slide) return;
 
-  const img = `
-    <img src="${config.imageUrl}" alt="Ad Image" style="width: 100%; display: block;" />
-  `;
+    container.innerHTML = `
+      <div style="background: ${config.header_config?.background || "#2ecc71"}; padding: 12px 16px; color: #fff; font-weight: bold; font-size: 16px;">
+        ${config.header_config?.icon || "💡"} ${config.header_config?.title || "Featured Offer"}
+      </div>
 
-  const headline = `<h2 style="padding: 0 16px;">${config.headline}</h2>`;
-  const subheadline = `<p style="padding: 0 16px;">${config.subheadline}</p>`;
+      <img src="${slide.imageUrl}" alt="Ad Image" style="width: 100%; display: block;" />
 
-  const cta = `
-    <div style="padding: 0 16px 16px;">
-      <a href="${config.destinationUrl}" target="_blank" style="
-        display: inline-block;
-        background: ${config.styling_theme?.buttonColor || "#6c5ce7"};
-        color: ${config.styling_theme?.buttonText || "#fff"};
-        padding: 12px 16px;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: bold;
-      ">${config.ctaText}</a>
-    </div>
-  `;
+      <h2 style="padding: 0 16px;">${slide.headline || ""}</h2>
+      <p style="padding: 0 16px;">${slide.subheadline || ""}</p>
 
-  const trust = config.trust_indicators?.length
-    ? `<ul style="padding: 0 16px 16px; font-size: 14px;">${config.trust_indicators.map(item => `<li>${item}</li>`).join("")}</ul>`
-    : "";
+      <div style="padding: 0 16px 16px;">
+        <a href="${slide.destinationUrl}" target="_blank" style="
+          display: inline-block;
+          background: ${config.styling_theme?.buttonColor || "#6c5ce7"};
+          color: ${config.styling_theme?.buttonText || "#fff"};
+          padding: 12px 16px;
+          border-radius: 4px;
+          text-decoration: none;
+          font-weight: bold;
+        ">${slide.ctaText || "Learn More"}</a>
+      </div>
 
-  const navDots = config.navigation_enabled
-    ? `<div style="padding: 8px 0; text-align: center;">
-        <span style="display: inline-block; width: 8px; height: 8px; background: #aaa; border-radius: 50%; margin: 0 4px;"></span>
-        <span style="display: inline-block; width: 8px; height: 8px; background: #ddd; border-radius: 50%; margin: 0 4px;"></span>
-        <span style="display: inline-block; width: 8px; height: 8px; background: #ddd; border-radius: 50%; margin: 0 4px;"></span>
-      </div>`
-    : "";
+      ${config.trust_indicators?.length ? `
+        <ul style="padding: 0 16px 16px; font-size: 14px;">
+          ${config.trust_indicators.map(item => `<li>${item}</li>`).join("")}
+        </ul>` : ""
+      }
 
-  container.innerHTML = `
-    ${header}
-    ${img}
-    ${headline}
-    ${subheadline}
-    ${cta}
-    ${trust}
-    ${navDots}
-  `;
+      ${config.navigation_enabled && slides.length > 1 ? `
+        <div style="text-align:center; padding: 8px 0;">
+          <button id="prevBtn" style="margin: 0 8px;">◀</button>
+          ${slides.map((_, i) => `
+            <span style="
+              display: inline-block;
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              background: ${i === current ? "#6c5ce7" : "#ddd"};
+              margin: 0 4px;
+            "></span>
+          `).join("")}
+          <button id="nextBtn" style="margin: 0 8px;">▶</button>
+        </div>` : ""
+      }
+    `;
+
+    // Bind navigation
+    if (config.navigation_enabled && slides.length > 1) {
+      const prevBtn = container.querySelector("#prevBtn");
+      const nextBtn = container.querySelector("#nextBtn");
+
+      if (prevBtn) prevBtn.onclick = () => updateSlide(-1);
+      if (nextBtn) nextBtn.onclick = () => updateSlide(1);
+    }
+  }
+
+  function updateSlide(offset) {
+    current = (current + offset + slides.length) % slides.length;
+    renderSlide(current);
+    if (config.auto_advance) {
+      clearInterval(timer);
+      timer = setInterval(() => updateSlide(1), config.slide_duration || 5000);
+    }
+  }
+
+  renderSlide(current);
+
+  if (config.auto_advance) {
+    timer = setInterval(() => updateSlide(1), config.slide_duration || 5000);
+  }
 
   currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
   console.log("✅ ScrollFrame rendered successfully");
