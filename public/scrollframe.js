@@ -2,118 +2,288 @@
   console.log("✅ scrollframe.js loaded");
 
   const currentScript = document.currentScript;
-  const unitId = currentScript?.getAttribute("data-unit-id");
+  const unitId = currentScript?.dataset?.unitId;
+
   if (!unitId) {
-    console.error("❌ No data-unit-id found in embed script tag.");
+    console.error("❌ No data-unit-id found on script tag");
     return;
   }
 
-  const res = await fetch(`https://mynqhurabkihzyqweyet.supabase.co/rest/v1/channel_partner_units?select=config&unit_id=eq.${unitId}`, {
-    headers: {
-      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15bnFodXJhYmtpaHp5cXdleWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTM2OTUsImV4cCI6MjA2NjY4OTY5NX0.TO-_oG0yheW-GbWx9n0fP3IJm7M_-4_Z2Jf8d4I1wBE',
+  const supabaseAnonKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15bnFodXJhYmtpaHp5cXdleWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTM2OTUsImV4cCI6MjA2NjY4OTY5NX0.TO-_oG0yheW-GbWx9n0fP3IJm7M_-4_Z2Jf8d4I1wBE";
+
+  const res = await fetch(
+    `https://mynqhurabkihzyqweyet.supabase.co/rest/v1/channel_partner_units?select=config&unit_id=eq.${unitId}&is_active=eq.true`,
+    {
+      headers: {
+        apikey: supabaseAnonKey,
+      },
+    }
+  );
+
+  const result = await res.json();
+  const config = result?.[0]?.config;
+
+  if (!config) {
+    console.error("❌ No config found for unit:", unitId);
+    return;
+  }
+
+  console.log("✅ CONFIG RAW:", JSON.stringify(config, null, 2));
+
+  // Check if config has slides (new multi-slide format) or is legacy single-slide
+  const isMultiSlide = config.slides && Array.isArray(config.slides);
+  
+  if (Array.isArray(config.slides)) {
+    console.log("✅ FIRST SLIDE:", config.slides[0]);
+  }
+  
+  const {
+    template_type = "investment",
+    header_config = {
+      title: "💰 Premium Investment Insights",
+      background: "#2ecc71",
+      icon: "💰",
     },
+    navigation_enabled = true,
+    trust_indicators = ["✓ Secure Checkout", "⭐ 5-Star Rated"],
+    styling_theme = {
+      buttonColor: "#6c5ce7",
+      buttonText: "#fff",
+    },
+    auto_advance = true,
+    slide_duration = 5000,
+    slides = [],
+    // Legacy single-slide fields (fallback)
+    imageUrl,
+    headline,
+    subheadline,
+    destinationUrl,
+    ctaText,
+  } = config;
+
+  // For legacy configs, create a single slide array
+  const slideData = isMultiSlide ? slides : [{
+    imageUrl,
+    headline,
+    subheadline,
+    destinationUrl,
+    ctaText,
+  }];
+  
+  console.log("✅ SLIDE DATA:", slideData);
+  console.log("✅ IS MULTI SLIDE:", isMultiSlide);
+  console.log("✅ STYLING THEME:", styling_theme);
+
+  // Multi-slide state management
+  let currentSlideIndex = 0;
+  let autoAdvanceTimer = null;
+
+  // Helper functions for multi-slide functionality
+  const renderSlide = (slideIndex) => {
+    console.log("🔍 [DEBUG] renderSlide called with slideIndex:", slideIndex);
+    console.log("🔍 [DEBUG] slideData:", slideData);
+    console.log("🔍 [DEBUG] styling_theme:", styling_theme);
+    
+    const slide = slideData[slideIndex];
+    console.log("🔍 [DEBUG] Current slide object:", slide);
+    
+    if (!slide) return '';
+    
+    return `
+      <div class="slide-content" style="opacity: 1; transition: opacity 0.3s ease-in-out; padding: 0;">
+        <div style="width: 100%; max-height: 220px; overflow: hidden;">
+          <img src="${slide?.imageUrl || ''}" alt="Ad Image" style="width: 100%; height: auto; object-fit: cover; display: block;" />
+        </div>
+        <div style="padding: 12px 16px;">
+          <h3 style="margin: 0 0 8px 0; font-size: 18px; font-weight: bold;">${slide?.headline || ''}</h3>
+          <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.4; color: #555;">${slide?.subheadline || ''}</p>
+          <a href="${slide?.destinationUrl || '#'}" target="_blank" style="
+            display: inline-block;
+            background: ${styling_theme?.buttonColor || '#6c5ce7'};
+            color: ${styling_theme?.buttonText || '#fff'};
+            padding: 10px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+          ">${slide?.ctaText || 'Learn More'}</a>
+        </div>
+      </div>
+    `;
+  };
+
+  const renderNavigation = () => {
+    if (!navigation_enabled || slideData.length <= 1) return '';
+    
+    const dots = slideData.map((_, index) => 
+      `<span class="nav-dot ${index === currentSlideIndex ? 'active' : ''}" 
+             data-slide="${index}"
+             style="width: 8px; height: 8px; border-radius: 50%; 
+                    background: ${index === currentSlideIndex ? styling_theme.buttonColor : '#ccc'}; 
+                    box-shadow: 0 ${index === currentSlideIndex ? '2' : '1'}px ${index === currentSlideIndex ? '4' : '2'}px rgba(0,0,0,0.1);
+                    cursor: pointer;"></span>`
+    ).join('');
+
+    return `
+      <div class="scrollframe-nav" style="margin-top: 16px; text-align: center;">
+        <div class="nav-controls" style="display: flex; align-items: center; justify-content: center; gap: 16px;">
+          <span class="nav-arrow nav-prev" 
+                style="cursor: ${currentSlideIndex > 0 ? 'pointer' : 'default'}; 
+                       padding: 8px; font-size: 18px; 
+                       color: ${currentSlideIndex > 0 ? styling_theme.buttonColor : '#aaa'}; 
+                       user-select: none;">◀</span>
+          <div class="nav-dots" style="display: flex; align-items: center; gap: 8px;">
+            ${dots}
+          </div>
+          <span class="nav-arrow nav-next" 
+                style="cursor: ${currentSlideIndex < slideData.length - 1 ? 'pointer' : 'default'}; 
+                       padding: 8px; font-size: 18px; 
+                       color: ${currentSlideIndex < slideData.length - 1 ? styling_theme.buttonColor : '#aaa'}; 
+                       user-select: none;">▶</span>
+        </div>
+      </div>
+    `;
+  };
+
+  const updateSlide = () => {
+    const contentArea = container.querySelector('.slide-content');
+    const navArea = container.querySelector('.scrollframe-nav');
+    
+    // Fade out current content
+    if (contentArea) {
+      contentArea.style.opacity = '0';
+      setTimeout(() => {
+        contentArea.outerHTML = renderSlide(currentSlideIndex);
+        const newContent = container.querySelector('.slide-content');
+        if (newContent) {
+          newContent.style.opacity = '1';
+        }
+      }, 150);
+    }
+    
+    // Update navigation
+    if (navArea) {
+      navArea.outerHTML = renderNavigation();
+      setupNavigation();
+    }
+  };
+
+  const nextSlide = () => {
+    if (currentSlideIndex < slideData.length - 1) {
+      currentSlideIndex++;
+      updateSlide();
+      resetAutoAdvance();
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentSlideIndex > 0) {
+      currentSlideIndex--;
+      updateSlide();
+      resetAutoAdvance();
+    }
+  };
+
+  const goToSlide = (index) => {
+    if (index >= 0 && index < slideData.length && index !== currentSlideIndex) {
+      currentSlideIndex = index;
+      updateSlide();
+      resetAutoAdvance();
+    }
+  };
+
+  const startAutoAdvance = () => {
+    if (auto_advance && slideData.length > 1) {
+      autoAdvanceTimer = setInterval(() => {
+        if (currentSlideIndex < slideData.length - 1) {
+          nextSlide();
+        } else {
+          currentSlideIndex = 0;
+          updateSlide();
+        }
+      }, slide_duration);
+    }
+  };
+
+  const resetAutoAdvance = () => {
+    if (autoAdvanceTimer) {
+      clearInterval(autoAdvanceTimer);
+      autoAdvanceTimer = null;
+    }
+    startAutoAdvance();
+  };
+
+  const setupNavigation = () => {
+    // Previous arrow
+    const prevArrow = container.querySelector('.nav-prev');
+    if (prevArrow) {
+      prevArrow.onclick = prevSlide;
+    }
+
+    // Next arrow
+    const nextArrow = container.querySelector('.nav-next');
+    if (nextArrow) {
+      nextArrow.onclick = nextSlide;
+    }
+
+    // Dots
+    const dots = container.querySelectorAll('.nav-dot');
+    dots.forEach((dot, index) => {
+      dot.onclick = () => goToSlide(index);
+    });
+  };
+
+  // Create the container
+  const container = document.createElement("div");
+  container.className = `scrollframe-wrapper ${template_type}`;
+  container.style.cssText = `
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-width: 460px;
+    margin: 30px auto;
+    font-family: Inter, sans-serif;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  `;
+
+  // Initial render
+  container.innerHTML = `
+    <div style="background: ${header_config.background}; color: #fff; padding: 14px 20px; font-weight: 600; font-size: 16px;">
+      ${header_config.icon || "💡"} ${header_config.title}
+    </div>
+    <div style="padding: 20px; background: #fff;">
+      ${renderSlide(currentSlideIndex)}
+      ${
+        trust_indicators?.length
+          ? `<ul style="list-style: none; padding: 0; margin: 0; font-size: 12px; color: #888; text-align: center;">
+            ${trust_indicators
+              .map((ti) => `<li style="margin-bottom: 4px;">${ti}</li>`)
+              .join("")}
+          </ul>`
+          : ""
+      }
+      ${renderNavigation()}
+    </div>
+  `;
+
+  // Insert into DOM
+  currentScript?.parentNode?.insertBefore(container, currentScript.nextSibling);
+
+  // Setup interactivity
+  setupNavigation();
+  startAutoAdvance();
+
+  // Pause auto-advance on hover
+  container.addEventListener('mouseenter', () => {
+    if (autoAdvanceTimer) {
+      clearInterval(autoAdvanceTimer);
+    }
   });
 
-  const data = await res.json();
-  const config = data?.[0]?.config;
-  if (!config) {
-    console.error("❌ No config found for unit_id:", unitId);
-    return;
-  }
+  container.addEventListener('mouseleave', () => {
+    resetAutoAdvance();
+  });
 
-  console.log("✅ Parsed config:", config);
-
-  const isMulti = Array.isArray(config.slides);
-  const slides = isMulti ? config.slides : [config];
-  let current = 0;
-  let timer;
-
-  const container = document.createElement("div");
-  container.style.maxWidth = "600px";
-  container.style.margin = "0 auto";
-  container.style.fontFamily = "Arial, sans-serif";
-  container.style.border = "1px solid #ddd";
-  container.style.borderRadius = "8px";
-  container.style.overflow = "hidden";
-  container.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-  container.style.background = config.styling_theme?.background || "#fff";
-  container.style.color = config.styling_theme?.text || "#000";
-
-  function renderSlide(index) {
-    const slide = slides[index];
-    if (!slide) return;
-
-    container.innerHTML = `
-      <div style="background: ${config.header_config?.background || "#2ecc71"}; padding: 12px 16px; color: #fff; font-weight: bold; font-size: 16px;">
-        ${config.header_config?.icon || "💡"} ${config.header_config?.title || "Featured Offer"}
-      </div>
-
-      <img src="${slide.imageUrl}" alt="Ad Image" style="width: 100%; display: block;" />
-
-      <h2 style="padding: 0 16px;">${slide.headline || ""}</h2>
-      <p style="padding: 0 16px;">${slide.subheadline || ""}</p>
-
-      <div style="padding: 0 16px 16px;">
-        <a href="${slide.destinationUrl}" target="_blank" style="
-          display: inline-block;
-          background: ${config.styling_theme?.buttonColor || "#6c5ce7"};
-          color: ${config.styling_theme?.buttonText || "#fff"};
-          padding: 12px 16px;
-          border-radius: 4px;
-          text-decoration: none;
-          font-weight: bold;
-        ">${slide.ctaText || "Learn More"}</a>
-      </div>
-
-      ${config.trust_indicators?.length ? `
-        <ul style="padding: 0 16px 16px; font-size: 14px;">
-          ${config.trust_indicators.map(item => `<li>${item}</li>`).join("")}
-        </ul>` : ""
-      }
-
-      ${config.navigation_enabled && slides.length > 1 ? `
-        <div style="text-align:center; padding: 8px 0;">
-          <button id="prevBtn" style="margin: 0 8px;">◀</button>
-          ${slides.map((_, i) => `
-            <span style="
-              display: inline-block;
-              width: 8px;
-              height: 8px;
-              border-radius: 50%;
-              background: ${i === current ? "#6c5ce7" : "#ddd"};
-              margin: 0 4px;
-            "></span>
-          `).join("")}
-          <button id="nextBtn" style="margin: 0 8px;">▶</button>
-        </div>` : ""
-      }
-    `;
-
-    // Bind navigation
-    if (config.navigation_enabled && slides.length > 1) {
-      const prevBtn = container.querySelector("#prevBtn");
-      const nextBtn = container.querySelector("#nextBtn");
-
-      if (prevBtn) prevBtn.onclick = () => updateSlide(-1);
-      if (nextBtn) nextBtn.onclick = () => updateSlide(1);
-    }
-  }
-
-  function updateSlide(offset) {
-    current = (current + offset + slides.length) % slides.length;
-    renderSlide(current);
-    if (config.auto_advance) {
-      clearInterval(timer);
-      timer = setInterval(() => updateSlide(1), config.slide_duration || 5000);
-    }
-  }
-
-  renderSlide(current);
-
-  if (config.auto_advance) {
-    timer = setInterval(() => updateSlide(1), config.slide_duration || 5000);
-  }
-
-  currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
-  console.log("✅ ScrollFrame rendered successfully");
+  console.log("✅ ScrollFrame ad rendered successfully with", slideData.length, "slides");
 })();
