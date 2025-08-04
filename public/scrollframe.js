@@ -1,7 +1,7 @@
 (async () => {
   try {
     console.log("✅ scrollframe.js loaded");
-document.getElementById("scrollframe-status").innerText = "✅ scrollframe.js loaded and running.";
+    document.getElementById("scrollframe-status").innerText = "✅ scrollframe.js loaded and running.";
 
     const currentScript = document.currentScript;
     const embedId = currentScript?.dataset?.embedId;
