@@ -3,6 +3,7 @@
 
   const currentScript = document.currentScript;
   const unitId = currentScript?.dataset?.unitId;
+  const position = currentScript?.dataset?.position || "popup";
 
   if (!unitId) {
     console.error("❌ No data-unit-id found on script tag");
@@ -20,21 +21,17 @@
         body: JSON.stringify({ unitId }),
       }
     );
-
     const result = await res.json();
-
     if (!res.ok || !result?.config) {
       console.error("❌ Error fetching config for unit:", unitId, result);
       return;
     }
-
     config = result.config;
   } catch (err) {
     console.error("❌ Failed to load ScrollFrame config:", err);
     return;
   }
 
-  // Helper colors
   const tailwindColors = {
     "emerald-600": "#059669",
     "emerald-700": "#047857",
@@ -60,13 +57,9 @@
 
   const {
     template_type = "investment",
-    header_config = {
-      title: "💰 Premium Investment Insights",
-      gradient: "from-emerald-600 to-green-500",
-      icon: "💰",
-    },
+    header_config = {},
     navigation_enabled = true,
-    trust_indicators = ["✓ Secure Checkout", "⭐ 5-Star Rated"],
+    trust_indicators = [],
     styling_theme = {
       buttonColor: "#10b981",
       buttonText: "#ffffff",
@@ -74,19 +67,11 @@
     auto_advance = true,
     slide_duration = 5000,
     slides = [],
-    imageUrl,
-    headline,
-    subheadline,
-    body,
-    destinationUrl,
-    ctaText,
+    imageUrl, headline, subheadline, body, destinationUrl, ctaText
   } = config;
 
   const isMulti = Array.isArray(slides) && slides.length > 0;
-  const slideData = isMulti ? slides : [{
-    imageUrl, headline, subheadline, body, destinationUrl, ctaText
-  }];
-
+  const slideData = isMulti ? slides : [{ imageUrl, headline, subheadline, body, destinationUrl, ctaText }];
   let currentSlideIndex = 0;
   let autoAdvanceTimer = null;
 
@@ -123,7 +108,7 @@
       <span class="nav-dot ${i === currentSlideIndex ? 'active' : ''}" data-slide="${i}" style="
         width:8px; height:8px; border-radius:50%;
         background:${i === currentSlideIndex ? styling_theme.buttonColor : '#ccc'};
-        box-shadow:0 1px 2px rgba(0,0,0,0.1); cursor:pointer;"></span>
+        cursor:pointer;"></span>
     `).join('');
     return `
       <div class="scrollframe-nav" style="margin-top:16px; text-align:center;">
@@ -205,17 +190,17 @@
     border:1px solid #ddd;
     border-radius:8px;
     max-width:460px;
-    margin:30px auto;
     font-family:Inter,sans-serif;
     overflow:hidden;
     box-shadow:0 8px 24px rgba(0,0,0,0.08);
+    background:#fff;
   `;
 
   container.innerHTML = `
     <div style="${parseGradient(header_config.gradient)}; color:#fff; padding:14px 20px; font-weight:600; font-size:16px;">
       ${header_config.icon || "💡"} ${header_config.title}
     </div>
-    <div style="padding:20px; background:#fff;">
+    <div style="padding:20px;">
       ${renderSlide(currentSlideIndex)}
       ${trust_indicators?.length ? `
         <ul style="list-style:none; padding:0; font-size:12px; color:#888; text-align:center;">
@@ -225,12 +210,40 @@
     </div>
   `;
 
-  currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
+  let overlay = null;
+  if (position === "modal") {
+    overlay = document.createElement("div");
+    overlay.style.cssText = `
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 9998;
+    `;
+    document.body.appendChild(overlay);
+    container.style.position = "fixed";
+    container.style.left = "50%";
+    container.style.top = "50%";
+    container.style.transform = "translate(-50%, -50%)";
+    container.style.zIndex = "9999";
+    document.body.style.overflow = "hidden";
+  } else if (position === "popup") {
+    container.style.position = "fixed";
+    container.style.bottom = "30px";
+    container.style.right = "30px";
+    container.style.zIndex = "9999";
+  } else {
+    currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
+  }
+
+  if (position === "modal" || position === "popup") {
+    document.body.appendChild(container);
+  }
+
   setupNav();
   startAutoAdvance();
 
   container.addEventListener("mouseenter", () => clearInterval(autoAdvanceTimer));
   container.addEventListener("mouseleave", () => resetAutoAdvance());
 
-  console.log("✅ ScrollFrame ad rendered successfully with", slideData.length, "slides");
+  console.log("✅ ScrollFrame rendered in", position, "mode with", slideData.length, "slides");
 })();
