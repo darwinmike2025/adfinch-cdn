@@ -3,17 +3,18 @@
     console.log("✅ scrollframe.js loaded");
 
     const currentScript = document.currentScript;
-    const unitId = currentScript?.dataset?.unitId;
+    const embedId = currentScript?.dataset?.embedId;
     const position = currentScript?.dataset?.position || "popup";
 
-    if (!unitId) {
-      console.error("❌ No data-unit-id found on script tag");
+    if (!embedId) {
+      console.error("❌ No data-embed-id found on script tag");
       return;
     }
 
-    console.log("🔍 Loading ScrollFrame for unit:", unitId, "position:", position);
+    console.log("🔍 Loading ScrollFrame for embedId:", embedId, "position:", position);
 
     let config;
+    let slideData = [];
 
     try {
       const res = await fetch(
@@ -21,21 +22,41 @@
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ unitId }),
+          body: JSON.stringify({ embedId }),
         }
       );
       const result = await res.json();
       console.log("🔍 Raw fetch result:", result);
 
       if (!res.ok || !result.success || !result.config) {
-        console.error("❌ Error fetching config for unit:", unitId, result);
+        console.warn("⚠️ Error fetching config for embedId:", embedId, result);
         return;
       }
 
       config = result.config;
       console.log("🔍 Config received from edge function:", config);
+
+      // Extract slides from config.slides array, or fallback to single slide
+      if (config.slides && Array.isArray(config.slides) && config.slides.length > 0) {
+        slideData = config.slides.slice(0, 5); // Limit to 5 slides max
+        console.log("🔍 Using", slideData.length, "slides from config.slides array");
+      } else if (config.imageUrl || config.headline) {
+        // Fallback to single slide from root config properties
+        slideData = [{
+          imageUrl: config.imageUrl,
+          headline: config.headline,
+          subheadline: config.subheadline,
+          body: config.body,
+          destinationUrl: config.destinationUrl,
+          ctaText: config.ctaText
+        }];
+        console.log("🔍 Using single slide from config properties");
+      } else {
+        console.warn("⚠️ No valid slide data found in config");
+        return;
+      }
     } catch (err) {
-      console.error("❌ Failed to load ScrollFrame config:", err);
+      console.warn("⚠️ Failed to load ScrollFrame config:", err);
       return;
     }
 
@@ -62,7 +83,7 @@
       return "background: #10b981;";
     };
 
-    // Destructure config with proper property names (template_type fixed)
+    // Destructure config with proper property names
     const {
       template_type = "investment",
       header_config = {},
@@ -73,22 +94,13 @@
         buttonText: "#ffffff",
       },
       auto_advance = true,
-      slide_duration = 5000,
-      slides = [],
-      imageUrl,
-      headline,
-      subheadline,
-      body,
-      destinationUrl,
-      ctaText
+      slide_duration = 5000
     } = config;
 
     console.log("🔍 Using template_type:", template_type);
     console.log("🔍 Header config:", header_config);
     console.log("🔍 Navigation enabled:", navigation_enabled);
 
-    const isMulti = Array.isArray(slides) && slides.length > 0;
-    const slideData = isMulti ? slides : [{ imageUrl, headline, subheadline, body, destinationUrl, ctaText }];
     let currentSlideIndex = 0;
     let autoAdvanceTimer = null;
 
