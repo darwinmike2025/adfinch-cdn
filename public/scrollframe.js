@@ -11,6 +11,8 @@
       return;
     }
 
+    console.log("🔍 Loading ScrollFrame for unit:", unitId, "position:", position);
+
     let config;
 
     try {
@@ -60,6 +62,7 @@
       return "background: #10b981;";
     };
 
+    // Destructure config with proper property names (template_type fixed)
     const {
       template_type = "investment",
       header_config = {},
@@ -80,14 +83,23 @@
       ctaText
     } = config;
 
+    console.log("🔍 Using template_type:", template_type);
+    console.log("🔍 Header config:", header_config);
+    console.log("🔍 Navigation enabled:", navigation_enabled);
+
     const isMulti = Array.isArray(slides) && slides.length > 0;
     const slideData = isMulti ? slides : [{ imageUrl, headline, subheadline, body, destinationUrl, ctaText }];
     let currentSlideIndex = 0;
     let autoAdvanceTimer = null;
 
+    console.log("🔍 Slide data prepared:", slideData.length, "slides");
+
     const renderSlide = (index) => {
       const s = slideData[index];
-      if (!s) return '';
+      if (!s) {
+        console.warn("⚠️ No slide data for index:", index);
+        return '';
+      }
       return `
         <div class="slide-content" style="opacity:1; transition:opacity 0.3s ease-in-out;">
           <div style="width:100%; max-height:220px; overflow:hidden;">
@@ -132,23 +144,33 @@
     };
 
     const updateSlide = () => {
-      const content = container.querySelector('.slide-content');
-      const nav = container.querySelector('.scrollframe-nav');
-      if (content) {
-        content.style.opacity = '0';
-        setTimeout(() => {
-          content.outerHTML = renderSlide(currentSlideIndex);
-          container.querySelector('.slide-content').style.opacity = '1';
-        }, 150);
-      }
-      if (nav) {
-        nav.outerHTML = renderNav();
-        setupNav();
+      try {
+        const content = container.querySelector('.slide-content');
+        const nav = container.querySelector('.scrollframe-nav');
+        
+        if (content) {
+          content.style.opacity = '0';
+          setTimeout(() => {
+            content.outerHTML = renderSlide(currentSlideIndex);
+            const newContent = container.querySelector('.slide-content');
+            if (newContent) {
+              newContent.style.opacity = '1';
+            }
+          }, 150);
+        }
+        
+        if (nav) {
+          nav.outerHTML = renderNav();
+          setupNav();
+        }
+      } catch (err) {
+        console.error("❌ Error updating slide:", err);
       }
     };
 
     const goToSlide = (i) => {
       if (i >= 0 && i < slideData.length && i !== currentSlideIndex) {
+        console.log("🔍 Going to slide:", i);
         currentSlideIndex = i;
         updateSlide();
         resetAutoAdvance();
@@ -156,40 +178,62 @@
     };
 
     const setupNav = () => {
-      container.querySelector('.nav-prev')?.addEventListener('click', () => {
-        if (currentSlideIndex > 0) {
-          currentSlideIndex--;
-          updateSlide();
-          resetAutoAdvance();
+      try {
+        const prevBtn = container.querySelector('.nav-prev');
+        const nextBtn = container.querySelector('.nav-next');
+        const dots = container.querySelectorAll('.nav-dot');
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', () => {
+            if (currentSlideIndex > 0) {
+              currentSlideIndex--;
+              updateSlide();
+              resetAutoAdvance();
+            }
+          });
         }
-      });
-      container.querySelector('.nav-next')?.addEventListener('click', () => {
-        if (currentSlideIndex < slideData.length - 1) {
-          currentSlideIndex++;
-          updateSlide();
-          resetAutoAdvance();
+
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
+            if (currentSlideIndex < slideData.length - 1) {
+              currentSlideIndex++;
+              updateSlide();
+              resetAutoAdvance();
+            }
+          });
         }
-      });
-      container.querySelectorAll('.nav-dot')?.forEach((dot, i) => {
-        dot.addEventListener('click', () => goToSlide(i));
-      });
+
+        dots.forEach((dot, i) => {
+          dot.addEventListener('click', () => goToSlide(i));
+        });
+      } catch (err) {
+        console.error("❌ Error setting up navigation:", err);
+      }
     };
 
     const startAutoAdvance = () => {
-      if (auto_advance && slideData.length > 1) {
-        autoAdvanceTimer = setInterval(() => {
-          currentSlideIndex = (currentSlideIndex + 1) % slideData.length;
-          updateSlide();
-        }, slide_duration);
+      try {
+        if (auto_advance && slideData.length > 1) {
+          console.log("🔍 Starting auto-advance with duration:", slide_duration);
+          autoAdvanceTimer = setInterval(() => {
+            currentSlideIndex = (currentSlideIndex + 1) % slideData.length;
+            updateSlide();
+          }, slide_duration);
+        }
+      } catch (err) {
+        console.error("❌ Error starting auto-advance:", err);
       }
     };
 
     const resetAutoAdvance = () => {
-      clearInterval(autoAdvanceTimer);
-      autoAdvanceTimer = null;
+      if (autoAdvanceTimer) {
+        clearInterval(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
       startAutoAdvance();
     };
 
+    // Create main container
     const container = document.createElement("div");
     container.className = `scrollframe-wrapper ${template_type}`;
     container.style.cssText = `
@@ -203,6 +247,9 @@
       position: relative;
     `;
 
+    console.log("🔍 Building container with template:", template_type);
+
+    // Build container content
     container.innerHTML = `
       <div style="${parseGradient(header_config.gradient)}; color:#fff; padding:14px 20px; font-weight:600; font-size:16px; position: relative;">
         ${header_config.icon || "💡"} ${header_config.title || ""}
@@ -217,28 +264,43 @@
       </div>
     `;
 
-    // Modal-specific setup
+    // Modal-specific setup with enhanced debugging
     let overlay = null;
     let originalOverflow = null;
     let keydownHandler = null;
 
     const closeModal = () => {
-      if (container.parentNode) {
-        container.parentNode.removeChild(container);
+      console.log("🔍 closeModal called - removing elements");
+      try {
+        if (container && container.parentNode) {
+          container.parentNode.removeChild(container);
+          console.log("🔍 Container removed from DOM");
+        }
+        if (overlay && overlay.parentNode) {
+          overlay.parentNode.removeChild(overlay);
+          console.log("🔍 Overlay removed from DOM");
+        }
+        if (originalOverflow !== null) {
+          document.body.style.overflow = originalOverflow;
+          console.log("🔍 Body overflow restored");
+        }
+        if (keydownHandler) {
+          document.removeEventListener("keydown", keydownHandler);
+          console.log("🔍 Keydown handler removed");
+        }
+        if (autoAdvanceTimer) {
+          clearInterval(autoAdvanceTimer);
+          console.log("🔍 Auto-advance timer cleared");
+        }
+      } catch (err) {
+        console.error("❌ Error in closeModal:", err);
       }
-      if (overlay && overlay.parentNode) {
-        overlay.parentNode.removeChild(overlay);
-      }
-      if (originalOverflow !== null) {
-        document.body.style.overflow = originalOverflow;
-      }
-      if (keydownHandler) {
-        document.removeEventListener("keydown", keydownHandler);
-      }
-      clearInterval(autoAdvanceTimer);
     };
 
+    // Position-specific rendering
     if (position === "modal") {
+      console.log("🔍 Setting up modal mode");
+      
       overlay = document.createElement("div");
       overlay.style.cssText = `
         position: fixed;
@@ -277,11 +339,18 @@
         align-items: center;
         justify-content: center;
       `;
-      closeBtn.addEventListener("click", closeModal);
+      
+      closeBtn.addEventListener("click", (e) => {
+        console.log("🔍 Close button clicked");
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+      });
       container.appendChild(closeBtn);
 
       keydownHandler = (e) => {
         if (e.key === "Escape") {
+          console.log("🔍 Escape key pressed");
           closeModal();
         }
       };
@@ -289,16 +358,26 @@
 
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) {
+          console.log("🔍 Overlay clicked");
           closeModal();
         }
       });
 
+      // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
-        document.body.appendChild(overlay);
-        document.body.appendChild(container);
-        document.body.style.overflow = "hidden";
+        try {
+          document.body.appendChild(overlay);
+          document.body.appendChild(container);
+          document.body.style.overflow = "hidden";
+          console.log("🔍 Modal elements added to DOM");
+        } catch (err) {
+          console.error("❌ Error adding modal to DOM:", err);
+        }
       });
+
     } else if (position === "popup") {
+      console.log("🔍 Setting up popup mode");
+      
       container.style.position = "fixed";
       container.style.bottom = "30px";
       container.style.right = "30px";
@@ -326,26 +405,64 @@
         align-items: center;
         justify-content: center;
       `;
-      closeBtn.addEventListener("click", () => {
-        if (container.parentNode) {
-          container.parentNode.removeChild(container);
+      
+      closeBtn.addEventListener("click", (e) => {
+        console.log("🔍 Popup close button clicked");
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          if (container && container.parentNode) {
+            container.parentNode.removeChild(container);
+          }
+          if (autoAdvanceTimer) {
+            clearInterval(autoAdvanceTimer);
+          }
+          console.log("🔍 Popup closed successfully");
+        } catch (err) {
+          console.error("❌ Error closing popup:", err);
         }
-        clearInterval(autoAdvanceTimer);
       });
       container.appendChild(closeBtn);
 
-      document.body.appendChild(container);
+      try {
+        document.body.appendChild(container);
+        console.log("🔍 Popup added to DOM");
+      } catch (err) {
+        console.error("❌ Error adding popup to DOM:", err);
+      }
+
     } else {
-      currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
+      console.log("🔍 Setting up inline mode");
+      try {
+        currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
+        console.log("🔍 Inline container added to DOM");
+      } catch (err) {
+        console.error("❌ Error adding inline container:", err);
+      }
     }
 
-    setupNav();
-    startAutoAdvance();
+    // Setup navigation and auto-advance with proper timing
+    setTimeout(() => {
+      try {
+        setupNav();
+        startAutoAdvance();
 
-    container.addEventListener("mouseenter", () => clearInterval(autoAdvanceTimer));
-    container.addEventListener("mouseleave", () => resetAutoAdvance());
+        container.addEventListener("mouseenter", () => {
+          if (autoAdvanceTimer) {
+            clearInterval(autoAdvanceTimer);
+          }
+        });
+        
+        container.addEventListener("mouseleave", () => {
+          resetAutoAdvance();
+        });
 
-    console.log("✅ ScrollFrame rendered in", position, "mode with", slideData.length, "slides");
+        console.log("✅ ScrollFrame rendered in", position, "mode with", slideData.length, "slides");
+      } catch (err) {
+        console.error("❌ Error in final setup:", err);
+      }
+    }, 100);
+
   } catch (err) {
     console.error("❌ ScrollFrame render failed:", err);
   }
