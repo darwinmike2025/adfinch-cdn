@@ -1,3 +1,7 @@
+try {
+
+// === Begin original script ===
+
 (async () => {
   console.log("✅ scrollframe.js loaded");
 
@@ -22,6 +26,7 @@
       }
     );
     const result = await res.json();
+    console.log("🔍 Raw fetch result:", result);
     if (!res.ok || !result?.config) {
       console.error("❌ Error fetching config for unit:", unitId, result);
       return;
@@ -220,7 +225,7 @@
       background: rgba(0, 0, 0, 0.7);
       z-index: 9998;
     `;
-    document.body.appendChild(overlay);
+
     container.style.position = "fixed";
     container.style.left = "50%";
     container.style.top = "50%";
@@ -228,7 +233,6 @@
     container.style.zIndex = "9999";
 
     const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     const closeBtn = document.createElement("button");
     closeBtn.innerText = "×";
@@ -266,17 +270,20 @@
       document.body.removeChild(overlay);
       document.body.style.overflow = originalOverflow;
     });
+
+    requestAnimationFrame(() => {
+      document.body.appendChild(overlay);
+      document.body.appendChild(container);
+      document.body.style.overflow = "hidden";
+    });
   } else if (position === "popup") {
     container.style.position = "fixed";
     container.style.bottom = "30px";
     container.style.right = "30px";
     container.style.zIndex = "9999";
+    document.body.appendChild(container);
   } else {
     currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
-  }
-
-  if (position === "modal" || position === "popup") {
-    document.body.appendChild(container);
   }
 
   setupNav();
@@ -287,3 +294,9 @@
 
   console.log("✅ ScrollFrame rendered in", position, "mode with", slideData.length, "slides");
 })();
+
+// === End original script ===
+
+} catch (err) {
+  console.error("❌ ScrollFrame render failed:", err);
+}
