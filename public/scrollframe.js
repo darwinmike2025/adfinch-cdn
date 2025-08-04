@@ -27,6 +27,10 @@
         }
       );
       const result = await res.json();
+      document.getElementById("scrollframe-fetch-status").innerText =
+        result.success
+          ? `✅ Fetched config: ${result.config.slides?.length || 0} slide(s)`
+          : `❌ Fetch failed: ${JSON.stringify(result)}`;
       console.log("🔍 Raw fetch result:", result);
 
       if (!res.ok || !result.success || !result.config) {
