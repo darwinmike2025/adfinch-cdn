@@ -194,6 +194,7 @@
     overflow:hidden;
     box-shadow:0 8px 24px rgba(0,0,0,0.08);
     background:#fff;
+    position: relative;
   `;
 
   container.innerHTML = `
@@ -233,12 +234,15 @@
     closeBtn.innerText = "×";
     closeBtn.style.cssText = `
       position: absolute;
-      top: 10px;
-      right: 14px;
-      background: none;
-      border: none;
-      font-size: 24px;
+      top: 12px;
+      right: 16px;
+      background: rgba(0,0,0,0.8);
       color: #fff;
+      border: 1px solid #fff;
+      border-radius: 4px;
+      font-size: 24px;
+      width: 36px;
+      height: 36px;
       cursor: pointer;
       z-index: 10000;
     `;
