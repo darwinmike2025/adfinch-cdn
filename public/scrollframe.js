@@ -247,7 +247,7 @@
       if (overlay) document.body.removeChild(overlay);
       document.body.style.overflow = originalOverflow;
     });
-    document.body.appendChild(closeBtn);
+    container.appendChild(closeBtn);
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
