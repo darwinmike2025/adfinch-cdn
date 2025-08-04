@@ -225,7 +225,43 @@
     container.style.top = "50%";
     container.style.transform = "translate(-50%, -50%)";
     container.style.zIndex = "9999";
+
+    const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
+    const closeBtn = document.createElement("button");
+    closeBtn.innerText = "×";
+    closeBtn.style.cssText = `
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #fff;
+      cursor: pointer;
+      z-index: 10000;
+    `;
+    closeBtn.addEventListener("click", () => {
+      document.body.removeChild(container);
+      if (overlay) document.body.removeChild(overlay);
+      document.body.style.overflow = originalOverflow;
+    });
+    document.body.appendChild(closeBtn);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        document.body.removeChild(container);
+        if (overlay) document.body.removeChild(overlay);
+        document.body.style.overflow = originalOverflow;
+      }
+    });
+
+    overlay.addEventListener("click", () => {
+      document.body.removeChild(container);
+      document.body.removeChild(overlay);
+      document.body.style.overflow = originalOverflow;
+    });
   } else if (position === "popup") {
     container.style.position = "fixed";
     container.style.bottom = "30px";
