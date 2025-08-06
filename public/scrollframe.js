@@ -89,6 +89,17 @@
       return;
     }
 
+    console.log("[ScrollFrame] slideData:", slideData.length, "slides");
+
+    // Create main container first
+    const container = document.createElement('div');
+    container.className = 'scrollframe-wrapper';
+    container.style.cssText = `
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      z-index: 9999;
+      position: fixed;
+    `;
+
     // Define tailwind colors as mapping
     const tailwindColors = {
       emerald: '#10b981',
@@ -102,35 +113,36 @@
     };
 
     // Parse gradient class to CSS
-    const parseGradient = (gradientClass) => {
-      if (!gradientClass || typeof gradientClass !== 'string') return '';
+    const parseGradient = (gradientClass = '') => {
+      if (!gradientClass || typeof gradientClass !== 'string') return 'linear-gradient(135deg, #10b981, #059669)';
       
       const matches = gradientClass.match(/from-(\w+)-(\d+)\s+to-(\w+)-(\d+)/);
       if (matches) {
         const [, fromColor, fromShade, toColor, toShade] = matches;
-        const fromColorValue = tailwindColors[fromColor] || fromColor;
-        const toColorValue = tailwindColors[toColor] || toColor;
+        const fromColorValue = tailwindColors[fromColor] || '#10b981';
+        const toColorValue = tailwindColors[toColor] || '#059669';
         return `linear-gradient(135deg, ${fromColorValue}, ${toColorValue})`;
       }
-      return '';
+      return 'linear-gradient(135deg, #10b981, #059669)';
     };
+
+    // State management
+    let currentSlide = 0;
+    let autoAdvanceInterval = null;
 
     // Render slide content
     const renderSlide = (slide, index) => {
-      const imageUrl = slide.imageUrl || '';
+      const imageUrl = slide.imageUrl || slide.image_url || '';
       const headline = slide.headline || '';
-      const ctaText = slide.ctaText || 'Learn More';
-      const destinationUrl = slide.destinationUrl || '#';
+      const ctaText = slide.ctaText || slide.cta_text || 'Learn More';
+      const destinationUrl = slide.destinationUrl || slide.destination_url || '#';
 
       return `
-        <div class="scrollframe-slide" style="display: ${index === 0 ? 'block' : 'none'};">
+        <div class="scrollframe-slide" data-slide="${index}" style="display: ${index === 0 ? 'block' : 'none'};">
           <div style="
             position: relative;
             background: white;
-            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            max-width: 400px;
             width: 100%;
           ">
             <div style="position: relative; height: 200px; overflow: hidden;">
@@ -240,25 +252,21 @@
       `;
     };
 
-    // State management
-    let currentSlide = 0;
-    let autoAdvanceInterval = null;
-
-    // Update slide display
+    // Update slide display (scoped to container)
     const updateSlide = (index) => {
-      // Hide all slides
-      document.querySelectorAll('.scrollframe-slide').forEach(slide => {
+      // Hide all slides in this container
+      container.querySelectorAll('.scrollframe-slide').forEach(slide => {
         slide.style.display = 'none';
       });
       
-      // Show current slide
-      const currentSlideEl = document.querySelectorAll('.scrollframe-slide')[index];
+      // Show current slide in this container
+      const currentSlideEl = container.querySelector(`.scrollframe-slide[data-slide="${index}"]`);
       if (currentSlideEl) {
         currentSlideEl.style.display = 'block';
       }
       
-      // Update dots
-      document.querySelectorAll('.scrollframe-dot').forEach((dot, i) => {
+      // Update dots in this container
+      container.querySelectorAll('.scrollframe-dot').forEach((dot, i) => {
         dot.style.background = i === index ? '#10b981' : '#d1d5db';
       });
       
@@ -273,11 +281,11 @@
       }
     };
 
-    // Setup navigation event listeners
+    // Setup navigation event listeners (scoped to container)
     const setupNav = () => {
-      const prevBtn = document.querySelector('.scrollframe-prev');
-      const nextBtn = document.querySelector('.scrollframe-next');
-      const dots = document.querySelectorAll('.scrollframe-dot');
+      const prevBtn = container.querySelector('.scrollframe-prev');
+      const nextBtn = container.querySelector('.scrollframe-next');
+      const dots = container.querySelectorAll('.scrollframe-dot');
 
       if (prevBtn) {
         prevBtn.addEventListener('click', () => {
@@ -316,27 +324,17 @@
       startAutoAdvance();
     };
 
-    // Create main container
-    const container = document.createElement('div');
-    container.className = 'scrollframe-wrapper';
-    container.style.cssText = `
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      z-index: 9999;
-      position: fixed;
-    `;
-
     // Header with gradient background
     const headerGradient = parseGradient(config.header_config?.gradient);
-    const headerStyle = headerGradient ? `background: ${headerGradient};` : 'background: linear-gradient(135deg, #10b981, #059669);';
     
     container.innerHTML = `
-      <div style="${headerStyle} color: white; padding: 12px 20px; border-radius: 12px 12px 0 0; position: relative;">
+      <div style="background: ${headerGradient}; color: white; padding: 12px 20px; border-radius: 12px 12px 0 0; position: relative;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="font-size: 16px;">${config.header_config?.icon === 'TrendingUp' ? '📈' : config.header_config?.icon === 'Wine' ? '🍷' : config.header_config?.icon === 'Heart' ? '💖' : '📈'}</span>
             <span style="font-weight: 600; font-size: 14px;">${config.header_config?.title || 'Sponsored Content'}</span>
           </div>
-          <button onclick="this.closest('.scrollframe-wrapper').remove()" style="
+          <button class="scrollframe-close" style="
             background: none;
             border: none;
             color: white;
@@ -382,10 +380,26 @@
       </div>
     `;
 
+    // Close button functionality
+    const closeBtn = container.querySelector('.scrollframe-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        if (container.parentElement && container.parentElement.classList.contains('scrollframe-overlay')) {
+          container.parentElement.remove();
+        } else {
+          container.remove();
+        }
+        if (autoAdvanceInterval) {
+          clearInterval(autoAdvanceInterval);
+        }
+      });
+    }
+
     // Position based on mode
     if (position === 'modal') {
       // Create overlay
       const overlay = document.createElement('div');
+      overlay.className = 'scrollframe-overlay';
       overlay.style.cssText = `
         position: fixed;
         top: 0;
@@ -416,15 +430,23 @@
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
           overlay.remove();
+          if (autoAdvanceInterval) {
+            clearInterval(autoAdvanceInterval);
+          }
         }
       });
       
       // Close on escape key
-      document.addEventListener('keydown', (e) => {
+      const escapeHandler = (e) => {
         if (e.key === 'Escape') {
           overlay.remove();
+          if (autoAdvanceInterval) {
+            clearInterval(autoAdvanceInterval);
+          }
+          document.removeEventListener('keydown', escapeHandler);
         }
-      });
+      };
+      document.addEventListener('keydown', escapeHandler);
       
     } else if (position === 'popup') {
       container.style.cssText += `
@@ -451,9 +473,8 @@
       `;
       
       // Insert after the script tag
-      const scriptTag = document.currentScript;
-      if (scriptTag && scriptTag.parentNode) {
-        scriptTag.parentNode.insertBefore(container, scriptTag.nextSibling);
+      if (currentScript && currentScript.parentNode) {
+        currentScript.parentNode.insertBefore(container, currentScript.nextSibling);
       } else {
         document.body.appendChild(container);
       }
