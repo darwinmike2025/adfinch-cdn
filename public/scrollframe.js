@@ -49,6 +49,8 @@
         // Fallback to single slide format
         slideData = [{
           headline: config.headline,
+          subheadline: config.subheadline || '',
+          body: config.body || '',
           imageUrl: config.imageUrl,
           destinationUrl: config.destinationUrl || '#',
           ctaText: config.ctaText || 'Learn More'
@@ -130,10 +132,18 @@
     let currentSlide = 0;
     let autoAdvanceInterval = null;
 
+    // Helper function to truncate text
+    const truncateText = (text, maxLength = 200) => {
+      if (!text) return '';
+      return text.length <= maxLength ? text : text.substring(0, maxLength) + '...';
+    };
+
     // Render slide content
     const renderSlide = (slide, index) => {
       const imageUrl = slide.imageUrl || slide.image_url || '';
       const headline = slide.headline || '';
+      const subheadline = slide.subheadline || '';
+      const body = slide.body || '';
       const ctaText = slide.ctaText || slide.cta_text || 'Learn More';
       const destinationUrl = slide.destinationUrl || slide.destination_url || '#';
 
@@ -160,12 +170,25 @@
             </div>
             <div style="padding: 20px;">
               <h3 style="
-                margin: 0 0 16px 0;
+                margin: 0 0 12px 0;
                 font-size: 18px;
                 font-weight: bold;
                 color: #1f2937;
                 line-height: 1.3;
               ">${headline}</h3>
+              ${subheadline ? `<h4 style="
+                margin: 0 0 12px 0;
+                font-size: 14px;
+                font-weight: 500;
+                color: #6b7280;
+                line-height: 1.4;
+              ">${subheadline}</h4>` : ''}
+              ${body ? `<p style="
+                margin: 0 0 16px 0;
+                font-size: 14px;
+                color: #4b5563;
+                line-height: 1.5;
+              ">${truncateText(body, 200)}</p>` : ''}
               <a 
                 href="${destinationUrl}"
                 target="_blank"
