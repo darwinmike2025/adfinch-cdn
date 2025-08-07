@@ -157,7 +157,7 @@
                 line-height: 1.3;
               ">${headline}</h3>
               ${subheadline ? `<h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #6b7280; line-height: 1.4;">${subheadline}</h4>` : ''}
-              ${body ? `<p style="margin: 0 0 16px 0; font-size: 14px; color: #374151; line-height: 1.5;">${body.substring(0, 200)}${body.length > 200 ? '...' : ''}</p>` : ''}
+              ${body ? `<div style="margin: 0 0 16px 0; font-size: 14px; color: #374151; line-height: 1.5;">${body}</div>` : ''}
               <a 
                 href="${destinationUrl}"
                 target="_blank"
