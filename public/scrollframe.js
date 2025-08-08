@@ -1,8 +1,3 @@
-Great question. Use the async IIFE version. Replace your file with the complete script below (starts with “(async () => {” and ends with “})();”). It implements the v2 fixed-shell modal/popup with external chrome, no autoplay, Markdown rendering, keyboard and swipe navigation, and internal scrolling.
-
-Copy-paste this entire block as public/scrollframe.js:
-
-```javascript
 (async () => {
   try {
     console.log("[ScrollFrame v2] boot");
