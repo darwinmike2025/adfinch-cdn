@@ -2,626 +2,367 @@
   try {
     console.log("[ScrollFrame v2] boot");
 
-    // Robust currentScript detection (document.currentScript can be null in some cases)
-    const getCurrentScript = () => {
-      if (document.currentScript) return document.currentScript;
-      const scripts = Array.from(document.querySelectorAll('script[src]'));
-      return scripts.reverse().find(s => /scrollframe\.js(\?|$)/.test(s.src)) || null;
-    };
+    const currentScript = document.currentScript;
+    const ds = currentScript?.dataset || {};
+    const position = (ds.position || "popup").toLowerCase();
 
-    const currentScript = getCurrentScript();
-    const embedId = currentScript?.dataset?.embedId;
-    const position = (currentScript?.dataset?.position || "popup").toLowerCase();
-    const noIframe = String(currentScript?.dataset?.noIframe || "").toLowerCase() === "true";
+    // Support both new (embedId) and legacy (unitId)
+    const idValue = ds.embedId || ds.unitId || "";
+    const idKey = ds.embedId ? "embedId" : (ds.unitId ? "unitId" : null);
 
-    if (!embedId) {
-      console.error("[ScrollFrame v2] error: No data-embed-id found on script tag");
+    if (!idKey || !idValue) {
+      console.error("[ScrollFrame v2] No data-embed-id or data-unit-id found on script tag");
+      // Visible inline error so it's obvious in tests
+      const errorDiv = document.createElement("div");
+      errorDiv.style.cssText = `
+        color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 12px;
+        border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px; margin: 10px 0; max-width: 420px;`;
+      errorDiv.textContent = "❌ ScrollFrame: missing data-embed-id or data-unit-id";
+      currentScript?.parentNode?.insertBefore(errorDiv, currentScript.nextSibling);
       return;
     }
 
     // Fetch config with timeout
-    console.log("[ScrollFrame v2] starting fetch...");
     let config;
     let slides = [];
-
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
-
       const resp = await fetch(
-        `https://mynqhurabkihzyqweyet.supabase.co/functions/v1/scrollframe-fetch?embedId=${encodeURIComponent(embedId)}`,
+        `https://mynqhurabkihzyqweyet.supabase.co/functions/v1/scrollframe-fetch?${idKey}=${encodeURIComponent(idValue)}`,
         { signal: controller.signal }
       );
-
       clearTimeout(timeoutId);
-
-      if (!resp.ok) {
-        console.error("[ScrollFrame v2] fetch failed:", resp.status, resp.statusText);
-        throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
-      }
-
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
       const data = await resp.json();
-      if (!data?.success) {
-        console.error("[ScrollFrame v2] fetch unsuccessful:", data?.error);
-        throw new Error(data?.error || "Config fetch unsuccessful");
-      }
-
+      if (!data?.success) throw new Error(data?.error || "Config fetch unsuccessful");
       config = data.config || {};
 
-      // Normalize slides; require headline, image optional
+      // Normalize slides
       if (Array.isArray(config.slides)) {
         slides = config.slides
-          .map(s => ({
+          .map((s) => ({
             headline: s.headline || "",
             subheadline: s.subheadline || "",
-            body: s.body || s.body_copy || s.description || "",
-            imageUrl: s.imageUrl || s.image_url || "",
-            destinationUrl: s.destinationUrl || s.url || "#",
-            ctaText: s.ctaText || s.cta_text || "Learn More"
+            body: s.body || "",
+            imageUrl: s.imageUrl || "",
+            destinationUrl: s.destinationUrl || "",
+            ctaText: s.ctaText || "Learn More",
           }))
-          .filter(s => s.headline);
+          .filter((s) => s.headline);
       } else if (config.headline) {
-        slides = [{
-          headline: config.headline || "",
-          subheadline: config.subheadline || "",
-          body: config.body || config.body_copy || config.description || "",
-          imageUrl: config.imageUrl || config.image_url || "",
-          destinationUrl: config.destinationUrl || config.url || "#",
-          ctaText: config.ctaText || config.cta_text || "Learn More"
-        }];
+        slides = [
+          {
+            headline: config.headline,
+            subheadline: config.subheadline || "",
+            body: config.body || "",
+            imageUrl: config.imageUrl || "",
+            destinationUrl: config.destinationUrl || "",
+            ctaText: config.ctaText || "Learn More",
+          },
+        ];
       }
-
-      if (!slides.length) throw new Error("No valid slides found");
-
-      console.log(`[ScrollFrame v2] fetched ${slides.length} slide(s)`);
-
     } catch (err) {
-      console.error("[ScrollFrame v2] error:", err?.message || err);
-
-      // Visible error near script tag
+      console.error("[ScrollFrame v2] fetch error:", err?.message || err);
       const errorDiv = document.createElement("div");
       errorDiv.style.cssText = `
-        color: #dc2626;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        padding: 12px;
-        border-radius: 8px;
-        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-        font-size: 14px;
-        margin: 10px 0;
-        max-width: 420px;
-      `;
-      errorDiv.textContent = "❌ ScrollFrame: fetch failed (timeout or CORS error)";
-      if (currentScript?.parentNode) {
-        currentScript.parentNode.insertBefore(errorDiv, currentScript.nextSibling);
-      } else {
-        document.body.appendChild(errorDiv);
-      }
+        color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 12px;
+        border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px; margin: 10px 0; max-width: 420px;`;
+      errorDiv.textContent = "❌ ScrollFrame: fetch failed (timeout or CORS)";
+      currentScript?.parentNode?.insertBefore(errorDiv, currentScript.nextSibling);
       return;
     }
 
-    // Colors and header gradient helpers
-    const tailwindColors = {
-      emerald: "#10b981",
-      red: "#ef4444",
-      blue: "#3b82f6",
-      purple: "#8b5cf6",
-      pink: "#ec4899",
-      indigo: "#6366f1",
-      yellow: "#f59e0b",
-      green: "#22c55e"
-    };
+    if (!slides.length) {
+      console.error("[ScrollFrame v2] No valid slides");
+      return;
+    }
 
-    const parseGradient = (gradientClass) => {
-      if (!gradientClass || typeof gradientClass !== "string") return "";
-      const m = gradientClass.match(/from-(\w+)-(\d+)\s+to-(\w+)-(\d+)/);
-      if (m) {
-        const [, fromColor, , toColor] = m;
-        const fromColorValue = tailwindColors[fromColor] || fromColor || "#10b981";
-        const toColorValue = tailwindColors[toColor] || toColor || "#059669";
-        return `linear-gradient(135deg, ${fromColorValue}, ${toColorValue})`;
-      }
-      return "";
-    };
-
-    const primaryColor =
-      tailwindColors[config?.styling_theme?.primary] ||
-      config?.styling_theme?.primary ||
-      "#10b981";
-    const headerGradient =
-      parseGradient(config?.header_config?.gradient) ||
-      `linear-gradient(135deg, ${primaryColor}, #059669)`;
-    const headerTitle = config?.header_config?.title || "Sponsored Content";
-    const headerIcon = (() => {
-      const ic = (config?.header_config?.icon || "").toLowerCase();
-      if (ic === "trendingup") return "📈";
-      if (ic === "wine") return "🍷";
-      if (ic === "heart") return "💖";
-      return "📈";
-    })();
-
-    // Inject CSS once
-    const STYLE_ID = "adf-scrollframe-css";
-    if (!document.getElementById(STYLE_ID)) {
+    // Styles injection (idempotent)
+    const styleId = "adf-scrollframe-css";
+    if (!document.getElementById(styleId)) {
       const style = document.createElement("style");
-      style.id = STYLE_ID;
+      style.id = styleId;
       style.textContent = `
-      :root {
-        --adf-primary: ${primaryColor};
-        --adf-header-bg: ${headerGradient};
-        --adf-text: #111827;
-        --adf-muted: #6b7280;
-        --adf-bg: #ffffff;
-        --adf-border: #e5e7eb;
-        --adf-shadow: 0 20px 50px rgba(0,0,0,0.15);
-        --adf-radius: 14px;
-      }
-
-      .adf-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 2147483646;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-      }
-
-      .adf-modal {
-        width: clamp(320px, 90vw, 900px);
-        height: clamp(480px, 80vh, 720px);
-        background: var(--adf-bg);
-        color: var(--adf-text);
-        border-radius: var(--adf-radius);
-        box-shadow: var(--adf-shadow);
-        display: grid;
-        grid-template-rows: auto 1fr auto;
-        overflow: visible; /* allow arrows to sit slightly outside */
-        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      }
-
-      /* Popup positioning (no overlay) */
-      .adf-popup {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        z-index: 2147483646;
-      }
-
-      .adf-header {
-        background: var(--adf-header-bg);
-        color: white;
-        padding: 12px 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-top-left-radius: var(--adf-radius);
-        border-top-right-radius: var(--adf-radius);
-        min-height: 52px; /* match demo band height */
-      }
-
-      .adf-header .adf-title {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        letter-spacing: 0.2px;
-        white-space: nowrap;
-      }
-
-      .adf-close {
-        background: transparent;
-        border: none;
-        color: white;
-        font-size: 20px;
-        line-height: 1;
-        cursor: pointer;
-        border-radius: 8px;
-        padding: 2px 6px;
-      }
-      .adf-close:focus { outline: 2px solid rgba(255,255,255,0.6); outline-offset: 2px; }
-
-      .adf-frame {
-        position: relative;
-        display: grid;
-        grid-template-columns: 1fr;
-        align-items: stretch;
-        justify-items: stretch;
-        padding: 12px 28px; /* space so arrows can sit just outside content frame */
-        background: var(--adf-bg);
-      }
-
-      .adf-content {
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 10px;
-        border: 1px solid var(--adf-border);
-        padding: 16px;
-        background: #fff;
-        /* Professional typography base */
-        font-size: 16px;
-        line-height: 1.6;
-      }
-
-      /* Cleaner scrollbar (WebKit) */
-      .adf-content::-webkit-scrollbar { width: 10px; height: 10px; }
-      .adf-content::-webkit-scrollbar-track { background: transparent; }
-      .adf-content::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 999px; }
-      .adf-content:hover::-webkit-scrollbar-thumb { background: #9ca3af; }
-
-      /* Typography for markdown */
-      .adf-content h1 { font-size: clamp(24px, 2.4vw, 28px); line-height: 1.25; margin: 0 0 10px; font-weight: 700; }
-      .adf-content h2 { font-size: clamp(20px, 2.1vw, 22px); line-height: 1.3; margin: 12px 0 8px; font-weight: 700; }
-      .adf-content h3 { font-size: clamp(18px, 2vw, 20px); line-height: 1.35; margin: 12px 0 8px; font-weight: 600; color: var(--adf-text); }
-      .adf-content p { margin: 10px 0; color: #1f2937; }
-      .adf-content a { color: var(--adf-primary); text-decoration: underline; }
-      .adf-content ul, .adf-content ol { padding-left: 20px; margin: 10px 0; }
-      .adf-content li { margin: 6px 0; }
-      .adf-content blockquote { margin: 12px 0; padding: 8px 12px; border-left: 3px solid var(--adf-primary); color: #374151; background: #f9fafb; border-radius: 6px; }
-      .adf-content code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
-      .adf-content pre { background: #0f172a; color: #e2e8f0; padding: 10px; border-radius: 8px; overflow: auto; }
-
-      .adf-media {
-        width: 100%;
-        border-radius: 10px;
-        overflow: hidden;
-        background: #f3f4f6;
-        margin-bottom: 12px;
-        aspect-ratio: 16 / 10; /* keep media region consistent */
-      }
-      .adf-media img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-
-      .adf-cta {
-        display: inline-block;
-        background: var(--adf-primary);
-        color: white;
-        padding: 12px 16px;
-        border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        margin-top: 12px;
-      }
-
-      .adf-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: #ffffff;
-        color: #374151;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        width: 36px;
-        height: 36px;
-        border-radius: 999px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .adf-arrow:disabled { opacity: 0.5; cursor: default; }
-      .adf-prev { left: -20px; }
-      .adf-next { right: -20px; }
-
-      .adf-footer {
-        border-top: 1px solid var(--adf-border);
-        background: #fff;
-        padding: 10px 16px;
-        border-bottom-left-radius: var(--adf-radius);
-        border-bottom-right-radius: var(--adf-radius);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 48px;
-      }
-
-      .adf-dots { display: inline-flex; gap: 8px; }
-      .adf-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: #d1d5db;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-      }
-      .adf-dot[aria-current="true"] { background: var(--adf-primary); }
-
-      /* Slide container inside content */
-      .adf-slide { display: none; }
-      .adf-slide.active { display: block; }
-
-      @media (max-width: 420px) {
-        .adf-prev { left: -16px; }
-        .adf-next { right: -16px; }
-      }
+        .adf-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2147483646; display: grid; place-items: center; padding: 20px; }
+        .adf-modal { width: clamp(320px, 90vw, 900px); height: clamp(480px, 80vh, 720px); background: #fff; color: #0f172a; border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,.35); display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif; }
+        .adf-header { background: linear-gradient(135deg, #10b981, #059669); color: #fff; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+        .adf-title { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .adf-close { background: transparent; border: none; color: #fff; font-size: 22px; cursor: pointer; line-height: 1; }
+        .adf-frame { position: relative; overflow: visible; height: 100%; display: grid; }
+        .adf-content { overflow: auto; padding: 16px 20px; scrollbar-width: thin; scrollbar-color: rgba(17,24,39,.3) transparent; }
+        .adf-content::-webkit-scrollbar { width: 8px; height: 8px; }
+        .adf-content::-webkit-scrollbar-track { background: transparent; }
+        .adf-content::-webkit-scrollbar-thumb { background: rgba(17,24,39,.3); border-radius: 999px; }
+        .adf-footer { height: 56px; display: grid; place-items: center; border-top: 1px solid #e5e7eb; }
+        .adf-dots { display: flex; gap: 8px; align-items: center; justify-content: center; }
+        .adf-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; border: none; cursor: pointer; }
+        .adf-dot.is-active { background: #10b981; }
+        .adf-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 999px; border: 1px solid #e5e7eb; background: #fff; color: #111827; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+        .adf-prev { left: -20px; }
+        .adf-next { right: -20px; }
+        .adf-arrow[disabled] { opacity: .5; cursor: not-allowed; }
+        .adf-slide { display: none; height: 100%; }
+        .adf-slide.is-active { display: block; }
+        .adf-media { width: 100%; aspect-ratio: 16/10; background: #f3f4f6; border-radius: 12px; overflow: hidden; }
+        .adf-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .adf-stack { padding-top: 14px; }
+        .adf-headline { margin: 0 0 8px 0; font-size: 20px; line-height: 1.3; font-weight: 700; color: #0f172a; }
+        .adf-subheadline { margin: 0 0 12px 0; font-size: 16px; line-height: 1.35; color: #334155; font-weight: 600; }
+        .adf-cta { margin-top: 16px; display: inline-block; padding: 12px 18px; border-radius: 10px; background: #10b981; color: #fff; text-decoration: none; font-weight: 600; }
+        /* Markdown typography */
+        .adf-content .adf-md { font-size: 16px; line-height: 1.6; color: #1f2937; }
+        .adf-content .adf-md h1 { font-size: clamp(24px, 2.2vw, 28px); margin: 0 0 10px 0; line-height: 1.25; }
+        .adf-content .adf-md h2 { font-size: clamp(20px, 2vw, 22px); margin: 16px 0 8px 0; line-height: 1.3; }
+        .adf-content .adf-md h3 { font-size: clamp(18px, 1.8vw, 20px); margin: 14px 0 6px 0; line-height: 1.35; }
+        .adf-content .adf-md p { margin: 0 0 12px 0; }
+        .adf-content .adf-md ul, .adf-content .adf-md ol { margin: 0 0 12px 20px; }
+        .adf-content .adf-md li { margin: 6px 0; }
+        .adf-content .adf-md a { color: #059669; text-decoration: underline; }
+        .adf-content .adf-md blockquote { margin: 12px 0; padding: 10px 14px; border-left: 3px solid #10b981; color: #475569; background: #f8fafc; border-radius: 6px; }
+        .adf-content .adf-md img { max-width: 100%; height: auto; display: block; margin: 12px auto; border-radius: 8px; }
+        /* Popup placement */
+        .adf-popup { position: fixed; right: 20px; bottom: 20px; z-index: 2147483646; }
+        .adf-inline { position: relative; margin: 20px auto; }
       `;
       document.head.appendChild(style);
     }
 
-    // Simple Markdown to HTML
-    const markdownToHtml = (txt) => {
-      if (!txt) return "";
-      const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(txt);
-      if (looksLikeHtml) return txt;
+    const primaryColor = (config?.styling_theme?.primary && typeof config.styling_theme.primary === 'string')
+      ? config.styling_theme.primary
+      : '#10b981';
 
-      // Basic escapes
-      let s = txt.replace(/&/g, "&").replace(//g, ">");
+    // header gradient support (fallback to demo gradient for now)
+    const headerGradient = (() => {
+      const g = config?.header_config?.gradient;
+      if (typeof g === 'string' && g.includes('to-') && g.includes('from-')) {
+        return 'linear-gradient(135deg, #10b981, #059669)';
+      }
+      return 'linear-gradient(135deg, #10b981, #059669)';
+    })();
 
-      // Code blocks ```
-      s = s.replace(/```([\s\S]*?)```/g, (_, code) => `${code.replace(/</g, "<").replace(/>/g, ">")}`);
-
-      // Headings
-      s = s.replace(/^###\s+(.+)$/gm, "$1");
-      s = s.replace(/^##\s+(.+)$/gm, "$1");
-      s = s.replace(/^#\s+(.+)$/gm, "$1");
-
-      // Bold/Italic
-      s = s.replace(/\*\*(.+?)\*\*/g, "$1");
-      s = s.replace(/\*(.+?)\*/g, "$1");
-
-      // Links [text](url)
-      s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, `$1`);
-
-      // Blockquote
-      s = s.replace(/^\>\s+(.+)$/gm, "$1");
-
-      // Lists
-      // Ordered
-      s = s.replace(/^(?:\d+\.\s.+(?:\n|$))+?/gm, (m) => {
-        const items = m.trim().split(/\n/).map(l => l.replace(/^\d+\.\s+/, "").trim()).filter(Boolean);
-        return `${items.map(i => `${i}`).join("")}`;
-      });
-      // Unordered
-      s = s.replace(/^(?:[-*]\s.+(?:\n|$))+?/gm, (m) => {
-        const items = m.trim().split(/\n/).map(l => l.replace(/^[-*]\s+/, "").trim()).filter(Boolean);
-        return `${items.map(i => `${i}`).join("")}`;
-      });
-
-      // Paragraphs (naive)
-      s = s.split(/\n{2,}/).map(block => {
-        if (/^\s*<(h1|h2|h3|ul|ol|pre|blockquote)/.test(block)) return block;
-        return `${block.replace(/\n/g, "")}`;
-      }).join("");
-
+    // Markdown -> HTML (lightweight). If it already looks like HTML, pass through.
+    const markdownToHtml = (src = "") => {
+      if (!src) return "";
+      if (/<[a-z][\s\S]*>/i.test(src)) return src;
+      let s = src;
+      s = s.replace(/^###\s+(.+)$/gim, '<h3>$1</h3>');
+      s = s.replace(/^##\s+(.+)$/gim, '<h2>$1</h2>');
+      s = s.replace(/^#\s+(.+)$/gim, '<h1>$1</h1>');
+      s = s.replace(/\*\*(.+?)\*\*/gim, '<strong>$1</strong>');
+      s = s.replace(/\*(.+?)\*/gim, '<em>$1</em>');
+      s = s.replace(/`([^`]+)`/gim, '<code>$1</code>');
+      s = s.replace(/^>\s+(.+)$/gim, '<blockquote>$1</blockquote>');
+      // lists (basic)
+      s = s.replace(/^(\s*)-\s+(.+)$/gim, '$1<li>$2</li>');
+      s = s.replace(/(<li>.*<\/li>\n?)+/gim, '<ul>$&</ul>');
+      // links
+      s = s.replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/gim, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      // paragraphs
+      s = s
+        .split(/\n{2,}/)
+        .map((block) => (block.match(/^\s*<(h\d|ul|ol|blockquote|img|p|pre|code|table|li|ul|ol)/i) ? block : `<p>${block.trim()}</p>`))
+        .join("");
       return s;
     };
 
-    // Build slide DOM as HTML string
-    const renderSlideHtml = (slide) => {
-      const imgHtml = slide.imageUrl
-        ? ``
-        : "";
-      const sub = slide.subheadline ? `${slide.subheadline}` : "";
-      const bodyHtml = slide.body ? `${markdownToHtml(slide.body)}` : "";
-      const ctaHtml = slide.destinationUrl
-        ? `${slide.ctaText || "Learn More"}`
-        : "";
-
-      return `
-        ${imgHtml}
-        ${slide.headline}
-        ${sub}
-        ${bodyHtml}
-        ${ctaHtml}
-      `;
+    // Helpers
+    const makeArrow = (cls, label, char) => {
+      const btn = document.createElement("button");
+      btn.className = `adf-arrow ${cls}`;
+      btn.setAttribute("aria-label", label);
+      btn.innerHTML = char;
+      return btn;
     };
 
-    // Create shell
-    const overlay = document.createElement("div");
-    const modal = document.createElement("div");
-    modal.className = "adf-modal";
-    // Header
-    const header = document.createElement("div");
-    header.className = "adf-header";
-    header.innerHTML = `
-      ${headerIcon}${headerTitle}
-      ×
-    `;
-    // Frame (content area + arrows)
-    const frame = document.createElement("div");
-    frame.className = "adf-frame";
+    const makeDots = (count) => {
+      const wrap = document.createElement("div");
+      wrap.className = "adf-dots";
+      const dots = [];
+      for (let i = 0; i < count; i++) {
+        const d = document.createElement("button");
+        d.className = "adf-dot";
+        if (i === 0) d.classList.add("is-active");
+        d.setAttribute("aria-label", `Go to slide ${i + 1}`);
+        d.addEventListener("click", () => goToSlide(i));
+        wrap.appendChild(d);
+        dots.push(d);
+      }
+      return { wrap, dots };
+    };
 
-    // Content scroller
-    const content = document.createElement("div");
-    content.className = "adf-content";
-    content.setAttribute("role", "region");
-    content.setAttribute("aria-label", "Sponsored content");
+    // Build chrome
+    let overlayEl = null;
+    let rootEl = null;
 
-    // Slides container
-    const slideEls = slides.map((s, i) => {
-      const el = document.createElement("div");
-      el.className = "adf-slide" + (i === 0 ? " active" : "");
-      el.innerHTML = renderSlideHtml(s);
-      return el;
+    const headerEl = document.createElement("div");
+    headerEl.className = "adf-header";
+    headerEl.style.background = headerGradient;
+    const titleEl = document.createElement("div");
+    titleEl.className = "adf-title";
+    titleEl.innerHTML = `${config.header_config?.icon === 'TrendingUp' ? '📈' : config.header_config?.icon === 'Wine' ? '🍷' : config.header_config?.icon === 'Heart' ? '💖' : '📈'} <span>${config.header_config?.title || 'Sponsored Content'}</span>`;
+    const closeEl = document.createElement("button");
+    closeEl.className = "adf-close";
+    closeEl.setAttribute("aria-label", "Close modal");
+    closeEl.textContent = "×";
+    headerEl.appendChild(titleEl);
+    headerEl.appendChild(closeEl);
+
+    const frameEl = document.createElement("div");
+    frameEl.className = "adf-frame";
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "adf-content";
+
+    // Slides
+    const slideEls = slides.map((s, idx) => {
+      const slide = document.createElement("div");
+      slide.className = `adf-slide${idx === 0 ? " is-active" : ""}`;
+
+      const parts = [];
+      if (s.imageUrl) {
+        parts.push(`<div class="adf-media"><img src="${s.imageUrl}" alt="${(s.headline || "").replace(/"/g, '&quot;')}" loading="lazy" /></div>`);
+      }
+      const bodyHtml = markdownToHtml(s.body || "");
+      parts.push(`
+        <div class="adf-stack">
+          ${s.headline ? `<h2 class="adf-headline">${s.headline}</h2>` : ""}
+          ${s.subheadline ? `<h3 class="adf-subheadline">${s.subheadline}</h3>` : ""}
+          ${bodyHtml ? `<div class="adf-md">${bodyHtml}</div>` : ""}
+          ${s.destinationUrl ? `<a class="adf-cta" href="${s.destinationUrl}" target="_blank" rel="noopener">${s.ctaText || 'Learn More'}</a>` : ''}
+        </div>
+      `);
+      slide.innerHTML = parts.join("");
+      return slide;
     });
-    slideEls.forEach(el => content.appendChild(el));
+    slideEls.forEach((el) => contentEl.appendChild(el));
 
-    // Arrows (outside content frame)
-    const prevBtn = document.createElement("button");
-    prevBtn.className = "adf-arrow adf-prev";
-    prevBtn.setAttribute("aria-label", "Previous");
-    prevBtn.textContent = "‹";
+    const prevBtn = makeArrow("adf-prev", "Previous", "‹");
+    const nextBtn = makeArrow("adf-next", "Next", "›");
 
-    const nextBtn = document.createElement("button");
-    nextBtn.className = "adf-arrow adf-next";
-    nextBtn.setAttribute("aria-label", "Next");
-    nextBtn.textContent = "›";
+    frameEl.appendChild(prevBtn);
+    frameEl.appendChild(contentEl);
+    frameEl.appendChild(nextBtn);
 
-    // Footer (dots)
-    const footer = document.createElement("div");
-    footer.className = "adf-footer";
-    const dotsWrap = document.createElement("div");
-    dotsWrap.className = "adf-dots";
-    const dotEls = slides.map((_, i) => {
-      const b = document.createElement("button");
-      b.className = "adf-dot";
-      b.type = "button";
-      b.setAttribute("aria-label", `Go to slide ${i + 1}`);
-      if (i === 0) b.setAttribute("aria-current", "true");
-      return b;
-    });
-    dotEls.forEach(d => dotsWrap.appendChild(d));
-    footer.appendChild(dotsWrap);
+    const footerEl = document.createElement("div");
+    footerEl.className = "adf-footer";
+    const { wrap: dotsWrap, dots } = makeDots(slides.length);
+    footerEl.appendChild(dotsWrap);
 
-    // Assemble
-    frame.appendChild(content);
-    frame.appendChild(prevBtn);
-    frame.appendChild(nextBtn);
-    modal.appendChild(header);
-    modal.appendChild(frame);
-    modal.appendChild(footer);
+    const modalEl = document.createElement("div");
+    modalEl.className = "adf-modal";
+    modalEl.appendChild(headerEl);
+    modalEl.appendChild(frameEl);
+    modalEl.appendChild(footerEl);
 
-    // Insert by position
-    let root;
-    if (position === "modal") {
-      overlay.className = "adf-overlay";
-      overlay.appendChild(modal);
-      document.body.appendChild(overlay);
-    } else if (position === "popup") {
-      root = document.createElement("div");
-      root.className = "adf-popup";
-      root.appendChild(modal);
-      document.body.appendChild(root);
-    } else {
-      // inline
-      root = document.createElement("div");
-      root.style.position = "relative";
-      root.appendChild(modal);
-      if (currentScript?.parentNode) {
-        currentScript.parentNode.insertBefore(root, currentScript.nextSibling);
-      } else {
-        document.body.appendChild(root);
-      }
-    }
+    // Close/focus handling
+    const lastFocusedEl = document.activeElement;
+    let originalOverflow = document.body.style.overflow;
 
-    // Body scroll locking for modal
-    const lockBody = () => {
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
+    const closeAll = () => {
+      if (overlayEl) overlayEl.remove();
+      if (rootEl && rootEl.parentNode) rootEl.remove();
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = originalOverflow;
+      lastFocusedEl?.focus?.();
     };
-    const unlockBody = () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-    };
-    if (position === "modal") lockBody();
 
-    // Focus management (trap within modal in modal mode)
-    let previouslyFocused = document.activeElement;
-    const focusablesSelector = [
-      "a[href]",
-      "button:not([disabled])",
-      "textarea:not([disabled])",
-      "input:not([disabled])",
-      "select:not([disabled])",
-      '[tabindex]:not([tabindex="-1"])'
-    ].join(",");
-    const getFocusables = () => Array.from(modal.querySelectorAll(focusablesSelector));
-    const focusFirst = () => { const f = getFocusables()[0]; if (f) f.focus(); };
-    setTimeout(focusFirst, 0);
-
-    const handleFocusTrap = (e) => {
-      if (position !== "modal") return;
-      if (!modal.contains(e.target)) {
-        e.stopPropagation();
-        focusFirst();
-      }
-    };
-    document.addEventListener("focusin", handleFocusTrap);
-
-    // Close logic
-    const teardown = () => {
-      document.removeEventListener("keydown", keyHandler);
-      document.removeEventListener("focusin", handleFocusTrap);
-      window.removeEventListener("resize", onResize);
-      if (position === "modal") unlockBody();
-      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
-      if (root && root.parentNode) root.parentNode.removeChild(root);
-      if (previouslyFocused && previouslyFocused.focus) {
-        try { previouslyFocused.focus(); } catch {}
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") return closeAll();
+      if (e.key === "ArrowLeft") return goToSlide(currentIndex - 1);
+      if (e.key === "ArrowRight") return goToSlide(currentIndex + 1);
+      if (overlayEl && e.key === 'Tab') {
+        const focusables = modalEl.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     };
 
-    const closeBtn = header.querySelector(".adf-close");
-    closeBtn?.addEventListener("click", teardown);
-    if (position === "modal") {
-      overlay.addEventListener("click", (e) => { if (e.target === overlay) teardown(); });
-    }
-
-    // State + navigation
-    let current = 0;
-    const total = slides.length;
-
-    const setActive = (idx) => {
-      if (idx < 0 || idx >= total) return;
-      // hide old
-      slideEls[current].classList.remove("active");
-      // show new
-      current = idx;
-      slideEls[current].classList.add("active");
-      // update dots
-      dotEls.forEach((d, i) => {
-        if (i === current) d.setAttribute("aria-current", "true");
-        else d.removeAttribute("aria-current");
-      });
-      // reset scroll in content
-      content.scrollTop = 0;
-      // enable/disable arrows (no wrap)
-      prevBtn.disabled = current === 0;
-      nextBtn.disabled = current === total - 1;
-    };
-
-    prevBtn.addEventListener("click", () => setActive(current - 1));
-    nextBtn.addEventListener("click", () => setActive(current + 1));
-    dotEls.forEach((d, i) => d.addEventListener("click", () => setActive(i)));
-
-    // Keyboard support
-    const keyHandler = (e) => {
-      if (e.key === "Escape") { teardown(); return; }
-      if (e.key === "ArrowLeft") { e.preventDefault(); setActive(current - 1); }
-      if (e.key === "ArrowRight") { e.preventDefault(); setActive(current + 1); }
-    };
-    document.addEventListener("keydown", keyHandler);
-
-    // Touch swipe (ignore when vertical scrolling dominates)
-    let touchStartX = 0, touchStartY = 0, touching = false;
-    frame.addEventListener("touchstart", (e) => {
+    // Touch swipe
+    let touchStartX = 0, touchStartY = 0;
+    frameEl.addEventListener("touchstart", (e) => {
       const t = e.changedTouches[0];
-      touchStartX = t.clientX;
-      touchStartY = t.clientY;
-      touching = true;
+      touchStartX = t.clientX; touchStartY = t.clientY;
     }, { passive: true });
-    frame.addEventListener("touchend", (e) => {
-      if (!touching) return;
-      touching = false;
+    frameEl.addEventListener("touchend", (e) => {
       const t = e.changedTouches[0];
       const dx = t.clientX - touchStartX;
       const dy = t.clientY - touchStartY;
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-        if (dx < 0) setActive(current + 1);
-        else setActive(current - 1);
+        if (dx < 0) goToSlide(currentIndex + 1); else goToSlide(currentIndex - 1);
       }
-    });
+    }, { passive: true });
 
-    // Initial arrow disabled state
-    prevBtn.disabled = true;
-    nextBtn.disabled = total <= 1;
+    // Positioning
+    if (position === "modal") {
+      overlayEl = document.createElement("div");
+      overlayEl.className = "adf-overlay";
+      overlayEl.addEventListener("click", (e) => { if (e.target === overlayEl) closeAll(); });
+      document.addEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "hidden";
+      closeEl.addEventListener("click", closeAll);
+      overlayEl.appendChild(modalEl);
+      document.body.appendChild(overlayEl);
+      setTimeout(() => (modalEl.querySelector("button, a") || modalEl).focus?.(), 0);
+    } else if (position === "popup") {
+      rootEl = document.createElement("div");
+      rootEl.className = "adf-popup";
+      closeEl.addEventListener("click", closeAll);
+      rootEl.appendChild(modalEl);
+      document.body.appendChild(rootEl);
+      document.addEventListener("keydown", onKeyDown);
+    } else { // inline
+      rootEl = document.createElement("div");
+      rootEl.className = "adf-inline";
+      closeEl.addEventListener("click", closeAll);
+      rootEl.appendChild(modalEl);
+      const scriptTag = document.currentScript;
+      if (scriptTag && scriptTag.parentNode) {
+        scriptTag.parentNode.insertBefore(rootEl, scriptTag.nextSibling);
+      } else {
+        document.body.appendChild(rootEl);
+      }
+      document.addEventListener("keydown", onKeyDown);
+    }
 
-    // Keep outer shell balanced on resize (no layout shift within clamps)
-    const onResize = () => {
-      // No-op placeholder: clamps handled via CSS; we keep for future tuning
+    // Navigation
+    let currentIndex = 0;
+    const setDisabledStates = () => {
+      prevBtn.disabled = currentIndex <= 0;
+      nextBtn.disabled = currentIndex >= slides.length - 1;
     };
-    window.addEventListener("resize", onResize);
+    const updateDots = () => {
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === currentIndex));
+    };
+    const updateSlides = () => {
+      slideEls.forEach((el, i) => {
+        el.classList.toggle("is-active", i === currentIndex);
+      });
+      // reset internal scroll
+      contentEl.scrollTop = 0;
+    };
+    const goToSlide = (idx) => {
+      const clamped = Math.max(0, Math.min(slides.length - 1, idx));
+      if (clamped === currentIndex) return;
+      currentIndex = clamped;
+      updateSlides();
+      updateDots();
+      setDisabledStates();
+    };
 
-    console.log("[ScrollFrame v2] render completed successfully");
-  } catch (error) {
-    console.error("[ScrollFrame v2] fatal error:", error);
+    prevBtn.addEventListener("click", () => goToSlide(currentIndex - 1));
+    nextBtn.addEventListener("click", () => goToSlide(currentIndex + 1));
+
+    // Initialize UI state
+    setDisabledStates();
+    updateDots();
+    console.log(`[ScrollFrame v2] loaded ${slides.length} slide(s)`);
+  } catch (err) {
+    console.error("[ScrollFrame v2] error:", err);
   }
 })();
-```
