@@ -12,7 +12,6 @@
 
     if (!idKey || !idValue) {
       console.error("[ScrollFrame v2] No data-embed-id or data-unit-id found on script tag");
-      // Visible inline error so it's obvious in tests
       const errorDiv = document.createElement("div");
       errorDiv.style.cssText = `
         color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 12px;
@@ -82,63 +81,239 @@
 
     console.info('[ScrollFrame] slides', slides.length, { layout: config?.layout, hasBody: !!slides[0]?.body, bodyLength: slides[0]?.body?.length || 0, textColor: config?.styling_theme?.text, mode: 'embed', position });
 
-    // Styles injection (idempotent)
+    // Enhanced styles injection with comprehensive overrides
     const styleId = "adf-scrollframe-css";
     if (!document.getElementById(styleId)) {
       const style = document.createElement("style");
       style.id = styleId;
       style.textContent = `
-        .adf-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2147483646; display: grid; place-items: center; padding: 20px; }
-        .adf-modal { width: clamp(320px, 90vw, 900px); height: clamp(480px, 80vh, 720px); background: #fff; color: #0f172a; border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,.35); display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif; }
-        .adf-header { background: linear-gradient(135deg, #10b981, #059669); color: #fff; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .adf-title { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-        .adf-close { background: transparent; border: none; color: #fff; font-size: 22px; cursor: pointer; line-height: 1; }
-        .adf-frame { position: relative; overflow: visible; height: 100%; display: grid; }
-        .adf-content { overflow-y: auto; max-height: calc(100vh - 200px); padding: 16px 20px; scrollbar-width: thin; scrollbar-color: rgba(17,24,39,.3) transparent; }
-        .adf-content::-webkit-scrollbar { width: 8px; height: 8px; }
-        .adf-content::-webkit-scrollbar-track { background: transparent; }
-        .adf-content::-webkit-scrollbar-thumb { background: rgba(17,24,39,.3); border-radius: 999px; }
-        .adf-footer { height: 56px; display: grid; place-items: center; border-top: 1px solid #e5e7eb; }
-        .adf-dots { display: flex; gap: 8px; align-items: center; justify-content: center; }
-        .adf-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; border: none; cursor: pointer; }
-        .adf-dot.is-active { background: #10b981; }
-        .adf-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 999px; border: 1px solid #e5e7eb; background: #fff; color: #111827; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
-        .adf-prev { left: -20px; }
-        .adf-next { right: -20px; }
-        .adf-arrow[disabled] { opacity: .5; cursor: not-allowed; }
-        .adf-slide { display: none; height: 100%; }
-        .adf-slide.is-active { display: block; }
-        .adf-media { width: 100%; aspect-ratio: 16/10; background: #f3f4f6; border-radius: 12px; overflow: hidden; }
-        .adf-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .adf-stack { padding-top: 14px; }
-        .adf-headline { margin: 0 0 8px 0; font-size: 20px; line-height: 1.3; font-weight: 700; color: #0f172a !important; }
-        .adf-subheadline { margin: 0 0 12px 0; font-size: 16px; line-height: 1.35; color: #334155 !important; font-weight: 600; }
-        .adf-cta { margin-top: 16px; display: inline-block; padding: 12px 18px; border-radius: 10px; background: #10b981; color: #fff; text-decoration: none; font-weight: 600; }
-        /* Enhanced body text visibility with !important overrides */
-        .adf-content, .adf-content p, .adf-content .adf-body { color: #111 !important; line-height: 1.6; font-size: 16px; }
+        .adf-overlay { 
+          position: fixed !important; 
+          inset: 0 !important; 
+          background: rgba(0,0,0,.5) !important; 
+          z-index: 2147483646 !important; 
+          display: grid !important; 
+          place-items: center !important; 
+          padding: 20px !important; 
+        }
+        
+        .adf-modal { 
+          width: clamp(320px, 90vw, 900px) !important; 
+          height: clamp(480px, 80vh, 720px) !important; 
+          max-height: 90vh !important;
+          background: #fff !important; 
+          color: #0f172a !important; 
+          border-radius: 16px !important; 
+          box-shadow: 0 30px 80px rgba(0,0,0,.35) !important; 
+          display: grid !important; 
+          grid-template-rows: auto 1fr auto !important; 
+          overflow: hidden !important; 
+          font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important; 
+        }
+        
+        .adf-header { 
+          background: linear-gradient(135deg, #10b981, #059669) !important; 
+          color: #fff !important; 
+          height: 64px !important; 
+          display: flex !important; 
+          align-items: center !important; 
+          justify-content: space-between !important; 
+          padding: 0 20px !important; 
+        }
+        
+        .adf-title { 
+          font-weight: 600 !important; 
+          font-size: 16px !important; 
+          display: flex !important; 
+          align-items: center !important; 
+          gap: 8px !important; 
+        }
+        
+        .adf-close { 
+          background: transparent !important; 
+          border: none !important; 
+          color: #fff !important; 
+          font-size: 22px !important; 
+          cursor: pointer !important; 
+          line-height: 1 !important; 
+        }
+        
+        .adf-frame { 
+          position: relative !important; 
+          overflow: visible !important; 
+          height: 100% !important; 
+          display: grid !important; 
+        }
+        
+        .adf-content { 
+          overflow-y: auto !important; 
+          max-height: calc(100vh - 200px) !important; 
+          padding: 16px 20px !important; 
+          scrollbar-width: thin !important; 
+          scrollbar-color: rgba(17,24,39,.3) transparent !important; 
+          color: #111827 !important;
+          line-height: 1.6 !important;
+        }
+        
+        .adf-content::-webkit-scrollbar { width: 8px !important; height: 8px !important; }
+        .adf-content::-webkit-scrollbar-track { background: transparent !important; }
+        .adf-content::-webkit-scrollbar-thumb { background: rgba(17,24,39,.3) !important; border-radius: 999px !important; }
+        
+        .adf-footer { 
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          padding: 16px 20px !important;
+          background: #f9fafb !important;
+          border-top: 1px solid #e5e7eb !important;
+        }
+        
+        .adf-dots { 
+          display: flex !important; 
+          gap: 8px !important; 
+          align-items: center !important; 
+          justify-content: center !important; 
+        }
+        
+        .adf-dot { 
+          width: 8px !important; 
+          height: 8px !important; 
+          border-radius: 50% !important; 
+          background: #d1d5db !important; 
+          border: none !important; 
+          cursor: pointer !important; 
+        }
+        
+        .adf-dot.is-active { background: #10b981 !important; }
+        
+        /* FIXED: Position arrows inside modal content area */
+        .adf-arrow { 
+          display: grid !important;
+          place-items: center !important;
+          position: absolute !important; 
+          top: 50% !important; 
+          transform: translateY(-50%) !important; 
+          width: 40px !important; 
+          height: 40px !important; 
+          border-radius: 50% !important; 
+          border: 2px solid #e5e7eb !important; 
+          background: white !important; 
+          color: #111827 !important; 
+          cursor: pointer !important; 
+          box-shadow: 0 6px 18px rgba(0,0,0,0.12) !important; 
+          z-index: 1000 !important;
+          font-size: 18px !important;
+          font-weight: bold !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        
+        .adf-arrow:hover {
+          background: #f9fafb !important;
+          border-color: #d1d5db !important;
+          transform: translateY(-50%) scale(1.05) !important;
+        }
+        
+        .adf-arrow:disabled {
+          opacity: 0.4 !important;
+          cursor: not-allowed !important;
+        }
+        
+        /* FIXED: Position arrows inside the modal */
+        .adf-prev { left: 20px !important; }
+        .adf-next { right: 20px !important; }
+        
+        .adf-slide { display: none !important; height: 100% !important; }
+        .adf-slide.is-active { display: block !important; }
+        
+        .adf-media { 
+          width: 100% !important; 
+          aspect-ratio: 16/10 !important; 
+          background: #f3f4f6 !important; 
+          border-radius: 12px !important; 
+          overflow: hidden !important; 
+        }
+        
+        .adf-media img { 
+          width: 100% !important; 
+          height: 100% !important; 
+          object-fit: cover !important; 
+          display: block !important; 
+        }
+        
+        .adf-stack { padding-top: 14px !important; }
+        
+        .adf-headline { 
+          margin: 0 0 8px 0 !important; 
+          font-size: 20px !important; 
+          line-height: 1.3 !important; 
+          font-weight: 700 !important; 
+          color: #0f172a !important; 
+        }
+        
+        .adf-subheadline { 
+          margin: 0 0 12px 0 !important; 
+          font-size: 16px !important; 
+          line-height: 1.35 !important; 
+          color: #334155 !important; 
+          font-weight: 600 !important; 
+        }
+        
+        .adf-cta { 
+          margin-top: 16px !important; 
+          display: inline-block !important; 
+          padding: 12px 18px !important; 
+          border-radius: 10px !important; 
+          background: #10b981 !important; 
+          color: #fff !important; 
+          text-decoration: none !important; 
+          font-weight: 600 !important; 
+        }
+        
+        /* Enhanced body text visibility with comprehensive overrides */
+        .adf-content, 
+        .adf-content p, 
+        .adf-content .adf-body { 
+          color: #111827 !important; 
+          line-height: 1.6 !important; 
+          font-size: 16px !important; 
+        }
+        
         .adf-content .adf-body { color: #1f2937 !important; }
-        .adf-content .adf-body h1, .adf-content .adf-body h2, .adf-content .adf-body h3 { color: #111827 !important; }
-        .adf-content .adf-body p { color: #374151 !important; margin-bottom: 12px; }
+        .adf-content .adf-body h1, 
+        .adf-content .adf-body h2, 
+        .adf-content .adf-body h3 { color: #111827 !important; }
+        .adf-content .adf-body p { color: #374151 !important; margin-bottom: 12px !important; }
         .adf-content .adf-body strong { color: #111827 !important; }
         .adf-content .adf-body em { color: #4b5563 !important; }
-        .adf-content .adf-body ul, .adf-content .adf-body ol { color: #374151 !important; }
+        .adf-content .adf-body ul, 
+        .adf-content .adf-body ol { color: #374151 !important; }
         .adf-content .adf-body li { color: #374151 !important; }
-        .adf-content .adf-body blockquote { color: #6b7280 !important; background: #f9fafb !important; border-left: 3px solid #10b981 !important; padding: 12px 16px !important; margin: 16px 0 !important; border-radius: 6px; }
-        .adf-content .adf-body a { color: #059669 !important; text-decoration: underline; }
-        /* Markdown typography */
-        .adf-content .adf-md { font-size: 16px; line-height: 1.6; color: #1f2937 !important; }
-        .adf-content .adf-md h1 { font-size: clamp(24px, 2.2vw, 28px); margin: 0 0 10px 0; line-height: 1.25; color: #111827 !important; }
-        .adf-content .adf-md h2 { font-size: clamp(20px, 2vw, 22px); margin: 16px 0 8px 0; line-height: 1.3; color: #111827 !important; }
-        .adf-content .adf-md h3 { font-size: clamp(18px, 1.8vw, 20px); margin: 14px 0 6px 0; line-height: 1.35; color: #111827 !important; }
-        .adf-content .adf-md p { margin: 0 0 12px 0; color: #374151 !important; }
-        .adf-content .adf-md ul, .adf-content .adf-md ol { margin: 0 0 12px 20px; color: #374151 !important; }
-        .adf-content .adf-md li { margin: 6px 0; color: #374151 !important; }
-        .adf-content .adf-md a { color: #059669 !important; text-decoration: underline; }
-        .adf-content .adf-md blockquote { margin: 12px 0; padding: 10px 14px; border-left: 3px solid #10b981; color: #475569 !important; background: #f8fafc; border-radius: 6px; }
-        .adf-content .adf-md img { max-width: 100%; height: auto; display: block; margin: 12px auto; border-radius: 8px; }
-        /* Popup placement */
-        .adf-popup { position: fixed; right: 20px; bottom: 20px; z-index: 2147483646; }
-        .adf-inline { position: relative; margin: 20px auto; }
+        .adf-content .adf-body blockquote { 
+          color: #6b7280 !important; 
+          background: #f9fafb !important; 
+          border-left: 3px solid #10b981 !important; 
+          padding: 12px 16px !important; 
+          margin: 16px 0 !important; 
+          border-radius: 6px !important; 
+        }
+        .adf-content .adf-body a { 
+          color: #059669 !important; 
+          text-decoration: underline !important; 
+        }
+        
+        /* Popup and inline positioning */
+        .adf-popup { 
+          position: fixed !important; 
+          right: 20px !important; 
+          bottom: 20px !important; 
+          z-index: 2147483646 !important; 
+        }
+        
+        .adf-inline { 
+          position: relative !important; 
+          margin: 20px auto !important; 
+        }
       `;
       document.head.appendChild(style);
     }
