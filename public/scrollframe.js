@@ -99,7 +99,7 @@
         
         .adf-modal { 
           width: clamp(320px, 90vw, 900px) !important; 
-          height: clamp(480px, 80vh, 720px) !important; 
+          height: clamp(320px, 90vh, 800px) !important; 
           max-height: 90vh !important;
           background: #fff !important; 
           color: #0f172a !important; 
@@ -146,8 +146,8 @@
         }
         
         .adf-content { 
+          height: 100% !important;
           overflow-y: auto !important; 
-          max-height: calc(100vh - 200px) !important; 
           padding: 16px 20px !important; 
           scrollbar-width: thin !important; 
           scrollbar-color: rgba(17,24,39,.3) transparent !important; 
@@ -228,17 +228,21 @@
         
         .adf-media { 
           width: 100% !important; 
-          aspect-ratio: 16/10 !important; 
+          max-height: 60vh !important;
           background: #f3f4f6 !important; 
           border-radius: 12px !important; 
           overflow: hidden !important; 
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
         
         .adf-media img { 
-          width: 100% !important; 
-          height: 100% !important; 
-          object-fit: cover !important; 
+          max-width: 100% !important; 
+          height: auto !important; 
+          object-fit: contain !important; 
           display: block !important; 
+          margin: 0 auto !important;
         }
         
         .adf-stack { padding-top: 14px !important; }
@@ -313,6 +317,31 @@
         .adf-inline { 
           position: relative !important; 
           margin: 20px auto !important; 
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .adf-overlay { 
+            padding: 10px !important; 
+          }
+          
+          .adf-modal { 
+            width: clamp(280px, 95vw, 900px) !important; 
+            height: clamp(300px, 95vh, 800px) !important; 
+          }
+          
+          .adf-content { 
+            padding: 12px 16px !important; 
+          }
+          
+          .adf-prev { left: 10px !important; }
+          .adf-next { right: 10px !important; }
+          
+          .adf-arrow { 
+            width: 32px !important; 
+            height: 32px !important; 
+            font-size: 14px !important; 
+          }
         }
       `;
       document.head.appendChild(style);
