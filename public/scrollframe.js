@@ -109,6 +109,7 @@
           flex-direction: column !important; 
           overflow: hidden !important; 
           font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important; 
+          min-height: 0 !important; 
         }
         
         .adf-header { 
@@ -145,17 +146,21 @@
           flex: 1 !important; 
           display: flex !important; 
           flex-direction: column !important; 
+          min-height: 0 !important; 
         }
         
         .adf-content { 
           flex: 1 !important;
           overflow-y: auto !important; 
+          overflow-x: hidden !important;
           padding: 16px 20px !important; 
           scrollbar-width: thin !important; 
           scrollbar-color: rgba(17,24,39,.3) transparent !important; 
           color: #111827 !important;
           line-height: 1.6 !important;
           min-height: 0 !important; /* Force flex child to shrink */
+          -webkit-overflow-scrolling: touch !important;
+          scrollbar-gutter: stable both-edges !important;
         }
         
         .adf-content::-webkit-scrollbar { width: 8px !important; height: 8px !important; }
@@ -227,12 +232,12 @@
         .adf-prev { left: 20px !important; }
         .adf-next { right: 20px !important; }
         
-        .adf-slide { display: none !important; height: 100% !important; }
+        .adf-slide { display: none !important; }
         .adf-slide.is-active { display: block !important; }
         
         .adf-media { 
           width: 100% !important; 
-          max-height: 45vh !important; /* Optimal height for responsive scaling */
+          max-height: 50vh !important; /* Balanced height for responsive scaling */
           background: #f3f4f6 !important; 
           border-radius: 12px !important; 
           overflow: hidden !important; 
