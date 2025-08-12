@@ -98,15 +98,15 @@
         }
         
         .adf-modal { 
-          width: clamp(320px, 90vw, 900px) !important; 
-          height: clamp(320px, 90vh, 800px) !important; 
+          width: 100% !important;
+          max-width: 672px !important; /* max-w-2xl */
           max-height: 90vh !important;
           background: #fff !important; 
           color: #0f172a !important; 
           border-radius: 16px !important; 
           box-shadow: 0 30px 80px rgba(0,0,0,.35) !important; 
-          display: grid !important; 
-          grid-template-rows: auto 1fr auto !important; 
+          display: flex !important; 
+          flex-direction: column !important; 
           overflow: hidden !important; 
           font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important; 
         }
@@ -119,6 +119,7 @@
           align-items: center !important; 
           justify-content: space-between !important; 
           padding: 0 20px !important; 
+          flex-shrink: 0 !important; 
         }
         
         .adf-title { 
@@ -140,19 +141,21 @@
         
         .adf-frame { 
           position: relative !important; 
-          overflow: visible !important; 
-          height: 100% !important; 
-          display: grid !important; 
+          overflow: hidden !important; 
+          flex: 1 !important; 
+          display: flex !important; 
+          flex-direction: column !important; 
         }
         
         .adf-content { 
-          height: 100% !important;
+          flex: 1 !important;
           overflow-y: auto !important; 
           padding: 16px 20px !important; 
           scrollbar-width: thin !important; 
           scrollbar-color: rgba(17,24,39,.3) transparent !important; 
           color: #111827 !important;
           line-height: 1.6 !important;
+          min-height: 0 !important; /* Force flex child to shrink */
         }
         
         .adf-content::-webkit-scrollbar { width: 8px !important; height: 8px !important; }
@@ -166,6 +169,7 @@
           padding: 16px 20px !important;
           background: #f9fafb !important;
           border-top: 1px solid #e5e7eb !important;
+          flex-shrink: 0 !important;
         }
         
         .adf-dots { 
@@ -228,7 +232,7 @@
         
         .adf-media { 
           width: 100% !important; 
-          max-height: 60vh !important;
+          max-height: 45vh !important; /* Optimal height for responsive scaling */
           background: #f3f4f6 !important; 
           border-radius: 12px !important; 
           overflow: hidden !important; 
@@ -319,19 +323,23 @@
           margin: 20px auto !important; 
         }
         
-        /* Responsive adjustments */
+        /* Responsive adjustments - match demo exactly */
         @media (max-width: 768px) {
           .adf-overlay { 
-            padding: 10px !important; 
+            padding: 1.5rem !important; 
           }
           
           .adf-modal { 
-            width: clamp(280px, 95vw, 900px) !important; 
-            height: clamp(300px, 95vh, 800px) !important; 
+            width: calc(100vw - 3rem) !important; 
+            max-height: calc(100vh - 6rem) !important; 
           }
           
           .adf-content { 
             padding: 12px 16px !important; 
+          }
+          
+          .adf-media { 
+            max-height: 35vh !important; /* Smaller on mobile to prevent overflow */
           }
           
           .adf-prev { left: 10px !important; }
