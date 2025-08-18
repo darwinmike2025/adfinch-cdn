@@ -48,6 +48,8 @@
             imageUrl: s.imageUrl || "",
             destinationUrl: s.destinationUrl || "",
             ctaText: s.ctaText || "Learn More",
+            tracking_link: s.tracking_link || null,
+            link_id: s.link_id || null,
           }))
           .filter((s) => s.headline);
       } else if (config.headline) {
@@ -461,7 +463,10 @@
           ${s.headline ? `<h2 class="adf-headline">${s.headline}</h2>` : ""}
           ${s.subheadline ? `<h3 class="adf-subheadline">${s.subheadline}</h3>` : ""}
           ${bodyHtml ? `<div class="adf-body">${bodyHtml}</div>` : ""}
-          ${s.destinationUrl ? `<a class="adf-cta" href="${s.destinationUrl}" target="_blank" rel="noopener">${s.ctaText || 'Learn More'}</a>` : ''}
+          ${s.tracking_link 
+  ? `<a class="adf-cta" href="${s.tracking_link}" target="_blank" rel="noopener">${s.ctaText || 'Learn More'}</a>` 
+  : (() => { console.warn(`[ScrollFrame] CTA hidden for slide ${idx} (${s.headline}) - missing tracking_link`); return '' })()
+}
         </div>
       `);
       slide.innerHTML = parts.join("");
