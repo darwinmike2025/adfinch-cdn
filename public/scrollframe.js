@@ -425,6 +425,18 @@
       return { wrap, dots };
     };
 
+    // Ensure CTA anchor exists (target _blank) even if DOM re-renders (SPA)
+    function bindCTAObserver(root) {
+      const ok = () => {
+        const a = root.querySelector('.scrollframe-cta');
+        return a && a.href && a.target === '_blank';
+      };
+      if (!ok()) {
+        const mo = new MutationObserver(() => ok() && mo.disconnect());
+        mo.observe(root, { childList: true, subtree: true });
+      }
+    }
+
     // Build chrome
     let overlayEl = null;
     let rootEl = null;
@@ -463,16 +475,41 @@
           ${s.headline ? `<h2 class="adf-headline">${s.headline}</h2>` : ""}
           ${s.subheadline ? `<h3 class="adf-subheadline">${s.subheadline}</h3>` : ""}
           ${bodyHtml ? `<div class="adf-body">${bodyHtml}</div>` : ""}
-          ${s.tracking_link 
-  ? `<a class="adf-cta" href="${s.tracking_link}" target="_blank" rel="noopener">${s.ctaText || 'Learn More'}</a>` 
-  : (() => { console.warn(`[ScrollFrame] CTA hidden for slide ${idx} (${s.headline}) - missing tracking_link`); return '' })()
-}
+          ${s.tracking_link
+            ? `<a class="adf-cta scrollframe-cta" href="${s.destinationUrl}" target="_blank" rel="noopener noreferrer" data-tracking="${s.tracking_link}">${s.ctaText || 'Learn More'}</a>`
+            : ""
+          }
         </div>
       `);
       slide.innerHTML = parts.join("");
       return slide;
     });
+
     slideEls.forEach((el) => contentEl.appendChild(el));
+
+    // Global click capture: fire beacon early and allow default new-tab navigation
+    document.addEventListener(
+      "click",
+      (e) => {
+        const t = e.target;
+        const a = t && t.closest ? t.closest('a.scrollframe-cta') : null;
+        if (a) {
+          e.stopPropagation();
+          const tracking = a.getAttribute('data-tracking');
+          if (tracking) {
+            try {
+              if (navigator.sendBeacon) {
+                navigator.sendBeacon(tracking);
+              } else {
+                const i = new Image();
+                i.src = tracking + (tracking.includes('?') ? '&' : '?') + 't=' + Date.now();
+              }
+            } catch (_) {}
+          }
+        }
+      },
+      { capture: true }
+    );
 
     const prevBtn = makeArrow("adf-prev", "Previous", "‹");
     const nextBtn = makeArrow("adf-next", "Next", "›");
@@ -544,6 +581,7 @@
       overlayEl.appendChild(modalEl);
       document.body.appendChild(overlayEl);
       setTimeout(() => (modalEl.querySelector("button, a") || modalEl).focus?.(), 0);
+      bindCTAObserver(modalEl);
     } else if (position === "popup") {
       rootEl = document.createElement("div");
       rootEl.className = "adf-popup";
@@ -551,6 +589,7 @@
       rootEl.appendChild(modalEl);
       document.body.appendChild(rootEl);
       document.addEventListener("keydown", onKeyDown);
+      bindCTAObserver(modalEl);
     } else { // inline
       rootEl = document.createElement("div");
       rootEl.className = "adf-inline";
@@ -563,6 +602,7 @@
         document.body.appendChild(rootEl);
       }
       document.addEventListener("keydown", onKeyDown);
+      bindCTAObserver(modalEl);
     }
 
     // Navigation
