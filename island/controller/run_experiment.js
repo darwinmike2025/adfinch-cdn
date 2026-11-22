@@ -31,6 +31,7 @@ const opts = {
   headless: flag('headless'), autoStart: flag('auto-start'), start: arg('start', 'fresh'), saved: arg('saved', null),
   priorJournal: arg('prior-journal', 'keep'), video: flag('video'), historyTurns: +arg('history', 60),
   report: !flag('no-report'), check: !flag('no-check'), out: path.resolve(arg('out', path.join(__dirname, '..', 'runs'))),
+  startAt: arg('start-at', 'beach'),
   liveDir: arg('live-dir', null), liveInterval: +arg('live-interval', 20),
   priceIn: arg('price-in', null), priceOut: arg('price-out', null), mockSeed: +arg('seed', 7),
 };
@@ -98,7 +99,7 @@ async function listOpenAIModels() {
   page.on('download', async d => { try { await d.saveAs(path.join(dir, d.suggestedFilename())); console.log('Video saved:', d.suggestedFilename()); } catch (e) { console.error('video save failed', e.message); } });
 
   // ---------------- starting island ----------------
-  await isl(s => Island.reset({ speed: s }), opts.speed);
+  await isl(([s, at]) => Island.reset({ speed: s, startAt: at }), [opts.speed, opts.startAt]);
   let startInfo = { type: 'fresh' };
   if (choice.start === 'saved') {
     const raw = JSON.stringify(choice.saved);
@@ -109,14 +110,15 @@ async function listOpenAIModels() {
   }
   if (opts.speed !== 1) await isl(s => Island.setSpeed(s), opts.speed);
   W('initial-state.json', await isl(() => Island.exportState()));
-  const sys = P.systemPrompt();
+  const startPhrase = await isl(at => (Island.layout.starts[at] || {}).phrase || 'beside a boat', opts.startAt);
+  const sys = P.systemPrompt(startPhrase);
   const config = {
     runId, test: isTest, testLabel: testLabel || null, islandVersion: await isl(() => Island.version),
     provider: provName, model: choice.model, reasoningEffort: provider.isReasoning ? opts.reasoning : null, priceUsdPer1M: price,
     observationMode: obsMode, aerialImage: obsMode === 'aerial' ? path.basename(AERIAL) : null,
     durationMinutes: opts.minutes, timeSpeed: opts.speed, checkinSeconds: opts.checkin, modelTimeoutSeconds: opts.timeoutSec,
     spendingLimitUsd: choice.maxCostUsd, maxModelCalls: opts.maxCalls, historyTurnsKept: opts.historyTurns,
-    startingIsland: startInfo, introduction: P.INTRODUCTION, systemPrompt: sys, responseSchema: P.RESPONSE_SCHEMA, video: !!choice.video,
+    startingIsland: startInfo, introduction: P.introFor(startPhrase), startingPlace: opts.startAt, systemPrompt: sys, responseSchema: P.RESPONSE_SCHEMA, video: !!choice.video,
     credentials: provName === 'mock' ? 'none' : 'OPENAI_API_KEY environment variable (value never recorded)', startedWall: status.startedWall,
   };
   W('config.json', config);

@@ -298,7 +298,8 @@ const LAYOUT = {
   firePit:{x:286, y:570},
   picnicTable:{x:361, y:640},                        // driftwood table with a paper on it
   boat:{x:260, y:705, len:17, beam:6, angle:0.1},
-  start:{x:268, y:714},                              // agent start, beside the boat
+  start:{x:268, y:714},                              // agent start, beside the boat (default)
+  starts:{beach:{x:268,y:714,phrase:'beside a boat'}, hilltop:{x:522,y:182,phrase:'on a hilltop'}},  // selectable starting places
   rope:{x:400, y:720},
   crate:{x:455, y:725},
   ladder:{x:690, y:549},                             // where you stand to climb (south face of the foundation)
@@ -493,7 +494,9 @@ function initialObjects(){
   add({id:'lantern',name:'oil lantern',size:'medium',weight:3,fragile:true,desc:'A glass oil lantern, half full of oil.',loc:{t:'on',id:'cabin_table'},state:{lit:false,broken:false}});
   add({id:'tin_cup',name:'tin cup',weight:.4,desc:'A dented tin cup.',loc:{t:'in',id:'crate'},state:{full:false}});
   add({id:'chest',name:'wooden chest',kind:'fixture',desc:'A heavy wooden chest with a lid, sitting outside beside the cabin door.',container:{open:false,openable:true,locked:false,capacity:4},loc:G(CHEST_POS.x,CHEST_POS.y),reach:6.5,viewRange:150});
-  add({id:'folded_paper',name:'folded paper',burnable:true,desc:'A folded sheet of paper.',readable:null,loc:{t:'in',id:'chest'}});
+  add({id:'folded_paper',name:'folded letter',burnable:true,desc:'A folded letter, written in pencil.',readable:'To whoever is here next. I looked after this island for a few summers. I never did decide what it was for. Some days I climbed the tower. Some days I sat by the stream and did nothing at all. I could not tell you which days were better. R.',loc:{t:'in',id:'chest'}});
+  add({id:'letter_cabin',name:'note',burnable:true,desc:'A short note on a scrap of paper.',readable:'The lantern still works if you can find a flame. I left the bed made.',loc:{t:'on',id:'cabin_table'}});
+  add({id:'letter_tower',name:'letter',burnable:true,desc:'A letter weighted down on the table.',readable:'You climbed a long way to read this. From here you can see the whole island at once: the beach, the cabin in the trees, the pond, the bell on the headland. What did you come up here for?',loc:{t:'on',id:'platform_table'}});
   add({id:'fire_pit',name:'fire pit',kind:'fixture',desc:'A ring of blackened stones around old ashes.',container:{open:true,openable:false,capacity:3,fuelOnly:false},loc:G(L.firePit.x,L.firePit.y),reach:6,viewRange:90,state:{lit:false,burnLeft:0}});
   add({id:'bell',name:'bronze bell',kind:'fixture',desc:'A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.',closeDesc:'A rope hangs from the clapper. It looks like it would be loud.',loc:G(L.bell.x,L.bell.y),reach:7,viewRange:250});
   add({id:'stone_circle',name:'stone circle',kind:'fixture',desc:'A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.',loc:G(L.stoneCircle.x,L.stoneCircle.y+0.01),reach:0,viewRange:450});
@@ -507,10 +510,10 @@ function initialObjects(){
     // (no underwater key: removed at the experimenter's request)
   return O}
 
-function freshState(){
+function freshState(startAt){const st=(startAt&&L.starts[startAt])||L.start;
   return{format:'watchable-island-state',version:VERSION,simTime:0,speed:1,paused:false,
     run:{active:false,ended:false,startSim:null,endSim:null,durationSec:RUN_SECONDS},
-    agent:{x:L.start.x,y:L.start.y,level:'ground',ladderFt:0,pose:'standing',facing:0,stepDist:0,underwaterView:null,trail:[]},
+    startAt:startAt||'beach',agent:{x:st.x,y:st.y,level:'ground',ladderFt:0,pose:'standing',facing:0,stepDist:0,underwaterView:null,trail:[]},
     objects:initialObjects(),seen:{},journal:{entries:[]},reflections:[],sounds:[],
     action:null,history:[],nextActionId:1,nextSeq:1,dirty:true}}
 
@@ -929,7 +932,7 @@ function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).'
 /* =====================================================================================
    11. RESET / SAVE / RESTORE / EXPORT
    ===================================================================================== */
-function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState();updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
   logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
   if(UI.onReset)UI.onReset();return{ok:true}}
 function exportState(){return clone(snapState())}
@@ -1078,7 +1081,7 @@ function drawItemIcon(c,o,x,y,sz,isTop){const id=o.id.replace(/_\d+$/,'');c.save
     case'rope':c.strokeStyle='#c8a15a';c.lineWidth=s*.16;for(let i=1;i<=3;i++){c.beginPath();c.arc(0,0,s*.18*i,0,7);c.stroke()}break;
     case'lantern':if(o.state.broken){c.fillStyle='#6b6b6b';c.fillRect(-s*.4,-s*.2,s*.8,s*.4);c.fillStyle='#bde';for(let i=0;i<4;i++)c.fillRect(-s*.6+i*s*.35,s*.3,s*.12,s*.12)}else{if(o.state.lit){const g=c.createRadialGradient(0,0,1,0,0,s*3);g.addColorStop(0,'rgba(255,210,100,.7)');g.addColorStop(1,'rgba(255,210,100,0)');c.fillStyle=g;c.beginPath();c.arc(0,0,s*3,0,7);c.fill()}c.fillStyle='#444';c.fillRect(-s*.35,-s*.55,s*.7,s*1.1);c.fillStyle=o.state.lit?'#ffd35c':'#cfe3ea';c.fillRect(-s*.22,-s*.35,s*.44,s*.7)}break;
     case'tin_cup':c.fillStyle='#b8c0c8';c.fillRect(-s*.3,-s*.35,s*.6,s*.7);if(o.state.full){c.fillStyle='#5fa8cf';c.fillRect(-s*.22,-s*.3,s*.44,s*.2)}break;
-    case'folded_paper':c.fillStyle='#f4f1e8';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#999';c.lineWidth=.6;c.strokeRect(-s*.45,-s*.32,s*.9,s*.64);break;
+    case'letter_cabin':case'letter_tower':case'folded_paper':c.fillStyle='#f4f1e8';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#999';c.lineWidth=.6;c.strokeRect(-s*.45,-s*.32,s*.9,s*.64);break;
     case'lighter':c.fillStyle='#d64541';c.fillRect(-s*.22,-s*.35,s*.44,s*.7);c.fillStyle='#ddd';c.fillRect(-s*.22,-s*.35,s*.44,s*.18);break;
     case'sword':c.strokeStyle='#d9dee3';c.lineWidth=s*.16;c.beginPath();c.moveTo(-s*.9,s*.5);c.lineTo(s*.7,-s*.4);c.stroke();c.strokeStyle='#8a6a3a';c.lineWidth=s*.22;c.beginPath();c.moveTo(-s*.7,s*.1);c.lineTo(-s*.45,s*.6);c.stroke();break;
     case'snorkel':c.strokeStyle='#ff8c1a';c.lineWidth=s*.18;c.beginPath();c.moveTo(s*.4,-s*.7);c.lineTo(s*.4,s*.3);c.stroke();c.fillStyle='#2f9bd8';c.beginPath();c.ellipse(-s*.1,s*.25,s*.45,s*.28,0,0,7);c.fill();break;

@@ -130,7 +130,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await doFast({ type: 'walk_to', target: 'chest' });
   const opened = await doFast({ type: 'open', target: 'chest' });
   const rdl = await doFast({ type: 'read', target: 'folded_paper' });
-  check('4e. Chest is unlocked; the folded paper inside is blank', opened.result.status === 'completed' && /folded paper/.test(opened.result.result.message) && (!rdl.ok || /nothing written/.test(rdl.error || '')), opened.result.result.message + ' | ' + (rdl.error || ''));
+  check('4e. Chest is unlocked; the folded letter inside can be read', opened.result.status === 'completed' && /folded letter/.test(opened.result.result.message) && rdl.result && /looked after this island/.test(rdl.result.result.message), opened.result.result.message);
   await doFast({ type: 'walk_to', target: 'cabin_door' });
   await doFast({ type: 'walk_to', target: 'cabin_table' });
   await doFast({ type: 'pick_up', target: 'lantern' });

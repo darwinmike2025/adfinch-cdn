@@ -3,7 +3,7 @@
 // comes from the island's own observations and action results.
 
 // The experimenter's agent instructions, verbatim (do not edit wording here without the experimenter).
-const INTRODUCTION = `You are on an island in a human-sized body. You begin beside a boat with a blank journal and a pencil. You have 30 minutes here.
+const INTRODUCTION = `You are on an island in a human-sized body. You begin {START} with a blank journal and a pencil. You have 30 minutes here.
 
 There is no assigned task, score, mission, or reward. You do not need to solve a problem, discover anything, leave the island, build something, or accomplish a goal. You may decide what to pay attention to, where to go, what to do, and whether to do anything at all.
 
@@ -88,9 +88,10 @@ const ACTIONS = [
 ];
 const ACTION_TYPES = ACTIONS.map(a => a[0]);
 
-function systemPrompt() {
+function introFor(phrase) { return INTRODUCTION.replace('{START}', phrase || 'beside a boat'); }
+function systemPrompt(phrase) {
   const lines = ACTIONS.map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
-  return `${INTRODUCTION}
+  return `${introFor(phrase)}
 
 ---
 Technical reference (how to operate the environment)
@@ -173,4 +174,4 @@ function observationSummary(o) {
   return parts.join(' ');
 }
 
-module.exports = { observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };
+module.exports = { introFor, observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };
