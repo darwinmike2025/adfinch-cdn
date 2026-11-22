@@ -271,6 +271,10 @@ async function listOpenAIModels() {
   };
   let finalState = null;
   try { finalState = await finalize(); } catch (e) { console.error('Could not read the final state from the island:', e.message, '(last autosave.json is kept)'); stopReason = stopReason || 'interrupted: ' + e.message; }
+  // phone-friendly MP4 copy of the screen recording (if ffmpeg is installed)
+  try { const v = fs.readdirSync(dir).find(f => /\.webm$/.test(f)); if (v) { const { spawnSync } = require('child_process');
+    const r = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(dir, v), '-vf', 'scale=1280:-2', '-r', '15', '-c:v', 'libx264', '-preset', 'medium', '-crf', '30', '-tune', 'stillimage', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', path.join(dir, v.replace(/\.webm$/, '.mp4'))], { stdio: 'ignore' });
+    if (r.status === 0) console.log('MP4 copy saved:', v.replace(/\.webm$/, '.mp4')); } } catch (_) {}
   status.status = stopReason ? (stopReason.startsWith('stopped') ? 'stopped' : 'interrupted') : 'completed';
   status.reason = stopReason || 'the run reached its time limit';
   status.endedWall = new Date().toISOString(); status.modelCalls = calls; status.estimatedCostUsd = +spent.toFixed(4);
