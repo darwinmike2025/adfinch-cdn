@@ -1,0 +1,12 @@
+{
+ "runId": "2026-11-22T18-05-35_gpt-5",
+ "status": "completed",
+ "startedWall": "2026-11-22T18:05:35.800Z",
+ "test": false,
+ "died": true,
+ "reason": "the agent died",
+ "endedWall": "2026-11-22T18:23:48.770Z",
+ "modelCalls": 51,
+ "estimatedCostUsd": 0.2194,
+ "reportCheck": "None. All statements in the report are supported by the activity record or are explicitly labeled as interpretation."
+}

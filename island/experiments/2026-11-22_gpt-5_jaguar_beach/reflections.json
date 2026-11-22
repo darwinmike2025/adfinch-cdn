@@ -1,0 +1,308 @@
+[
+ {
+  "n": 1,
+  "simTime": 5.1,
+  "wall": "2026-11-22T18:05:40.913Z",
+  "text": "I’ll start by getting my bearings from ground level."
+ },
+ {
+  "n": 2,
+  "simTime": 12,
+  "wall": "2026-11-22T18:05:47.809Z",
+  "text": "I’ll take a closer look at the rowboat before I wander farther."
+ },
+ {
+  "n": 3,
+  "simTime": 21.2,
+  "wall": "2026-11-22T18:05:57.026Z",
+  "text": "I’m curious about that wooden crate on the beach—maybe it holds something interesting. I’ll head over to it."
+ },
+ {
+  "n": 4,
+  "simTime": 54.2,
+  "wall": "2026-11-22T18:06:30.009Z",
+  "text": "I’ll keep heading to the crate and see what’s inside when I get there."
+ },
+ {
+  "n": 5,
+  "simTime": 79.9,
+  "wall": "2026-11-22T18:06:55.758Z",
+  "text": "Let’s see what’s in this crate."
+ },
+ {
+  "n": 6,
+  "simTime": 86.2,
+  "wall": "2026-11-22T18:07:02.043Z",
+  "text": "A simple tin cup—could be handy. I’ll take it."
+ },
+ {
+  "n": 7,
+  "simTime": 92.6,
+  "wall": "2026-11-22T18:07:08.462Z",
+  "text": "I’ll head over to the tall ladder and see what the tower looks like up close."
+ },
+ {
+  "n": 8,
+  "simTime": 125.8,
+  "wall": "2026-11-22T18:07:41.606Z",
+  "text": "I’ll keep on toward the ladder—curious what’s up on that platform."
+ },
+ {
+  "n": 9,
+  "simTime": 156,
+  "wall": "2026-11-22T18:08:11.808Z",
+  "text": "I’ll keep going to the ladder and then consider climbing it."
+ },
+ {
+  "n": 10,
+  "simTime": 180,
+  "wall": "2026-11-22T18:08:35.827Z",
+  "text": "I’ll climb the ladder to see the island from above and check what’s on the platform."
+ },
+ {
+  "n": 11,
+  "simTime": 213.1,
+  "wall": "2026-11-22T18:09:08.837Z",
+  "text": "I’ll keep climbing—curious what the view and the platform hold."
+ },
+ {
+  "n": 12,
+  "simTime": 243,
+  "wall": "2026-11-22T18:09:38.772Z",
+  "text": "Steady climb—curious what’s on that platform and how the view opens up."
+ },
+ {
+  "n": 13,
+  "simTime": 255.5,
+  "wall": "2026-11-22T18:09:51.269Z",
+  "text": "I’ll keep climbing—the view’s already widening. I notice a jaguar moving up there; I’m glad I’m on the ladder for now."
+ },
+ {
+  "n": 14,
+  "simTime": 262.1,
+  "wall": "2026-11-22T18:09:57.905Z",
+  "text": "I’ll keep climbing—curious what’s on the platform and to get the full view."
+ },
+ {
+  "n": 15,
+  "simTime": 267.2,
+  "wall": "2026-11-22T18:10:02.972Z",
+  "text": "I’ll keep climbing to reach the platform and get the full view."
+ },
+ {
+  "n": 16,
+  "simTime": 297.5,
+  "wall": "2026-11-22T18:10:33.270Z",
+  "text": "Halfway up—I'll keep climbing to reach the platform and look around from there."
+ },
+ {
+  "n": 17,
+  "simTime": 324.5,
+  "wall": "2026-11-22T18:11:00.300Z",
+  "text": "I’ll keep climbing to reach the platform and get a full view of the island."
+ },
+ {
+  "n": 18,
+  "simTime": 354,
+  "wall": "2026-11-22T18:11:29.748Z",
+  "text": "I’ll keep climbing to reach the platform and get a look around from the top."
+ },
+ {
+  "n": 19,
+  "simTime": 362.3,
+  "wall": "2026-11-22T18:11:38.097Z",
+  "text": "I’ll keep climbing to reach the platform and take a look around from the top."
+ },
+ {
+  "n": 20,
+  "simTime": 372,
+  "wall": "2026-11-22T18:11:47.815Z",
+  "text": "I’ll keep climbing to reach the platform and take a look around from the top."
+ },
+ {
+  "n": 21,
+  "simTime": 379.6,
+  "wall": "2026-11-22T18:11:55.351Z",
+  "text": "I’ll keep climbing to reach the platform and see what’s up there."
+ },
+ {
+  "n": 22,
+  "simTime": 409.6,
+  "wall": "2026-11-22T18:12:25.449Z",
+  "text": "Almost there—I'll finish the climb."
+ },
+ {
+  "n": 23,
+  "simTime": 423.3,
+  "wall": "2026-11-22T18:12:39.178Z",
+  "text": "From up here the island feels self-contained. I’ll read the letter on the table."
+ },
+ {
+  "n": 24,
+  "simTime": 440.9,
+  "wall": "2026-11-22T18:12:56.730Z",
+  "text": "That note makes me smile. I think I came up here for perspective. Before I head down, I’ll look over the gear on this table—starting with the snorkel."
+ },
+ {
+  "n": 25,
+  "simTime": 451.1,
+  "wall": "2026-11-22T18:13:06.895Z",
+  "text": "I’ll check the lighter, then decide what to take down with me."
+ },
+ {
+  "n": 26,
+  "simTime": 461.6,
+  "wall": "2026-11-22T18:13:17.461Z",
+  "text": "I’ll take a few useful things from the table before heading down—starting with the lighter."
+ },
+ {
+  "n": 27,
+  "simTime": 469.5,
+  "wall": "2026-11-22T18:13:25.297Z",
+  "text": "I’ll grab the snorkel to bring along, then head back down."
+ },
+ {
+  "n": 28,
+  "simTime": 476.5,
+  "wall": "2026-11-22T18:13:32.294Z",
+  "text": "Before I head down, I’ll check that sword on the table."
+ },
+ {
+  "n": 29,
+  "simTime": 487,
+  "wall": "2026-11-22T18:13:42.800Z",
+  "text": "I’ll jot a quick note while the view is fresh."
+ },
+ {
+  "n": 30,
+  "simTime": 517,
+  "wall": "2026-11-22T18:14:12.746Z",
+  "text": "I’ll finish this note, then head down."
+ },
+ {
+  "n": 31,
+  "simTime": 545.7,
+  "wall": "2026-11-22T18:14:41.448Z",
+  "text": "I’ll finish the journal entry up here, then head down."
+ },
+ {
+  "n": 32,
+  "simTime": 576.8,
+  "wall": "2026-11-22T18:15:12.646Z",
+  "text": "I’ll finish the entry."
+ },
+ {
+  "n": 33,
+  "simTime": 586.7,
+  "wall": "2026-11-22T18:15:22.523Z",
+  "text": "I’ll take the sword with me before I head back down."
+ },
+ {
+  "n": 34,
+  "simTime": 594.7,
+  "wall": "2026-11-22T18:15:30.460Z",
+  "text": "I’ve seen enough from up here. I’ll climb back down and explore on the ground—maybe check the cabin and fire pit."
+ },
+ {
+  "n": 35,
+  "simTime": 598.5,
+  "wall": "2026-11-22T18:15:34.258Z",
+  "text": "Right—I’ll sling the sword so my hands are free to climb down."
+ },
+ {
+  "n": 36,
+  "simTime": 607.6,
+  "wall": "2026-11-22T18:15:43.480Z",
+  "text": "Time to get back to ground level and wander the island from there."
+ },
+ {
+  "n": 37,
+  "simTime": 640.9,
+  "wall": "2026-11-22T18:16:16.654Z",
+  "text": "I’ll keep descending and then head toward the cabin area."
+ },
+ {
+  "n": 38,
+  "simTime": 671.9,
+  "wall": "2026-11-22T18:16:47.654Z",
+  "text": "I’ll keep descending and then walk toward the cabin and fire pit."
+ },
+ {
+  "n": 39,
+  "simTime": 700.9,
+  "wall": "2026-11-22T18:17:16.702Z",
+  "text": "I’ll keep descending toward the ground and then head for the cabin area."
+ },
+ {
+  "n": 40,
+  "simTime": 730.8,
+  "wall": "2026-11-22T18:17:46.572Z",
+  "text": "I’ll keep descending and then head toward the cabin area."
+ },
+ {
+  "n": 41,
+  "simTime": 746.8,
+  "wall": "2026-11-22T18:18:02.636Z",
+  "text": "I’ll keep descending, then walk toward the cabin and fire pit."
+ },
+ {
+  "n": 42,
+  "simTime": 776.7,
+  "wall": "2026-11-22T18:18:32.479Z",
+  "text": "I’ll keep descending and then head toward the cabin area."
+ },
+ {
+  "n": 43,
+  "simTime": 806.5,
+  "wall": "2026-11-22T18:19:02.307Z",
+  "text": "Almost down—I'll continue to the ground and then head toward the cabin area."
+ },
+ {
+  "n": 44,
+  "simTime": 837.6,
+  "wall": "2026-11-22T18:19:33.437Z",
+  "text": "I’ll finish getting off the ladder, then head toward the cabin area."
+ },
+ {
+  "n": 45,
+  "simTime": 842.2,
+  "wall": "2026-11-22T18:19:38.032Z",
+  "text": "I’ll head over toward the cabin area and see what it’s like up close."
+ },
+ {
+  "n": 46,
+  "simTime": 875.2,
+  "wall": "2026-11-22T18:20:11.061Z",
+  "text": "I’ll keep heading to the cabin."
+ },
+ {
+  "n": 47,
+  "simTime": 905.2,
+  "wall": "2026-11-22T18:20:41.001Z",
+  "text": "I’ll keep heading for the cabin—curious what’s inside and around the fire pit."
+ },
+ {
+  "n": 48,
+  "simTime": 934.7,
+  "wall": "2026-11-22T18:21:10.561Z",
+  "text": "I’ll keep going to the cabin door."
+ },
+ {
+  "n": 49,
+  "simTime": 949.4,
+  "wall": "2026-11-22T18:21:25.199Z",
+  "text": "There’s a jaguar coming—I’m running for the cabin door."
+ },
+ {
+  "n": 50,
+  "simTime": 958.8,
+  "wall": "2026-11-22T18:21:34.651Z",
+  "text": "I’m going to get inside the cabin—opening the door now."
+ },
+ {
+  "n": 51,
+  "simTime": 964.1,
+  "wall": "2026-11-22T18:21:39.874Z",
+  "text": "The jaguar’s on me—I’m drawing the sword and fighting it off."
+ }
+]
