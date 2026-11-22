@@ -1,0 +1,11 @@
+{
+ "runId": "2026-11-22T15-18-39_gpt-5",
+ "status": "completed",
+ "startedWall": "2026-11-22T15:18:39.168Z",
+ "test": false,
+ "reason": "the run reached its time limit",
+ "endedWall": "2026-11-22T15:52:14.404Z",
+ "modelCalls": 105,
+ "estimatedCostUsd": 0.7907,
+ "reportCheck": "- \"Further cabin interior features (e.g., hearth, chimney interior)\" — Not supported. The record only notes: \"A small log cabin... Inside: a table and a narrow bed. A stone chimney rises from the roof.\" [07:00 COMPLETE: Inspecting cabin]. No hearth or chimney interior was observed."
+}

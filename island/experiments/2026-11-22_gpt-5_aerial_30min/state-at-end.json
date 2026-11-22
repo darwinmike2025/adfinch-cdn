@@ -1,0 +1,3900 @@
+{
+ "format": "watchable-island-state",
+ "version": "1.0.0",
+ "simTime": 1800.655400000009,
+ "speed": 1,
+ "paused": false,
+ "run": {
+  "active": false,
+  "ended": true,
+  "startSim": 0,
+  "endSim": 1800,
+  "durationSec": 1800
+ },
+ "agent": {
+  "x": 525.2293315797994,
+  "y": 399.77066842020105,
+  "level": "ground",
+  "ladderFt": 0,
+  "pose": "standing",
+  "facing": -2.356194490192343,
+  "stepDist": 2658.278193651438,
+  "underwaterView": {
+   "x": 641.09,
+   "y": 393.91
+  },
+  "trail": [
+   [
+    468.4,
+    507.5
+   ],
+   [
+    474.5,
+    507.5
+   ],
+   [
+    480.7,
+    507.5
+   ],
+   [
+    486.9,
+    507.5
+   ],
+   [
+    493.1,
+    507.5
+   ],
+   [
+    499.3,
+    507.5
+   ],
+   [
+    505.5,
+    507.5
+   ],
+   [
+    511.7,
+    507.5
+   ],
+   [
+    517.8,
+    507.5
+   ],
+   [
+    523.9,
+    507.5
+   ],
+   [
+    529.9,
+    507.5
+   ],
+   [
+    536.1,
+    507.5
+   ],
+   [
+    542.2,
+    507.5
+   ],
+   [
+    548.4,
+    507.5
+   ],
+   [
+    554.5,
+    507.5
+   ],
+   [
+    560.6,
+    507.5
+   ],
+   [
+    566.7,
+    507.5
+   ],
+   [
+    572.8,
+    507.5
+   ],
+   [
+    578.9,
+    507.5
+   ],
+   [
+    585,
+    507.5
+   ],
+   [
+    591.1,
+    507.5
+   ],
+   [
+    597.1,
+    507.5
+   ],
+   [
+    601.6,
+    511.6
+   ],
+   [
+    607.5,
+    512.5
+   ],
+   [
+    611.8,
+    516.8
+   ],
+   [
+    616.1,
+    521.1
+   ],
+   [
+    620.4,
+    525.4
+   ],
+   [
+    624.7,
+    529.7
+   ],
+   [
+    630.1,
+    532.5
+   ],
+   [
+    636.2,
+    532.5
+   ],
+   [
+    642.3,
+    532.5
+   ],
+   [
+    648.6,
+    532.5
+   ],
+   [
+    654.4,
+    534.4
+   ],
+   [
+    659.7,
+    537.5
+   ],
+   [
+    665.1,
+    540.1
+   ],
+   [
+    669.5,
+    544.5
+   ],
+   [
+    674.8,
+    547.5
+   ],
+   [
+    680.9,
+    547.5
+   ],
+   [
+    687.2,
+    547.5
+   ],
+   [
+    693.2,
+    548.9
+   ],
+   [
+    699.1,
+    547.5
+   ],
+   [
+    705.2,
+    547.5
+   ],
+   [
+    710.5,
+    544.5
+   ],
+   [
+    714.9,
+    540.1
+   ],
+   [
+    719.3,
+    535.7
+   ],
+   [
+    723.6,
+    531.4
+   ],
+   [
+    727.8,
+    527.2
+   ],
+   [
+    732.1,
+    522.9
+   ],
+   [
+    736.3,
+    518.7
+   ],
+   [
+    740.6,
+    514.4
+   ],
+   [
+    744.9,
+    510.1
+   ],
+   [
+    749.2,
+    505.8
+   ],
+   [
+    753.6,
+    501.4
+   ],
+   [
+    757.9,
+    497.1
+   ],
+   [
+    762.2,
+    492.8
+   ],
+   [
+    766.5,
+    488.5
+   ],
+   [
+    767.5,
+    482.5
+   ],
+   [
+    771.8,
+    478.2
+   ],
+   [
+    772.5,
+    472.1
+   ],
+   [
+    772.5,
+    466
+   ],
+   [
+    772.5,
+    459.9
+   ],
+   [
+    772.5,
+    453.9
+   ],
+   [
+    772.5,
+    447.8
+   ],
+   [
+    776.7,
+    443.3
+   ],
+   [
+    781,
+    439
+   ],
+   [
+    785.3,
+    434.7
+   ],
+   [
+    789.6,
+    430.4
+   ],
+   [
+    794,
+    426
+   ],
+   [
+    798.3,
+    421.7
+   ],
+   [
+    802.5,
+    417.5
+   ],
+   [
+    802.5,
+    411.4
+   ],
+   [
+    802.5,
+    405.2
+   ],
+   [
+    802.5,
+    399.2
+   ],
+   [
+    805.9,
+    394.1
+   ],
+   [
+    807.5,
+    388.3
+   ],
+   [
+    811.4,
+    383.6
+   ],
+   [
+    812.5,
+    377.7
+   ],
+   [
+    816.7,
+    373.3
+   ],
+   [
+    817.7,
+    367.3
+   ],
+   [
+    822,
+    363
+   ],
+   [
+    823,
+    357
+   ],
+   [
+    827.4,
+    352.6
+   ],
+   [
+    827.5,
+    346.5
+   ],
+   [
+    829.4,
+    340.6
+   ],
+   [
+    832.5,
+    335.3
+   ],
+   [
+    835.2,
+    329.8
+   ],
+   [
+    837.5,
+    324.2
+   ],
+   [
+    840.8,
+    319.2
+   ],
+   [
+    842.5,
+    313.3
+   ],
+   [
+    842.8,
+    307.2
+   ],
+   [
+    847.1,
+    302.9
+   ],
+   [
+    851.4,
+    298.6
+   ],
+   [
+    855.7,
+    294.3
+   ],
+   [
+    860,
+    290
+   ],
+   [
+    864.2,
+    285.8
+   ],
+   [
+    859.1,
+    282.5
+   ],
+   [
+    854.1,
+    285.9
+   ],
+   [
+    849.8,
+    290.2
+   ],
+   [
+    844.1,
+    292.5
+   ],
+   [
+    837.9,
+    292.5
+   ],
+   [
+    831.8,
+    292.5
+   ],
+   [
+    825.6,
+    292.5
+   ],
+   [
+    819.5,
+    292.5
+   ],
+   [
+    813.3,
+    292.5
+   ],
+   [
+    807.3,
+    292.5
+   ],
+   [
+    801.2,
+    292.5
+   ],
+   [
+    795.2,
+    292.5
+   ],
+   [
+    789.2,
+    292.5
+   ],
+   [
+    783.2,
+    292.5
+   ],
+   [
+    777,
+    292.5
+   ],
+   [
+    770.8,
+    292.5
+   ],
+   [
+    764.6,
+    292.5
+   ],
+   [
+    758.4,
+    292.5
+   ],
+   [
+    753.7,
+    296.3
+   ],
+   [
+    749.4,
+    300.6
+   ],
+   [
+    743.6,
+    302.5
+   ],
+   [
+    738.8,
+    306.2
+   ],
+   [
+    732.8,
+    307.5
+   ],
+   [
+    728.3,
+    311.7
+   ],
+   [
+    724,
+    316
+   ],
+   [
+    719.7,
+    320.3
+   ],
+   [
+    715.3,
+    324.7
+   ],
+   [
+    711,
+    329
+   ],
+   [
+    706.6,
+    333.4
+   ],
+   [
+    702.3,
+    337.7
+   ],
+   [
+    698,
+    342
+   ],
+   [
+    693.7,
+    346.3
+   ],
+   [
+    689.3,
+    350.7
+   ],
+   [
+    684.9,
+    355.1
+   ],
+   [
+    680.6,
+    359.4
+   ],
+   [
+    676.3,
+    363.7
+   ],
+   [
+    671.9,
+    368.1
+   ],
+   [
+    667.6,
+    372.4
+   ],
+   [
+    663.3,
+    376.7
+   ],
+   [
+    659,
+    381
+   ],
+   [
+    654.7,
+    385.3
+   ],
+   [
+    650.4,
+    389.6
+   ],
+   [
+    646.1,
+    393.9
+   ],
+   [
+    642.1,
+    389.4
+   ],
+   [
+    639.2,
+    384.2
+   ],
+   [
+    634.9,
+    379.9
+   ],
+   [
+    629.2,
+    377.5
+   ],
+   [
+    623.1,
+    377.5
+   ],
+   [
+    617.1,
+    377.5
+   ],
+   [
+    610.9,
+    377.5
+   ],
+   [
+    604.7,
+    377.5
+   ],
+   [
+    598.6,
+    377.5
+   ],
+   [
+    592.5,
+    377.5
+   ],
+   [
+    586.4,
+    377.5
+   ],
+   [
+    580.2,
+    377.5
+   ],
+   [
+    574.8,
+    380.2
+   ],
+   [
+    569.1,
+    382.5
+   ],
+   [
+    563,
+    382.5
+   ],
+   [
+    556.8,
+    382.5
+   ],
+   [
+    551,
+    384
+   ],
+   [
+    546,
+    387.5
+   ],
+   [
+    539.8,
+    387.5
+   ],
+   [
+    534.5,
+    390.5
+   ],
+   [
+    530.2,
+    394.8
+   ],
+   [
+    525.9,
+    399.1
+   ]
+  ]
+ },
+ "objects": {
+  "journal": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.6,
+   "state": {},
+   "reach": 5.5,
+   "id": "journal",
+   "name": "journal",
+   "burnable": true,
+   "desc": "A small notebook with a cloth cover.",
+   "loc": {
+    "t": "carried"
+   }
+  },
+  "pencil": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.05,
+   "state": {},
+   "reach": 5.5,
+   "id": "pencil",
+   "name": "pencil",
+   "burnable": true,
+   "desc": "A sharpened wooden pencil.",
+   "loc": {
+    "t": "carried"
+   }
+  },
+  "boat": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 13,
+   "id": "boat",
+   "name": "rowboat",
+   "desc": "A weathered wooden rowboat pulled up onto the sand.",
+   "closeDesc": "The hull is dry and sound. The boat is open on top, so anything inside is visible.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 6
+   },
+   "loc": {
+    "t": "ground",
+    "x": 260,
+    "y": 705
+   },
+   "viewRange": 400
+  },
+  "oar": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 5,
+   "state": {},
+   "reach": 5.5,
+   "id": "oar",
+   "name": "oar",
+   "awkward": true,
+   "burnable": true,
+   "desc": "A long wooden oar.",
+   "loc": {
+    "t": "ground",
+    "x": 306.44,
+    "y": 431.44
+   }
+  },
+  "rope": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 4,
+   "state": {},
+   "reach": 5.5,
+   "id": "rope",
+   "name": "coil of rope",
+   "burnable": true,
+   "desc": "About 30 feet of hemp rope, coiled on the sand.",
+   "loc": {
+    "t": "carried"
+   }
+  },
+  "crate": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "crate",
+   "name": "wooden crate",
+   "desc": "A sturdy wooden crate with a hinged lid, sitting on the beach.",
+   "container": {
+    "open": true,
+    "openable": true,
+    "locked": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 455,
+    "y": 725
+   },
+   "viewRange": 250
+  },
+  "wheelbarrow": {
+   "kind": "item",
+   "size": "large",
+   "weight": 25,
+   "state": {},
+   "reach": 6,
+   "id": "wheelbarrow",
+   "name": "wheelbarrow",
+   "awkward": true,
+   "desc": "A rusty metal wheelbarrow with a wooden handle. Pick it up to push it; things inside come along.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 205,
+    "y": 522
+   }
+  },
+  "mirror": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6,
+   "id": "mirror",
+   "name": "standing mirror",
+   "desc": "A round mirror in a wooden frame, standing against a tree.",
+   "closeDesc": "The glass is clean.",
+   "loc": {
+    "t": "ground",
+    "x": 160,
+    "y": 455
+   },
+   "viewRange": 120
+  },
+  "picnic_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "picnic_table",
+   "name": "driftwood table",
+   "surface": true,
+   "desc": "A rough table built from driftwood.",
+   "loc": {
+    "t": "ground",
+    "x": 361,
+    "y": 640
+   },
+   "viewRange": 200
+  },
+  "paper": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 5.5,
+   "id": "paper",
+   "name": "sheet of paper",
+   "burnable": true,
+   "desc": "A weathered sheet of paper on the table.",
+   "readable": null,
+   "loc": {
+    "t": "on",
+    "id": "picnic_table"
+   }
+  },
+  "stepladder": {
+   "kind": "item",
+   "size": "large",
+   "weight": 14,
+   "state": {},
+   "reach": 5.5,
+   "id": "stepladder",
+   "name": "stepladder",
+   "awkward": true,
+   "desc": "A small wooden A-frame stepladder, about 6 ft tall.",
+   "loc": {
+    "t": "ground",
+    "x": 575,
+    "y": 520
+   }
+  },
+  "ball": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 0.4,
+   "state": {},
+   "reach": 5.5,
+   "id": "ball",
+   "name": "red ball",
+   "desc": "A bright red rubber ball.",
+   "loc": {
+    "t": "ground",
+    "x": 582,
+    "y": 610
+   }
+  },
+  "blanket": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 2,
+   "state": {
+    "spread": true
+   },
+   "reach": 5.5,
+   "id": "blanket",
+   "name": "blue blanket",
+   "burnable": true,
+   "desc": "A blue cotton blanket.",
+   "loc": {
+    "t": "ground",
+    "x": 645,
+    "y": 615
+   }
+  },
+  "blocks": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 3,
+   "state": {
+    "stacked": true
+   },
+   "reach": 5.5,
+   "id": "blocks",
+   "name": "wooden blocks",
+   "burnable": true,
+   "desc": "A handful of plain wooden cubes.",
+   "loc": {
+    "t": "ground",
+    "x": 735,
+    "y": 612
+   }
+  },
+  "driftwood_1": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 7,
+   "state": {},
+   "reach": 5.5,
+   "id": "driftwood_1",
+   "name": "driftwood log",
+   "burnable": true,
+   "fuel": true,
+   "desc": "A bleached, dry piece of driftwood about 3 ft long.",
+   "loc": {
+    "t": "ground",
+    "x": 190,
+    "y": 660
+   }
+  },
+  "driftwood_2": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 6,
+   "state": {},
+   "reach": 5.5,
+   "id": "driftwood_2",
+   "name": "driftwood log",
+   "burnable": true,
+   "fuel": true,
+   "desc": "A bleached, dry piece of driftwood about 3 ft long.",
+   "loc": {
+    "t": "ground",
+    "x": 330,
+    "y": 745
+   }
+  },
+  "stone_1": {
+   "kind": "item",
+   "size": "small",
+   "weight": 1,
+   "state": {},
+   "reach": 5.5,
+   "id": "stone_1",
+   "name": "smooth stone",
+   "desc": "A smooth, palm-sized grey stone.",
+   "loc": {
+    "t": "ground",
+    "x": 215,
+    "y": 700
+   }
+  },
+  "stone_2": {
+   "kind": "item",
+   "size": "small",
+   "weight": 1.2,
+   "state": {},
+   "reach": 5.5,
+   "id": "stone_2",
+   "name": "smooth stone",
+   "desc": "A smooth, palm-sized speckled stone.",
+   "loc": {
+    "t": "ground",
+    "x": 590,
+    "y": 752
+   }
+  },
+  "cabin": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "cabin",
+   "name": "cabin",
+   "bothSides": true,
+   "desc": "A small log cabin with a single door on its south side.",
+   "closeDesc": "Inside: a table and a narrow bed. A stone chimney rises from the roof.",
+   "loc": {
+    "t": "ground",
+    "x": 265,
+    "y": 410
+   },
+   "viewRange": 450
+  },
+  "cabin_door": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "open": true
+   },
+   "reach": 6,
+   "id": "cabin_door",
+   "name": "cabin door",
+   "bothSides": true,
+   "door": true,
+   "desc": "A plank door with an iron latch.",
+   "loc": {
+    "t": "ground",
+    "x": 267.5,
+    "y": 425
+   },
+   "viewRange": 300
+  },
+  "cabin_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "cabin_table",
+   "name": "cabin table",
+   "surface": true,
+   "desc": "A rough wooden table.",
+   "loc": {
+    "t": "ground",
+    "x": 252.5,
+    "y": 402.5
+   },
+   "viewRange": 60
+  },
+  "lantern": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 3,
+   "state": {
+    "lit": false,
+    "broken": false
+   },
+   "reach": 5.5,
+   "id": "lantern",
+   "name": "oil lantern",
+   "fragile": true,
+   "desc": "A glass oil lantern, half full of oil.",
+   "loc": {
+    "t": "ground",
+    "x": 646.44,
+    "y": 393.56
+   }
+  },
+  "tin_cup": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.4,
+   "state": {
+    "full": false
+   },
+   "reach": 5.5,
+   "id": "tin_cup",
+   "name": "tin cup",
+   "desc": "A dented tin cup.",
+   "loc": {
+    "t": "carried"
+   }
+  },
+  "chest": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "chest",
+   "name": "wooden chest",
+   "desc": "A heavy wooden chest with a lid, sitting outside beside the cabin door.",
+   "container": {
+    "open": true,
+    "openable": true,
+    "locked": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 302.5,
+    "y": 432.5
+   },
+   "viewRange": 150
+  },
+  "folded_paper": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 5.5,
+   "id": "folded_paper",
+   "name": "folded paper",
+   "burnable": true,
+   "desc": "A folded sheet of paper.",
+   "readable": null,
+   "loc": {
+    "t": "carried"
+   }
+  },
+  "fire_pit": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "lit": false,
+    "burnLeft": 0
+   },
+   "reach": 6,
+   "id": "fire_pit",
+   "name": "fire pit",
+   "desc": "A ring of blackened stones around old ashes.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 3,
+    "fuelOnly": false
+   },
+   "loc": {
+    "t": "ground",
+    "x": 286,
+    "y": 570
+   },
+   "viewRange": 90
+  },
+  "bell": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "lastRung": 1387.9499999999955
+   },
+   "reach": 7,
+   "id": "bell",
+   "name": "bronze bell",
+   "desc": "A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.",
+   "closeDesc": "A rope hangs from the clapper. It looks like it would be loud.",
+   "loc": {
+    "t": "ground",
+    "x": 845,
+    "y": 310
+   },
+   "viewRange": 250
+  },
+  "stone_circle": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "stone_circle",
+   "name": "stone circle",
+   "desc": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.",
+   "loc": {
+    "t": "ground",
+    "x": 800,
+    "y": 420.01
+   },
+   "viewRange": 450
+  },
+  "bridge": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "bridge",
+   "name": "wooden bridge",
+   "desc": "An arched plank footbridge with handrails over the stream.",
+   "loc": {
+    "t": "ground",
+    "x": 430,
+    "y": 505
+   },
+   "viewRange": 250
+  },
+  "ladder": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 4,
+   "id": "ladder",
+   "name": "tall metal ladder",
+   "desc": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+   "closeDesc": "The rails are bolted into the concrete. The rungs are dry and solid. You cannot see what is on the platform from down here.",
+   "loc": {
+    "t": "ground",
+    "x": 690,
+    "y": 549
+   },
+   "viewRange": 2000
+  },
+  "platform": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 99,
+   "id": "platform",
+   "name": "platform",
+   "surface": true,
+   "platformLevel": true,
+   "desc": "A steel platform with a railing at the top of the tower.",
+   "loc": {
+    "t": "platform"
+   },
+   "viewRange": 2000
+  },
+  "platform_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 99,
+   "id": "platform_table",
+   "name": "platform table",
+   "surface": true,
+   "platformLevel": true,
+   "desc": "A small wooden table fixed to the platform.",
+   "loc": {
+    "t": "platform"
+   },
+   "viewRange": 0
+  },
+  "lighter": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.1,
+   "state": {},
+   "reach": 5.5,
+   "id": "lighter",
+   "name": "lighter",
+   "desc": "A metal flip-top lighter.",
+   "loc": {
+    "t": "carried"
+   }
+  },
+  "sword": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 5,
+   "state": {},
+   "reach": 5.5,
+   "id": "sword",
+   "name": "sword",
+   "awkward": true,
+   "wearable": true,
+   "desc": "A steel sword in a leather scabbard with a shoulder strap.",
+   "loc": {
+    "t": "carried"
+   }
+  },
+  "snorkel": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.3,
+   "state": {},
+   "reach": 5.5,
+   "id": "snorkel",
+   "name": "snorkel",
+   "wearable": true,
+   "desc": "A snorkel with an attached dive mask.",
+   "loc": {
+    "t": "worn"
+   }
+  }
+ },
+ "seen": {
+  "boat": 1167,
+  "oar": 593,
+  "crate": 1167,
+  "picnic_table": 1167,
+  "driftwood_2": 166,
+  "cabin": 1800,
+  "cabin_door": 1800,
+  "ladder": 1800,
+  "platform": 1800,
+  "feature:pond": 1800,
+  "feature:stream": 1800,
+  "feature:hill": 1800,
+  "feature:ocean": 1800,
+  "feature:beach": 1800,
+  "feature:forest": 1800,
+  "feature:cliffs": 1800,
+  "bridge": 1800,
+  "rope": 1725,
+  "tin_cup": 120,
+  "stone_circle": 1800,
+  "chest": 1167,
+  "folded_paper": 325,
+  "wheelbarrow": 591,
+  "mirror": 1167,
+  "cabin_table": 472,
+  "lantern": 1757,
+  "fire_pit": 1167,
+  "stepladder": 1259.1,
+  "blanket": 1259.1,
+  "blocks": 1269,
+  "bell": 1745,
+  "platform_table": 1040,
+  "lighter": 957,
+  "sword": 1718,
+  "snorkel": 973
+ },
+ "journal": {
+  "entries": [
+   {
+    "n": 1,
+    "simTime": 1800,
+    "wall": "2026-11-22T15:48:39.183Z",
+    "text": "From the platform I took in the whole island—bell on the",
+    "interrupted": true,
+    "where": "grass (525, 400)"
+   }
+  ]
+ },
+ "reflections": [
+  {
+   "n": 1,
+   "simTime": 4.3,
+   "wall": "2026-11-22T15:18:43.462Z",
+   "text": "I’ll start by getting my bearings from ground level before heading anywhere."
+  },
+  {
+   "n": 2,
+   "simTime": 11.5,
+   "wall": "2026-11-22T15:18:50.733Z",
+   "text": "That rowboat is closest—I’ll start there and see what’s inside and around it."
+  },
+  {
+   "n": 3,
+   "simTime": 14.9,
+   "wall": "2026-11-22T15:18:54.111Z",
+   "text": "I’ll take a closer look at the rowboat before moving on."
+  },
+  {
+   "n": 4,
+   "simTime": 26.2,
+   "wall": "2026-11-22T15:19:05.316Z",
+   "text": "The boat looks sound. I’ll take the oar in hand, then head toward that wooden crate down the beach."
+  },
+  {
+   "n": 5,
+   "simTime": 31.8,
+   "wall": "2026-11-22T15:19:11.015Z",
+   "text": "I’ll check out that wooden crate on the beach to the east."
+  },
+  {
+   "n": 6,
+   "simTime": 65.5,
+   "wall": "2026-11-22T15:19:44.712Z",
+   "text": "I’ll keep heading to the crate and see if it opens easily."
+  },
+  {
+   "n": 7,
+   "simTime": 96.8,
+   "wall": "2026-11-22T15:20:16.051Z",
+   "text": "Almost there—continuing to the crate."
+  },
+  {
+   "n": 8,
+   "simTime": 100.7,
+   "wall": "2026-11-22T15:20:19.850Z",
+   "text": "I’ll check the crate closely and see how it opens."
+  },
+  {
+   "n": 9,
+   "simTime": 109.8,
+   "wall": "2026-11-22T15:20:29.008Z",
+   "text": "I’ll open the crate and see what’s inside."
+  },
+  {
+   "n": 10,
+   "simTime": 117.2,
+   "wall": "2026-11-22T15:20:36.428Z",
+   "text": "I’ll take the tin cup, then check out the rope along the beach."
+  },
+  {
+   "n": 11,
+   "simTime": 123.9,
+   "wall": "2026-11-22T15:20:43.178Z",
+   "text": "I’ll head over to that coil of rope and take a closer look."
+  },
+  {
+   "n": 12,
+   "simTime": 145.6,
+   "wall": "2026-11-22T15:21:04.790Z",
+   "text": "I’ll take a closer look at the rope, then bring it along."
+  },
+  {
+   "n": 13,
+   "simTime": 154.9,
+   "wall": "2026-11-22T15:21:14.075Z",
+   "text": "I’ll take the coil of rope with me before heading inland."
+  },
+  {
+   "n": 14,
+   "simTime": 163,
+   "wall": "2026-11-22T15:21:22.144Z",
+   "text": "I’ll head inland toward the wooden bridge over the stream and see what the water and nearby area are like."
+  },
+  {
+   "n": 15,
+   "simTime": 196.3,
+   "wall": "2026-11-22T15:21:55.521Z",
+   "text": "I’ll keep heading to the bridge and take a look at the stream from there."
+  },
+  {
+   "n": 16,
+   "simTime": 226.2,
+   "wall": "2026-11-22T15:22:25.388Z",
+   "text": "Continuing to the bridge—once there I’ll pause to observe the stream."
+  },
+  {
+   "n": 17,
+   "simTime": 234.9,
+   "wall": "2026-11-22T15:22:34.106Z",
+   "text": "From the bridge, I want to examine the stream—see how fast it’s flowing and whether the water looks fresh."
+  },
+  {
+   "n": 18,
+   "simTime": 246,
+   "wall": "2026-11-22T15:22:45.170Z",
+   "text": "The tower is tempting, but I’ll explore the cabin area first—starting with that chest by the door."
+  },
+  {
+   "n": 19,
+   "simTime": 280.2,
+   "wall": "2026-11-22T15:23:19.344Z",
+   "text": "I’ll keep going to the chest and then take a closer look at it."
+  },
+  {
+   "n": 20,
+   "simTime": 297.2,
+   "wall": "2026-11-22T15:23:36.420Z",
+   "text": "I’ll set the oar down here so I’ve got a hand free to check the chest."
+  },
+  {
+   "n": 21,
+   "simTime": 304.6,
+   "wall": "2026-11-22T15:23:43.742Z",
+   "text": "I’ll take a closer look at the wooden chest."
+  },
+  {
+   "n": 22,
+   "simTime": 315.2,
+   "wall": "2026-11-22T15:23:54.418Z",
+   "text": "I’ll open the chest and see what’s inside."
+  },
+  {
+   "n": 23,
+   "simTime": 322.5,
+   "wall": "2026-11-22T15:24:01.702Z",
+   "text": "I’ll take the folded paper from the chest and see what it says."
+  },
+  {
+   "n": 24,
+   "simTime": 328.5,
+   "wall": "2026-11-22T15:24:07.670Z",
+   "text": "I’ll read the folded paper I just picked up."
+  },
+  {
+   "n": 25,
+   "simTime": 334.9,
+   "wall": "2026-11-22T15:24:14.053Z",
+   "text": "The paper’s blank—maybe it’s folded or needs something else. I’ll examine it closely."
+  },
+  {
+   "n": 26,
+   "simTime": 345.2,
+   "wall": "2026-11-22T15:24:24.401Z",
+   "text": "I’ll head over to the cabin door and see if it opens."
+  },
+  {
+   "n": 27,
+   "simTime": 359.3,
+   "wall": "2026-11-22T15:24:38.466Z",
+   "text": "I’ll try the latch and open the cabin door."
+  },
+  {
+   "n": 28,
+   "simTime": 366.4,
+   "wall": "2026-11-22T15:24:45.605Z",
+   "text": "I’ll step inside and check the table and lantern."
+  },
+  {
+   "n": 29,
+   "simTime": 380.4,
+   "wall": "2026-11-22T15:24:59.617Z",
+   "text": "I’ll examine the lantern to see if it’s functional and whether there’s a way to light it here."
+  },
+  {
+   "n": 30,
+   "simTime": 390.3,
+   "wall": "2026-11-22T15:25:09.483Z",
+   "text": "I’ll check the table itself for drawers or supplies—maybe matches."
+  },
+  {
+   "n": 31,
+   "simTime": 399.7,
+   "wall": "2026-11-22T15:25:18.900Z",
+   "text": "I’ll take a moment to look around the rest of the cabin for anything useful—especially near the hearth or bed."
+  },
+  {
+   "n": 32,
+   "simTime": 410,
+   "wall": "2026-11-22T15:25:29.152Z",
+   "text": "I’ll check the bed area—maybe there’s something tucked under the pillow or frame."
+  },
+  {
+   "n": 33,
+   "simTime": 413.6,
+   "wall": "2026-11-22T15:25:32.815Z",
+   "text": "I’ll take a closer look around the cabin interior to locate the bed and anything else of note."
+  },
+  {
+   "n": 34,
+   "simTime": 425.6,
+   "wall": "2026-11-22T15:25:44.748Z",
+   "text": "I’ll move over to the narrow bed and check it."
+  },
+  {
+   "n": 35,
+   "simTime": 434.9,
+   "wall": "2026-11-22T15:25:54.099Z",
+   "text": "I’ll take the lantern with me and head back outside toward the tall ladder’s base."
+  },
+  {
+   "n": 36,
+   "simTime": 443.5,
+   "wall": "2026-11-22T15:26:02.761Z",
+   "text": "I’ll scan the interior to spot the bed, then move toward it if I can."
+  },
+  {
+   "n": 37,
+   "simTime": 454,
+   "wall": "2026-11-22T15:26:13.162Z",
+   "text": "I’ll move a bit farther into the cabin to see the bed area more clearly."
+  },
+  {
+   "n": 38,
+   "simTime": 460,
+   "wall": "2026-11-22T15:26:19.156Z",
+   "text": "I’ll move a bit farther north to find the bed area."
+  },
+  {
+   "n": 39,
+   "simTime": 493.8,
+   "wall": "2026-11-22T15:26:52.961Z",
+   "text": "I seem to have stepped back outside. I’ll head over to that standing mirror by the tree and take a closer look."
+  },
+  {
+   "n": 40,
+   "simTime": 527.5,
+   "wall": "2026-11-22T15:27:26.713Z",
+   "text": "I’ll keep going to the mirror and take a close look when I get there."
+  },
+  {
+   "n": 41,
+   "simTime": 533.9,
+   "wall": "2026-11-22T15:27:33.091Z",
+   "text": "I’ll take a close look at the standing mirror by the tree."
+  },
+  {
+   "n": 42,
+   "simTime": 544.1,
+   "wall": "2026-11-22T15:27:43.244Z",
+   "text": "The mirror looks clean. I’ll head over to the tall ladder’s base to see about climbing the tower."
+  },
+  {
+   "n": 43,
+   "simTime": 577.3,
+   "wall": "2026-11-22T15:28:16.508Z",
+   "text": "I’ll keep heading for the ladder base—curious what the view will be like from up there."
+  },
+  {
+   "n": 44,
+   "simTime": 607.3,
+   "wall": "2026-11-22T15:28:46.511Z",
+   "text": "I’ll keep heading for the ladder base and plan to climb once I’m there."
+  },
+  {
+   "n": 45,
+   "simTime": 638.1,
+   "wall": "2026-11-22T15:29:17.322Z",
+   "text": "I’ll keep going to the ladder. Once there, I’ll set down the rope and lantern so I can climb safely."
+  },
+  {
+   "n": 46,
+   "simTime": 667.6,
+   "wall": "2026-11-22T15:29:46.790Z",
+   "text": "I’ll keep going to the ladder, then set down the rope and lantern before climbing."
+  },
+  {
+   "n": 47,
+   "simTime": 694.2,
+   "wall": "2026-11-22T15:30:13.406Z",
+   "text": "I’ll set down what I’m carrying so I can climb safely—starting with the rope."
+  },
+  {
+   "n": 48,
+   "simTime": 700.6,
+   "wall": "2026-11-22T15:30:19.739Z",
+   "text": "I’ll set down the lantern so I can climb safely."
+  },
+  {
+   "n": 49,
+   "simTime": 707.3,
+   "wall": "2026-11-22T15:30:26.524Z",
+   "text": "With my hands free, I’ll climb the ladder to see the view from the platform."
+  },
+  {
+   "n": 50,
+   "simTime": 741,
+   "wall": "2026-11-22T15:31:00.155Z",
+   "text": "I’ll keep climbing to the platform to see the view from the top."
+  },
+  {
+   "n": 51,
+   "simTime": 771.9,
+   "wall": "2026-11-22T15:31:31.053Z",
+   "text": "I’ll keep climbing to the top platform and see what’s up there and how the view looks."
+  },
+  {
+   "n": 52,
+   "simTime": 801.4,
+   "wall": "2026-11-22T15:32:00.600Z",
+   "text": "I’ll keep climbing to reach the platform and see what’s up there."
+  },
+  {
+   "n": 53,
+   "simTime": 830.7,
+   "wall": "2026-11-22T15:32:29.866Z",
+   "text": "Halfway up—steady and continuing to the platform."
+  },
+  {
+   "n": 54,
+   "simTime": 861,
+   "wall": "2026-11-22T15:33:00.150Z",
+   "text": "Steady on—continuing up to the platform."
+  },
+  {
+   "n": 55,
+   "simTime": 891,
+   "wall": "2026-11-22T15:33:30.148Z",
+   "text": "I’ll keep climbing to reach the platform and see what’s up there."
+  },
+  {
+   "n": 56,
+   "simTime": 921.4,
+   "wall": "2026-11-22T15:34:00.595Z",
+   "text": "I’ll keep climbing the last bit to reach the platform and check the table up there."
+  },
+  {
+   "n": 57,
+   "simTime": 955,
+   "wall": "2026-11-22T15:34:34.178Z",
+   "text": "From up here, that little table has some intriguing gear. I’ll grab the lighter so I can try warming this folded paper to see if anything appears."
+  },
+  {
+   "n": 58,
+   "simTime": 963.1,
+   "wall": "2026-11-22T15:34:42.287Z",
+   "text": "Up here in the breeze, I’ll gently warm the folded paper with the lighter to see if any hidden writing appears—careful not to scorch it."
+  },
+  {
+   "n": 59,
+   "simTime": 970.1,
+   "wall": "2026-11-22T15:34:49.299Z",
+   "text": "Nice vantage point. I’ll grab the snorkel for later, then head back down to the ground."
+  },
+  {
+   "n": 60,
+   "simTime": 980.6,
+   "wall": "2026-11-22T15:34:59.776Z",
+   "text": "Since I’m up here, I’ll check out the sword on the little table and see if it has a shoulder strap I can wear."
+  },
+  {
+   "n": 61,
+   "simTime": 991.5,
+   "wall": "2026-11-22T15:35:10.729Z",
+   "text": "I’ll sling the sword’s strap over my shoulder and then head back down the ladder."
+  },
+  {
+   "n": 62,
+   "simTime": 1006.2,
+   "wall": "2026-11-22T15:35:25.400Z",
+   "text": "Great view. I’ll head back down to the ground to regroup."
+  },
+  {
+   "n": 63,
+   "simTime": 1039.6,
+   "wall": "2026-11-22T15:35:58.738Z",
+   "text": "I’ll keep climbing down carefully."
+  },
+  {
+   "n": 64,
+   "simTime": 1071.1,
+   "wall": "2026-11-22T15:36:30.272Z",
+   "text": "I’ll keep climbing down carefully."
+  },
+  {
+   "n": 65,
+   "simTime": 1101,
+   "wall": "2026-11-22T15:37:00.201Z",
+   "text": "I’ll keep climbing down to the ground."
+  },
+  {
+   "n": 66,
+   "simTime": 1130,
+   "wall": "2026-11-22T15:37:29.137Z",
+   "text": "Still descending—steady grip, continuing down."
+  },
+  {
+   "n": 67,
+   "simTime": 1160.6,
+   "wall": "2026-11-22T15:37:59.815Z",
+   "text": "I’ll keep climbing down; once I’m on the ground I’ll grab the rope and lantern again."
+  },
+  {
+   "n": 68,
+   "simTime": 1190.1,
+   "wall": "2026-11-22T15:38:29.285Z",
+   "text": "I’ll keep climbing down and then grab the rope and lantern at the base."
+  },
+  {
+   "n": 69,
+   "simTime": 1219.8,
+   "wall": "2026-11-22T15:38:58.970Z",
+   "text": "Almost down—continuing to the ground, then I’ll grab the rope and lantern."
+  },
+  {
+   "n": 70,
+   "simTime": 1243.8,
+   "wall": "2026-11-22T15:39:22.966Z",
+   "text": "Back on the ground—I’ll grab my gear again, starting with the rope."
+  },
+  {
+   "n": 71,
+   "simTime": 1251.6,
+   "wall": "2026-11-22T15:39:30.731Z",
+   "text": "I’ll grab the lantern, then head over toward that low stone circle by the cliffs to check it out."
+  },
+  {
+   "n": 72,
+   "simTime": 1258.9,
+   "wall": "2026-11-22T15:39:38.133Z",
+   "text": "I’ll head over to the low stone circle by the cliffs and take a closer look when I get there."
+  },
+  {
+   "n": 73,
+   "simTime": 1292.9,
+   "wall": "2026-11-22T15:40:12.090Z",
+   "text": "I’ll keep going to the stone circle and take a closer look when I arrive."
+  },
+  {
+   "n": 74,
+   "simTime": 1310.4,
+   "wall": "2026-11-22T15:40:29.578Z",
+   "text": "I’ll take a close look at the stone circle and see if any stones are loose or marked."
+  },
+  {
+   "n": 75,
+   "simTime": 1323.7,
+   "wall": "2026-11-22T15:40:42.827Z",
+   "text": "I’ll step into the center of the stone circle to check the ground there more closely."
+  },
+  {
+   "n": 76,
+   "simTime": 1331.8,
+   "wall": "2026-11-22T15:40:50.997Z",
+   "text": "Standing in the circle’s center, I don’t notice anything special. I’ll head up to the bronze bell on the headland and try ringing it."
+  },
+  {
+   "n": 77,
+   "simTime": 1366.1,
+   "wall": "2026-11-22T15:41:25.284Z",
+   "text": "Almost there—keep going to the bell, then I’ll give the rope a pull to ring it."
+  },
+  {
+   "n": 78,
+   "simTime": 1372.4,
+   "wall": "2026-11-22T15:41:31.578Z",
+   "text": "I’ll set the lantern down so I can ring the bell."
+  },
+  {
+   "n": 79,
+   "simTime": 1381.9,
+   "wall": "2026-11-22T15:41:41.160Z",
+   "text": "I’ll give the bell’s rope a firm pull to ring it and see what happens."
+  },
+  {
+   "n": 80,
+   "simTime": 1397.5,
+   "wall": "2026-11-22T15:41:56.687Z",
+   "text": "That bell carries—nice. I’ll take my lantern with me before I wander on."
+  },
+  {
+   "n": 81,
+   "simTime": 1406,
+   "wall": "2026-11-22T15:42:05.184Z",
+   "text": "I’ll walk over to the cliff edge here and take a careful look down at the water below."
+  },
+  {
+   "n": 82,
+   "simTime": 1426.9,
+   "wall": "2026-11-22T15:42:26.026Z",
+   "text": "I’ll take a careful look over the edge and examine the cliffs here."
+  },
+  {
+   "n": 83,
+   "simTime": 1438.7,
+   "wall": "2026-11-22T15:42:37.891Z",
+   "text": "The cliffs are a dead end for now. I’ll unfold the paper to see if there’s anything inside."
+  },
+  {
+   "n": 84,
+   "simTime": 1447.5,
+   "wall": "2026-11-22T15:42:46.701Z",
+   "text": "Nothing more to do at the cliff edge. I’ll head over to the pond and explore there."
+  },
+  {
+   "n": 85,
+   "simTime": 1481.1,
+   "wall": "2026-11-22T15:43:20.316Z",
+   "text": "I’ll keep heading to the pond and take a look around when I arrive."
+  },
+  {
+   "n": 86,
+   "simTime": 1511.2,
+   "wall": "2026-11-22T15:43:50.339Z",
+   "text": "I’ll keep going to the pond and take a closer look when I arrive."
+  },
+  {
+   "n": 87,
+   "simTime": 1523.3,
+   "wall": "2026-11-22T15:44:02.509Z",
+   "text": "I’ll take a closer look around the pond’s edge to see what’s here."
+  },
+  {
+   "n": 88,
+   "simTime": 1533.1,
+   "wall": "2026-11-22T15:44:12.239Z",
+   "text": "The pond looks murky—I'll take a closer look at the water and edges."
+  },
+  {
+   "n": 89,
+   "simTime": 1557.6,
+   "wall": "2026-11-22T15:44:36.803Z",
+   "text": "I’ll scan the area around the pond to see what specific items are nearby before deciding what to try."
+  },
+  {
+   "n": 90,
+   "simTime": 1570.3,
+   "wall": "2026-11-22T15:44:49.475Z",
+   "text": "I’ll leave my hands free and keep the lantern dry, then wade in to take a look under the surface with the snorkel."
+  },
+  {
+   "n": 91,
+   "simTime": 1580.2,
+   "wall": "2026-11-22T15:44:59.352Z",
+   "text": "I’ll leave the rope dry here, put on the snorkel, and wade a few feet into the pond to peek below the surface."
+  },
+  {
+   "n": 92,
+   "simTime": 1587.5,
+   "wall": "2026-11-22T15:45:06.667Z",
+   "text": "I’ll put on the snorkel and wade a few feet into the pond to peek below the surface."
+  },
+  {
+   "n": 93,
+   "simTime": 1598.6,
+   "wall": "2026-11-22T15:45:17.819Z",
+   "text": "I’ll wade a few feet into the pond with the snorkel on to peer below the surface."
+  },
+  {
+   "n": 94,
+   "simTime": 1605.4,
+   "wall": "2026-11-22T15:45:24.519Z",
+   "text": "I’ll wade a few more feet into the pond and take a look beneath the surface."
+  },
+  {
+   "n": 95,
+   "simTime": 1611.5,
+   "wall": "2026-11-22T15:45:30.701Z",
+   "text": "I’ll try snorkeling along the shallow edge here to peek under the surface."
+  },
+  {
+   "n": 96,
+   "simTime": 1618.3,
+   "wall": "2026-11-22T15:45:37.467Z",
+   "text": "I’ll take off the sword so I don’t wade in with it, set it down here, and then try using the snorkel in the pond."
+  },
+  {
+   "n": 97,
+   "simTime": 1632.9,
+   "wall": "2026-11-22T15:45:52.056Z",
+   "text": "I’ll take a look at the folded paper and see what’s written on it."
+  },
+  {
+   "n": 98,
+   "simTime": 1638.1,
+   "wall": "2026-11-22T15:45:57.325Z",
+   "text": "I’ll set the sword down so my hands are free, then try using the snorkel in the pond to peek beneath the surface."
+  },
+  {
+   "n": 99,
+   "simTime": 1647.8,
+   "wall": "2026-11-22T15:46:06.965Z",
+   "text": "With the sword set aside, I’ll try snorkeling along the pond’s edge to peek below the surface."
+  },
+  {
+   "n": 100,
+   "simTime": 1677.5,
+   "wall": "2026-11-22T15:46:36.704Z",
+   "text": "I’ll try a different spot along the pond’s edge to see beneath the surface."
+  },
+  {
+   "n": 101,
+   "simTime": 1685,
+   "wall": "2026-11-22T15:46:44.203Z",
+   "text": "I’ll try peeking under the surface here too—using the snorkel to look beneath the water along this edge."
+  },
+  {
+   "n": 102,
+   "simTime": 1715.1,
+   "wall": "2026-11-22T15:47:14.295Z",
+   "text": "I’ll gather my things and head toward the wooden bridge to explore that area."
+  },
+  {
+   "n": 103,
+   "simTime": 1722.3,
+   "wall": "2026-11-22T15:47:21.449Z",
+   "text": "I’ll grab the rope before heading toward the bridge."
+  },
+  {
+   "n": 104,
+   "simTime": 1730.7,
+   "wall": "2026-11-22T15:47:29.880Z",
+   "text": "I’ll head over to the wooden bridge and see what the stream looks like there."
+  },
+  {
+   "n": 105,
+   "simTime": 1771.7,
+   "wall": "2026-11-22T15:48:10.912Z",
+   "text": "I’ll pause here by the pond and jot a quick note."
+  }
+ ],
+ "sounds": [],
+ "action": null,
+ "history": [
+  {
+   "id": 1,
+   "type": "look",
+   "params": {
+    "type": "look"
+   },
+   "label": "Looking around",
+   "status": "completed",
+   "startSim": 4.3,
+   "endSim": 8.3,
+   "durationSec": 4,
+   "result": {
+    "message": "You look around. You can see 9 things nearby.",
+    "observation": {
+     "observationOf": "agent",
+     "simTimeSec": 8.3,
+     "run": {
+      "active": true,
+      "ended": false,
+      "elapsedSec": 8.3,
+      "remainingSec": 1791.7
+     },
+     "self": {
+      "position": {
+       "x": 268,
+       "y": 714,
+       "unit": "ft",
+       "axes": "x east, y south, origin at NW corner of map"
+      },
+      "groundElevationFt": 0.5,
+      "heightAboveGroundFt": 0,
+      "level": "ground",
+      "pose": "standing",
+      "indoors": false,
+      "underfoot": "sandy beach",
+      "carrying": [
+       {
+        "id": "journal",
+        "name": "journal",
+        "in": "pocket"
+       },
+       {
+        "id": "pencil",
+        "name": "pencil",
+        "in": "pocket"
+       }
+      ],
+      "wearing": [],
+      "handsFree": 2
+     },
+     "currentAction": {
+      "id": 1,
+      "type": "look",
+      "label": "Looking around",
+      "progress": 1,
+      "elapsedSec": 4,
+      "estimatedTotalSec": 4
+     },
+     "lastActionResult": null,
+     "visibleObjects": [
+      {
+       "id": "boat",
+       "name": "rowboat",
+       "distanceFt": 12,
+       "bearing": "NW",
+       "bearingDeg": 318,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A weathered wooden rowboat pulled up onto the sand. The hull is dry and sound. The boat is open on top, so anything inside is visible.",
+       "contains": [
+        "oar"
+       ],
+       "reachable": true
+      },
+      {
+       "id": "oar",
+       "name": "oar",
+       "distanceFt": 12,
+       "bearing": "NW",
+       "bearingDeg": 318,
+       "location": "inside the rowboat",
+       "type": "item",
+       "description": "A long wooden oar.",
+       "reachable": true
+      },
+      {
+       "id": "driftwood_2",
+       "name": "driftwood log",
+       "distanceFt": 69,
+       "bearing": "SE",
+       "bearingDeg": 117,
+       "location": "on the ground (sandy beach)",
+       "type": "item",
+       "description": "An object, too far away to make out details.",
+       "reachable": false
+      },
+      {
+       "id": "picnic_table",
+       "name": "driftwood table",
+       "distanceFt": 119,
+       "bearing": "NE",
+       "bearingDeg": 51,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A rough table built from driftwood.",
+       "reachable": false
+      },
+      {
+       "id": "crate",
+       "name": "wooden crate",
+       "distanceFt": 187,
+       "bearing": "E",
+       "bearingDeg": 93,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A sturdy wooden crate with a hinged lid, sitting on the beach.",
+       "reachable": false
+      },
+      {
+       "id": "cabin_door",
+       "name": "cabin door",
+       "distanceFt": 289,
+       "bearing": "N",
+       "bearingDeg": 360,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A plank door with an iron latch.",
+       "reachable": false
+      },
+      {
+       "id": "cabin",
+       "name": "cabin",
+       "distanceFt": 304,
+       "bearing": "N",
+       "bearingDeg": 359,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A small log cabin with a single door on its south side.",
+       "reachable": false
+      },
+      {
+       "id": "ladder",
+       "name": "tall metal ladder",
+       "distanceFt": 453,
+       "bearing": "E",
+       "bearingDeg": 69,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+       "reachable": false
+      },
+      {
+       "id": "platform",
+       "name": "platform",
+       "distanceFt": 471,
+       "location": "at the top of the ladder",
+       "type": "fixture",
+       "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+       "reachable": false
+      }
+     ],
+     "terrainFeatures": [
+      {
+       "id": "pond",
+       "distanceFt": 388,
+       "bearing": "NE"
+      },
+      {
+       "id": "stream",
+       "distanceFt": 218,
+       "bearing": "NE"
+      },
+      {
+       "id": "hill",
+       "distanceFt": 602,
+       "bearing": "NE"
+      },
+      {
+       "id": "ocean",
+       "distanceFt": 24,
+       "bearing": "SW"
+      },
+      {
+       "id": "beach",
+       "distanceFt": 5,
+       "bearing": "E"
+      },
+      {
+       "id": "forest",
+       "distanceFt": 76,
+       "bearing": "NE"
+      },
+      {
+       "id": "cliffs",
+       "distanceFt": 388,
+       "bearing": "E"
+      }
+     ],
+     "soundsHeard": [],
+     "notes": [
+      "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here."
+     ]
+    }
+   }
+  },
+  {
+   "id": 2,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "boat"
+   },
+   "label": "Walking to the rowboat",
+   "status": "completed",
+   "startSim": 11.55,
+   "endSim": 11.55,
+   "durationSec": 0,
+   "result": {
+    "message": "Arrived at the rowboat (268, 714) after 0 ft in 00:00."
+   }
+  },
+  {
+   "id": 3,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "boat"
+   },
+   "label": "Inspecting rowboat",
+   "status": "completed",
+   "startSim": 14.9,
+   "endSim": 20.9,
+   "durationSec": 6,
+   "result": {
+    "message": "A weathered wooden rowboat pulled up onto the sand. The hull is dry and sound. The boat is open on top, so anything inside is visible. Contents: oar."
+   }
+  },
+  {
+   "id": 4,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "oar"
+   },
+   "label": "Picking up the oar",
+   "status": "completed",
+   "startSim": 26.151,
+   "endSim": 29.151,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the oar."
+   }
+  },
+  {
+   "id": 5,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "crate"
+   },
+   "label": "Walking to the wooden crate",
+   "status": "completed",
+   "startSim": 31.851,
+   "endSim": 97.324,
+   "durationSec": 65.47,
+   "result": {
+    "message": "Arrived at the wooden crate (453, 723) after 197 ft in 01:05 (avg 3.01 ft/s)."
+   }
+  },
+  {
+   "id": 6,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "crate"
+   },
+   "label": "Inspecting wooden crate",
+   "status": "completed",
+   "startSim": 100.67,
+   "endSim": 106.67,
+   "durationSec": 6,
+   "result": {
+    "message": "A sturdy wooden crate with a hinged lid, sitting on the beach. (closed)"
+   }
+  },
+  {
+   "id": 7,
+   "type": "open",
+   "params": {
+    "type": "open",
+    "target": "crate"
+   },
+   "label": "Opening the wooden crate",
+   "status": "completed",
+   "startSim": 109.813,
+   "endSim": 112.813,
+   "durationSec": 3,
+   "result": {
+    "message": "You open the wooden crate. Inside: tin cup."
+   }
+  },
+  {
+   "id": 8,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "tin_cup"
+   },
+   "label": "Picking up the tin cup",
+   "status": "completed",
+   "startSim": 117.265,
+   "endSim": 120.265,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the tin cup."
+   }
+  },
+  {
+   "id": 9,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "rope"
+   },
+   "label": "Walking to the coil of rope",
+   "status": "completed",
+   "startSim": 124.014,
+   "endSim": 141.593,
+   "durationSec": 17.58,
+   "result": {
+    "message": "Arrived at the coil of rope (403, 723) after 50 ft in 00:18 (avg 2.84 ft/s)."
+   }
+  },
+  {
+   "id": 10,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "rope"
+   },
+   "label": "Inspecting coil of rope",
+   "status": "completed",
+   "startSim": 145.613,
+   "endSim": 151.613,
+   "durationSec": 6,
+   "result": {
+    "message": "About 30 feet of hemp rope, coiled on the sand."
+   }
+  },
+  {
+   "id": 11,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "rope"
+   },
+   "label": "Picking up the coil of rope",
+   "status": "completed",
+   "startSim": 154.911,
+   "endSim": 157.911,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the coil of rope."
+   }
+  },
+  {
+   "id": 12,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "bridge"
+   },
+   "label": "Walking to the wooden bridge",
+   "status": "completed",
+   "startSim": 162.979,
+   "endSim": 230.194,
+   "durationSec": 67.21,
+   "result": {
+    "message": "Arrived at the wooden bridge (428, 508) after 225 ft in 01:07 (avg 3.35 ft/s)."
+   }
+  },
+  {
+   "id": 13,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "stream"
+   },
+   "label": "Inspecting stream",
+   "status": "completed",
+   "startSim": 234.903,
+   "endSim": 240.903,
+   "durationSec": 6,
+   "result": {
+    "message": "A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly."
+   }
+  },
+  {
+   "id": 14,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "chest"
+   },
+   "label": "Walking to the wooden chest",
+   "status": "completed",
+   "startSim": 246.006,
+   "endSim": 292.067,
+   "durationSec": 46.06,
+   "result": {
+    "message": "Arrived at the wooden chest (308, 433) after 151 ft in 00:46 (avg 3.28 ft/s)."
+   }
+  },
+  {
+   "id": 15,
+   "type": "put_down",
+   "params": {
+    "type": "put_down",
+    "target": "oar"
+   },
+   "label": "Putting down the oar",
+   "status": "completed",
+   "startSim": 297.256,
+   "endSim": 300.256,
+   "durationSec": 3,
+   "result": {
+    "message": "You put down the oar on the ground (grass)."
+   }
+  },
+  {
+   "id": 16,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "chest"
+   },
+   "label": "Inspecting wooden chest",
+   "status": "completed",
+   "startSim": 304.577,
+   "endSim": 310.577,
+   "durationSec": 6,
+   "result": {
+    "message": "A heavy wooden chest with a lid, sitting outside beside the cabin door. (closed)"
+   }
+  },
+  {
+   "id": 17,
+   "type": "open",
+   "params": {
+    "type": "open",
+    "target": "chest"
+   },
+   "label": "Opening the wooden chest",
+   "status": "completed",
+   "startSim": 315.254,
+   "endSim": 318.254,
+   "durationSec": 3,
+   "result": {
+    "message": "You open the wooden chest. Inside: folded paper."
+   }
+  },
+  {
+   "id": 18,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "folded_paper"
+   },
+   "label": "Picking up the folded paper",
+   "status": "completed",
+   "startSim": 322.507,
+   "endSim": 325.507,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the folded paper."
+   }
+  },
+  {
+   "id": 19,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "folded_paper"
+   },
+   "label": "Inspecting folded paper",
+   "status": "completed",
+   "startSim": 334.851,
+   "endSim": 340.851,
+   "durationSec": 6,
+   "result": {
+    "message": "A folded sheet of paper."
+   }
+  },
+  {
+   "id": 20,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "cabin_door"
+   },
+   "label": "Walking to the cabin door",
+   "status": "completed",
+   "startSim": 345.2,
+   "endSim": 355.57,
+   "durationSec": 10.37,
+   "result": {
+    "message": "Arrived at the cabin door (273, 428) after 40 ft in 00:10 (avg 3.86 ft/s)."
+   }
+  },
+  {
+   "id": 21,
+   "type": "open",
+   "params": {
+    "type": "open",
+    "target": "cabin_door"
+   },
+   "label": "Opening the cabin door",
+   "status": "completed",
+   "startSim": 359.302,
+   "endSim": 361.302,
+   "durationSec": 2,
+   "result": {
+    "message": "You open the cabin door."
+   }
+  },
+  {
+   "id": 22,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "cabin_table"
+   },
+   "label": "Walking to the cabin table",
+   "status": "completed",
+   "startSim": 366.426,
+   "endSim": 375.348,
+   "durationSec": 8.92,
+   "result": {
+    "message": "Arrived at the cabin table (253, 408) after 34 ft in 00:09 (avg 3.83 ft/s)."
+   }
+  },
+  {
+   "id": 23,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "lantern"
+   },
+   "label": "Inspecting oil lantern",
+   "status": "completed",
+   "startSim": 380.453,
+   "endSim": 386.453,
+   "durationSec": 6,
+   "result": {
+    "message": "A glass oil lantern, half full of oil."
+   }
+  },
+  {
+   "id": 24,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "cabin_table"
+   },
+   "label": "Inspecting cabin table",
+   "status": "completed",
+   "startSim": 390.301,
+   "endSim": 396.301,
+   "durationSec": 6,
+   "result": {
+    "message": "A rough wooden table. Contents: oil lantern."
+   }
+  },
+  {
+   "id": 25,
+   "type": "look",
+   "params": {
+    "type": "look"
+   },
+   "label": "Looking around",
+   "status": "completed",
+   "startSim": 399.7,
+   "endSim": 403.7,
+   "durationSec": 4,
+   "result": {
+    "message": "You look around. You can see 5 things nearby.",
+    "observation": {
+     "observationOf": "agent",
+     "simTimeSec": 403.7,
+     "run": {
+      "active": true,
+      "ended": false,
+      "elapsedSec": 403.7,
+      "remainingSec": 1396.3
+     },
+     "self": {
+      "position": {
+       "x": 252.5,
+       "y": 407.5,
+       "unit": "ft",
+       "axes": "x east, y south, origin at NW corner of map"
+      },
+      "groundElevationFt": 6.4,
+      "heightAboveGroundFt": 0,
+      "level": "ground",
+      "pose": "standing",
+      "indoors": true,
+      "underfoot": "cabin floor",
+      "carrying": [
+       {
+        "id": "journal",
+        "name": "journal",
+        "in": "pocket"
+       },
+       {
+        "id": "pencil",
+        "name": "pencil",
+        "in": "pocket"
+       },
+       {
+        "id": "rope",
+        "name": "coil of rope",
+        "in": "hand"
+       },
+       {
+        "id": "tin_cup",
+        "name": "tin cup",
+        "in": "pocket"
+       },
+       {
+        "id": "folded_paper",
+        "name": "folded paper",
+        "in": "pocket"
+       }
+      ],
+      "wearing": [],
+      "handsFree": 1
+     },
+     "currentAction": {
+      "id": 25,
+      "type": "look",
+      "label": "Looking around",
+      "progress": 1,
+      "elapsedSec": 4,
+      "estimatedTotalSec": 4
+     },
+     "lastActionResult": {
+      "id": 24,
+      "type": "inspect",
+      "status": "completed",
+      "message": "A rough wooden table. Contents: oil lantern."
+     },
+     "visibleObjects": [
+      {
+       "id": "cabin_table",
+       "name": "cabin table",
+       "distanceFt": 5,
+       "bearing": "N",
+       "bearingDeg": 0,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A rough wooden table.",
+       "holds": [
+        "lantern"
+       ],
+       "reachable": true
+      },
+      {
+       "id": "lantern",
+       "name": "oil lantern",
+       "distanceFt": 5,
+       "bearing": "N",
+       "bearingDeg": 0,
+       "location": "on the cabin table",
+       "type": "item",
+       "description": "A glass oil lantern, half full of oil.",
+       "reachable": true
+      },
+      {
+       "id": "cabin",
+       "name": "cabin",
+       "distanceFt": 13,
+       "bearing": "E",
+       "bearingDeg": 101,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A small log cabin with a single door on its south side. Inside: a table and a narrow bed. A stone chimney rises from the roof.",
+       "reachable": false
+      },
+      {
+       "id": "cabin_door",
+       "name": "cabin door",
+       "distanceFt": 23,
+       "bearing": "SE",
+       "bearingDeg": 139,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A plank door with an iron latch.",
+       "reachable": false
+      },
+      {
+       "id": "platform",
+       "name": "platform",
+       "distanceFt": 465,
+       "location": "at the top of the ladder",
+       "type": "fixture",
+       "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+       "reachable": false
+      }
+     ],
+     "terrainFeatures": [],
+     "soundsHeard": [],
+     "notes": [
+      "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.",
+      "You are inside the cabin. The door is open."
+     ]
+    }
+   }
+  },
+  {
+   "id": 26,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "cabin"
+   },
+   "label": "Inspecting cabin",
+   "status": "completed",
+   "startSim": 413.651,
+   "endSim": 419.651,
+   "durationSec": 6,
+   "result": {
+    "message": "A small log cabin with a single door on its south side. Inside: a table and a narrow bed. A stone chimney rises from the roof."
+   }
+  },
+  {
+   "id": 27,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "lantern"
+   },
+   "label": "Picking up the oil lantern",
+   "status": "completed",
+   "startSim": 434.922,
+   "endSim": 437.922,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the oil lantern."
+   }
+  },
+  {
+   "id": 28,
+   "type": "look",
+   "params": {
+    "type": "look"
+   },
+   "label": "Looking around",
+   "status": "completed",
+   "startSim": 443.55,
+   "endSim": 447.55,
+   "durationSec": 4,
+   "result": {
+    "message": "You look around. You can see 4 things nearby.",
+    "observation": {
+     "observationOf": "agent",
+     "simTimeSec": 447.5,
+     "run": {
+      "active": true,
+      "ended": false,
+      "elapsedSec": 447.5,
+      "remainingSec": 1352.5
+     },
+     "self": {
+      "position": {
+       "x": 252.5,
+       "y": 407.5,
+       "unit": "ft",
+       "axes": "x east, y south, origin at NW corner of map"
+      },
+      "groundElevationFt": 6.4,
+      "heightAboveGroundFt": 0,
+      "level": "ground",
+      "pose": "standing",
+      "indoors": true,
+      "underfoot": "cabin floor",
+      "carrying": [
+       {
+        "id": "journal",
+        "name": "journal",
+        "in": "pocket"
+       },
+       {
+        "id": "pencil",
+        "name": "pencil",
+        "in": "pocket"
+       },
+       {
+        "id": "rope",
+        "name": "coil of rope",
+        "in": "hand"
+       },
+       {
+        "id": "lantern",
+        "name": "oil lantern",
+        "in": "hand"
+       },
+       {
+        "id": "tin_cup",
+        "name": "tin cup",
+        "in": "pocket"
+       },
+       {
+        "id": "folded_paper",
+        "name": "folded paper",
+        "in": "pocket"
+       }
+      ],
+      "wearing": [],
+      "handsFree": 0
+     },
+     "currentAction": {
+      "id": 28,
+      "type": "look",
+      "label": "Looking around",
+      "progress": 1,
+      "elapsedSec": 4,
+      "estimatedTotalSec": 4
+     },
+     "lastActionResult": {
+      "id": 27,
+      "type": "pick_up",
+      "status": "completed",
+      "message": "You pick up the oil lantern."
+     },
+     "visibleObjects": [
+      {
+       "id": "cabin_table",
+       "name": "cabin table",
+       "distanceFt": 5,
+       "bearing": "N",
+       "bearingDeg": 0,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A rough wooden table.",
+       "holds": [],
+       "reachable": true
+      },
+      {
+       "id": "cabin",
+       "name": "cabin",
+       "distanceFt": 13,
+       "bearing": "E",
+       "bearingDeg": 101,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A small log cabin with a single door on its south side. Inside: a table and a narrow bed. A stone chimney rises from the roof.",
+       "reachable": false
+      },
+      {
+       "id": "cabin_door",
+       "name": "cabin door",
+       "distanceFt": 23,
+       "bearing": "SE",
+       "bearingDeg": 139,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A plank door with an iron latch.",
+       "reachable": false
+      },
+      {
+       "id": "platform",
+       "name": "platform",
+       "distanceFt": 465,
+       "location": "at the top of the ladder",
+       "type": "fixture",
+       "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+       "reachable": false
+      }
+     ],
+     "terrainFeatures": [],
+     "soundsHeard": [],
+     "notes": [
+      "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.",
+      "You are inside the cabin. The door is open."
+     ]
+    }
+   }
+  },
+  {
+   "id": 29,
+   "type": "walk",
+   "params": {
+    "type": "walk",
+    "direction": "N",
+    "distance": 8
+   },
+   "label": "Walking N 8 ft",
+   "status": "completed",
+   "startSim": 454,
+   "endSim": 456.569,
+   "durationSec": 2.57,
+   "result": {
+    "message": "Arrived at 8 ft N (258, 403) after 10 ft in 00:03 (avg 3.89 ft/s)."
+   }
+  },
+  {
+   "id": 30,
+   "type": "walk",
+   "params": {
+    "type": "walk",
+    "direction": "N",
+    "distance": 10
+   },
+   "label": "Walking N 10 ft",
+   "status": "completed",
+   "startSim": 459.95,
+   "endSim": 486.714,
+   "durationSec": 26.76,
+   "result": {
+    "message": "Arrived at 10 ft N (258, 393) after 104 ft in 00:27 (avg 3.89 ft/s)."
+   }
+  },
+  {
+   "id": 31,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "mirror"
+   },
+   "label": "Walking to the standing mirror",
+   "status": "completed",
+   "startSim": 493.768,
+   "endSim": 528.247,
+   "durationSec": 34.48,
+   "result": {
+    "message": "Arrived at the standing mirror (163, 453) after 123 ft in 00:34 (avg 3.56 ft/s)."
+   }
+  },
+  {
+   "id": 32,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "mirror"
+   },
+   "label": "Inspecting standing mirror",
+   "status": "completed",
+   "startSim": 533.926,
+   "endSim": 539.926,
+   "durationSec": 6,
+   "result": {
+    "message": "A round mirror in a wooden frame, standing against a tree. The glass is clean."
+   }
+  },
+  {
+   "id": 33,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "ladder"
+   },
+   "label": "Walking to the tall metal ladder",
+   "status": "completed",
+   "startSim": 544.075,
+   "endSim": 689.665,
+   "durationSec": 145.59,
+   "result": {
+    "message": "Arrived at the tall metal ladder (688, 548) after 564 ft in 02:26 (avg 3.88 ft/s)."
+   }
+  },
+  {
+   "id": 34,
+   "type": "put_down",
+   "params": {
+    "type": "put_down",
+    "target": "rope"
+   },
+   "label": "Putting down the coil of rope",
+   "status": "completed",
+   "startSim": 694.203,
+   "endSim": 697.203,
+   "durationSec": 3,
+   "result": {
+    "message": "You put down the coil of rope on the ground (grass)."
+   }
+  },
+  {
+   "id": 35,
+   "type": "put_down",
+   "params": {
+    "type": "put_down",
+    "target": "lantern"
+   },
+   "label": "Putting down the oil lantern",
+   "status": "completed",
+   "startSim": 700.555,
+   "endSim": 703.555,
+   "durationSec": 3,
+   "result": {
+    "message": "You put down the oil lantern on the ground (grass)."
+   }
+  },
+  {
+   "id": 36,
+   "type": "climb",
+   "params": {
+    "type": "climb",
+    "target": "ladder"
+   },
+   "label": "Climbing the ladder",
+   "status": "completed",
+   "startSim": 707.375,
+   "endSim": 947.375,
+   "durationSec": 240,
+   "result": {
+    "message": "You reach the platform at the top of the ladder, 100 ft up."
+   }
+  },
+  {
+   "id": 37,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "lighter"
+   },
+   "label": "Picking up the lighter",
+   "status": "completed",
+   "startSim": 955.014,
+   "endSim": 958.014,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the lighter."
+   }
+  },
+  {
+   "id": 38,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "snorkel"
+   },
+   "label": "Picking up the snorkel",
+   "status": "completed",
+   "startSim": 970.11,
+   "endSim": 973.11,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the snorkel."
+   }
+  },
+  {
+   "id": 39,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "sword"
+   },
+   "label": "Inspecting sword",
+   "status": "completed",
+   "startSim": 980.612,
+   "endSim": 986.612,
+   "durationSec": 6,
+   "result": {
+    "message": "A steel sword in a leather scabbard with a shoulder strap."
+   }
+  },
+  {
+   "id": 40,
+   "type": "wear",
+   "params": {
+    "type": "wear",
+    "target": "sword"
+   },
+   "label": "Putting on the sword",
+   "status": "completed",
+   "startSim": 991.59,
+   "endSim": 997.59,
+   "durationSec": 6,
+   "result": {
+    "message": "You put on the sword."
+   }
+  },
+  {
+   "id": 41,
+   "type": "descend",
+   "params": {
+    "type": "descend"
+   },
+   "label": "Descending the ladder",
+   "status": "completed",
+   "startSim": 1006.21,
+   "endSim": 1237.21,
+   "durationSec": 231,
+   "result": {
+    "message": "You step off the ladder onto the ground."
+   }
+  },
+  {
+   "id": 42,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "rope"
+   },
+   "label": "Picking up the coil of rope",
+   "status": "completed",
+   "startSim": 1243.802,
+   "endSim": 1246.802,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the coil of rope."
+   }
+  },
+  {
+   "id": 43,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "lantern"
+   },
+   "label": "Picking up the oil lantern",
+   "status": "completed",
+   "startSim": 1251.567,
+   "endSim": 1254.567,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the oil lantern."
+   }
+  },
+  {
+   "id": 44,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "stone_circle"
+   },
+   "label": "Walking to the stone circle",
+   "status": "completed",
+   "startSim": 1258.95,
+   "endSim": 1305.769,
+   "durationSec": 46.82,
+   "result": {
+    "message": "Arrived at the stone circle (798, 423) after 180 ft in 00:47 (avg 3.85 ft/s)."
+   }
+  },
+  {
+   "id": 45,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "stone_circle"
+   },
+   "label": "Inspecting stone circle",
+   "status": "completed",
+   "startSim": 1310.414,
+   "endSim": 1316.414,
+   "durationSec": 6,
+   "result": {
+    "message": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass."
+   }
+  },
+  {
+   "id": 46,
+   "type": "walk",
+   "params": {
+    "type": "walk",
+    "direction": "NE",
+    "distance": 8
+   },
+   "label": "Walking NE 8 ft",
+   "status": "completed",
+   "startSim": 1323.65,
+   "endSim": 1325.669,
+   "durationSec": 2.02,
+   "result": {
+    "message": "Arrived at 8 ft NE (803, 417) after 8 ft in 00:02 (avg 3.96 ft/s)."
+   }
+  },
+  {
+   "id": 47,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "bell"
+   },
+   "label": "Walking to the bronze bell",
+   "status": "completed",
+   "startSim": 1331.812,
+   "endSim": 1362.808,
+   "durationSec": 31,
+   "result": {
+    "message": "Arrived at the bronze bell (843, 313) after 121 ft in 00:31 (avg 3.90 ft/s)."
+   }
+  },
+  {
+   "id": 48,
+   "type": "put_down",
+   "params": {
+    "type": "put_down",
+    "target": "lantern"
+   },
+   "label": "Putting down the oil lantern",
+   "status": "completed",
+   "startSim": 1372.411,
+   "endSim": 1375.411,
+   "durationSec": 3,
+   "result": {
+    "message": "You put down the oil lantern on the ground (grass)."
+   }
+  },
+  {
+   "id": 49,
+   "type": "use",
+   "params": {
+    "type": "use",
+    "target": "bell"
+   },
+   "label": "Ringing the bell",
+   "status": "completed",
+   "startSim": 1381.95,
+   "endSim": 1387.95,
+   "durationSec": 6,
+   "result": {
+    "message": "You pull the rope. The bell rings out loudly across the island."
+   }
+  },
+  {
+   "id": 50,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "lantern"
+   },
+   "label": "Picking up the oil lantern",
+   "status": "completed",
+   "startSim": 1397.501,
+   "endSim": 1400.501,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the oil lantern."
+   }
+  },
+  {
+   "id": 51,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "cliffs"
+   },
+   "label": "Walking to the cliffs",
+   "status": "completed",
+   "startSim": 1406.019,
+   "endSim": 1422.023,
+   "durationSec": 16,
+   "result": {
+    "message": "Arrived at the cliffs (868, 283) after 40 ft in 00:16 (avg 2.52 ft/s)."
+   }
+  },
+  {
+   "id": 52,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "cliffs"
+   },
+   "label": "Inspecting cliffs",
+   "status": "completed",
+   "startSim": 1426.861,
+   "endSim": 1432.861,
+   "durationSec": 6,
+   "result": {
+    "message": "Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down."
+   }
+  },
+  {
+   "id": 53,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "pond"
+   },
+   "label": "Walking to the pond",
+   "status": "completed",
+   "startSim": 1447.522,
+   "endSim": 1517.624,
+   "durationSec": 70.1,
+   "result": {
+    "message": "Arrived at the pond (648, 393) after 266 ft in 01:10 (avg 3.79 ft/s)."
+   }
+  },
+  {
+   "id": 54,
+   "type": "look",
+   "params": {
+    "type": "look"
+   },
+   "label": "Looking around",
+   "status": "completed",
+   "startSim": 1523.308,
+   "endSim": 1527.308,
+   "durationSec": 4,
+   "result": {
+    "message": "You look around. You can see 6 things nearby.",
+    "observation": {
+     "observationOf": "agent",
+     "simTimeSec": 1527.3,
+     "run": {
+      "active": true,
+      "ended": false,
+      "elapsedSec": 1527.3,
+      "remainingSec": 272.7
+     },
+     "self": {
+      "position": {
+       "x": 647.5,
+       "y": 392.5,
+       "unit": "ft",
+       "axes": "x east, y south, origin at NW corner of map"
+      },
+      "groundElevationFt": 6.1,
+      "heightAboveGroundFt": 0,
+      "level": "ground",
+      "pose": "standing",
+      "indoors": false,
+      "underfoot": "grass",
+      "carrying": [
+       {
+        "id": "journal",
+        "name": "journal",
+        "in": "pocket"
+       },
+       {
+        "id": "pencil",
+        "name": "pencil",
+        "in": "pocket"
+       },
+       {
+        "id": "rope",
+        "name": "coil of rope",
+        "in": "hand"
+       },
+       {
+        "id": "lantern",
+        "name": "oil lantern",
+        "in": "hand"
+       },
+       {
+        "id": "tin_cup",
+        "name": "tin cup",
+        "in": "pocket"
+       },
+       {
+        "id": "folded_paper",
+        "name": "folded paper",
+        "in": "pocket"
+       },
+       {
+        "id": "lighter",
+        "name": "lighter",
+        "in": "pocket"
+       },
+       {
+        "id": "snorkel",
+        "name": "snorkel",
+        "in": "pocket"
+       }
+      ],
+      "wearing": [
+       {
+        "id": "sword",
+        "name": "sword"
+       }
+      ],
+      "handsFree": 0
+     },
+     "currentAction": {
+      "id": 54,
+      "type": "look",
+      "label": "Looking around",
+      "progress": 1,
+      "elapsedSec": 4,
+      "estimatedTotalSec": 4
+     },
+     "lastActionResult": {
+      "id": 53,
+      "type": "walk_to",
+      "status": "completed",
+      "message": "Arrived at the pond (648, 393) after 266 ft in 01:10 (avg 3.79 ft/s)."
+     },
+     "visibleObjects": [
+      {
+       "id": "stone_circle",
+       "name": "stone circle",
+       "distanceFt": 155,
+       "bearing": "E",
+       "bearingDeg": 100,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.",
+       "reachable": false
+      },
+      {
+       "id": "ladder",
+       "name": "tall metal ladder",
+       "distanceFt": 162,
+       "bearing": "S",
+       "bearingDeg": 165,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+       "reachable": false
+      },
+      {
+       "id": "platform",
+       "name": "platform",
+       "distanceFt": 175,
+       "location": "at the top of the ladder",
+       "type": "fixture",
+       "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+       "reachable": false
+      },
+      {
+       "id": "bell",
+       "name": "bronze bell",
+       "distanceFt": 214,
+       "bearing": "NE",
+       "bearingDeg": 67,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.",
+       "reachable": false
+      },
+      {
+       "id": "bridge",
+       "name": "wooden bridge",
+       "distanceFt": 245,
+       "bearing": "SW",
+       "bearingDeg": 243,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "An arched plank footbridge with handrails over the stream.",
+       "reachable": false
+      },
+      {
+       "id": "cabin",
+       "name": "cabin",
+       "distanceFt": 383,
+       "bearing": "W",
+       "bearingDeg": 267,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A small log cabin with a single door on its south side.",
+       "reachable": false
+      }
+     ],
+     "terrainFeatures": [
+      {
+       "id": "pond",
+       "distanceFt": 6,
+       "bearing": "SW"
+      },
+      {
+       "id": "stream",
+       "distanceFt": 200,
+       "bearing": "W"
+      },
+      {
+       "id": "hill",
+       "distanceFt": 254,
+       "bearing": "NW"
+      },
+      {
+       "id": "ocean",
+       "distanceFt": 272,
+       "bearing": "E"
+      },
+      {
+       "id": "beach",
+       "distanceFt": 346,
+       "bearing": "S"
+      },
+      {
+       "id": "forest",
+       "distanceFt": 56,
+       "bearing": "NE"
+      },
+      {
+       "id": "cliffs",
+       "distanceFt": 240,
+       "bearing": "NE"
+      }
+     ],
+     "soundsHeard": [],
+     "notes": [
+      "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.",
+      "The pond water is murky."
+     ]
+    }
+   }
+  },
+  {
+   "id": 55,
+   "type": "inspect",
+   "params": {
+    "type": "inspect",
+    "target": "pond"
+   },
+   "label": "Inspecting pond",
+   "status": "completed",
+   "startSim": 1533.054,
+   "endSim": 1539.054,
+   "durationSec": 6,
+   "result": {
+    "message": "A still pond. The water is murky near the banks."
+   }
+  },
+  {
+   "id": 56,
+   "type": "look",
+   "params": {
+    "type": "look"
+   },
+   "label": "Looking around",
+   "status": "completed",
+   "startSim": 1557.623,
+   "endSim": 1561.623,
+   "durationSec": 4,
+   "result": {
+    "message": "You look around. You can see 6 things nearby.",
+    "observation": {
+     "observationOf": "agent",
+     "simTimeSec": 1561.6,
+     "run": {
+      "active": true,
+      "ended": false,
+      "elapsedSec": 1561.6,
+      "remainingSec": 238.4
+     },
+     "self": {
+      "position": {
+       "x": 647.5,
+       "y": 392.5,
+       "unit": "ft",
+       "axes": "x east, y south, origin at NW corner of map"
+      },
+      "groundElevationFt": 6.1,
+      "heightAboveGroundFt": 0,
+      "level": "ground",
+      "pose": "standing",
+      "indoors": false,
+      "underfoot": "grass",
+      "carrying": [
+       {
+        "id": "journal",
+        "name": "journal",
+        "in": "pocket"
+       },
+       {
+        "id": "pencil",
+        "name": "pencil",
+        "in": "pocket"
+       },
+       {
+        "id": "rope",
+        "name": "coil of rope",
+        "in": "hand"
+       },
+       {
+        "id": "lantern",
+        "name": "oil lantern",
+        "in": "hand"
+       },
+       {
+        "id": "tin_cup",
+        "name": "tin cup",
+        "in": "pocket"
+       },
+       {
+        "id": "folded_paper",
+        "name": "folded paper",
+        "in": "pocket"
+       },
+       {
+        "id": "lighter",
+        "name": "lighter",
+        "in": "pocket"
+       },
+       {
+        "id": "snorkel",
+        "name": "snorkel",
+        "in": "pocket"
+       }
+      ],
+      "wearing": [
+       {
+        "id": "sword",
+        "name": "sword"
+       }
+      ],
+      "handsFree": 0
+     },
+     "currentAction": {
+      "id": 56,
+      "type": "look",
+      "label": "Looking around",
+      "progress": 1,
+      "elapsedSec": 4,
+      "estimatedTotalSec": 4
+     },
+     "lastActionResult": {
+      "id": 55,
+      "type": "inspect",
+      "status": "completed",
+      "message": "A still pond. The water is murky near the banks."
+     },
+     "visibleObjects": [
+      {
+       "id": "stone_circle",
+       "name": "stone circle",
+       "distanceFt": 155,
+       "bearing": "E",
+       "bearingDeg": 100,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.",
+       "reachable": false
+      },
+      {
+       "id": "ladder",
+       "name": "tall metal ladder",
+       "distanceFt": 162,
+       "bearing": "S",
+       "bearingDeg": 165,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+       "reachable": false
+      },
+      {
+       "id": "platform",
+       "name": "platform",
+       "distanceFt": 175,
+       "location": "at the top of the ladder",
+       "type": "fixture",
+       "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+       "reachable": false
+      },
+      {
+       "id": "bell",
+       "name": "bronze bell",
+       "distanceFt": 214,
+       "bearing": "NE",
+       "bearingDeg": 67,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.",
+       "reachable": false
+      },
+      {
+       "id": "bridge",
+       "name": "wooden bridge",
+       "distanceFt": 245,
+       "bearing": "SW",
+       "bearingDeg": 243,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "An arched plank footbridge with handrails over the stream.",
+       "reachable": false
+      },
+      {
+       "id": "cabin",
+       "name": "cabin",
+       "distanceFt": 383,
+       "bearing": "W",
+       "bearingDeg": 267,
+       "location": "fixed in place",
+       "type": "fixture",
+       "description": "A small log cabin with a single door on its south side.",
+       "reachable": false
+      }
+     ],
+     "terrainFeatures": [
+      {
+       "id": "pond",
+       "distanceFt": 6,
+       "bearing": "SW"
+      },
+      {
+       "id": "stream",
+       "distanceFt": 200,
+       "bearing": "W"
+      },
+      {
+       "id": "hill",
+       "distanceFt": 254,
+       "bearing": "NW"
+      },
+      {
+       "id": "ocean",
+       "distanceFt": 272,
+       "bearing": "E"
+      },
+      {
+       "id": "beach",
+       "distanceFt": 346,
+       "bearing": "S"
+      },
+      {
+       "id": "forest",
+       "distanceFt": 56,
+       "bearing": "NE"
+      },
+      {
+       "id": "cliffs",
+       "distanceFt": 240,
+       "bearing": "NE"
+      }
+     ],
+     "soundsHeard": [],
+     "notes": [
+      "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.",
+      "The pond water is murky."
+     ]
+    }
+   }
+  },
+  {
+   "id": 57,
+   "type": "put_down",
+   "params": {
+    "type": "put_down",
+    "target": "lantern"
+   },
+   "label": "Putting down the oil lantern",
+   "status": "completed",
+   "startSim": 1570.326,
+   "endSim": 1573.326,
+   "durationSec": 3,
+   "result": {
+    "message": "You put down the oil lantern on the ground (grass)."
+   }
+  },
+  {
+   "id": 58,
+   "type": "put_down",
+   "params": {
+    "type": "put_down",
+    "target": "coil of rope"
+   },
+   "label": "Putting down the coil of rope",
+   "status": "completed",
+   "startSim": 1580.15,
+   "endSim": 1583.15,
+   "durationSec": 3,
+   "result": {
+    "message": "You put down the coil of rope on the ground (grass)."
+   }
+  },
+  {
+   "id": 59,
+   "type": "wear",
+   "params": {
+    "type": "wear",
+    "target": "snorkel"
+   },
+   "label": "Putting on the snorkel",
+   "status": "completed",
+   "startSim": 1587.504,
+   "endSim": 1593.504,
+   "durationSec": 6,
+   "result": {
+    "message": "You put on the snorkel."
+   }
+  },
+  {
+   "id": 60,
+   "type": "walk",
+   "params": {
+    "type": "walk",
+    "direction": "SW",
+    "distance": 8
+   },
+   "label": "Walking SW 8 ft (stopping at the water)",
+   "status": "completed",
+   "startSim": 1598.655,
+   "endSim": 1599.163,
+   "durationSec": 0.51,
+   "result": {
+    "message": "Arrived at 8 ft SW (646, 394) after 2 ft in 00:01 (avg 3.93 ft/s)."
+   }
+  },
+  {
+   "id": 61,
+   "type": "remove",
+   "params": {
+    "type": "remove",
+    "target": "sword"
+   },
+   "label": "Taking off the sword",
+   "status": "completed",
+   "startSim": 1618.303,
+   "endSim": 1623.303,
+   "durationSec": 5,
+   "result": {
+    "message": "You take off the sword and carry it."
+   }
+  },
+  {
+   "id": 62,
+   "type": "put_down",
+   "params": {
+    "type": "put_down",
+    "target": "sword"
+   },
+   "label": "Putting down the sword",
+   "status": "completed",
+   "startSim": 1638.176,
+   "endSim": 1641.176,
+   "durationSec": 3,
+   "result": {
+    "message": "You put down the sword on the ground (grass)."
+   }
+  },
+  {
+   "id": 63,
+   "type": "use",
+   "params": {
+    "type": "use",
+    "target": "snorkel",
+    "with": "pond"
+   },
+   "label": "Looking underwater in the pond",
+   "status": "completed",
+   "startSim": 1647.801,
+   "endSim": 1667.801,
+   "durationSec": 20,
+   "result": {
+    "message": "You put your face in the water and look around beneath the surface. Only mud and weeds nearby."
+   }
+  },
+  {
+   "id": 64,
+   "type": "walk",
+   "params": {
+    "type": "walk",
+    "direction": "W",
+    "distance": 30
+   },
+   "label": "Walking W 30 ft (stopping at the water)",
+   "status": "completed",
+   "startSim": 1677.5,
+   "endSim": 1678.776,
+   "durationSec": 1.28,
+   "result": {
+    "message": "Arrived at 30 ft W (641, 394) after 5 ft in 00:01 (avg 3.92 ft/s)."
+   }
+  },
+  {
+   "id": 65,
+   "type": "use",
+   "params": {
+    "type": "use",
+    "target": "snorkel",
+    "with": "pond"
+   },
+   "label": "Looking underwater in the pond",
+   "status": "completed",
+   "startSim": 1685.024,
+   "endSim": 1705.024,
+   "durationSec": 20,
+   "result": {
+    "message": "You put your face in the water and look around beneath the surface. Only mud and weeds nearby."
+   }
+  },
+  {
+   "id": 66,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "sword"
+   },
+   "label": "Picking up the sword",
+   "status": "completed",
+   "startSim": 1715.131,
+   "endSim": 1718.131,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the sword."
+   }
+  },
+  {
+   "id": 67,
+   "type": "pick_up",
+   "params": {
+    "type": "pick_up",
+    "target": "rope"
+   },
+   "label": "Picking up the coil of rope",
+   "status": "completed",
+   "startSim": 1722.285,
+   "endSim": 1725.285,
+   "durationSec": 3,
+   "result": {
+    "message": "You pick up the coil of rope."
+   }
+  },
+  {
+   "id": 68,
+   "type": "walk_to",
+   "params": {
+    "type": "walk_to",
+    "target": "bridge"
+   },
+   "label": "Walking to the wooden bridge",
+   "status": "interrupted",
+   "startSim": 1730.7,
+   "endSim": 1771.762,
+   "durationSec": 41.06,
+   "result": {
+    "message": "Stopped walking at (525, 400) after 137 ft in 00:41 (avg 3.34 ft/s).",
+    "reason": "replaced by new action",
+    "progressAtStop": 0.493
+   }
+  },
+  {
+   "id": 69,
+   "type": "write_journal",
+   "params": {
+    "type": "write_journal",
+    "text": "From the platform I took in the whole island—bell on the headland, pond and stream ribboning to the sea, cabin under the trees. I rang the bell (it carries!), then circled back to the pond. Snorkeling along the edges showed only mud and weeds here; perhaps the center hides more, or a clearer inlet. I left a lantern on the far bank. I’m carrying rope and a sword; the ladder climb felt solid and calm. If I had more time: retrieve the lantern, explore the cabin, and follow the stream under the bridge.",
+    "interruptCurrent": true
+   },
+   "label": "Writing in the journal",
+   "status": "interrupted",
+   "startSim": 1771.762,
+   "endSim": 1800.018,
+   "durationSec": 28.26,
+   "result": {
+    "message": "You stop writing. Written so far: \"From the platform I took in the whole island—bell on the\"",
+    "reason": "run ended",
+    "progressAtStop": 0.122
+   }
+  }
+ ],
+ "nextActionId": 70,
+ "nextSeq": 474
+}
