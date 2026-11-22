@@ -50,11 +50,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   // ---------- 2. movement rate in REAL TIME (1x) ----------
   // Walk on flat grass. First get to a flat grass start point quickly, then measure at 1x.
   await ev(() => Island.setSpeed(60));
-  let r = await doFast({ type: 'walk_to', x: 560, y: 560 });
-  const flat = await ev(() => ({ t: Island._debug.terrainAt(560, 560), h1: Island._debug.heightAt(560, 560), h2: Island._debug.heightAt(620, 560), t2: Island._debug.terrainAt(620, 560) }));
+  let r = await doFast({ type: 'walk_to', x: 380, y: 660 });
+  const flat = await ev(() => ({ t: Island._debug.terrainAt(380, 660), h1: Island._debug.heightAt(380, 660), h2: Island._debug.heightAt(440, 660), t2: Island._debug.terrainAt(440, 660) }));
   await ev(() => Island.setSpeed(1));
   const before = await ev(() => Island.getObservation().self.position);
-  r = await ev(() => Island.submitAction({ type: 'walk_to', x: 640, y: 560 }));
+  r = await ev(() => Island.submitAction({ type: 'walk_to', x: 460, y: 660 }));
   const tA = Date.now(); const simA = (await ev(() => Island.getStatus())).simTimeSec;
   await shot('02a_walk_start', true);
   await sleep(5000); await shot('02b_walk_5s');
@@ -67,16 +67,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const intr = await ev(() => { const i = Island.interrupt(); return { i, p: Island.getObservation().self.position }; });
   await sleep(1500);
   const after = await ev(() => Island.getObservation().self.position);
-  check('2b. Interrupt leaves agent at its intermediate position', intr.i.ok && Math.abs(after.x - intr.p.x) < 0.01 && intr.p.x > 560.5 && intr.p.x < 639, `stopped at x=${intr.p.x}, still ${after.x} 1.5 s later`);
+  check('2b. Interrupt leaves agent at its intermediate position', intr.i.ok && Math.abs(after.x - intr.p.x) < 0.01 && intr.p.x > 380.5 && intr.p.x < 459, `stopped at x=${intr.p.x}, still ${after.x} 1.5 s later`);
   // 300 ft estimate on the beach vs grass
   const est = await ev(() => { const r = Island.submitAction({ type: 'walk', direction: 'E', distance: 300 }); Island.interrupt(); return r; });
   check('2c. 300 ft walk estimate is plausible (≈75 s on clear ground, longer on rough/sloped ground)', est.ok && est.estimatedDurationSec >= 70 && est.estimatedDurationSec < 140, 'estimated ' + est.estimatedDurationSec + ' s: ' + est.label);
 
   // ---------- 3. climbing progress ----------
   await ev(() => Island.setSpeed(60));
+  await doFast({ type: 'walk_to', target: 'cabin_door' });
+  const logMark = await ev(() => Island.exportLog().length);
   r = await doFast({ type: 'walk_to', target: 'ladder' });
-  check('3a. Walk to ladder succeeds (route crosses the bridge)', r.ok && /Arrived/.test(r.result.result.message), r.result && r.result.result.message);
-  const bridgeLog = await ev(() => Island.exportLog().some(e => /wooden bridge/.test(e.msg)));
+  check('3a. Walk from the cabin to the ladder succeeds', r.ok && /Arrived/.test(r.result.result.message), r.result && r.result.result.message);
+  const bridgeLog = await ev(m => Island.exportLog().slice(m).some(e => /wooden bridge/.test(e.msg)), logMark);
   check('3a2. Route used the bridge rather than wading', bridgeLog, 'log mentions bridge: ' + bridgeLog);
   await ev(() => Island.setSpeed(1));
   r = await ev(() => Island.submitAction({ type: 'climb' }));
@@ -115,7 +117,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const st = await ev(() => { const s = Island.exportState(); return { sword: s.objects.sword.loc, lighter: s.objects.lighter.loc, snorkel: s.objects.snorkel.loc }; });
   check('4b. Objects stay where placed (sword on platform, lighter in boat, snorkel worn)', st.sword.t === 'on' && st.sword.id === 'platform' && st.lighter.t === 'in' && st.lighter.id === 'boat' && st.snorkel.t === 'worn', JSON.stringify(st));
   // underwater key with snorkel
-  await doFast({ type: 'walk_to', x: 532, y: 403 });
+  await doFast({ type: 'walk_to', x: 516, y: 425 });
   const k0 = await ev(() => Island.getObservation().visibleObjects.some(o => o.id === 'brass_key'));
   r = await doFast({ type: 'use', target: 'snorkel' });
   const k1 = await ev(() => Island.getObservation().visibleObjects.some(o => o.id === 'brass_key'));
@@ -124,7 +126,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   // cabin: door, locked chest, key, fragile lantern
   const shut = await ev(() => Island.submitAction({ type: 'walk_to', target: 'cabin_table' }));
   check('4d. Cannot walk into the cabin while the door is closed', !shut.ok, shut.error);
-  const shut2 = await ev(() => { Island.submitAction({ type: 'walk_to', target: 'cabin_door' }); Island.advanceTime(400); return Island.submitAction({ type: 'walk_to', x: 300, y: 425 }); });
+  const shut2 = await ev(() => { Island.submitAction({ type: 'walk_to', target: 'cabin_door' }); Island.advanceTime(400); return Island.submitAction({ type: 'walk_to', x: 267, y: 410 }); });
   check('4d2. Walking to a point inside the closed cabin is refused', !shut2.ok, shut2.error);
   await doFast({ type: 'walk_to', target: 'cabin_door' });
   await doFast({ type: 'open', target: 'cabin_door' });
@@ -133,6 +135,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await doFast({ type: 'use', target: 'brass_key', with: 'chest' });
   const opened = await doFast({ type: 'open', target: 'chest' });
   check('4e. Locked chest fails to open; opens after unlocking with key', lockd.result.status === 'failed' && opened.result.status === 'completed', opened.result.result.message);
+  await doFast({ type: 'walk_to', target: 'cabin_door' });
   await doFast({ type: 'walk_to', target: 'cabin_table' });
   await doFast({ type: 'pick_up', target: 'lantern' });
   const drop = await doFast({ type: 'drop', target: 'lantern' });
@@ -142,6 +145,32 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const unsup2 = await ev(() => Island.submitAction({ type: 'swim' }));
   check('4g. Unsupported actions return a clear message', !unsup.ok && /No behavior is implemented/.test(unsup.error) && !unsup2.ok && /Unsupported/.test(unsup2.error), unsup.error + ' | ' + unsup2.error.slice(0, 60));
   await shot('04_cabin_open', true);
+
+  // ---------- 4h. objects from the reference image ----------
+  await doFast({ type: 'walk_to', x: 215, y: 540 });
+  await doFast({ type: 'walk_to', target: 'wheelbarrow' });
+  const wb1 = await doFast({ type: 'pick_up', target: 'wheelbarrow' });
+  await doFast({ type: 'walk_to', target: 'picnic_table' });
+  await doFast({ type: 'put_down', target: 'wheelbarrow' });
+  const rd = await doFast({ type: 'read', target: 'island_map' });
+  await doFast({ type: 'pick_up', target: 'island_map' });
+  await doFast({ type: 'put_down', target: 'island_map', onto: 'wheelbarrow' });
+  await doFast({ type: 'pick_up', target: 'wheelbarrow' });
+  const slow = await ev(() => Island.submitAction({ type: 'walk_to', x: 600, y: 600 }));
+  for (let i = 0; i < 400; i++) { const s = await ev(() => { Island.advanceTime(2); return Island.getStatus(); }); if (!s.action) break; }
+  await doFast({ type: 'put_down', target: 'wheelbarrow' });
+  const wbs = await ev(() => { const s = Island.exportState(); return { wb: s.objects.wheelbarrow.loc, map: s.objects.island_map.loc }; });
+  await doFast({ type: 'walk_to', target: 'blanket' });
+  const bl = await doFast({ type: 'use', target: 'blanket' });
+  await doFast({ type: 'walk_to', x: 700, y: 600 });
+  await doFast({ type: 'walk_to', target: 'blocks' });
+  const bk = await doFast({ type: 'use', target: 'blocks' });
+  const st2 = await ev(() => { const s = Island.exportState().objects; return { blanket: s.blanket.state.spread, blocks: s.blocks.state.stacked }; });
+  check('4h. Image objects work: wheelbarrow carries contents, map is readable, blanket folds, blocks topple', wb1.result.status === 'completed' && /hand-drawn map/.test(rd.result.result.text || '') && wbs.wb.t === 'ground' && wbs.wb.x > 560 && wbs.map.t === 'in' && wbs.map.id === 'wheelbarrow' && st2.blanket === false && st2.blocks === false,
+    `wheelbarrow now at (${Math.round(wbs.wb.x)}, ${Math.round(wbs.wb.y)}) with map inside; pushing estimate ${slow.estimatedDurationSec}s; ${bl.result.result.message} ${bk.result.result.message}`);
+  await doFast({ type: 'walk_to', x: 600, y: 700 });
+  const cliffWalk = await ev(() => Island.submitAction({ type: 'walk_to', x: 930, y: 560 }));
+  check('4i. Cliffs on the east are impassable', !cliffWalk.ok && /cliff/.test(cliffWalk.error), cliffWalk.error);
 
   // ---------- 5. journal ----------
   r = await doFast({ type: 'write_journal', text: 'The chest held a letter. The lantern broke when I dropped it.' });

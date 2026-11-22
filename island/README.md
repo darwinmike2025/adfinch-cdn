@@ -29,31 +29,41 @@ The header chip shows **1× REAL TIME** (green) or **TEST SPEED n×** (orange). 
 
 ## The island
 
-- Map: 1000 × 800 ft. The island is about 913 ft across at its widest point.
+The layout follows the reference image (`screenshots/reference-image.png`, an angled view looking north from the south-west), turned into a top-down map.
+
+- Map: 1000 × 800 ft. The island is about 930 ft across at its widest point (west to east).
 - **Coordinates:** feet, origin at the **north-west corner**, **x increases east, y increases south** (north is up). Elevation is in feet.
-- All positions are in the `LAYOUT` block near the top of the script. **Note:** no reference image came with the original request, so the layout is a reasonable arrangement of the requested features. To match a picture, edit the `LAYOUT` numbers.
+- All positions are in the `LAYOUT` block near the top of the script. Edit those numbers to adjust the map.
+- Shoreline: sandy beach along the south-west, south and west; rocky cliffs along the east, north-east and south-east (impassable at the edge); a narrow rocky rim elsewhere.
 
 | Feature | Position (ft) | Notes |
 |---|---|---|
-| Agent start | (478, 698) | Sandy beach beside the boat, carrying a blank **journal** and a **pencil** |
-| Rowboat | (470, 688) | Holds an **oar** and a **coil of rope**. Launching the boat is not implemented. |
-| Driftwood ×2, smooth stones ×2 | south beach | Driftwood is fuel for the fire pit |
-| Cabin | x 280–320, y 410–440 | Door on the south wall (closed at start). Inside: a table with an **oil lantern** (fragile) and a **tin cup**, plus a **locked chest** holding a **folded letter** |
-| Fire pit | (300, 482) | Put driftwood in, then use the lighter on it |
-| Hill | peak at (440, 210), ~65 ft high | Slopes slow walking |
-| Stone circle + bronze bell | (440, 208) | Nine standing stones. The **bell** can be rung. |
-| Stream | hill spring → pond → east coast | Wading is slow (0.32× speed) |
-| Pond | centre (590, 400), 110 × 76 ft | Can't be walked into. A **brass key** lies underwater near the west bank. |
-| Bridge | (675, 414) | Crosses the stream at normal speed |
-| Tall ladder | base (770, 271), concrete foundation at (770, 262) | **100 ft** steel ladder up to a platform. On the platform's table: **lighter**, **sword**, **snorkel** |
-| Forests | NW, W, N, scattered | Rough ground (0.72× speed). Trunks are obstacles. |
+| Agent start | (268, 714) | Sandy beach beside the boat, carrying a blank **journal** and a **pencil** |
+| Rowboat | (260, 705) | Holds an **oar**. Launching the boat is not implemented. |
+| Coil of rope, wooden crate | (400, 720), (455, 725) | On the beach. The crate opens and holds a **tin cup**. |
+| Driftwood table | (361, 640) | A **sheet of paper** on it is a hand-drawn map you can read |
+| Fire pit | (286, 570) | Stone ring. Put driftwood in, then use the lighter on it. |
+| Wheelbarrow | (205, 522) | Pick it up to push it (both hands); anything inside comes along |
+| Cabin | x 245–285, y 395–425 | In the western trees, door on the south wall (closed at start). Inside: a table with an **oil lantern** (fragile) and a bed. |
+| Wooden chest | (302, 432) | Outside, beside the cabin door. **Locked**; holds a **folded letter**. |
+| Standing mirror | (160, 455) | Round mirror by a tree. "Use" it to look at yourself. |
+| Stream | hill steps (470, 250) → footbridge → south beach (540, 795) | Rocky; wading is slow (0.25× speed) |
+| Footbridge | (430, 505) | Arched, crosses the stream at normal speed |
+| Hill | peak at (525, 170), ~60 ft high | Boulders on top; stone steps beside the stream |
+| Pond | centre (590, 420), 140 × 76 ft | Lily pads. Can't be walked into. A **brass key** lies underwater near the west bank. |
+| Tower and ladder | foundation centre (690, 530), 30 ft square; climb from (690, 549) | **100 ft** ladder up the middle of a four-legged steel tower to a railed platform. On the platform's table: **lighter**, **sword**, **snorkel** |
+| Stepladder | (575, 520) | Small wooden A-frame, movable (both hands) |
+| Red ball, blue blanket, wooden blocks | (582, 610), (645, 615), (735, 612) | On the grass south of the tower |
+| Stone circle | (800, 420) | Low ring of stones near the eastern cliffs |
+| Bronze bell | (845, 310) | On a wooden frame on the north-east headland. Can be rung. |
+| Forests | west and north-west, around the cabin | Rough ground (0.72× speed). Trunks are obstacles. |
 
 ## Simulation rules (the environment decides all of these)
 
 **Time.** Real time by default (1×). Test speeds are 2, 5, 10, 30 and 60×, and they're logged. Time advances in 0.25 s steps.
 
 **Walking.** 4 ft/s on clear, level grass. The speed is multiplied by:
-- terrain: beach 0.85, forest 0.72, rocky hilltop 0.85, stream 0.32, bridge/grass/floor 1.0
+- terrain: beach 0.85, forest 0.72, rocky ground 0.65, stream 0.25, bridge/grass/floor 1.0
 - slope: `1 / (1 + 2.5·uphill grade + 1.0·downhill grade)`
 - load: each awkward item carried (oar, sword in hand) 0.85; total weight over 10 lb slows you further (up to 0.6×)
 
@@ -61,7 +71,7 @@ Routes are found by A* pathfinding on a 5 ft grid that minimises travel time. Wa
 
 **Climbing.** 2.4 s per ft up (4:00 for 100 ft) and 2.1 s per ft down (3:30). Both hands must be free: pocket-sized items are fine, and worn items are fine (wearing the sword makes climbing 10% slower). If you stop, the agent holds on at its current height.
 
-**Hands and pockets.** Small items go in pockets (up to 6). Medium items (oar, rope, driftwood, lantern, sword) take one hand each, and you have 2 hands. The snorkel can be worn, and so can the sword (by its shoulder strap).
+**Hands and pockets.** Small items go in pockets (up to 6). Medium items (oar, rope, driftwood, lantern, sword, ball, blanket, blocks) take one hand each, and you have 2 hands. Large items (wheelbarrow, stepladder) take both hands. The snorkel can be worn, and so can the sword (by its shoulder strap).
 
 **Action durations.** Look 4 s · inspect 6 s · pick up 3 s (10 s underwater) · put down 3 s · drop 1 s · open/close 2–3 s · wear 6 s · remove 5 s · ring bell 6 s · light fire 15 s · light lantern 8 s · look underwater 20 s · write ≈2.5 s per word (minimum 8 s) · read ≈0.3 s per word · sit 3 s · stand 2 s · rest/wait as requested.
 
@@ -74,13 +84,15 @@ Routes are found by A* pathfinding on a 5 ft grid that minimises travel time. Wa
 - Fire needs driftwood in the pit. Each log burns about 15 minutes and is then gone. Burnable items put into a lit fire are destroyed, including the journal.
 - The bell is heard island-wide for 30 s.
 - The tin cup can be filled at the pond or stream, then drunk from.
+- The wheelbarrow carries whatever is inside it when you push it. Picking up the blanket folds it. Picking up the blocks scatters the stack.
+- The east cliffs can't be walked onto.
 - The cabin door blocks movement when closed.
 
 **What the agent can perceive** (`getObservation()`). This is deliberately not the full world state.
-- Small items are visible within 40 ft on the same level, with details within 10 ft. Fixed landmarks are visible from further away (the ladder and hill from anywhere, the boat within 400 ft, and so on).
+- Items are visible on the same level within 40 ft (small), 80 ft (medium) or 120 ft (large), with details within 10 ft. Fixed landmarks are visible from further away (the ladder and hill from anywhere, the boat within 400 ft, and so on).
 - Objects at the top of the ladder are **only** visible from the platform, or from the ladder at 85 ft or higher. From the ground the agent is told there is a platform, but not what's on it.
 - From the platform or high on the ladder, all landmarks are visible, but small objects on the ground are too far away.
-- Things inside the cabin are visible only from inside, or through the open door from within 20 ft. Contents of closed containers are hidden.
+- Things inside the cabin are visible only from inside, or through the open door (standing within 20 ft of it, seeing up to 40 ft in). Contents of closed containers are hidden.
 - The underwater key is visible only after wearing the snorkel and using it ("look underwater") at the pond edge.
 - **Memory:** fixed features the agent has seen once (boat, cabin door, bell…) can be walked to later by name. Movable items must be currently visible.
 - The observation includes the agent's own coordinates. Remove `self.position` in `getObservation()` if an experiment shouldn't give that away.
@@ -112,9 +124,9 @@ All inputs and outputs are plain JSON-compatible objects.
 
 **Actions:** `look`, `inspect{target}`, `walk_to{target | x,y}`, `walk{direction, distance}`, `climb`, `descend`, `pick_up{target}` (alias `take`), `put_down{target, onto?}` (alias `put_in`), `drop{target}`, `open{target}`, `close{target}`, `use{target, with?}`, `wear{target}`, `remove{target}`, `read{target}`, `read_journal`, `write_journal{text}`, `sit`, `stand`, `rest{seconds}`, `wait{seconds}`, `stop`.
 
-Targets are object ids (`ladder`, `boat`, `cabin_door`, `chest`, `snorkel`…) or terrain features (`pond`, `stream`, `hill`, `ocean`, `beach`, `forest`). Names also work (`"rowboat"`, `"oil lantern"`).
+Targets are object ids (`ladder`, `boat`, `cabin_door`, `chest`, `crate`, `wheelbarrow`, `snorkel`…) or terrain features (`pond`, `stream`, `hill`, `ocean`, `beach`, `forest`, `cliffs`). Names also work (`"rowboat"`, `"oil lantern"`).
 
-**`use` combinations that are implemented:** `bell`; `lighter` alone, or with `fire_pit` or `lantern`; `brass_key` with `chest`; `snorkel` (worn, at the pond edge); `tin_cup` with `pond`/`stream`, or alone to drink. Anything else returns a clear "not implemented" message and changes nothing.
+**`use` combinations that are implemented:** `bell`; `lighter` alone, or with `fire_pit` or `lantern`; `brass_key` with `chest`; `snorkel` (worn, at the pond edge); `tin_cup` with `pond`/`stream`, or alone to drink; `mirror` (describes what you look like and what you carry); `ball` (toss and catch); `blanket` (spread or fold); `blocks` (stack or knock over). Anything else returns a clear "not implemented" message and changes nothing.
 
 Example observation, trimmed:
 
@@ -122,14 +134,14 @@ Example observation, trimmed:
 {
   "simTimeSec": 12.0,
   "run": {"active": true, "ended": false, "elapsedSec": 12.0, "remainingSec": 1788.0},
-  "self": {"position": {"x": 478, "y": 698}, "groundElevationFt": 0.9, "heightAboveGroundFt": 0,
+  "self": {"position": {"x": 268, "y": 714}, "groundElevationFt": 0.9, "heightAboveGroundFt": 0,
            "level": "ground", "pose": "standing", "indoors": false, "underfoot": "sandy beach",
            "carrying": [{"id": "journal", "in": "pocket"}, {"id": "pencil", "in": "pocket"}], "wearing": [], "handsFree": 2},
   "currentAction": null,
   "lastActionResult": {"id": 1, "type": "look", "status": "completed", "message": "You look around..."},
   "visibleObjects": [{"id": "boat", "name": "rowboat", "distanceFt": 13, "bearing": "NW", "reachable": true,
-                      "description": "...", "contains": ["oar", "rope"]},
-                     {"id": "ladder", "distanceFt": 513, "bearing": "NE", "reachable": false}],
+                      "description": "...", "contains": ["oar"]},
+                     {"id": "ladder", "distanceFt": 457, "bearing": "NE", "reachable": false}],
   "terrainFeatures": [{"id": "ocean", "distanceFt": 28, "bearing": "S"}],
   "soundsHeard": [],
   "notes": ["There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here."]
@@ -140,7 +152,7 @@ Example observation, trimmed:
 
 A web page opened from a file can't accept connections from another program. Browsers don't let pages listen on a network port. So a separate controller has to reach into the page. The simplest method, **built and tested**:
 
-**Browser automation (Playwright).** `controller/example_controller.js` opens `island.html` in a visible Chromium window. It then loops: read the observation, decide, submit the action, wait for it to finish. It streams events to the terminal and saves the replay, log, journal and (optionally) video at the end. It was tested headless at 60× for a 12-minute run: the timer ended the run on schedule and all files were written.
+**Browser automation (Playwright).** `controller/example_controller.js` opens `island.html` in a visible Chromium window. It then loops: read the observation, decide, submit the action, wait for it to finish. It streams events to the terminal and saves the replay, log, journal and (optionally) video at the end. It was tested headless at 60× for 12- and 14-minute runs: the timer ended the run on schedule and all files were written.
 
 ```
 npm i playwright && npx playwright install chromium
@@ -170,16 +182,16 @@ Other options, **not built**: a small local server that relays between the page 
 
 ## Tests
 
-`tests/test_island.js` runs 37 automated checks in headless Chromium (`node tests/test_island.js`). Screenshots and downloaded files go to `tests/output/`. Last run: **37/37 passed**, covering:
+`tests/test_island.js` runs 39 automated checks in headless Chromium (`node tests/test_island.js`). Screenshots and downloaded files go to `tests/output/`. Last run (after re-laying the island to match the reference image): **39/39 passed**, covering:
 
 1. The interface loads (clock, log, journal, reflections) with no errors.
-2. Real-time walking measured at **3.97 ft/s** on level grass (44 ft in 11.1 s of wall time). Interrupting leaves the agent where it stopped. A 300 ft estimate comes to about 73 s.
-3. The climb takes 4:00 and runs at 0.42 ft/s in real time. Mid-climb height and the gauge are captured in a screenshot. The agent reaches the platform at 100 ft.
-4. Objects keep their state: the sword left on the platform, the lighter put in the boat, the snorkel worn. The key is hidden until the agent looks underwater. The locked chest fails to open, then opens with the key. The dropped lantern breaks and stays broken. Unsupported actions get clear messages.
+2. Real-time walking measured at **3.97 ft/s** on level grass (44 ft in 11.1 s of wall time). Interrupting leaves the agent where it stopped. A 300 ft walk east from there is estimated at 86 s (it crosses rougher, gently sloping ground; on clear level grass 300 ft takes 75 s).
+3. The route from the cabin to the tower crosses the footbridge rather than wading. The climb takes 4:00 and runs at 0.42 ft/s in real time. Mid-climb height and the gauge are captured in a screenshot. The agent reaches the platform at 100 ft.
+4. Objects keep their state: the sword left on the platform, the lighter put in the boat, the snorkel worn. The key is hidden until the agent looks underwater. The locked chest fails to open, then opens with the key. The dropped lantern breaks and stays broken. The wheelbarrow carries the map across the island; the blanket folds; the blocks topple. The east cliffs refuse entry. Unsupported actions get clear messages.
 5. Journal entries persist and appear in the panel. An interrupted entry keeps its partial text. Reflections appear in their own panel.
 6. The beach observation does not mention the lighter, sword or snorkel. The platform observation does.
 7. Reset, save, restore (by API and from a downloaded file through the UI), and journal/log/CSV/replay exports all work. The log contains every required event kind.
-8. Replay, after a full page reload, from the exported file, matches the live positions within 0.43 ft and the live heights within 0.08 ft. The end state matches. Play, pause and speed work. Video recording produced a playable 1280×720 WebM.
+8. Replay, after a full page reload, from the exported file, matches the live positions within 0.2 ft and the live heights within 0.08 ft. The end state matches. Play, pause and speed work. Video recording produced a playable 1280×720 WebM.
 9. It opens and runs with the network blocked and makes no network requests. There are no remote URLs in the file.
 
 ## Limits and simplifications

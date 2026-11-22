@@ -244,24 +244,40 @@ aside{border-left:1px solid var(--line);display:flex;flex-direction:column;min-h
    ===================================================================================== */
 const VERSION = '1.0.0';
 const LAYOUT = {
+  // Matched to the reference image (camera looking north from the south-west).
   mapW:1000, mapH:800,
-  coast:{cx:480, cy:420, rx:450, ry:320},          // island outline (ellipse + wobble) ~900 ft wide
-  hill:{x:440, y:210, peak:62, sigma:80},          // main hill, peak 62 ft + base
-  pond:{x:590, y:400, rx:55, ry:38},
-  streamUpper:[[512,282],[524,312],[538,342],[553,374]],             // spring on hill -> pond
-  streamLower:[[643,404],[675,414],[705,424],[750,438],[810,453],[870,466],[930,476],[992,484]], // pond -> sea
-  bridge:{x:675, y:414, len:26, wid:8},
-  cabin:{x:280, y:410, w:40, h:30},               // footprint; door on the south wall
-  firePit:{x:300, y:482},
-  boat:{x:470, y:688, len:17, beam:6, angle:-0.3},
-  start:{x:478, y:698},                            // agent start, beside the boat
-  ladder:{x:770, y:271},                           // where you stand to climb
-  foundation:{x:770, y:262, size:12},              // concrete foundation; platform sits above it
+  coast:{cx:480, cy:430,                            // island outline: radius (ft) by compass angle (deg, 0=east, 90=south)
+    radii:[[8.6,470],[23,488],[42,432],[65,376],[95,346],[125,384],[147,427],[168,449],[187,423],[216,408],[245,353],[277,342],[305,380],[335,430],[350,457]]},
+  shore:{beach:[72,188], cliffs:[318,64]},           // sandy beach S/SW/W, rocky cliffs E/NE/SE, rocky edge elsewhere
+  hill:{x:525, y:170, peak:58, sigma:80},            // north hill with boulders on top
+  pond:{x:590, y:420, rx:70, ry:38},                 // lily pond, centre-east
+  stream:[[470,250],[462,300],[452,350],[440,400],[432,450],[430,505],[440,560],[460,610],[490,660],[515,710],[540,795]], // hill steps -> south beach
+  bridge:{x:430, y:505, len:26, wid:8},              // arched footbridge
+  cabin:{x:245, y:395, w:40, h:30},                  // in the western trees; door on the south wall
+  chest:{x:302, y:432},                              // outside, beside the cabin door
+  mirror:{x:160, y:455},                             // round standing mirror by a tree
+  wheelbarrow:{x:205, y:522},
+  firePit:{x:286, y:570},
+  picnicTable:{x:361, y:640},                        // driftwood table with a paper on it
+  boat:{x:260, y:705, len:17, beam:6, angle:0.1},
+  start:{x:268, y:714},                              // agent start, beside the boat
+  rope:{x:400, y:720},
+  crate:{x:455, y:725},
+  ladder:{x:690, y:549},                             // where you stand to climb (south face of the foundation)
+  foundation:{x:690, y:530, size:30},                // concrete foundation; tower legs splay out to its corners
   ladderHeight:100,
-  stoneCircle:{x:440, y:208, r:26, n:9},           // bell hangs in the middle
-  key:{x:543, y:403},                              // brass key, underwater in the pond
-  driftwood:[[440,705],[528,684]],
-  stones:[[505,716],[420,700]],
+  stepladder:{x:575, y:520},
+  ball:{x:582, y:610}, blanket:{x:645, y:615}, blocks:{x:735, y:612},
+  stoneCircle:{x:800, y:420, r:7, n:11},             // low ring of stones near the eastern cliffs
+  bell:{x:845, y:310},                               // bell on a wooden frame on the north-east headland
+  key:{x:528, y:425},                                // brass key, underwater near the pond's west bank
+  driftwood:[[190,660],[330,745]],
+  stones:[[215,700],[590,752]],
+  boulders:[[515,150],[532,158],[505,162],[548,146],[770,560],[788,548],[806,560],[824,546],[842,562],[812,522],[858,540],[175,690],[560,770],[640,760]],
+  paths:[[[267,428],[310,462],[372,492],[430,505],[500,522],[580,540],[672,550]],
+         [[432,470],[448,400],[458,330],[468,262],[500,205],[522,175]],
+         [[706,520],[760,470],[796,428],[825,370],[845,322]],
+         [[286,575],[330,615],[350,640]]],
 };
 const L = LAYOUT, W = L.mapW, H = L.mapH, CELL = 5, GW = W/CELL, GH = H/CELL;
 const K_OBLIQUE = 0.85;   // screen feet per foot of height when drawing the ladder "up the screen"
@@ -270,7 +286,8 @@ const K_OBLIQUE = 0.85;   // screen feet per foot of height when drawing the lad
 const WALK_SPEED = 4.0;           // ft/s on clear level ground
 const CLIMB_SEC_PER_FT = 2.4;     // 100 ft -> 4:00
 const DESCEND_SEC_PER_FT = 2.1;   // 100 ft -> 3:30
-const ITEM_VIEW_RANGE = 40;       // small objects visible within 40 ft (same level)
+const ITEM_VIEW_RANGE = 40;       // small objects visible within 40 ft (same level); medium 80 ft, large 120 ft
+const itemRange=o=>o.size==='large'?120:o.size==='medium'?80:ITEM_VIEW_RANGE;
 const DETAIL_RANGE = 10;          // close-up details within 10 ft
 const RUN_SECONDS = 30*60;
 
@@ -283,17 +300,24 @@ function vnoise(x,y){const i=Math.floor(x),j=Math.floor(y),fx=x-i,fy=y-j;const a
 function fbm(x,y){return vnoise(x,y)*.5+vnoise(x*2.1+7,y*2.1+3)*.3+vnoise(x*4.3+1,y*4.3+9)*.2}
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const dist=(ax,ay,bx,by)=>Math.hypot(ax-bx,ay-by);
-function coastR(th){return 1+.05*Math.sin(3*th+.7)+.035*Math.sin(5*th+2.1)+.02*Math.sin(8*th+.4)+.012*Math.sin(13*th+1.3)}
-function islandS(x,y){const dx=x-L.coast.cx,dy=y-L.coast.cy;return Math.hypot(dx/L.coast.rx,dy/L.coast.ry)/coastR(Math.atan2(dy,dx))}
-function beachT(x,y){const th=Math.atan2(y-L.coast.cy,x-L.coast.cx);return .875-.075*Math.max(0,Math.sin(th))}
-function landFactor(s){const t=clamp((1-s)/.22,0,1);return t*t*(3-2*t)}
+const toDeg=(dx,dy)=>((Math.atan2(dy,dx)*180/Math.PI)+360)%360;
+function coastRadius(deg){const R=L.coast.radii,n=R.length;let i=n-1;for(let k=0;k<n;k++){if(R[k][0]>deg){i=(k-1+n)%n;break}if(k===n-1)i=n-1}
+  const a=R[i],b=R[(i+1)%n],p0=R[(i-1+n)%n],p3=R[(i+2)%n];let span=(b[0]-a[0]+360)%360||360,t=((deg-a[0]+360)%360)/span;
+  const t2=t*t,t3=t2*t;const r=.5*((2*a[1])+(-p0[1]+b[1])*t+(2*p0[1]-5*a[1]+4*b[1]-p3[1])*t2+(-p0[1]+3*a[1]-3*b[1]+p3[1])*t3);
+  const th=deg*Math.PI/180;return r*(1+.022*Math.sin(7*th+1)+.014*Math.sin(13*th+.4)+.008*Math.sin(23*th+2))}
+function islandS(x,y){const dx=x-L.coast.cx,dy=y-L.coast.cy;return Math.hypot(dx,dy)/coastRadius(toDeg(dx,dy))}
+function inArc(d,a,b){return a<=b?(d>=a&&d<=b):(d>=a||d<=b)}
+function shoreZone(x,y){const d=toDeg(x-L.coast.cx,y-L.coast.cy);if(inArc(d,L.shore.beach[0],L.shore.beach[1]))return'beach';if(inArc(d,L.shore.cliffs[0],L.shore.cliffs[1]))return'cliff';return'rocky'}
+function beachT(x,y){const d=toDeg(x-L.coast.cx,y-L.coast.cy);const[a,b]=L.shore.beach;if(!inArc(d,a,b))return 2;
+  return .80+.08*clamp((d-150)/(b-150),0,1)+.10*clamp((85-d)/(85-a),0,1)}
+function landFactor(s,w){const t=clamp((1-s)/(w||.22),0,1);return t*t*(3-2*t)}
 function g2(x,y,cx,cy,s){const dx=x-cx,dy=y-cy;return Math.exp(-(dx*dx+dy*dy)/(2*s*s))}
 function heightAt(x,y){const s=islandS(x,y);if(s>=1)return 0;
-  const h=L.hill.peak*g2(x,y,L.hill.x,L.hill.y,L.hill.sigma)+9*g2(x,y,780,250,95)+5*g2(x,y,200,320,120)+2.5;
-  return h*landFactor(s)}
+  const h=L.hill.peak*g2(x,y,L.hill.x,L.hill.y,L.hill.sigma)+7*g2(x,y,800,450,130)+5*g2(x,y,200,330,130)+2.5;
+  return h*landFactor(s,shoreZone(x,y)==='cliff'?.06:.22)}
 function distSeg(px,py,ax,ay,bx,by){const vx=bx-ax,vy=by-ay,l2=vx*vx+vy*vy;let t=l2?((px-ax)*vx+(py-ay)*vy)/l2:0;t=clamp(t,0,1);const qx=ax+t*vx,qy=ay+t*vy;return[Math.hypot(px-qx,py-qy),qx,qy]}
 function nearestOnPoly(px,py,pts){let b=[1e9,0,0];for(let i=0;i<pts.length-1;i++){const r=distSeg(px,py,pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1]);if(r[0]<b[0])b=r}return b}
-function streamNearest(x,y){const a=nearestOnPoly(x,y,L.streamUpper),b=nearestOnPoly(x,y,L.streamLower);return a[0]<b[0]?a:b}
+function streamNearest(x,y){return nearestOnPoly(x,y,L.stream)}
 function pondE(x,y){const p=L.pond;return Math.hypot((x-p.x)/p.rx,(y-p.y)/p.ry)}
 function pondEdgeDist(x,y){const e=pondE(x,y);if(e<1e-6)return-Math.min(L.pond.rx,L.pond.ry);return dist(x,y,L.pond.x,L.pond.y)*(1-1/e)}
 function pondEdgePoint(x,y){const e=pondE(x,y)||1;return{x:L.pond.x+(x-L.pond.x)/e,y:L.pond.y+(y-L.pond.y)/e}}
@@ -308,65 +332,68 @@ function parseDir(d){if(d==null||d==='')return null;if(typeof d==='number')retur
 /* =====================================================================================
    3. STATIC TERRAIN: trees, walkability grid (5 ft cells)
    ===================================================================================== */
-const T={OCEAN:0,BEACH:1,GRASS:2,FOREST:3,STREAM:4,POND:5,BRIDGE:6,ROCK:7,FLOOR:8,WALL:9,OBST:10};
-const TNAME=['ocean','sandy beach','grass','forest floor (rough)','stream (wading)','pond','wooden bridge','rocky hilltop','cabin floor','wall','obstacle'];
-const TSPEED=[0,.85,1,.72,.32,0,1,.85,1,0,0];
+const T={OCEAN:0,BEACH:1,GRASS:2,FOREST:3,STREAM:4,POND:5,BRIDGE:6,ROCK:7,FLOOR:8,WALL:9,OBST:10,CLIFF:11};
+const TNAME=['ocean','sandy beach','grass','forest floor (rough)','stream (wading over rocks)','pond','wooden bridge','rocky ground','cabin floor','wall','obstacle','cliff edge'];
+const TSPEED=[0,.85,1,.72,.25,0,1,.65,1,0,0,0];
 const grid=new Uint8Array(GW*GH);
 const cIdx=(c,r)=>r*GW+c, cOf=(x)=>clamp(Math.floor(x/CELL),0,GW-1), rOf=(y)=>clamp(Math.floor(y/CELL),0,GH-1);
 const cellAt=(x,y)=>cIdx(cOf(x),rOf(y));
 const cellCenter=(i)=>({x:(i%GW)*CELL+CELL/2,y:Math.floor(i/GW)*CELL+CELL/2});
+const pathDist=(x,y)=>Math.min(...L.paths.map(p=>nearestOnPoly(x,y,p)[0]));
 
 const TREES=[],PALMS=[];
 (function genTrees(){
   const rng=mulberry32(20261122);
-  const zones=[[230,250,150,.95],[150,440,85,.85],[625,150,90,.8],[880,360,45,.55],[370,560,55,.5],[640,610,45,.45],[330,330,60,.6]];
-  const bad=(x,y)=>{const s=islandS(x,y);if(s>beachT(x,y)-.015)return true;
-    if(pondE(x,y)<1.4)return true;if(streamNearest(x,y)[0]<13)return true;
-    if(dist(x,y,L.stoneCircle.x,L.stoneCircle.y)<70)return true;if(dist(x,y,300,428)<55)return true;
-    if(dist(x,y,L.firePit.x,L.firePit.y)<30)return true;if(dist(x,y,L.foundation.x,L.foundation.y)<42)return true;
-    if(dist(x,y,L.bridge.x,L.bridge.y)<28)return true;return false};
-  for(let k=0;k<9000&&TREES.length<330;k++){const x=rng()*W,y=rng()*H;let dens=.025;
+  const zones=[[200,300,175,.95],[330,230,115,.9],[110,430,85,.85],[420,135,75,.75],[130,560,55,.45],[650,290,50,.35],[300,500,40,.3]];
+  const keep=[[L.cabin.x+20,L.cabin.y+15,40],[L.chest.x,L.chest.y,14],[L.mirror.x,L.mirror.y,10],[L.wheelbarrow.x,L.wheelbarrow.y,14],[L.firePit.x,L.firePit.y,30],[L.picnicTable.x,L.picnicTable.y,30],
+    [L.hill.x,L.hill.y,45],[L.stoneCircle.x,L.stoneCircle.y,30],[L.bell.x,L.bell.y,25],[L.foundation.x,L.foundation.y,55],[L.bridge.x,L.bridge.y,24],[L.boat.x,L.boat.y,40],[L.stepladder.x,L.stepladder.y,15]];
+  const bad=(x,y)=>{const s=islandS(x,y);if(s>.9||s>beachT(x,y)-.02)return true;
+    if(pondE(x,y)<1.3)return true;if(streamNearest(x,y)[0]<12)return true;if(pathDist(x,y)<9)return true;
+    for(const k of keep)if(dist(x,y,k[0],k[1])<k[2])return true;return false};
+  for(let k=0;k<12000&&TREES.length<300;k++){const x=rng()*W,y=rng()*H;let dens=.012;
     for(const z of zones){const d=dist(x,y,z[0],z[1]);if(d<z[2])dens=Math.max(dens,z[3]*(1-(d/z[2])**2))}
     if(rng()>dens||bad(x,y))continue;if(TREES.some(t=>dist(t.x,t.y,x,y)<13))continue;
-    TREES.push({x,y,r:7+rng()*6,tone:rng()})}
-  for(let k=0;k<3000&&PALMS.length<12;k++){const x=rng()*W,y=rng()*H,s=islandS(x,y);
-    if(s<beachT(x,y)+.01||s>.97)continue;if(dist(x,y,L.boat.x,L.boat.y)<45||dist(x,y,L.start.x,L.start.y)<35)continue;
-    if(streamNearest(x,y)[0]<15||PALMS.some(p=>dist(p.x,p.y,x,y)<40))continue;PALMS.push({x,y,a:rng()*6.28})}
+    TREES.push({x,y,r:7+rng()*7,tone:rng()})}
+  // low bushes on open ground (decorative, walk-through)
+  for(let k=0;k<4000&&PALMS.length<70;k++){const x=rng()*W,y=rng()*H;const s=islandS(x,y);if(s>.88||bad(x,y)||pathDist(x,y)<6)continue;if(PALMS.some(p=>dist(p.x,p.y,x,y)<18))continue;PALMS.push({x,y,r:2.5+rng()*2.5,tone:rng()})}
 })();
 const STONES=[];for(let i=0;i<L.stoneCircle.n;i++){const a=i/L.stoneCircle.n*Math.PI*2;STONES.push({x:L.stoneCircle.x+Math.cos(a)*L.stoneCircle.r,y:L.stoneCircle.y+Math.sin(a)*L.stoneCircle.r})}
-const BR=(function(){const p=nearestOnPoly(L.bridge.x,L.bridge.y,L.streamLower);let dx=0.952,dy=0.307;return{dx,dy,px:-dy,py:dx}})();
+const BR=(function(){const P=L.stream;let best=0,bd=1e9;for(let i=0;i<P.length-1;i++){const d=distSeg(L.bridge.x,L.bridge.y,P[i][0],P[i][1],P[i+1][0],P[i+1][1])[0];if(d<bd){bd=d;best=i}}
+  let dx=P[best+1][0]-P[best][0],dy=P[best+1][1]-P[best][1];const n=Math.hypot(dx,dy);dx/=n;dy/=n;return{dx,dy,px:-dy,py:dx}})();
 // Cabin cells
 const CAB_C0=cOf(CAB.x+1),CAB_C1=cOf(CAB.x+CAB.w-1),CAB_R0=rOf(CAB.y+1),CAB_R1=rOf(CAB.y+CAB.h-1);
 const DOOR_CELL=cIdx(cOf(CAB.x+CAB.w/2+1),CAB_R1);
 const DOOR_POS={x:cellCenter(DOOR_CELL).x,y:CAB.y+CAB.h};
-const TABLE_CELL=cIdx(CAB_C0+1,CAB_R0+1), CHEST_CELL=cIdx(CAB_C1-1,CAB_R0+1);
+const TABLE_CELL=cIdx(CAB_C0+1,CAB_R0+1), CHEST_CELL=cellAt(L.chest.x,L.chest.y);
 const TABLE_POS=cellCenter(TABLE_CELL), CHEST_POS=cellCenter(CHEST_CELL);
+const BEACH_PTS=[],CLIFF_PTS=[];
 
 (function buildGrid(){
-  for(let r=0;r<GH;r++)for(let c=0;c<GW;c++){const x=c*CELL+2.5,y=r*CELL+2.5,s=islandS(x,y);let t;
+  for(let r=0;r<GH;r++)for(let c=0;c<GW;c++){const x=c*CELL+2.5,y=r*CELL+2.5,s=islandS(x,y);let t;const z=shoreZone(x,y);
     if(s>=1)t=T.OCEAN;else if(pondE(x,y)<1)t=T.POND;else if(streamNearest(x,y)[0]<5.5)t=T.STREAM;
-    else if(s>beachT(x,y))t=T.BEACH;else if(heightAt(x,y)>50)t=T.ROCK;else t=T.GRASS;grid[cIdx(c,r)]=t}
+    else if(z==='beach'&&s>beachT(x,y))t=T.BEACH;else if(z==='cliff'&&s>.955)t=T.CLIFF;else if(z==='cliff'&&s>.90)t=T.ROCK;else if(z!=='beach'&&s>.972)t=T.ROCK;
+    else if(heightAt(x,y)>50)t=T.ROCK;else t=T.GRASS;grid[cIdx(c,r)]=t}
   for(const tr of TREES){const rr=tr.r*.8;for(let r=rOf(tr.y-rr);r<=rOf(tr.y+rr);r++)for(let c=cOf(tr.x-rr);c<=cOf(tr.x+rr);c++){const i=cIdx(c,r),cc=cellCenter(i);
-      if(dist(cc.x,cc.y,tr.x,tr.y)<=rr&&(grid[i]===T.GRASS||grid[i]===T.ROCK))grid[i]=T.FOREST}}
+      if(dist(cc.x,cc.y,tr.x,tr.y)<=rr&&grid[i]===T.GRASS)grid[i]=T.FOREST}}
   for(const tr of TREES)grid[cellAt(tr.x,tr.y)]=T.OBST;
-  for(const p of PALMS)grid[cellAt(p.x,p.y)]=T.OBST;
   // bridge
   for(let r=rOf(L.bridge.y-20);r<=rOf(L.bridge.y+20);r++)for(let c=cOf(L.bridge.x-20);c<=cOf(L.bridge.x+20);c++){const i=cIdx(c,r),cc=cellCenter(i),vx=cc.x-L.bridge.x,vy=cc.y-L.bridge.y;
     if(Math.abs(vx*BR.px+vy*BR.py)<=L.bridge.len/2&&Math.abs(vx*BR.dx+vy*BR.dy)<=L.bridge.wid/2+1)grid[i]=T.BRIDGE}
   // cabin
   for(let r=CAB_R0;r<=CAB_R1;r++)for(let c=CAB_C0;c<=CAB_C1;c++)grid[cIdx(c,r)]=(r===CAB_R0||r===CAB_R1||c===CAB_C0||c===CAB_C1)?T.WALL:T.FLOOR;
   grid[DOOR_CELL]=T.FLOOR;grid[TABLE_CELL]=T.OBST;grid[CHEST_CELL]=T.OBST;
-  for(const s of STONES)grid[cellAt(s.x,s.y)]=T.OBST;grid[cellAt(L.stoneCircle.x,L.stoneCircle.y)]=T.OBST;
+  for(const p of[L.mirror,L.bell,L.picnicTable,L.crate,L.firePit])grid[cellAt(p.x,p.y)]=T.OBST;
+  for(const b of L.boulders)grid[cellAt(b[0],b[1])]=T.OBST;
   for(let r=rOf(L.boat.y-12);r<=rOf(L.boat.y+12);r++)for(let c=cOf(L.boat.x-12);c<=cOf(L.boat.x+12);c++){const i=cIdx(c,r),cc=cellCenter(i);
     const ca=Math.cos(-L.boat.angle),sa=Math.sin(-L.boat.angle),vx=cc.x-L.boat.x,vy=cc.y-L.boat.y,u=vx*ca-vy*sa,v=vx*sa+vy*ca;
     if((u/(L.boat.len/2))**2+(v/(L.boat.beam/2))**2<1)grid[i]=T.OBST}
   const f=L.foundation;for(let r=rOf(f.y-f.size/2);r<=rOf(f.y+f.size/2);r++)for(let c=cOf(f.x-f.size/2);c<=cOf(f.x+f.size/2);c++){const cc=cellCenter(cIdx(c,r));
     if(Math.abs(cc.x-f.x)<f.size/2&&Math.abs(cc.y-f.y)<f.size/2)grid[cIdx(c,r)]=T.OBST}
-  grid[cellAt(L.firePit.x,L.firePit.y)]=T.OBST;
+  for(let i=0;i<GW*GH;i+=1){if(grid[i]===T.BEACH&&i%2===0)BEACH_PTS.push(cellCenter(i));if(grid[i]===T.CLIFF&&i%2===0)CLIFF_PTS.push(cellCenter(i))}
 })();
 const cellH=new Float32Array(GW*GH);for(let i=0;i<GW*GH;i++){const c=cellCenter(i);cellH[i]=heightAt(c.x,c.y)}
 function terrainAt(x,y){return grid[cellAt(x,y)]}
-function isBlocked(i){const g=grid[i];if(g===T.OCEAN||g===T.POND||g===T.WALL||g===T.OBST)return true;
+function isBlocked(i){const g=grid[i];if(g===T.OCEAN||g===T.POND||g===T.WALL||g===T.OBST||g===T.CLIFF)return true;
   if(i===DOOR_CELL&&S&&S.objects.cabin_door&&!S.objects.cabin_door.state.open)return true;return false}
 
 /* A* over the grid. Cost = travel-time-equivalent feet (terrain + slope). */
@@ -409,25 +436,34 @@ function initialObjects(){
   add({id:'pencil',name:'pencil',weight:.05,burnable:true,desc:'A sharpened wooden pencil.',loc:{t:'carried'}});
   add({id:'boat',name:'rowboat',kind:'fixture',desc:'A weathered wooden rowboat pulled up onto the sand.',closeDesc:'The hull is dry and sound. The boat is open on top, so anything inside is visible.',container:{open:true,openable:false,capacity:6},loc:G(L.boat.x,L.boat.y),reach:13,viewRange:400});
   add({id:'oar',name:'oar',size:'medium',weight:5,awkward:true,burnable:true,desc:'A long wooden oar.',loc:{t:'in',id:'boat'}});
-  add({id:'rope',name:'coil of rope',size:'medium',weight:4,burnable:true,desc:'About 30 feet of hemp rope.',loc:{t:'in',id:'boat'}});
+  add({id:'rope',name:'coil of rope',size:'medium',weight:4,burnable:true,desc:'About 30 feet of hemp rope, coiled on the sand.',loc:G(L.rope.x,L.rope.y)});
+  add({id:'crate',name:'wooden crate',kind:'fixture',desc:'A sturdy wooden crate with a hinged lid, sitting on the beach.',container:{open:false,openable:true,locked:false,capacity:4},loc:G(L.crate.x,L.crate.y),reach:6.5,viewRange:250});
+  add({id:'wheelbarrow',name:'wheelbarrow',size:'large',weight:25,awkward:true,desc:'A rusty metal wheelbarrow with a wooden handle. Pick it up to push it; things inside come along.',container:{open:true,openable:false,capacity:4},loc:G(L.wheelbarrow.x,L.wheelbarrow.y),reach:6});
+  add({id:'mirror',name:'standing mirror',kind:'fixture',desc:'A round mirror in a wooden frame, standing against a tree.',closeDesc:'The glass is clean. You could look into it.',loc:G(L.mirror.x,L.mirror.y),reach:6,viewRange:120});
+  add({id:'picnic_table',name:'driftwood table',kind:'fixture',surface:true,desc:'A rough table built from driftwood.',loc:G(L.picnicTable.x,L.picnicTable.y),reach:6.5,viewRange:200});
+  add({id:'island_map',name:'sheet of paper',burnable:true,desc:'A weathered sheet of paper weighted down on the table.',readable:'A hand-drawn map of the island. It shows: a sandy beach and a rowboat on the south shore; a cabin among trees to the west with a fire pit in front; a stream running from steps on the hill down to the beach, crossed by a footbridge; a pond in the middle; a tall tower east of the pond; a bell on the north-east headland; rocky cliffs along the east side.',loc:{t:'on',id:'picnic_table'}});
+  add({id:'stepladder',name:'stepladder',size:'large',weight:14,awkward:true,desc:'A small wooden A-frame stepladder, about 6 ft tall.',loc:G(L.stepladder.x,L.stepladder.y)});
+  add({id:'ball',name:'red ball',size:'medium',weight:.4,desc:'A bright red rubber ball.',loc:G(L.ball.x,L.ball.y)});
+  add({id:'blanket',name:'blue blanket',size:'medium',weight:2,burnable:true,desc:'A blue cotton blanket.',loc:G(L.blanket.x,L.blanket.y),state:{spread:true}});
+  add({id:'blocks',name:'wooden blocks',size:'medium',weight:3,burnable:true,desc:'A handful of plain wooden cubes.',loc:G(L.blocks.x,L.blocks.y),state:{stacked:true}});
   add({id:'driftwood_1',name:'driftwood log',size:'medium',weight:7,burnable:true,fuel:true,desc:'A bleached, dry piece of driftwood about 3 ft long.',loc:G(...L.driftwood[0])});
   add({id:'driftwood_2',name:'driftwood log',size:'medium',weight:6,burnable:true,fuel:true,desc:'A bleached, dry piece of driftwood about 3 ft long.',loc:G(...L.driftwood[1])});
   add({id:'stone_1',name:'smooth stone',weight:1,desc:'A smooth, palm-sized grey stone.',loc:G(...L.stones[0])});
   add({id:'stone_2',name:'smooth stone',weight:1.2,desc:'A smooth, palm-sized speckled stone.',loc:G(...L.stones[1])});
-  add({id:'cabin',name:'cabin',kind:'fixture',bothSides:true,desc:'A small log cabin with a single door on its south side.',closeDesc:'Inside: a table, a wooden chest and a narrow bed.',loc:G(CAB.x+CAB.w/2,CAB.y+CAB.h/2),reach:0,viewRange:450});
+  add({id:'cabin',name:'cabin',kind:'fixture',bothSides:true,desc:'A small log cabin with a single door on its south side.',closeDesc:'Inside: a table and a narrow bed. A stone chimney rises from the roof.',loc:G(CAB.x+CAB.w/2,CAB.y+CAB.h/2),reach:0,viewRange:450});
   add({id:'cabin_door',name:'cabin door',kind:'fixture',bothSides:true,door:true,desc:'A plank door with an iron latch.',loc:G(DOOR_POS.x,DOOR_POS.y),reach:6,viewRange:300,state:{open:false}});
-  add({id:'cabin_table',name:'cabin table',kind:'fixture',surface:true,desc:'A rough wooden table.',loc:G(TABLE_POS.x,TABLE_POS.y),reach:6.5,viewRange:30});
+  add({id:'cabin_table',name:'cabin table',kind:'fixture',surface:true,desc:'A rough wooden table.',loc:G(TABLE_POS.x,TABLE_POS.y),reach:6.5,viewRange:60});
   add({id:'lantern',name:'oil lantern',size:'medium',weight:3,fragile:true,desc:'A glass oil lantern, half full of oil.',loc:{t:'on',id:'cabin_table'},state:{lit:false,broken:false}});
-  add({id:'tin_cup',name:'tin cup',weight:.4,desc:'A dented tin cup.',loc:{t:'on',id:'cabin_table'},state:{full:false}});
-  add({id:'chest',name:'wooden chest',kind:'fixture',desc:'A heavy wooden chest with a brass lock.',container:{open:false,openable:true,locked:true,key:'brass_key',capacity:4},loc:G(CHEST_POS.x,CHEST_POS.y),reach:6.5,viewRange:30});
+  add({id:'tin_cup',name:'tin cup',weight:.4,desc:'A dented tin cup.',loc:{t:'in',id:'crate'},state:{full:false}});
+  add({id:'chest',name:'wooden chest',kind:'fixture',desc:'A heavy wooden chest with a brass lock, sitting outside beside the cabin door.',container:{open:false,openable:true,locked:true,key:'brass_key',capacity:4},loc:G(CHEST_POS.x,CHEST_POS.y),reach:6.5,viewRange:150});
   add({id:'old_letter',name:'folded letter',burnable:true,desc:'A folded sheet of paper.',readable:'Supply list, spring: lamp oil, rope, matches (ran out). The tower platform was inspected and the anchors are sound. Do not leave the lantern lit unattended.',loc:{t:'in',id:'chest'}});
   add({id:'fire_pit',name:'fire pit',kind:'fixture',desc:'A ring of blackened stones around old ashes.',container:{open:true,openable:false,capacity:3,fuelOnly:false},loc:G(L.firePit.x,L.firePit.y),reach:6,viewRange:90,state:{lit:false,burnLeft:0}});
-  add({id:'bell',name:'bronze bell',kind:'fixture',desc:'A bronze bell hanging from a wooden frame in the middle of the stone circle.',closeDesc:'A rope hangs from the clapper. It looks like it would be loud.',loc:G(L.stoneCircle.x,L.stoneCircle.y),reach:7,viewRange:250});
-  add({id:'stone_circle',name:'stone circle',kind:'fixture',desc:'Nine standing stones in a ring on top of the hill.',loc:G(L.stoneCircle.x,L.stoneCircle.y+0.01),reach:0,viewRange:450});
-  add({id:'bridge',name:'wooden bridge',kind:'fixture',desc:'A short plank footbridge over the stream.',loc:G(L.bridge.x,L.bridge.y),reach:0,viewRange:250});
-  add({id:'ladder',name:'tall metal ladder',kind:'fixture',desc:'A tall steel ladder anchored in a concrete foundation, rising about 100 ft to a platform.',closeDesc:'The rails are bolted into the concrete. The rungs are dry and solid. You cannot see what is on the platform from down here.',loc:G(L.ladder.x,L.ladder.y),reach:4,viewRange:2000});
-  add({id:'platform',name:'platform',kind:'fixture',surface:true,platformLevel:true,desc:'A small steel platform with a railing at the top of the ladder.',loc:{t:'platform'},reach:99,viewRange:2000});
-  add({id:'platform_table',name:'platform table',kind:'fixture',surface:true,platformLevel:true,desc:'A small metal table bolted to the platform.',loc:{t:'platform'},reach:99,viewRange:0});
+  add({id:'bell',name:'bronze bell',kind:'fixture',desc:'A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.',closeDesc:'A rope hangs from the clapper. It looks like it would be loud.',loc:G(L.bell.x,L.bell.y),reach:7,viewRange:250});
+  add({id:'stone_circle',name:'stone circle',kind:'fixture',desc:'A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.',loc:G(L.stoneCircle.x,L.stoneCircle.y+0.01),reach:0,viewRange:450});
+  add({id:'bridge',name:'wooden bridge',kind:'fixture',desc:'An arched plank footbridge with handrails over the stream.',loc:G(L.bridge.x,L.bridge.y),reach:0,viewRange:250});
+  add({id:'ladder',name:'tall metal ladder',kind:'fixture',desc:'A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.',closeDesc:'The rails are bolted into the concrete. The rungs are dry and solid. You cannot see what is on the platform from down here.',loc:G(L.ladder.x,L.ladder.y),reach:4,viewRange:2000});
+  add({id:'platform',name:'platform',kind:'fixture',surface:true,platformLevel:true,desc:'A steel platform with a railing at the top of the tower.',loc:{t:'platform'},reach:99,viewRange:2000});
+  add({id:'platform_table',name:'platform table',kind:'fixture',surface:true,platformLevel:true,desc:'A small wooden table fixed to the platform.',loc:{t:'platform'},reach:99,viewRange:0});
   add({id:'lighter',name:'lighter',weight:.1,desc:'A metal flip-top lighter.',loc:{t:'on',id:'platform_table'}});
   add({id:'sword',name:'sword',size:'medium',weight:5,awkward:true,wearable:true,desc:'A steel sword in a leather scabbard with a shoulder strap.',loc:{t:'on',id:'platform_table'}});
   add({id:'snorkel',name:'snorkel',weight:.3,wearable:true,desc:'A snorkel with an attached dive mask.',loc:{t:'on',id:'platform_table'}});
@@ -484,7 +520,7 @@ function locText(o){const l=o.loc;if(o.kind==='fixture')return o.platformLevel?'
   if(l.t==='in')return'inside the '+O(l.id).name;if(l.t==='on')return'on the '+O(l.id).name;if(l.t==='platform')return'at the top of the ladder';
   const tt=terrainAt(l.x,l.y);return'on the ground ('+TNAME[tt]+')'}
 function stateText(o){const s=o.state,p=[];if(o.container&&o.container.openable)p.push(o.container.open?'open':'closed');if(o.container&&o.container.locked)p.push('locked');
-  if(o.door)p.push(s.open?'open':'closed');if(s.lit)p.push(o.id==='fire_pit'?'burning':'lit');if(s.broken)p.push('broken');if(s.full)p.push('full of water');if(o.id==='journal')p.push(S.journal.entries.length+' entries');return p.join(', ')}
+  if(o.door)p.push(s.open?'open':'closed');if(s.lit)p.push(o.id==='fire_pit'?'burning':'lit');if(s.broken)p.push('broken');if(s.full)p.push('full of water');if(o.id==='blanket')p.push(s.spread?'spread out':'folded');if(o.id==='blocks')p.push(s.stacked?'stacked in a tower':'scattered');if(o.id==='journal')p.push(S.journal.entries.length+' entries');return p.join(', ')}
 
 /* Visibility (what the agent can perceive). Returns map id -> {d, detail} */
 function perceiveObjects(){
@@ -497,8 +533,8 @@ function perceiveObjects(){
     else if(l==='underwater'){const uv=a.underwaterView;vis=!!(uv&&isWearing('snorkel')&&a.level==='ground'&&dist(uv.x,uv.y,ax,ay)<3&&dist(p.x,p.y,uv.x,uv.y)<=25);det=vis}
     else if(!o.bothSides&&ind!==oin&&!doorView){vis=false}
     else if(ind&&o.bothSides&&o.id==='cabin'){vis=true;det=true}
-    else if(o.kind==='fixture'){let range=o.viewRange||150;if(o.id==='fire_pit'&&o.state.lit)range=2000;if(high>30)range=Math.max(range,o.viewRange?2000:0);if(ind!==oin&&!o.bothSides)range=Math.min(range,ind?150:30);vis=d<=range;det=d<=Math.max(DETAIL_RANGE,o.reach+2)&&high<5}
-    else{vis=high<=20&&d<=(ind!==oin?30:ITEM_VIEW_RANGE);det=d<=DETAIL_RANGE&&high<5&&ind===oin}
+    else if(o.kind==='fixture'){let range=o.viewRange||150;if(o.id==='fire_pit'&&o.state.lit)range=2000;if(high>30)range=Math.max(range,o.viewRange?2000:0);if(ind!==oin&&!o.bothSides)range=Math.min(range,ind?150:40);vis=d<=range;det=d<=Math.max(DETAIL_RANGE,o.reach+2)&&high<5}
+    else{vis=high<=20&&d<=(ind!==oin?40:itemRange(o));det=d<=DETAIL_RANGE&&high<5&&ind===oin}
     if(vis)res[o.id]={d,detail:det}}
   return res}
 function reachInfo(o){
@@ -515,12 +551,15 @@ function reachInfo(o){
   if(!o.bothSides&&isIndoors(p.x,p.y)!==agentIndoors())return{ok:false,reason:agentIndoors()?'That is outside the cabin.':'That is inside the cabin.'};
   const r=(o.reach||5.5)+1;if(d>r)return{ok:false,reason:'It is '+Math.round(d)+' ft away; walk within '+Math.round(r)+' ft first.'};return{ok:true}}
 
-const TERRAIN_FEATURES=['pond','stream','hill','ocean','beach','forest'];
+const TERRAIN_FEATURES=['pond','stream','hill','ocean','beach','forest','cliffs'];
 function featurePoint(id){const a=S.agent;
   if(id==='pond')return pondEdgePoint(a.x,a.y);
   if(id==='stream'){const n=streamNearest(a.x,a.y);return{x:n[1],y:n[2]}}
   if(id==='hill')return{x:L.hill.x,y:L.hill.y};
-  if(id==='ocean'||id==='beach'){const s=islandS(a.x,a.y)||1,k=id==='ocean'?1/s:beachT(a.x,a.y)/s;return{x:L.coast.cx+(a.x-L.coast.cx)*Math.max(k,id==='beach'&&s>beachT(a.x,a.y)?1:k),y:L.coast.cy+(a.y-L.coast.cy)*Math.max(k,id==='beach'&&s>beachT(a.x,a.y)?1:k)}}
+  const nearestIn=(pts)=>{let b=null,bd=1e9;for(const q of pts){const d=dist(q.x,q.y,a.x,a.y);if(d<bd){bd=d;b=q}}return b};
+  if(id==='ocean'){const s=islandS(a.x,a.y)||1;return{x:L.coast.cx+(a.x-L.coast.cx)/s,y:L.coast.cy+(a.y-L.coast.cy)/s}}
+  if(id==='beach')return nearestIn(BEACH_PTS);
+  if(id==='cliffs')return nearestIn(CLIFF_PTS);
   if(id==='forest'){let b=null,bd=1e9;for(const t of TREES){const d=dist(t.x,t.y,a.x,a.y);if(d<bd){bd=d;b=t}}return b?{x:b.x,y:b.y}:null}
   return null}
 function resolveTarget(t){if(t==null||t==='')return null;if(typeof t==='object'&&t.id)t=t.id;const s=String(t).trim().toLowerCase().replace(/\s+/g,'_');
@@ -546,7 +585,7 @@ function getObservation(){
     if(id==='platform'&&!v.detail){e.distanceFt=Math.round(Math.hypot(v.d,L.ladderHeight-high))}
     e.reachable=reachInfo(o).ok;objs.push(e)}
   objs.sort((p,q)=>p.distanceFt-q.distanceFt);
-  const feats=[];if(!ind){for(const f of TERRAIN_FEATURES){const p=featurePoint(f);if(!p)continue;const d=dist(p.x,p.y,a.x,a.y);const range={pond:400,stream:250,hill:2000,ocean:2000,beach:500,forest:350}[f];if(d>range&&high<30)continue;
+  const feats=[];if(!ind){for(const f of TERRAIN_FEATURES){const p=featurePoint(f);if(!p)continue;const d=dist(p.x,p.y,a.x,a.y);const range={pond:400,stream:250,hill:2000,ocean:2000,beach:500,forest:350,cliffs:400}[f];if(d>range&&high<30)continue;
     feats.push({id:f,distanceFt:Math.round(d),bearing:d<2?'here':compass(bearingDeg(a.x,a.y,p.x,p.y))})}}
   const sounds=S.sounds.filter(s=>S.simTime-s.t<=30).map(s=>({secondsAgo:Math.round(S.simTime-s.t),description:s.msg,bearing:dist(s.x,s.y,a.x,a.y)<5?'here':compass(bearingDeg(a.x,a.y,s.x,s.y)),distanceFt:Math.round(dist(s.x,s.y,a.x,a.y))}));
   const notes=[];
@@ -603,7 +642,7 @@ const ACTIONS={
     complete(a){const ob=getObservation();a.result={message:'You look around. You can see '+ob.visibleObjects.length+' things nearby.',observation:ob}}},
   inspect:{desc:'Examine a visible object or feature closely.',params:{target:'object id or feature'},
     validate(p){const r=needTarget(p);if(r.error)return r;return{label:'Inspecting '+(r.o?r.o.name:r.id),duration:6,data:{r:r.o?r.o.id:r.id,feat:r.kind==='feature'}}},
-    complete(a){if(a.data.feat){const fd={pond:'A still pond. The water is murky near the banks.',stream:'A clear stream about 10 ft wide and knee-deep. You could wade across, slowly.',hill:'A grassy hill rising to a rocky top with standing stones.',ocean:'The sea surrounds the island. It is too deep and too far to swim anywhere.',beach:'Soft sand, slow to walk on.',forest:'Dense trees with rough ground underneath.'}[a.data.r];a.result={message:fd};return}
+    complete(a){if(a.data.feat){const fd={pond:'A still pond. The water is murky near the banks.',stream:'A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly.',cliffs:'Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down.',hill:'A grassy hill with wildflowers, rising to a top crowned with large boulders. Stone steps climb it beside the stream.',ocean:'The sea surrounds the island. It is too deep and too far to swim anywhere.',beach:'Soft sand along the south-west shore, slow to walk on.',forest:'Dense trees with rough ground underneath.'}[a.data.r];a.result={message:fd};return}
       const o=O(a.data.r),pv=perceiveObjects()[o.id],car=o.loc.t==='carried'||o.loc.t==='worn';
       if(!pv&&!car){a.result={message:'You can no longer see the '+o.name+'.'};a.failed=true;return}
       const close=car||(pv&&pv.detail);let m=close?(o.desc+(o.closeDesc?' '+o.closeDesc:'')):('From here: '+o.desc+' You would need to be closer for details.');
@@ -616,7 +655,7 @@ const ACTIONS={
         else{const o=r.o;if(o.loc.t==='carried'||o.loc.t==='worn')return{error:'You are already carrying that.'};if(objLevel(o)==='platform')return{error:'That is at the top of the ladder. Walk to the ladder and climb.'};
           const p2=objPos(o);const reach=o.id==='ladder'?3.6:Math.max(3.6,(o.reach||5.5)-.3);path=o.id==='cabin'?(agentIndoors()?[]:planPath(DOOR_POS.x,DOOR_POS.y+3,3,false)):planPath(p2.x,p2.y,reach,false);desc=o.id==='cabin'?'the cabin door (outside)':'the '+o.name}}
       else if(isFinite(+p.x)&&isFinite(+p.y)&&p.x!==''&&p.y!==''){const x=+p.x,y=+p.y;let i=cellAt(x,y);if(x<0||y<0||x>W||y>H)return{error:'That point is off the map.'};
-        if(isBlocked(i)){const t=grid[i];if(t===T.OCEAN)return{error:'That point is in the sea. You cannot walk there.'};if(t===T.POND)return{error:'That point is in the pond. You cannot walk there.'};
+        if(isBlocked(i)){const t=grid[i];if(t===T.OCEAN)return{error:'That point is in the sea. You cannot walk there.'};if(t===T.POND)return{error:'That point is in the pond. You cannot walk there.'};if(t===T.CLIFF)return{error:'That point is on the cliff edge. It is too dangerous to go there.'};
           if(i===DOOR_CELL)return{error:'The cabin door is closed.'};const j=nearestWalkable(x,y,8);if(j<0)return{error:'Something solid is in the way at that point.'};const c=cellCenter(j);path=planPath(c.x,c.y,0,true)}
         else path=planPath(x,y,0,true);desc='the point'}
       else return{error:'walk_to needs a "target" or both "x" and "y".'};
@@ -628,7 +667,7 @@ const ACTIONS={
     validate(p){const e=needGround();if(e)return{error:e};const deg=parseDir(p.direction);const dd=+p.distance;if(deg==null)return{error:'Give a direction like "N" or 45.'};if(!(dd>0))return{error:'Give a positive distance in feet.'};
       const rad=deg*Math.PI/180;const a=S.agent;let tx=a.x+Math.sin(rad)*dd,ty=a.y-Math.cos(rad)*dd;let i=cellAt(tx,ty),note='';
       // stop before water along the line
-      const steps=Math.ceil(dd/2.5);let lx=a.x,ly=a.y;for(let k=1;k<=steps;k++){const x=a.x+Math.sin(rad)*dd*k/steps,y=a.y-Math.cos(rad)*dd*k/steps;const g=grid[cellAt(x,y)];if(g===T.OCEAN||g===T.POND){note=' (stopping at the water)';tx=lx;ty=ly;break}lx=x;ly=y}
+      const steps=Math.ceil(dd/2.5);let lx=a.x,ly=a.y;for(let k=1;k<=steps;k++){const x=a.x+Math.sin(rad)*dd*k/steps,y=a.y-Math.cos(rad)*dd*k/steps;const g=grid[cellAt(x,y)];if(g===T.OCEAN||g===T.POND||g===T.CLIFF){note=g===T.CLIFF?' (stopping at the cliff edge)':' (stopping at the water)';tx=lx;ty=ly;break}lx=x;ly=y}
       if(dist(tx,ty,a.x,a.y)<1)return{error:'Water is directly in that direction.'};
       i=cellAt(tx,ty);let path;if(isBlocked(i)){const j=nearestWalkable(tx,ty,10);if(j<0)return{error:'Something solid blocks that direction.'};const c=cellCenter(j);path=planPath(c.x,c.y,0,true)}else path=planPath(tx,ty,0,true);
       if(!path)return{error:'No walkable route in that direction.'};return startWalk(path,'Walking '+compass(deg)+' '+Math.round(dd)+' ft'+note,Math.round(dd)+' ft '+compass(deg))},
@@ -661,15 +700,15 @@ const ACTIONS={
       const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};if(o.loc.t==='in'&&O(o.loc.id).id==='fire_pit'&&O('fire_pit').state.lit)return{error:'The fire is burning; it is too hot to reach in.'};
       if(o.size==='small'&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
       return{label:'Picking up the '+o.name,duration:o.loc.t==='underwater'?10:3,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc={t:'carried'};markChanged();
-      a.result={message:'You pick up the '+displayName(o)+'.'};logEvent('object','Picked up '+o.id+' (was '+from+').',{id:o.id,from})}},
+    complete(a){const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc={t:'carried'};if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
+      a.result={message:'You pick up the '+displayName(o)+(o.id==='blanket'?', folding it up':'')+'.'};logEvent('object','Picked up '+o.id+' (was '+from+').',{id:o.id,from})}},
   put_down:{desc:'Set a carried item down gently: on the ground at your feet, or onto/into a reachable surface or open container with "onto".',params:{target:'item id',onto:'surface/container id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='carried')return{error:'You are not carrying that.'};
       if(S.agent.level==='ladder')return{error:'You are on the ladder; you cannot set things down here. You could drop it.'};
       const onto=p.onto||p.container||p.with;let tgt=null;if(onto){const t=resolveTarget(onto);if(!t||t.kind!=='object')return{error:'Unknown place "'+onto+'".'};tgt=t.o;
         if(!tgt.surface&&!tgt.container)return{error:'You cannot put things in or on the '+tgt.name+'.'};const ri=reachInfo(tgt);if(!ri.ok)return{error:ri.reason};
         if(tgt.container&&!tgt.container.open)return{error:'The '+tgt.name+' is closed.'};if(tgt.container&&contentsOf(tgt.id).length>=tgt.container.capacity)return{error:'The '+tgt.name+' is full.'};
-        if(tgt.container&&o.size!=='small'&&tgt.id==='chest')return{error:'The '+o.name+' does not fit in the chest.'}}
+        if(tgt.container&&o.size!=='small'&&tgt.id==='chest')return{error:'The '+o.name+' does not fit in the chest.'};if(tgt.container&&o.size==='large')return{error:'The '+o.name+' is too big to go in the '+tgt.name+'.'};if(tgt.id===o.id)return{error:'You cannot put something inside itself.'}}
       return{label:'Putting down the '+o.name+(tgt?(tgt.surface?' on ':' in ')+'the '+tgt.name:''),duration:3,data:{id:o.id,onto:tgt?tgt.id:null}}},
     complete(a){const o=O(a.data.id);if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}
       if(a.data.onto){const t=O(a.data.onto);o.loc={t:t.surface?'on':'in',id:t.id};
@@ -693,7 +732,7 @@ const ACTIONS={
       if((o.door&&!o.state.open)||(o.container&&!o.container.open))return{error:'It is already closed.'};if(o.door&&S.agent.level==='ground'&&cellAt(S.agent.x,S.agent.y)===DOOR_CELL)return{error:'You are standing in the doorway.'};
       return{label:'Closing the '+o.name,duration:o.door?2:3,data:{id:o.id}}},
     complete(a){const o=O(a.data.id);if(o.door)o.state.open=false;else o.container.open=false;markChanged();a.result={message:'You close the '+o.name+'.'};logEvent('object','Closed '+o.id+'.',{id:o.id})}},
-  use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter with fire_pit or lantern; brass_key with chest; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
+  use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter with fire_pit or lantern; brass_key with chest; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot use the '+r.id+' by itself. Try using an object with it.'};const o=r.o;
       let w=null;if(p.with){w=resolveTarget(p.with);if(!w)return{error:'Unknown object "'+p.with+'".'};if(w.kind==='object'&&!knows(w.o))return{error:'You cannot see "'+p.with+'" from here.'}}
       const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(x.loc.t!=='carried'&&x.loc.t!=='worn')return'You need to be holding the '+x.name+'.';return null};
@@ -712,13 +751,20 @@ const ACTIONS={
       if(o.id==='tin_cup'){let e=need('tin_cup');if(e)return{error:e};const nearWater=pondEdgeDist(S.agent.x,S.agent.y)<=8||streamNearest(S.agent.x,S.agent.y)[0]<=8;
         if(wid==='pond'||wid==='stream'){if(!nearWater)return{error:'You need to be at the water\'s edge.'};if(O('tin_cup').state.full)return{error:'The cup is already full.'};return{label:'Filling the cup',duration:5,data:{k:'fill'}}}
         if(!wid){if(!O('tin_cup').state.full)return{error:'The cup is empty.'};return{label:'Drinking from the cup',duration:6,data:{k:'drink'}}}return{error:'Using the cup with that is not implemented.'}}
+      if(o.id==='mirror'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Looking into the mirror',duration:5,data:{k:'mirror'}}}
+      if(o.id==='ball'){let e=need('ball');if(e)return{error:e};return{label:'Tossing the ball',duration:4,data:{k:'ball'}}}
+      if(o.id==='blanket'){if(o.loc.t==='carried')return{error:'Put the blanket down first, then use it to spread or fold it.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.spread?'Folding':'Spreading out')+' the blanket',duration:6,data:{k:'blanket'}}}
+      if(o.id==='blocks'){if(o.loc.t==='carried')return{error:'Put the blocks down first.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.stacked?'Knocking down':'Stacking')+' the blocks',duration:o.state.stacked?2:15,data:{k:'blocks'}}}
+      if(o.id==='stepladder')return{error:'Standing on the stepladder is not implemented in this simulation.'};
+      if(o.id==='wheelbarrow')return{error:'To move the wheelbarrow, pick it up (you push it) and walk. Put things in it with put_down and "onto": "wheelbarrow".'};
+      if(o.id==='crate')return{error:'Use the actions "open" and "close".'};
       if(o.id==='boat')return{error:'Launching or rowing the boat is not implemented in this simulation.'};
       if(o.id==='journal'||o.id==='pencil')return{error:'Use the actions "write_journal" or "read_journal".'};
       if(o.id==='ladder')return{error:'Use the actions "climb" and "descend".'};
       if(o.id==='cabin_door'||o.id==='chest')return{error:'Use the actions "open" and "close".'};
       return{error:'No behavior is implemented for using the '+o.name+(p.with?' with '+p.with:'')+'.'}},
     complete(a){const k=a.data.k,ag=S.agent;
-      if(k==='bell'){S.sounds.push({t:S.simTime,x:L.stoneCircle.x,y:L.stoneCircle.y,msg:'A loud bell rang'});O('bell').state.lastRung=S.simTime;markChanged();a.result={message:'You pull the rope. The bell rings out loudly across the island.'};logEvent('sound','The bell rang (audible across the island).',{});return}
+      if(k==='bell'){S.sounds.push({t:S.simTime,x:L.bell.x,y:L.bell.y,msg:'A loud bell rang'});O('bell').state.lastRung=S.simTime;markChanged();a.result={message:'You pull the rope. The bell rings out loudly across the island.'};logEvent('sound','The bell rang (audible across the island).',{});return}
       if(k==='fire'){const fp=O('fire_pit'),fuel=contentsOf('fire_pit').filter(o=>o.fuel);if(!fuel.length){a.failed=true;a.result={message:'The lighter flame catches nothing. There is no wood in the fire pit.'};logEvent('fail','Fire not lit: no fuel in the fire pit.',{});return}
         fp.state.lit=true;fp.state.burnLeft=900*fuel.length;markChanged();a.result={message:'The driftwood catches. The fire is burning.'};logEvent('object','Fire lit in the fire pit ('+fuel.length+' log(s), about '+Math.round(fp.state.burnLeft/60)+' min of fuel).',{fuel:fuel.length});return}
       if(k==='lantern'){const ln=O('lantern');ln.state.lit=true;markChanged();a.result={message:'The lantern wick catches and glows.'};logEvent('object','Lantern lit.',{});return}
@@ -726,6 +772,10 @@ const ACTIONS={
       if(k==='key'){const c=O('chest').container;if(c.open){a.failed=true;a.result={message:'Close the chest before locking it.'};return}c.locked=!c.locked;markChanged();a.result={message:'The key turns. The chest is now '+(c.locked?'locked':'unlocked')+'.'};logEvent('object','Chest '+(c.locked?'locked':'unlocked')+'.',{});return}
       if(k==='snorkel'){ag.underwaterView={x:+ag.x.toFixed(2),y:+ag.y.toFixed(2)};markChanged();const seen=Object.values(S.objects).filter(o=>o.loc.t==='underwater'&&dist(o.loc.x,o.loc.y,ag.x,ag.y)<=25);
         a.result={message:'You put your face in the water and look around beneath the surface.'+(seen.length?' You see: '+seen.map(o=>o.name+' about '+Math.round(dist(o.loc.x,o.loc.y,ag.x,ag.y))+' ft away').join('; ')+'.':' Only mud and weeds nearby.')};logEvent('object','Looked underwater: found '+(seen.map(o=>o.id).join(', ')||'nothing')+'.',{found:seen.map(o=>o.id)});return}
+      if(k==='mirror'){const car=carried().map(displayName),wo=worn().map(x=>x.name);a.result={message:'In the mirror you see a small human figure in a red shirt and blue trousers'+(wo.length?', wearing '+wo.join(' and '):'')+(car.length?', carrying '+car.join(', '):'')+'. It looks back at you.'};logEvent('object','Looked into the mirror.',{});return}
+      if(k==='ball'){a.result={message:'You toss the red ball into the air and catch it.'};return}
+      if(k==='blanket'){const b=O('blanket');b.state.spread=!b.state.spread;markChanged();a.result={message:b.state.spread?'You spread the blanket out on the ground.':'You fold the blanket up.'};logEvent('object','Blanket '+(b.state.spread?'spread out':'folded')+'.',{});return}
+      if(k==='blocks'){const b=O('blocks');b.state.stacked=!b.state.stacked;markChanged();a.result={message:b.state.stacked?'You stack the wooden blocks into a small tower.':'The stack of blocks tumbles into a scattered pile.'};logEvent('object','Blocks '+(b.state.stacked?'stacked':'knocked over')+'.',{});return}
       if(k==='fill'){O('tin_cup').state.full=true;markChanged();a.result={message:'You fill the cup with cool water.'};logEvent('object','Filled tin_cup with water.',{});return}
       if(k==='drink'){O('tin_cup').state.full=false;markChanged();a.result={message:'You drink the water.'};logEvent('object','Drank from tin_cup (now empty).',{});return}}},
   wear:{desc:'Put on a wearable item (snorkel; sword via its shoulder strap). Worn items do not use your hands.',params:{target:'snorkel | sword'},
@@ -863,54 +913,72 @@ let terrainCanvas=null;
 function buildTerrainCanvas(){
   const R=1,raw=document.createElement('canvas');raw.width=W*R;raw.height=H*R;const rc=raw.getContext('2d'),img=rc.createImageData(W*R,H*R),px=img.data;
   for(let y=0;y<H*R;y++)for(let x=0;x<W*R;x++){const wx=(x+.5)/R,wy=(y+.5)/R,s=islandS(wx,wy),n=fbm(wx/18,wy/18),k=(y*W*R+x)*4;let r,g,b;
-    if(s>=1){const t=clamp((s-1)/.12,0,1);r=40+(1-t)*45;g=110+(1-t)*70;b=160+(1-t)*35;const wv=fbm(wx/40+3,wy/12)*.08;r*=1-wv;g*=1-wv}
-    else{const h=heightAt(wx,wy),hx=heightAt(wx+1,wy),hy=heightAt(wx,wy+1);const shade=clamp(1+((hx-h)+(hy-h))*.9,.62,1.3);
-      const bt=beachT(wx,wy);
+    if(s>=1){const t=clamp((s-1)/.12,0,1);r=40+(1-t)*45;g=110+(1-t)*70;b=160+(1-t)*35;const wv=fbm(wx/40+3,wy/12)*.08;r*=1-wv;g*=1-wv;
+      if(s<1.03&&shoreZone(wx,wy)!=='beach'){const f=(1-(s-1)/.03)*(.5+.5*fbm(wx/6,wy/6));r+=(235-r)*f*.8;g+=(240-g)*f*.8;b+=(245-b)*f*.8}}
+    else{const h=heightAt(wx,wy),hx=heightAt(wx+1,wy),hy=heightAt(wx,wy+1);const shade=clamp(1+((hx-h)+(hy-h))*.6,.72,1.22);const z=shoreZone(wx,wy),bt=beachT(wx,wy);
+      const rockStart=z==='cliff'?.9:(z==='rocky'?.972:2);
       if(s>bt){const wet=clamp((s-.975)/.025,0,1);r=228-wet*40;g=210-wet*40;b=158-wet*30;r+=(n-.5)*18;g+=(n-.5)*16;b+=(n-.5)*10}
-      else{const tr=clamp((bt-s)/.04,0,1);r=104+(n-.5)*30;g=150+(n-.5)*36;b=70+(n-.5)*18;if(h>48){const m=clamp((h-48)/10,0,1);r=r*(1-m)+138*m;g=g*(1-m)+136*m;b=b*(1-m)+112*m}
-        r=r*tr+210*(1-tr);g=g*tr+200*(1-tr);b=b*tr+150*(1-tr);r*=shade;g*=shade;b*=shade;
-        if(h>12&&(Math.floor(h/10)!==Math.floor(hx/10)||Math.floor(h/10)!==Math.floor(hy/10))){r*=.82;g*=.82;b*=.8}}}
+      else if(s>rockStart){const m=fbm(wx/5,wy/5),dk=s>.955&&z==='cliff'?.7:.95;r=(110+m*60)*dk;g=(106+m*56)*dk;b=(98+m*50)*dk}
+      else{r=104+(n-.5)*30;g=150+(n-.5)*36;b=70+(n-.5)*18;const fl=fbm(wx/3+40,wy/3);if(fl>.78){r+=40;g+=30;b+=10}
+        if(h>48){const m=clamp((h-48)/10,0,1);r=r*(1-m)+130*m;g=g*(1-m)+140*m;b=b*(1-m)+95*m}
+        if(bt<2){const tr=clamp((bt-s)/.04,0,1);r=r*tr+210*(1-tr);g=g*tr+200*(1-tr);b=b*tr+150*(1-tr)}
+        if(rockStart<2){const tr=clamp((rockStart-s)/.03,0,1);r=r*tr+125*(1-tr);g=g*tr+122*(1-tr);b=b*tr+100*(1-tr)}
+        r*=shade;g*=shade;b*=shade;
+        if(h>12&&(Math.floor(h/10)!==Math.floor(hx/10)||Math.floor(h/10)!==Math.floor(hy/10))){r*=.85;g*=.85;b*=.83}}}
     px[k]=r;px[k+1]=g;px[k+2]=b;px[k+3]=255}
   rc.putImageData(img,0,0);
   const SC=2,tc=document.createElement('canvas');tc.width=W*SC;tc.height=H*SC;const c=tc.getContext('2d');c.imageSmoothingEnabled=true;c.drawImage(raw,0,0,W*SC,H*SC);c.scale(SC,SC);
-  // stream
-  for(const pts of[L.streamUpper,L.streamLower]){c.lineCap='round';c.lineJoin='round';c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));
-    c.strokeStyle='#3d7fa8';c.lineWidth=11;c.stroke();c.strokeStyle='#5fa8cf';c.lineWidth=7;c.stroke();c.strokeStyle='rgba(200,235,255,.35)';c.lineWidth=1.2;c.setLineDash([4,6]);c.stroke();c.setLineDash([])}
-  // pond
+  const rr=mulberry32(7);
+  // cliff rocks and surf along the east
+  for(const q of CLIFF_PTS){if(rr()>.55)continue;const x=q.x+(rr()-.5)*5,y=q.y+(rr()-.5)*5,sz=2+rr()*4;c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(x+1.5,y+1.5,sz,sz*.8,0,0,7);c.fill();
+    const t=90+rr()*50;c.fillStyle='rgb('+t+','+(t-4)+','+(t-10)+')';c.beginPath();c.ellipse(x,y,sz,sz*.8,rr(),0,7);c.fill();c.fillStyle='rgba(255,255,255,.18)';c.beginPath();c.ellipse(x-sz*.3,y-sz*.3,sz*.45,sz*.3,0,0,7);c.fill()}
+  // dirt paths
+  for(const pth of L.paths){c.lineCap='round';c.lineJoin='round';c.beginPath();pth.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.strokeStyle='rgba(150,120,80,.55)';c.lineWidth=5;c.stroke();c.strokeStyle='rgba(190,160,110,.45)';c.lineWidth=2.5;c.stroke()}
+  // stream (rocky, with stones)
+  {const pts=L.stream;c.lineCap='round';c.lineJoin='round';c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));
+    c.strokeStyle='#7d7a70';c.lineWidth=13;c.stroke();c.strokeStyle='#3d7fa8';c.lineWidth=10;c.stroke();c.strokeStyle='#5fa8cf';c.lineWidth=6;c.stroke();c.strokeStyle='rgba(220,240,255,.45)';c.lineWidth=1.2;c.setLineDash([3,5]);c.stroke();c.setLineDash([]);
+    for(let i=0;i<pts.length-1;i++){for(let k=0;k<6;k++){const t=rr(),x=pts[i][0]+(pts[i+1][0]-pts[i][0])*t+(rr()-.5)*14,y=pts[i][1]+(pts[i+1][1]-pts[i][1])*t+(rr()-.5)*6;c.fillStyle='rgba(140,140,132,.9)';c.beginPath();c.ellipse(x,y,1+rr()*1.4,.8+rr(),0,0,7);c.fill()}}
+    // stone steps on the hill beside the stream
+    c.fillStyle='#a49d8c';for(let i=0;i<8;i++){const y=258+i*7,x=476-i*1.2;c.fillRect(x-3,y,7,2.6)}}
+  // pond with lily pads and reeds
   const p=L.pond;let gr=c.createRadialGradient(p.x,p.y,5,p.x,p.y,p.rx);gr.addColorStop(0,'#1f5d86');gr.addColorStop(1,'#4c95bf');c.fillStyle=gr;c.beginPath();c.ellipse(p.x,p.y,p.rx,p.ry,0,0,7);c.fill();
-  c.strokeStyle='#6b8f4e';c.lineWidth=2.5;c.stroke();const rr=mulberry32(7);c.strokeStyle='#4f7a35';c.lineWidth=.8;
-  for(let i=0;i<70;i++){const a=rr()*6.283,e=.97+rr()*.08,x=p.x+Math.cos(a)*p.rx*e,y=p.y+Math.sin(a)*p.ry*e;c.beginPath();c.moveTo(x,y);c.lineTo(x+(rr()-.5)*2,y-3-rr()*3);c.stroke()}
-  // bridge
+  c.strokeStyle='#6b8f4e';c.lineWidth=2.5;c.stroke();c.strokeStyle='#4f7a35';c.lineWidth=.8;
+  for(let i=0;i<90;i++){const a=rr()*6.283,e=.97+rr()*.08,x=p.x+Math.cos(a)*p.rx*e,y=p.y+Math.sin(a)*p.ry*e;c.beginPath();c.moveTo(x,y);c.lineTo(x+(rr()-.5)*2,y-3-rr()*3);c.stroke()}
+  for(let i=0;i<22;i++){const a=rr()*6.283,e=.35+rr()*.55,x=p.x+Math.cos(a)*p.rx*e,y=p.y+Math.sin(a)*p.ry*e;c.fillStyle='#5f9a48';c.beginPath();c.arc(x,y,1.6+rr(),0.4,6.0);c.lineTo(x,y);c.fill()}
+  // bridge (arched, with rails)
   c.save();c.translate(L.bridge.x,L.bridge.y);c.rotate(Math.atan2(BR.py,BR.px));c.fillStyle='rgba(0,0,0,.25)';c.fillRect(-L.bridge.len/2+1,-L.bridge.wid/2+1.5,L.bridge.len,L.bridge.wid);
   c.fillStyle='#9a6b3f';c.fillRect(-L.bridge.len/2,-L.bridge.wid/2,L.bridge.len,L.bridge.wid);c.strokeStyle='#6d4824';c.lineWidth=.5;for(let x=-L.bridge.len/2;x<=L.bridge.len/2;x+=2){c.beginPath();c.moveTo(x,-L.bridge.wid/2);c.lineTo(x,L.bridge.wid/2);c.stroke()}
-  c.fillStyle='#5a3b1d';c.fillRect(-L.bridge.len/2,-L.bridge.wid/2-.8,L.bridge.len,.9);c.fillRect(-L.bridge.len/2,L.bridge.wid/2-.1,L.bridge.len,.9);c.restore();
+  c.fillStyle='#5a3b1d';c.fillRect(-L.bridge.len/2,-L.bridge.wid/2-.8,L.bridge.len,.9);c.fillRect(-L.bridge.len/2,L.bridge.wid/2-.1,L.bridge.len,.9);
+  for(const x of[-L.bridge.len/2,-L.bridge.len/4,0,L.bridge.len/4,L.bridge.len/2]){c.fillRect(x-.6,-L.bridge.wid/2-1.2,1.2,1.6);c.fillRect(x-.6,L.bridge.wid/2-.4,1.2,1.6)}c.restore();
   // fire pit ring
-  c.fillStyle='#3b3631';c.beginPath();c.arc(L.firePit.x,L.firePit.y,3.2,0,7);c.fill();c.fillStyle='#8c8680';for(let i=0;i<10;i++){const a=i/10*6.283;c.beginPath();c.arc(L.firePit.x+Math.cos(a)*3.6,L.firePit.y+Math.sin(a)*3.6,1,0,7);c.fill()}
-  // stone circle
-  c.strokeStyle='rgba(90,80,60,.35)';c.lineWidth=1;c.beginPath();c.arc(L.stoneCircle.x,L.stoneCircle.y,L.stoneCircle.r,0,7);c.stroke();
-  for(const s of STONES){c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(s.x+2,s.y+2,3,2.4,0,0,7);c.fill();c.fillStyle='#9a9a94';c.beginPath();c.ellipse(s.x,s.y,2.8,2.2,0,0,7);c.fill();c.fillStyle='#c9c9c2';c.beginPath();c.ellipse(s.x-.6,s.y-.6,1.3,1,0,0,7);c.fill()}
+  c.fillStyle='#3b3631';c.beginPath();c.arc(L.firePit.x,L.firePit.y,3.6,0,7);c.fill();c.fillStyle='#8c8680';for(let i=0;i<12;i++){const a=i/12*6.283;c.beginPath();c.arc(L.firePit.x+Math.cos(a)*4.3,L.firePit.y+Math.sin(a)*4.3,1.1,0,7);c.fill()}
+  // low stone circle
+  for(const s of STONES){c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(s.x+1,s.y+1,1.9,1.5,0,0,7);c.fill();c.fillStyle='#a3a39c';c.beginPath();c.ellipse(s.x,s.y,1.8,1.4,0,0,7);c.fill()}
+  // boulders
+  for(const b of L.boulders){const sz=b[1]<200?4.5:2.8;c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(b[0]+1.5,b[1]+1.5,sz,sz*.8,0,0,7);c.fill();c.fillStyle='#9a978e';c.beginPath();c.ellipse(b[0],b[1],sz,sz*.8,0,0,7);c.fill();c.fillStyle='#c4c1b8';c.beginPath();c.ellipse(b[0]-sz*.3,b[1]-sz*.3,sz*.45,sz*.35,0,0,7);c.fill()}
   // foundation + shadow of the tower
-  const f=L.foundation;c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.moveTo(f.x-6,f.y-6);c.lineTo(f.x+6,f.y-6);c.lineTo(f.x+6+70,f.y-6-38);c.lineTo(f.x-6+70,f.y-6-38);c.closePath();c.fill();
-  c.fillStyle='#b8b8b2';c.fillRect(f.x-f.size/2,f.y-f.size/2,f.size,f.size);c.strokeStyle='#8a8a84';c.lineWidth=.8;c.strokeRect(f.x-f.size/2,f.y-f.size/2,f.size,f.size);
+  const f=L.foundation,hf=f.size/2;c.fillStyle='rgba(0,0,0,.16)';c.beginPath();c.moveTo(f.x-hf,f.y-hf);c.lineTo(f.x+hf,f.y-hf);c.lineTo(f.x+8+70,f.y-8-38);c.lineTo(f.x-8+70,f.y-8-38);c.closePath();c.fill();
+  c.fillStyle='rgba(0,0,0,.3)';c.fillRect(f.x-hf+1.5,f.y-hf+1.5,f.size,f.size);c.fillStyle='#bdbcb4';c.fillRect(f.x-hf,f.y-hf,f.size,f.size);c.strokeStyle='#8a8a84';c.lineWidth=.8;c.strokeRect(f.x-hf,f.y-hf,f.size,f.size);
+  c.strokeStyle='rgba(120,120,112,.5)';c.lineWidth=.4;c.beginPath();c.moveTo(f.x,f.y-hf);c.lineTo(f.x,f.y+hf);c.moveTo(f.x-hf,f.y);c.lineTo(f.x+hf,f.y);c.stroke();
   // cabin floor and walls (roof drawn dynamically)
   c.fillStyle='#8b6a46';c.fillRect(CAB.x,CAB.y,CAB.w,CAB.h);c.fillStyle='#a5845c';c.fillRect(CAB_IN.x0,CAB_IN.y0,CAB_IN.x1-CAB_IN.x0,CAB_IN.y1-CAB_IN.y0);
   c.strokeStyle='rgba(80,55,30,.4)';c.lineWidth=.4;for(let y=CAB_IN.y0;y<CAB_IN.y1;y+=2.5){c.beginPath();c.moveTo(CAB_IN.x0,y);c.lineTo(CAB_IN.x1,y);c.stroke()}
-  c.fillStyle='#6f8fb0';c.fillRect(CAB_IN.x0+1,CAB_IN.y1-9,7,8);c.fillStyle='#e8e2d0';c.fillRect(CAB_IN.x0+1,CAB_IN.y1-9,7,2.4);c.fillStyle='#9e3d32';c.fillRect(CAB_IN.x0+12,CAB_IN.y1-8,9,6);
+  c.fillStyle='#6f8fb0';c.fillRect(CAB_IN.x1-8,CAB_IN.y0+1,7,9);c.fillStyle='#e8e2d0';c.fillRect(CAB_IN.x1-8,CAB_IN.y0+1,7,2.4);c.fillStyle='#9e3d32';c.fillRect(CAB_IN.x0+10,CAB_IN.y1-8,9,6);
   c.fillStyle='#7a5532';c.fillRect(TABLE_POS.x-3,TABLE_POS.y-2.5,6,5);
-  // trees (shadow then canopy)
+  // bushes, then trees (shadow then canopy)
+  for(const bu of PALMS){c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.arc(bu.x+1.2,bu.y+1,bu.r,0,7);c.fill();c.fillStyle=bu.tone<.12?'#9a7ab8':(bu.tone<.2?'#e0d060':(bu.tone<.6?'#4d8a3c':'#5f9a44'));c.beginPath();c.arc(bu.x,bu.y,bu.r,0,7);c.fill()}
   for(const t of TREES){c.fillStyle='rgba(0,0,0,.22)';c.beginPath();c.ellipse(t.x+t.r*.35,t.y+t.r*.3,t.r,t.r*.85,0,0,7);c.fill()}
-  for(const t of TREES){const gg=c.createRadialGradient(t.x-t.r*.3,t.y-t.r*.3,1,t.x,t.y,t.r);const base=t.tone<.5?[38,92,44]:[52,108,48];gg.addColorStop(0,'rgb('+(base[0]+40)+','+(base[1]+45)+','+(base[2]+30)+')');gg.addColorStop(1,'rgb('+base+')');
+  for(const t of TREES){const gg=c.createRadialGradient(t.x-t.r*.3,t.y-t.r*.3,1,t.x,t.y,t.r);const base=t.tone<.5?[44,98,40]:[62,118,46];gg.addColorStop(0,'rgb('+(base[0]+50)+','+(base[1]+50)+','+(base[2]+25)+')');gg.addColorStop(1,'rgb('+base+')');
     c.fillStyle=gg;c.beginPath();c.arc(t.x,t.y,t.r,0,7);c.fill()}
-  for(const pm of PALMS){c.fillStyle='rgba(0,0,0,.2)';c.beginPath();c.arc(pm.x+4,pm.y+3,6,0,7);c.fill();c.strokeStyle='#3f7d3a';c.lineWidth=1.8;for(let i=0;i<6;i++){const a=pm.a+i*1.047;c.beginPath();c.moveTo(pm.x,pm.y);c.quadraticCurveTo(pm.x+Math.cos(a)*5,pm.y+Math.sin(a)*5-2,pm.x+Math.cos(a)*8,pm.y+Math.sin(a)*8);c.stroke()}c.fillStyle='#6b4a2a';c.beginPath();c.arc(pm.x,pm.y,1.3,0,7);c.fill()}
   terrainCanvas=tc}
 
 const cam={mode:'fit',scale:1,ox:0,oy:0,tScale:1,tx:500,ty:420,cx:500,cy:420,zoomMul:3.2};
 let dpr=1,CW=800,CH=600;
 function resize(){dpr=window.devicePixelRatio||1;const r=mapC.getBoundingClientRect();CW=Math.max(100,r.width);CH=Math.max(100,r.height);mapC.width=Math.round(CW*dpr);mapC.height=Math.round(CH*dpr)}
 window.addEventListener('resize',resize);
-function fitScale(){return Math.min(CW/940,CH/700)}
+function fitScale(){return Math.min(CW/950,CH/715)}
 function updateCam(view){const fs=fitScale();const a=view.agent;const ay=a.y-(a.level==='ground'?0:a.ladderFt*K_OBLIQUE);
-  if(cam.mode==='fit'){cam.tScale=fs;cam.tx=515;cam.ty=410}else if(cam.mode==='follow'){cam.tScale=fs*cam.zoomMul;cam.tx=a.x;cam.ty=ay}
+  if(cam.mode==='fit'){cam.tScale=fs;cam.tx=497;cam.ty=432}else if(cam.mode==='follow'){cam.tScale=fs*cam.zoomMul;cam.tx=a.x;cam.ty=ay}
   const k=.15;cam.scale+=(cam.tScale-cam.scale)*k;cam.cx+=(cam.tx-cam.cx)*k;cam.cy+=(cam.ty-cam.cy)*k;if(Math.abs(cam.scale-cam.tScale)<1e-4)cam.scale=cam.tScale;
   cam.ox=CW/2-cam.cx*cam.scale;cam.oy=CH/2-cam.cy*cam.scale}
 const w2s=(x,y)=>[x*cam.scale+cam.ox,y*cam.scale+cam.oy];
@@ -932,6 +1000,12 @@ function drawItemIcon(c,o,x,y,sz,isTop){const id=o.id.replace(/_\d+$/,'');c.save
     case'sword':c.strokeStyle='#d9dee3';c.lineWidth=s*.16;c.beginPath();c.moveTo(-s*.9,s*.5);c.lineTo(s*.7,-s*.4);c.stroke();c.strokeStyle='#8a6a3a';c.lineWidth=s*.22;c.beginPath();c.moveTo(-s*.7,s*.1);c.lineTo(-s*.45,s*.6);c.stroke();break;
     case'snorkel':c.strokeStyle='#ff8c1a';c.lineWidth=s*.18;c.beginPath();c.moveTo(s*.4,-s*.7);c.lineTo(s*.4,s*.3);c.stroke();c.fillStyle='#2f9bd8';c.beginPath();c.ellipse(-s*.1,s*.25,s*.45,s*.28,0,0,7);c.fill();break;
     case'brass_key':c.strokeStyle='#d9a521';c.lineWidth=s*.16;c.beginPath();c.arc(-s*.35,0,s*.22,0,7);c.stroke();c.beginPath();c.moveTo(-s*.13,0);c.lineTo(s*.6,0);c.lineTo(s*.6,s*.2);c.stroke();break;
+    case'wheelbarrow':c.fillStyle='#8a8f94';c.beginPath();c.moveTo(-s*.7,-s*.35);c.lineTo(s*.4,-s*.4);c.lineTo(s*.25,s*.35);c.lineTo(-s*.55,s*.35);c.closePath();c.fill();c.strokeStyle='#6b4a2a';c.lineWidth=s*.1;c.beginPath();c.moveTo(s*.3,-s*.25);c.lineTo(s*1,-s*.45);c.moveTo(s*.3,s*.25);c.lineTo(s*1,s*.4);c.stroke();c.fillStyle='#333';c.beginPath();c.arc(-s*.8,0,s*.18,0,7);c.fill();break;
+    case'stepladder':c.strokeStyle='#b58a52';c.lineWidth=s*.12;c.beginPath();c.moveTo(-s*.5,s*.6);c.lineTo(-s*.15,-s*.6);c.lineTo(s*.2,s*.6);c.moveTo(-s*.4,s*.25);c.lineTo(s*.1,s*.25);c.moveTo(-s*.3,-s*.1);c.lineTo(0,-s*.1);c.stroke();break;
+    case'ball':c.fillStyle='#d92d2d';c.beginPath();c.arc(0,0,s*.32,0,7);c.fill();c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.arc(-s*.1,-s*.1,s*.1,0,7);c.fill();break;
+    case'blanket':c.fillStyle='#2f5fd0';if(o.state.spread){c.save();c.rotate(-.2);c.fillRect(-s*.9,-s*.55,s*1.8,s*1.1);c.fillStyle='rgba(255,255,255,.15)';c.fillRect(-s*.9,-s*.55,s*1.8,s*.2);c.restore()}else{c.fillRect(-s*.4,-s*.3,s*.8,s*.6)}break;
+    case'blocks':c.fillStyle='#d9a96a';c.strokeStyle='#8a6438';c.lineWidth=s*.05;if(o.state.stacked){for(const[bx,by]of[[-.3,.15],[.05,.15],[-.12,-.2],[.4,.15]]){c.fillRect(bx*s,by*s,s*.3,s*.3);c.strokeRect(bx*s,by*s,s*.3,s*.3)}}else{for(const[bx,by]of[[-.6,0],[.1,.3],[.4,-.4],[-.2,-.5]]){c.fillRect(bx*s,by*s,s*.3,s*.3);c.strokeRect(bx*s,by*s,s*.3,s*.3)}}break;
+    case'island_map':c.fillStyle='#efe6cf';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#8a7a5a';c.lineWidth=s*.05;c.beginPath();c.ellipse(0,0,s*.3,s*.18,0,0,7);c.stroke();break;
     default:c.fillStyle='#fff';c.beginPath();c.arc(0,0,s*.3,0,7);c.fill()}
   c.restore()}
 
@@ -961,24 +1035,29 @@ function drawFigure(c,sx,sy,sz,pose,facing,phase,t,carry,wornIds,onLadder){
   let ix=7;for(const o of carry){if(o.id==='journal'&&(pose==='writing'||pose==='reading'))continue;drawItemIcon(c,o,ix,-9,5,false);ix+=5}
   c.restore()}
 
-function drawWaves(c,t){c.save();c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=1/cam.scale*1.2;for(let i=0;i<60;i++){const a=i/60*6.283,r=1.02+((t*.01+i*.137)%0.12);const cr=coastR(a);
-    const x=L.coast.cx+Math.cos(a)*L.coast.rx*cr*r,y=L.coast.cy+Math.sin(a)*L.coast.ry*cr*r;c.beginPath();c.arc(x,y,8,a-1.2,a-.3);c.stroke()}c.restore()}
+function drawWaves(c,t){c.save();c.strokeStyle='rgba(255,255,255,.14)';c.lineWidth=1/cam.scale*1.2;for(let i=0;i<70;i++){const a=i/70*6.283,r=1.02+((t*.01+i*.137)%0.12);const cr=coastRadius(a*180/Math.PI)*r;
+    const x=L.coast.cx+Math.cos(a)*cr,y=L.coast.cy+Math.sin(a)*cr;c.beginPath();c.arc(x,y,8,a-1.2,a-.3);c.stroke()}c.restore()}
 
-function drawLadder(c,view,t){const f=L.foundation,top=L.ladderHeight*K_OBLIQUE,yb=f.y+f.size/2,s=cam.scale;
-  // frame posts
-  c.strokeStyle='rgba(120,130,140,.9)';c.lineWidth=Math.max(.6,1.2/s*1.2);for(const dx of[-5.5,5.5]){c.beginPath();c.moveTo(f.x+dx,f.y-5.5);c.lineTo(f.x+dx,f.y-5.5-top);c.stroke()}
-  c.strokeStyle='rgba(150,160,170,.95)';for(const dx of[-5.5,5.5]){c.beginPath();c.moveTo(f.x+dx,yb);c.lineTo(f.x+dx,yb-top);c.stroke()}
-  c.strokeStyle='rgba(120,130,140,.6)';c.lineWidth=Math.max(.4,.7/s);for(let h=10;h<100;h+=20){const y=yb-h*K_OBLIQUE;c.beginPath();c.moveTo(f.x-5.5,y);c.lineTo(f.x+5.5,y-10*K_OBLIQUE);c.moveTo(f.x+5.5,y);c.lineTo(f.x-5.5,y-10*K_OBLIQUE);c.stroke()}
-  // ladder rails & rungs (front face)
-  c.strokeStyle='#d7dde2';c.lineWidth=Math.max(.8,1.6/s);for(const dx of[-2,2]){c.beginPath();c.moveTo(f.x+dx,yb+.5);c.lineTo(f.x+dx,yb-top);c.stroke()}
-  c.lineWidth=Math.max(.4,.7/s);const step=s>3?1:2;for(let h=0;h<=100;h+=step){const y=yb-h*K_OBLIQUE;c.beginPath();c.moveTo(f.x-2,y);c.lineTo(f.x+2,y);c.stroke()}
-  if(s>1.6){c.fillStyle='rgba(255,255,255,.8)';c.font=(9/s*1.2)+'px system-ui';c.textAlign='left';for(const h of[25,50,75,100]){c.fillText(h+' ft',f.x+7,yb-h*K_OBLIQUE+1)}}
-  // platform (top face)
-  const py=f.y-top;c.fillStyle='#7d8790';c.fillRect(f.x-6,py-6,12,12);c.strokeStyle='#c4ccd3';c.lineWidth=Math.max(.6,1/s);c.strokeRect(f.x-6,py-6,12,12);
-  c.fillStyle='#6e5034';c.fillRect(f.x-3.2,py-3.5,6.4,4.5);
-  // items on platform table / platform
-  const sz=Math.max(2.2,5/s);const onT=Object.values(view.objects).filter(o=>(o.loc.t==='on'&&o.loc.id==='platform_table'));onT.forEach((o,i)=>drawItemIcon(c,o,f.x-2.2+i*2.2,py-1.3,sz,true));
-  const onP=Object.values(view.objects).filter(o=>(o.loc.t==='on'&&o.loc.id==='platform'));onP.forEach((o,i)=>drawItemIcon(c,o,f.x-4+i*2.5,py+4,sz,true))}
+const LADDER_TOP_Y=()=>L.foundation.y+8;     // ground-plane y where the ladder meets the platform's front edge
+function ladderScreenY(h){const yb=L.foundation.y+L.foundation.size/2;return yb+(LADDER_TOP_Y()-yb)*h/100-h*K_OBLIQUE}
+function drawLadder(c,view,t){const f=L.foundation,top=L.ladderHeight*K_OBLIQUE,s=cam.scale,hf=f.size/2-2,hp=8;
+  const P=(x,y,h)=>[x,y-h*K_OBLIQUE];const leg=(sx,sy,col,w)=>{const a=P(f.x+sx*hf,f.y+sy*hf,0),b=P(f.x+sx*hp,f.y+sy*hp,100);c.strokeStyle=col;c.lineWidth=w;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();return[a,b]};
+  const lw=Math.max(.8,1.8/s);leg(-1,-1,'rgba(120,128,136,.85)',lw);leg(1,-1,'rgba(120,128,136,.85)',lw);
+  // braces on the back and sides
+  c.strokeStyle='rgba(120,128,136,.55)';c.lineWidth=Math.max(.4,.8/s);for(const h of[25,50,75]){const k=h/100,w=hf+(hp-hf)*k;for(const[ax,ay,bx,by]of[[-1,-1,1,-1],[-1,-1,-1,1],[1,-1,1,1]]){const p1=P(f.x+ax*w,f.y+ay*w,h),p2=P(f.x+bx*w,f.y+by*w,h);c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1]);c.stroke()}}
+  // platform (top face) with railing and table
+  const py=f.y-top;c.fillStyle='rgba(0,0,0,.25)';c.fillRect(f.x-hp+1,py-hp+1.5,hp*2,hp*2);c.fillStyle='#7d8790';c.fillRect(f.x-hp,py-hp,hp*2,hp*2);c.strokeStyle='#c4ccd3';c.lineWidth=Math.max(.6,1.1/s);c.strokeRect(f.x-hp,py-hp,hp*2,hp*2);
+  c.strokeStyle='rgba(210,215,220,.8)';c.lineWidth=Math.max(.4,.6/s);c.strokeRect(f.x-hp-.8,py-hp-2.2,hp*2+1.6,hp*2+1.6);
+  c.fillStyle='#8a6440';c.fillRect(f.x-4.5,py-4.5,9,5.5);c.strokeStyle='#5d4027';c.lineWidth=Math.max(.3,.5/s);c.strokeRect(f.x-4.5,py-4.5,9,5.5);
+  const sz=Math.max(2.4,5/s);Object.values(view.objects).filter(o=>(o.loc.t==='on'&&o.loc.id==='platform_table')).forEach((o,i)=>drawItemIcon(c,o,f.x-3+i*3,py-1.8,sz,true));
+  Object.values(view.objects).filter(o=>(o.loc.t==='on'&&o.loc.id==='platform')).forEach((o,i)=>drawItemIcon(c,o,f.x-5+i*3,py+4.5,sz,true));
+  // front legs (drawn over the platform underside) and front braces
+  leg(-1,1,'rgba(170,178,186,.95)',lw*1.15);leg(1,1,'rgba(170,178,186,.95)',lw*1.15);
+  c.strokeStyle='rgba(170,178,186,.6)';c.lineWidth=Math.max(.4,.8/s);for(const h of[25,50,75]){const k=h/100,w=hf+(hp-hf)*k;const p1=P(f.x-w,f.y+w,h),p2=P(f.x+w,f.y+w,h);c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1]);c.stroke()}
+  // ladder up the middle (front)
+  c.strokeStyle='#dfe4e8';c.lineWidth=Math.max(.8,1.6/s);for(const dx of[-2,2]){c.beginPath();c.moveTo(f.x+dx,ladderScreenY(0)+.5);c.lineTo(f.x+dx,ladderScreenY(100));c.stroke()}
+  c.lineWidth=Math.max(.4,.7/s);const step=s>3?1:2;for(let h=0;h<=100;h+=step){const y=ladderScreenY(h);c.beginPath();c.moveTo(f.x-2,y);c.lineTo(f.x+2,y);c.stroke()}
+  if(s>1.6){c.fillStyle='rgba(255,255,255,.85)';c.font=(9/s*1.2)+'px system-ui';c.textAlign='left';for(const h of[25,50,75,100]){c.fillText(h+' ft',f.x+hf+3-(hf-hp)*h/100,ladderScreenY(h)+1)}}}
 
 function drawWorld(c,view,t){
   c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#14537d';c.fillRect(0,0,CW,CH);
@@ -989,23 +1068,31 @@ function drawWorld(c,view,t){
   c.save();c.translate(L.boat.x,L.boat.y);c.rotate(L.boat.angle);c.fillStyle='rgba(0,0,0,.25)';c.beginPath();c.ellipse(1.5,1.5,L.boat.len/2,L.boat.beam/2,0,0,7);c.fill();
   c.fillStyle='#8a5a33';c.beginPath();c.moveTo(-L.boat.len/2,0);c.quadraticCurveTo(-L.boat.len/2+2,-L.boat.beam/2,0,-L.boat.beam/2);c.lineTo(L.boat.len/2-3,-L.boat.beam/2+.5);c.quadraticCurveTo(L.boat.len/2+1,0,L.boat.len/2-3,L.boat.beam/2-.5);c.lineTo(0,L.boat.beam/2);c.quadraticCurveTo(-L.boat.len/2+2,L.boat.beam/2,-L.boat.len/2,0);c.fill();
   c.fillStyle='#b98656';c.beginPath();c.ellipse(0,0,L.boat.len/2-1.6,L.boat.beam/2-1,0,0,7);c.fill();c.fillStyle='#6d4523';c.fillRect(-1,-L.boat.beam/2+1,1.4,L.boat.beam-2);c.fillRect(-5,-L.boat.beam/2+1,1.2,L.boat.beam-2);c.restore();
-  const inBoat=Object.values(objs).filter(o=>o.loc.t==='in'&&o.loc.id==='boat');inBoat.forEach((o,i)=>drawItemIcon(c,o,L.boat.x-3+i*5,L.boat.y-1+i,Math.max(2.5,6/s),false));
-  // cabin interior objects
-  const chest=objs.chest;c.fillStyle='#5b3a1e';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-2.2,6,4.4);c.fillStyle=chest.container.open?'#2a1a0c':'#7a5230';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-2.2,6,chest.container.open?1.2:4.4);c.fillStyle='#d9a521';c.fillRect(CHEST_POS.x-.5,CHEST_POS.y+.6,1,1);
-  if(chest.container.open)Object.values(objs).filter(o=>o.loc.t==='in'&&o.loc.id==='chest').forEach((o,i)=>drawItemIcon(c,o,CHEST_POS.x-1+i*2,CHEST_POS.y,Math.max(2,4/s)));
-  Object.values(objs).filter(o=>o.loc.t==='on'&&o.loc.id==='cabin_table').forEach((o,i)=>drawItemIcon(c,o,TABLE_POS.x-1.5+i*3,TABLE_POS.y,Math.max(2,4/s)));
+  // crate
+  {const cr=objs.crate,x=L.crate.x,y=L.crate.y;c.fillStyle='rgba(0,0,0,.3)';c.fillRect(x-3,y-2,7,5.2);c.fillStyle='#a07a4c';c.fillRect(x-3.5,y-2.6,7,5.2);c.strokeStyle='#6d4f2e';c.lineWidth=.4;c.strokeRect(x-3.5,y-2.6,7,5.2);
+    if(cr.container.open){c.fillStyle='#3a2a18';c.fillRect(x-3,y-2.1,6,4.2);c.fillStyle='#a07a4c';c.fillRect(x-3.5,y-5,7,2.2)}else{c.beginPath();c.moveTo(x-3.5,y-2.6);c.lineTo(x+3.5,y+2.6);c.moveTo(x+3.5,y-2.6);c.lineTo(x-3.5,y+2.6);c.stroke()}}
+  // driftwood table
+  {const x=L.picnicTable.x,y=L.picnicTable.y;c.fillStyle='rgba(0,0,0,.25)';c.fillRect(x-5,y-2.5,11,6);c.fillStyle='#c8b28c';c.fillRect(x-5.5,y-3,11,6);c.strokeStyle='#8e7a58';c.lineWidth=.4;for(let i=-2;i<=2;i+=1.3){c.beginPath();c.moveTo(x-5.5,y+i);c.lineTo(x+5.5,y+i);c.stroke()}}
+  // standing mirror
+  {const x=L.mirror.x,y=L.mirror.y;c.fillStyle='#6b4a2a';c.beginPath();c.arc(x,y,3.2,0,7);c.fill();const g=c.createLinearGradient(x-2,y-2,x+2,y+2);g.addColorStop(0,'#e8f4fb');g.addColorStop(1,'#9fb8c8');c.fillStyle=g;c.beginPath();c.arc(x,y,2.5,0,7);c.fill()}
+  // chest (outside the cabin door)
+  {const chest=objs.chest;c.fillStyle='rgba(0,0,0,.3)';c.fillRect(CHEST_POS.x-2.5,CHEST_POS.y-1.7,6,4.4);c.fillStyle='#6b4423';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-2.2,6,4.4);
+    if(chest.container.open){c.fillStyle='#2a1a0c';c.fillRect(CHEST_POS.x-2.5,CHEST_POS.y-1.7,5,3.4);c.fillStyle='#7a5230';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-4.6,6,2.4)}else{c.fillStyle='#8a5c32';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-2.2,6,1.6);c.fillStyle='#d9a521';c.fillRect(CHEST_POS.x-.5,CHEST_POS.y-.8,1,1.2)}}
+  // contents of containers and surfaces on the ground (boat, crate, chest, tables, wheelbarrow)
+  {const isz=Math.max(2,4.5/s);const groups={};for(const o of Object.values(objs)){if((o.loc.t==='in'||o.loc.t==='on')&&o.loc.id!=='fire_pit'){const par=objs[o.loc.id];if(!par||par.platformLevel)continue;if(par.loc.t!=='ground')continue;if(par.container&&!par.container.open)continue;(groups[par.id]=groups[par.id]||[]).push(o)}}
+    for(const pid in groups){const par=objs[pid],pp={x:par.loc.x,y:par.loc.y};groups[pid].forEach((o,i)=>{const off=pid==='boat'?[-4+i*4,-.5]:[-2+i*2.4,-.6];drawItemIcon(c,o,pp.x+off[0],pp.y+off[1],pid==='boat'?Math.max(2.5,6/s):isz,false)})}}
   // fire
   const fp=objs.fire_pit;Object.values(objs).filter(o=>o.loc.t==='in'&&o.loc.id==='fire_pit').forEach((o,i)=>drawItemIcon(c,o,L.firePit.x,L.firePit.y-1+i*1.5,2.2));
   if(fp.state.lit){const g=c.createRadialGradient(L.firePit.x,L.firePit.y,1,L.firePit.x,L.firePit.y,22);g.addColorStop(0,'rgba(255,160,40,.55)');g.addColorStop(1,'rgba(255,120,20,0)');c.fillStyle=g;c.beginPath();c.arc(L.firePit.x,L.firePit.y,22,0,7);c.fill();
     for(let i=0;i<6;i++){const ph=t*6+i*1.3;c.fillStyle=i%2?'#ffd35c':'#ff7b1c';c.beginPath();c.ellipse(L.firePit.x+Math.sin(ph)*1.3,L.firePit.y-1.5-Math.abs(Math.sin(ph*.7))*2,1,2.2,0,0,7);c.fill()}
     for(let i=0;i<5;i++){const p=((t*.15+i*.2)%1);c.fillStyle='rgba(200,200,200,'+(.35*(1-p))+')';c.beginPath();c.arc(L.firePit.x+p*30+Math.sin(p*9+i)*3,L.firePit.y-p*45,2+p*8,0,7);c.fill()}}
   // bell frame
-  const bell=objs.bell;c.strokeStyle='#5a3b1d';c.lineWidth=1.4;c.beginPath();c.moveTo(L.stoneCircle.x-4,L.stoneCircle.y+2);c.lineTo(L.stoneCircle.x-4,L.stoneCircle.y-6);c.lineTo(L.stoneCircle.x+4,L.stoneCircle.y-6);c.lineTo(L.stoneCircle.x+4,L.stoneCircle.y+2);c.stroke();
+  const bell=objs.bell;c.strokeStyle='#5a3b1d';c.lineWidth=1.4;c.beginPath();c.moveTo(L.bell.x-4,L.bell.y+2);c.lineTo(L.bell.x-4,L.bell.y-6);c.lineTo(L.bell.x+4,L.bell.y-6);c.lineTo(L.bell.x+4,L.bell.y+2);c.stroke();
   const since=view.simTime-(bell.state.lastRung==null?-999:bell.state.lastRung);const swing=since<8?Math.sin(since*8)*.5*(1-since/8):0;
-  c.save();c.translate(L.stoneCircle.x,L.stoneCircle.y-6);c.rotate(swing);c.fillStyle='#c08a2b';c.beginPath();c.moveTo(-2.2,4.5);c.quadraticCurveTo(-2,0,0,0);c.quadraticCurveTo(2,0,2.2,4.5);c.closePath();c.fill();c.restore();
-  if(since<8){for(let i=0;i<3;i++){const r=((since*40+i*25)%90);c.strokeStyle='rgba(255,230,150,'+(.6*(1-r/90))+')';c.lineWidth=1.5/s;c.beginPath();c.arc(L.stoneCircle.x,L.stoneCircle.y-3,r,0,7);c.stroke()}}
+  c.save();c.translate(L.bell.x,L.bell.y-6);c.rotate(swing);c.fillStyle='#c08a2b';c.beginPath();c.moveTo(-2.2,4.5);c.quadraticCurveTo(-2,0,0,0);c.quadraticCurveTo(2,0,2.2,4.5);c.closePath();c.fill();c.restore();
+  if(since<8){for(let i=0;i<3;i++){const r=((since*40+i*25)%90);c.strokeStyle='rgba(255,230,150,'+(.6*(1-r/90))+')';c.lineWidth=1.5/s;c.beginPath();c.arc(L.bell.x,L.bell.y-3,r,0,7);c.stroke()}}
   // ground objects
-  for(const o of Object.values(objs)){if(o.kind==='fixture')continue;const lt=o.loc.t;if(lt!=='ground'&&lt!=='underwater')continue;const inside=isIndoors(o.loc.x,o.loc.y);drawItemIcon(c,o,o.loc.x,o.loc.y,Math.max(2.5,(o.size==='medium'?7:5)/s),false)}
+  for(const o of Object.values(objs)){if(o.kind==='fixture')continue;const lt=o.loc.t;if(lt!=='ground'&&lt!=='underwater')continue;const inside=isIndoors(o.loc.x,o.loc.y);drawItemIcon(c,o,o.loc.x,o.loc.y,Math.max(2.5,(o.size==='large'?9:o.size==='medium'?7:5)/s),false)}
   // cabin roof / door
   const ind=a.level==='ground'&&isIndoors(a.x,a.y);const dOpen=objs.cabin_door.state.open;
   c.fillStyle='#4a2f1a';c.fillRect(DOOR_POS.x-2.5,CAB.y+CAB.h-5,5,5);
@@ -1018,7 +1105,7 @@ function drawWorld(c,view,t){
   if(a.trail&&a.trail.length>1){c.fillStyle='rgba(255,230,150,.55)';for(let i=0;i<a.trail.length;i++){const p=a.trail[i];c.globalAlpha=.15+.6*i/a.trail.length;c.beginPath();c.arc(p[0],p[1],Math.max(.6,1.4/s),0,7);c.fill()}c.globalAlpha=1}
   drawLadder(c,view,t);
   // the figure
-  const ay=a.level==='ground'?a.y:(L.foundation.y+L.foundation.size/2-a.ladderFt*K_OBLIQUE+(a.level==='platform'?-2:4));const[sx,sy]=w2s(a.x,ay);
+  const ay=a.level==='ground'?a.y:(a.level==='platform'?L.foundation.y-L.ladderHeight*K_OBLIQUE+6:ladderScreenY(a.ladderFt)+4);const[sx,sy]=w2s(a.x,ay);
   c.setTransform(dpr,0,0,dpr,0,0);const sz=clamp(15*Math.sqrt(cam.scale/fitScale()),15,44);
   const pose=view.pose,carry=Object.values(objs).filter(o=>o.loc.t==='carried'),wornIds=Object.values(objs).filter(o=>o.loc.t==='worn').map(o=>o.id);
   drawFigure(c,sx,sy,sz,pose,a.facing,a.stepDist*.55,t,carry,wornIds,a.level!=='ground');
