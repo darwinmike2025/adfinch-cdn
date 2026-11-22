@@ -67,6 +67,8 @@ const ACTIONS = [
   ['inspect', 'target', 'Examine something you can perceive.'],
   ['walk_to', 'target, or x and y', 'Walk to something you can perceive or have seen before, or to a point on the ground given in feet.'],
   ['walk', 'direction, distance', 'Walk a distance in feet in a compass direction (N, NE, E, ... or degrees).'],
+  ['run_to', 'target, or x and y', 'Run somewhere. Faster than walking for a short while, then tiring.'],
+  ['run', 'direction, distance', 'Run a distance in feet in a compass direction.'],
   ['climb', '', 'Climb up something climbable that you are standing at.'],
   ['descend', '', 'Climb back down.'],
   ['pick_up', 'target', 'Pick something up.'],
@@ -75,6 +77,9 @@ const ACTIONS = [
   ['open', 'target', 'Open something.'],
   ['close', 'target', 'Close something.'],
   ['use', 'target, optional with', 'Use something, optionally together with something else. The environment reports what happens, including when nothing happens.'],
+  ['attack', 'target, optional with', 'Strike something, optionally using an object you carry.'],
+  ['throw', 'target, at', 'Throw something you carry at something you can see.'],
+  ['shout', '', 'Shout or make a loud noise.'],
   ['wear', 'target', 'Put something on.'],
   ['remove', 'target', 'Take off something you are wearing.'],
   ['read', 'target', 'Read something.'],
@@ -115,10 +120,10 @@ const RESPONSE_SCHEMA = {
   properties: {
     action: {
       type: ['object', 'null'], additionalProperties: false,
-      required: ['type', 'target', 'with', 'onto', 'x', 'y', 'direction', 'distance', 'seconds', 'text'],
+      required: ['type', 'target', 'with', 'onto', 'at', 'x', 'y', 'direction', 'distance', 'seconds', 'text'],
       properties: {
         type: { type: 'string', enum: ACTION_TYPES },
-        target: { type: ['string', 'null'] }, with: { type: ['string', 'null'] }, onto: { type: ['string', 'null'] },
+        target: { type: ['string', 'null'] }, with: { type: ['string', 'null'] }, onto: { type: ['string', 'null'] }, at: { type: ['string', 'null'] },
         x: { type: ['number', 'null'] }, y: { type: ['number', 'null'] },
         direction: { type: ['string', 'null'] }, distance: { type: ['number', 'null'] },
         seconds: { type: ['number', 'null'] }, text: { type: ['string', 'null'] },
@@ -132,7 +137,7 @@ const RESPONSE_SCHEMA = {
 function toIslandAction(a) {
   if (!a) return null;
   const out = { type: a.type };
-  for (const k of ['target', 'with', 'onto', 'x', 'y', 'direction', 'distance', 'seconds', 'text']) if (a[k] !== null && a[k] !== undefined && a[k] !== '') out[k] = a[k];
+  for (const k of ['target', 'with', 'onto', 'at', 'x', 'y', 'direction', 'distance', 'seconds', 'text']) if (a[k] !== null && a[k] !== undefined && a[k] !== '') out[k] = a[k];
   return out;
 }
 
@@ -168,6 +173,7 @@ function observationSummary(o) {
   if (near.length) parts.push('Close by: ' + near.join(', ') + '.');
   const far = o.visibleObjects.filter(v => v.distanceFt > 60 && v.type === 'fixture').slice(0, 6).map(v => v.name);
   if (far.length) parts.push('Farther off: ' + far.join(', ') + '.');
+  if (s.condition && s.condition !== 'unhurt') parts.push('Condition: ' + s.condition + '.');
   if (s.carrying.length) parts.push('Carrying ' + s.carrying.map(c => c.name).join(', ') + (s.wearing.length ? '; wearing ' + s.wearing.map(w => w.name).join(', ') : '') + '.');
   for (const snd of o.soundsHeard || []) parts.push('Heard: ' + snd.description.toLowerCase() + '.');
   for (const n of o.notes || []) parts.push(n);

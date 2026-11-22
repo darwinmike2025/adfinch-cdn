@@ -396,7 +396,8 @@ const BR=(function(){const P=L.stream;let best=0,bd=1e9;for(let i=0;i<P.length-1
 const CAB_C0=cOf(CAB.x+1),CAB_C1=cOf(CAB.x+CAB.w-1),CAB_R0=rOf(CAB.y+1),CAB_R1=rOf(CAB.y+CAB.h-1);
 const DOOR_CELL=cIdx(cOf(CAB.x+CAB.w/2+1),CAB_R1);
 const DOOR_POS={x:cellCenter(DOOR_CELL).x,y:CAB.y+CAB.h};
-const TABLE_CELL=cIdx(CAB_C0+1,CAB_R0+1), CHEST_CELL=cellAt(L.chest.x,L.chest.y);
+const TABLE_CELL=cIdx(CAB_C0+1,CAB_R0+1), CHEST_CELL=cellAt(L.chest.x,L.chest.y), BED_CELL=cIdx(CAB_C0+1,CAB_R1-1), HEARTH_CELL=cIdx(CAB_C1-1,CAB_R0+1);
+const BED_POS=cellCenter(BED_CELL), HEARTH_POS=cellCenter(HEARTH_CELL);
 const TABLE_POS=cellCenter(TABLE_CELL), CHEST_POS=cellCenter(CHEST_CELL);
 const BEACH_PTS=[],CLIFF_PTS=[];
 
@@ -413,7 +414,7 @@ const BEACH_PTS=[],CLIFF_PTS=[];
     if(Math.abs(vx*BR.px+vy*BR.py)<=L.bridge.len/2&&Math.abs(vx*BR.dx+vy*BR.dy)<=L.bridge.wid/2+1)grid[i]=T.BRIDGE}
   // cabin
   for(let r=CAB_R0;r<=CAB_R1;r++)for(let c=CAB_C0;c<=CAB_C1;c++)grid[cIdx(c,r)]=(r===CAB_R0||r===CAB_R1||c===CAB_C0||c===CAB_C1)?T.WALL:T.FLOOR;
-  grid[DOOR_CELL]=T.FLOOR;grid[TABLE_CELL]=T.OBST;grid[CHEST_CELL]=T.OBST;
+  grid[DOOR_CELL]=T.FLOOR;grid[TABLE_CELL]=T.OBST;grid[CHEST_CELL]=T.OBST;grid[BED_CELL]=T.OBST;grid[HEARTH_CELL]=T.OBST;
   for(const p of[L.mirror,L.bell,L.picnicTable,L.crate,L.firePit])grid[cellAt(p.x,p.y)]=T.OBST;
   for(const b of L.boulders)grid[cellAt(b[0],b[1])]=T.OBST;
   for(let r=rOf(L.boat.y-12);r<=rOf(L.boat.y+12);r++)for(let c=cOf(L.boat.x-12);c<=cOf(L.boat.x+12);c++){const i=cIdx(c,r),cc=cellCenter(i);
@@ -429,7 +430,7 @@ function isBlocked(i){const g=grid[i];if(g===T.OCEAN||g===T.POND||g===T.WALL||g=
   if(i===DOOR_CELL&&S&&S.objects.cabin_door&&!S.objects.cabin_door.state.open)return true;return false}
 
 /* A* over the grid. Cost = travel-time-equivalent feet (terrain + slope). */
-function astar(startIdx,isGoal,heur){
+function astar(startIdx,isGoal,heur,blockedFn){const isBlocked_=blockedFn||isBlocked;
   const N=GW*GH,g=new Float64Array(N).fill(Infinity),came=new Int32Array(N).fill(-1),closed=new Uint8Array(N);
   const hp=[],hf=[];const push=(i,f)=>{hp.push(i);hf.push(f);let k=hp.length-1;while(k>0){const p=(k-1)>>1;if(hf[p]<=hf[k])break;[hp[p],hp[k]]=[hp[k],hp[p]];[hf[p],hf[k]]=[hf[k],hf[p]];k=p}};
   const pop=()=>{const top=hp[0];const li=hp.pop(),lf=hf.pop();if(hp.length){hp[0]=li;hf[0]=lf;let k=0;for(;;){const l=2*k+1,r=l+1;let m=k;if(l<hp.length&&hf[l]<hf[m])m=l;if(r<hp.length&&hf[r]<hf[m])m=r;if(m===k)break;[hp[m],hp[k]]=[hp[k],hp[m]];[hf[m],hf[k]]=[hf[k],hf[m]];k=m}}return top};
@@ -437,8 +438,8 @@ function astar(startIdx,isGoal,heur){
   const DIRS=[[1,0,5],[-1,0,5],[0,1,5],[0,-1,5],[1,1,7.071],[1,-1,7.071],[-1,1,7.071],[-1,-1,7.071]];
   while(hp.length){const i=pop();if(closed[i])continue;closed[i]=1;if(isGoal(i)){const path=[];let k=i;while(k!==-1){path.push(k);k=came[k]}return path.reverse()}
     const c=i%GW,r=(i/GW)|0,hi=cellH[i];
-    for(const[dc,dr,d]of DIRS){const nc=c+dc,nr=r+dr;if(nc<0||nr<0||nc>=GW||nr>=GH)continue;const j=cIdx(nc,nr);if(closed[j]||isBlocked(j))continue;
-      if(dc&&dr&&(isBlocked(cIdx(c+dc,r))||isBlocked(cIdx(c,r+dr))))continue;
+    for(const[dc,dr,d]of DIRS){const nc=c+dc,nr=r+dr;if(nc<0||nr<0||nc>=GW||nr>=GH)continue;const j=cIdx(nc,nr);if(closed[j]||isBlocked_(j))continue;
+      if(dc&&dr&&(isBlocked_(cIdx(c+dc,r))||isBlocked_(cIdx(c,r+dr))))continue;
       const dh=cellH[j]-hi;const sp=(TSPEED[grid[i]]+TSPEED[grid[j]])/2||.3;
       const cost=(d+2.5*Math.max(0,dh)+Math.max(0,-dh))/sp;const ng=g[i]+cost;if(ng<g[j]){g[j]=ng;came[j]=i;push(j,ng+heur(j))}}}
   return null}
@@ -482,8 +483,10 @@ function initialObjects(){
   add({id:'driftwood_2',name:'driftwood log',size:'medium',weight:6,burnable:true,fuel:true,desc:'A bleached, dry piece of driftwood about 3 ft long.',loc:G(...L.driftwood[1])});
   add({id:'stone_1',name:'smooth stone',weight:1,desc:'A smooth, palm-sized grey stone.',loc:G(...L.stones[0])});
   add({id:'stone_2',name:'smooth stone',weight:1.2,desc:'A smooth, palm-sized speckled stone.',loc:G(...L.stones[1])});
-  add({id:'cabin',name:'cabin',kind:'fixture',bothSides:true,desc:'A small log cabin with a single door on its south side.',closeDesc:'Inside: a table and a narrow bed. A stone chimney rises from the roof.',loc:G(CAB.x+CAB.w/2,CAB.y+CAB.h/2),reach:0,viewRange:450});
-  add({id:'cabin_door',name:'cabin door',kind:'fixture',bothSides:true,door:true,desc:'A plank door with an iron latch.',loc:G(DOOR_POS.x,DOOR_POS.y),reach:6,viewRange:300,state:{open:false}});
+  add({id:'cabin',name:'cabin',kind:'fixture',bothSides:true,desc:'A small log cabin with a single door on its south side.',closeDesc:'Inside: a table, a narrow bed, and a stone fireplace under the chimney.',loc:G(CAB.x+CAB.w/2,CAB.y+CAB.h/2),reach:0,viewRange:450});
+  add({id:'cabin_door',name:'cabin door',kind:'fixture',bothSides:true,door:true,desc:'A plank door with an iron latch.',loc:G(DOOR_POS.x,DOOR_POS.y),reach:8,viewRange:300,state:{open:false}});
+  add({id:'bed',name:'narrow bed',kind:'fixture',surface:true,desc:'A narrow wooden bed with a straw mattress and a wool blanket, neatly made.',loc:G(BED_POS.x,BED_POS.y),reach:6.5,viewRange:60});
+  add({id:'fireplace',name:'stone fireplace',kind:'fixture',desc:'A small stone fireplace with a chimney. The hearth is swept and empty.',container:{open:true,openable:false,capacity:4},loc:G(HEARTH_POS.x,HEARTH_POS.y),reach:6.5,viewRange:60,state:{lit:false}});
   add({id:'cabin_table',name:'cabin table',kind:'fixture',surface:true,desc:'A rough wooden table.',loc:G(TABLE_POS.x,TABLE_POS.y),reach:6.5,viewRange:60});
   add({id:'lantern',name:'oil lantern',size:'medium',weight:3,fragile:true,desc:'A glass oil lantern, half full of oil.',loc:{t:'on',id:'cabin_table'},state:{lit:false,broken:false}});
   add({id:'tin_cup',name:'tin cup',weight:.4,desc:'A dented tin cup.',loc:{t:'in',id:'crate'},state:{full:false}});
@@ -507,7 +510,7 @@ function initialObjects(){
 function freshState(startAt){const st=(startAt&&L.starts[startAt])||L.start;
   return{format:'watchable-island-state',version:VERSION,simTime:0,speed:1,paused:false,
     run:{active:false,ended:false,startSim:null,endSim:null,durationSec:RUN_SECONDS},
-    startAt:startAt||'beach',agent:{x:st.x,y:st.y,level:'ground',ladderFt:0,pose:'standing',facing:0,stepDist:0,underwaterView:null,trail:[]},
+    rng:20261122,animals:[],startAt:startAt||'beach',agent:{health:100,dead:false,x:st.x,y:st.y,level:'ground',ladderFt:0,pose:'standing',facing:0,stepDist:0,underwaterView:null,trail:[]},
     objects:initialObjects(),seen:{},journal:{entries:[]},reflections:[],sounds:[],
     action:null,history:[],nextActionId:1,nextSeq:1,dirty:true}}
 
@@ -515,8 +518,8 @@ function freshState(startAt){const st=(startAt&&L.starts[startAt])||L.start;
    5. LOGGING + RECORDING
    kinds: request | start | complete | fail | interrupt | rejected | move | object | journal | reflection | sound | system | error
    ===================================================================================== */
-const KIND_CLASS={observe:'sys',controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
-const KIND_TAG={observe:'SEES',controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
+const KIND_CLASS={animal:'err',body:'err',observe:'sys',controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
+const KIND_TAG={animal:'JAGUAR',body:'BODY',observe:'SEES',controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
 const listeners=[];
 function logEvent(kind,msg,data){const e={seq:S.nextSeq++,sim:+S.simTime.toFixed(3),wall:new Date().toISOString(),speed:S.speed,kind,msg,data:data||null};
   LOG.push(e);recordFrame(true);for(const f of listeners){try{f(e)}catch(_){}}UI.onLog&&UI.onLog(e);return e}
@@ -524,7 +527,7 @@ function newRecording(){REC={format:'watchable-island-replay',version:VERSION,cr
 function snapState(){const o=Object.assign({},S);delete o.dirty;return o}
 function clone(o){return JSON.parse(JSON.stringify(o))}
 function frameOf(){const a=S.agent,ac=S.action;return{t:+S.simTime.toFixed(3),x:+a.x.toFixed(2),y:+a.y.toFixed(2),lv:a.level,lf:+a.ladderFt.toFixed(2),p:displayPose(),f:+a.facing.toFixed(3),sd:+a.stepDist.toFixed(1),
-  al:ac?ac.label:null,ap:ac?+(ac.progress||0).toFixed(4):0,at:ac?ac.type:null}}
+  al:ac?ac.label:null,ap:ac?+(ac.progress||0).toFixed(4):0,at:ac?ac.type:null,an:(S.animals||[]).map(j=>[+j.x.toFixed(1),+j.y.toFixed(1),j.state,+j.facing.toFixed(2),+j.stepDist.toFixed(1)])}}
 function recordFrame(force){if(!REC)return;if(!force&&S.simTime-REC.lastFrameT<.25)return;const fr=frameOf();const last=REC.frames[REC.frames.length-1];
   if(last&&last.t===fr.t){REC.frames[REC.frames.length-1]=fr}else REC.frames.push(fr);REC.lastFrameT=S.simTime}
 function markChanged(){S.dirty=true}
@@ -554,7 +557,7 @@ function locText(o){const l=o.loc;if(o.kind==='fixture')return o.platformLevel?'
   if(l.t==='in')return'inside the '+O(l.id).name;if(l.t==='on')return'on the '+O(l.id).name;if(l.t==='platform')return'at the top of the ladder';
   const tt=terrainAt(l.x,l.y);return'on the ground ('+TNAME[tt]+')'}
 function stateText(o){const s=o.state,p=[];if(o.container&&o.container.openable)p.push(o.container.open?'open':'closed');if(o.container&&o.container.locked)p.push('locked');
-  if(o.door)p.push(s.open?'open':'closed');if(s.lit)p.push(o.id==='fire_pit'?'burning':'lit');if(s.broken)p.push('broken');if(s.full)p.push('full of water');if(o.id==='blanket')p.push(s.spread?'spread out':'folded');if(o.id==='blocks')p.push(s.stacked?'stacked in a tower':'scattered');if(o.id==='journal')p.push(S.journal.entries.length+' entries');return p.join(', ')}
+  if(o.door)p.push(s.open?'open':'closed');if(s.lit)p.push(HEARTHS[o.id]?'burning':'lit');if(s.burning)p.push('on fire');if(s.burnt)p.push('burned');if(s.wet)p.push('wet');if(s.broken)p.push('broken');if(s.full)p.push('full of water');if(o.id==='blanket')p.push(s.spread?'spread out':'folded');if(o.id==='blocks')p.push(s.stacked?'stacked in a tower':'scattered');if(o.id==='journal')p.push(S.journal.entries.length+' entries');return p.join(', ')}
 
 /* Visibility (what the agent can perceive). Returns map id -> {d, detail} */
 const lvlOk=o=>objLevel(o)===S.agent.level||(objLevel(o)==='ground'&&S.agent.level==='ground');
@@ -571,6 +574,7 @@ function perceiveObjects(){
     else if(o.kind==='fixture'){let range=o.viewRange||150;if(o.id==='fire_pit'&&o.state.lit)range=2000;if(high>30)range=Math.max(range,o.viewRange?2000:0);if(ind!==oin&&!o.bothSides)range=Math.min(range,ind?150:40);vis=d<=range;det=d<=Math.max(DETAIL_RANGE,o.reach+2)&&high<5}
     else{vis=high<=20&&d<=(ind!==oin?40:itemRange(o));det=d<=DETAIL_RANGE&&high<5&&ind===oin}
     if(vis&&!det&&high<5&&o.loc.t!=='underwater'&&lvlOk(o)&&reachInfo(o).ok)det=true; // anything within reach can be examined closely
+    if(!vis&&isBurning(o)&&objLevel(o)==='ground'&&d<(o.id==='cabin'?2000:250)&&!(ind!==oin&&!o.bothSides))vis=true;
     if(vis)res[o.id]={d,detail:det}}
   return res}
 function reachInfo(o){
@@ -624,6 +628,7 @@ function getObservation(){
     else e.description=o.id==='platform'?'A platform at the top of the ladder. From here you cannot make out what is on it.':(o.kind==='fixture'?o.desc:'An object, too far away to make out details.');
     if(id==='platform'&&!v.detail){e.distanceFt=Math.round(Math.hypot(v.d,L.ladderHeight-high))}
     e.reachable=reachInfo(o).ok;objs.push(e)}
+  {const pa=perceiveAnimals();for(const id in pa){const j=jaguar();objs.push({id,name:'jaguar',type:'animal',distanceFt:Math.round(pa[id].d),bearing:compass(bearingDeg(a.x,a.y,j.x,j.y)),bearingDeg:bearingDeg(a.x,a.y,j.x,j.y),description:jaguarDesc(j,pa[id].d),reachable:pa[id].d<=8})}}
   objs.sort((p,q)=>p.distanceFt-q.distanceFt);
   const feats=visibleFeatures();
   const sounds=S.sounds.filter(s=>S.simTime-s.t<=30).map(s=>({secondsAgo:Math.round(S.simTime-s.t),description:s.msg,bearing:dist(s.x,s.y,a.x,a.y)<5?'here':compass(bearingDeg(a.x,a.y,s.x,s.y)),distanceFt:Math.round(dist(s.x,s.y,a.x,a.y))}));
@@ -638,7 +643,7 @@ function getObservation(){
     observationOf:'agent',simTimeSec:+S.simTime.toFixed(1),
     run:{active:S.run.active,ended:S.run.ended,elapsedSec:runElapsed(),remainingSec:runRemaining()},
     self:{position:{x:+a.x.toFixed(1),y:+a.y.toFixed(1),unit:'ft',axes:'x east, y south, origin at NW corner of map'},
-      groundElevationFt:+gElev.toFixed(1),heightAboveGroundFt:+high.toFixed(1),level:a.level,pose:a.pose,indoors:ind,
+      groundElevationFt:+gElev.toFixed(1),heightAboveGroundFt:+high.toFixed(1),level:a.level,pose:a.pose==='down'?'on the ground (knocked down)':a.pose,condition:conditionText(a.health==null?100:a.health),indoors:ind,
       underfoot:a.level==='ground'?TNAME[terrainAt(a.x,a.y)]:(a.level==='ladder'?'ladder rungs':'steel platform'),
       carrying:carried().map(o=>({id:o.id,name:displayName(o),in:o.size==='small'?'pocket':'hand'})),wearing:worn().map(o=>({id:o.id,name:o.name})),
       handsFree:Math.max(0,2-handsUsed())},
@@ -657,15 +662,15 @@ function needTarget(p,{mustKnow=true,memory=false}={}){if(p.target==null||p.targ
   if(r.kind==='object'&&mustKnow&&!knows(r.o)&&!(memory&&remembers(r.o)))return{error:NOT_HERE(p.target)};return r}
 function carryFactor(){let f=1;for(const o of carried())if(o.awkward)f*=.85;const w=carried().reduce((s,o)=>s+o.weight,0);if(w>10)f*=1-Math.min(.4,(w-10)*.012);return f}
 function segSpeed(x0,y0,x1,y1){const d=dist(x0,y0,x1,y1)||1e-6,dh=heightAt(x1,y1)-heightAt(x0,y0),gr=dh/d;const t=grid[cellAt((x0+x1)/2,(y0+y1)/2)];
-  const ts=TSPEED[t]||.3;return WALK_SPEED*ts/(1+2.5*Math.max(0,gr)+Math.max(0,-gr))*carryFactor()}
+  const ts=TSPEED[t]||.3;const ac=S.action;const pace=ac&&ac.data&&ac.data.pace==='run'?((ac.data.runT||0)<30?2.75:1.75):1;return WALK_SPEED*ts/(1+2.5*Math.max(0,gr)+Math.max(0,-gr))*carryFactor()*healthFactor()*pace}
 function pathTime(path){let x=S.agent.x,y=S.agent.y,t=0,len=0;for(const[px,py]of path){const d=dist(x,y,px,py);if(d>0){t+=d/segSpeed(x,y,px,py);len+=d}x=px;y=py}return{t,len}}
 function placeOnGroundNear(o,dx){const a=S.agent;const f=a.facing;let x=a.x+Math.sin(f)*1.5+(dx||0),y=a.y-Math.cos(f)*1.5;const i=cellAt(x,y);if(isBlocked(i)){x=a.x;y=a.y}o.loc={t:'ground',x:+x.toFixed(2),y:+y.toFixed(2)}}
 const fmtPos=(x,y)=>'('+Math.round(x)+', '+Math.round(y)+')';
 
-function startWalk(path,label,targetDesc){const pt=pathTime(path);return{label,duration:pt.t+(S.agent.pose==='sitting'?2:0),data:{path,idx:0,walked:0,len:pt.len,from:[S.agent.x,S.agent.y],targetDesc,standDelay:S.agent.pose==='sitting'?2:0,lastTerrain:terrainAt(S.agent.x,S.agent.y)}}}
+function startWalk(path,label,targetDesc){const pt=pathTime(path);const sd=S.agent.pose==='sitting'?2:S.agent.pose==='down'?3:0;return{label,duration:pt.t+sd,data:{path,idx:0,walked:0,len:pt.len,from:[S.agent.x,S.agent.y],targetDesc,standDelay:sd,lastTerrain:terrainAt(S.agent.x,S.agent.y)}}}
 function walkTick(a,dt){const ag=S.agent,d=a.data;let rem=dt;
   if(d.standDelay>0){const u=Math.min(d.standDelay,rem);d.standDelay-=u;rem-=u;a.elapsed+=u;if(d.standDelay<=0){ag.pose='standing'}if(rem<=0)return-1}
-  ag.pose='walking';
+  ag.pose='walking';ag.down=false;if(d.pace==='run')d.runT=(d.runT||0)+rem;
   while(rem>1e-9&&d.idx<d.path.length){const[tx,ty]=d.path[d.idx];const dd=dist(ag.x,ag.y,tx,ty);if(dd<1e-6){d.idx++;continue}
     const v=segSpeed(ag.x,ag.y,tx,ty),step=Math.min(dd,v*rem);ag.facing=Math.atan2(tx-ag.x,-(ty-ag.y));ag.x+=(tx-ag.x)*step/dd;ag.y+=(ty-ag.y)*step/dd;
     rem-=step/v;a.elapsed+=step/v;d.walked+=step;ag.stepDist+=step;if(step>=dd-1e-9){ag.x=tx;ag.y=ty;d.idx++}
@@ -682,8 +687,10 @@ const ACTIONS={
     validate(){return{label:'Looking around',duration:4}},
     complete(a){const ob=getObservation();a.result={message:'You look around. You can see '+ob.visibleObjects.length+' things nearby.',observation:ob}}},
   inspect:{desc:'Examine a visible object or feature closely.',params:{target:'object id or feature'},
-    validate(p){const r=needTarget(p);if(r.error)return r;return{label:'Inspecting '+(r.o?r.o.name:r.id),duration:6,data:{r:r.o?r.o.id:r.id,feat:r.kind==='feature'}}},
-    complete(a){if(a.data.feat){const fd={pond:'A still pond. The water is murky near the banks.',stream:'A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly.',cliffs:'Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down.',hill:'A grassy hill with wildflowers, rising to a top crowned with large boulders. Stone steps climb it beside the stream.',ocean:'The sea surrounds the island. It is too deep and too far to swim anywhere.',beach:'Soft sand along the south-west shore, slow to walk on.',forest:'Dense trees with rough ground underneath.'}[a.data.r];a.result={message:fd};return}
+    validate(p){const an=targetAnimal(p.target);if(an==='unseen')return{error:NOT_HERE(p.target)};if(an)return{label:'Watching the jaguar',duration:3,data:{animal:true}};
+      const r=needTarget(p);if(r.error)return r;return{label:'Inspecting '+(r.o?r.o.name:r.id),duration:6,data:{r:r.o?r.o.id:r.id,feat:r.kind==='feature'}}},
+    complete(a){if(a.data.animal){const j=jaguar();const pv=perceiveAnimals().jaguar;a.result={message:pv?jaguarDesc(j,pv.d)+' It is about '+Math.round(pv.d)+' ft away.':'You can no longer see the jaguar.'};return}
+      if(a.data.feat){const fd={pond:'A still pond. The water is murky near the banks.',stream:'A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly.',cliffs:'Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down.',hill:'A grassy hill with wildflowers, rising to a top crowned with large boulders. Stone steps climb it beside the stream.',ocean:'The sea surrounds the island. It is too deep and too far to swim anywhere.',beach:'Soft sand along the south-west shore, slow to walk on.',forest:'Dense trees with rough ground underneath.'}[a.data.r];a.result={message:fd};return}
       const o=O(a.data.r),pv=perceiveObjects()[o.id],car=o.loc.t==='carried'||o.loc.t==='worn';
       if(!pv&&!car){a.result={message:'You can no longer see the '+o.name+'.'};a.failed=true;return}
       const close=car||(pv&&pv.detail);let m=close?(o.desc+(o.closeDesc?' '+o.closeDesc:'')):('From here: '+o.desc+' You would need to be closer for details.');
@@ -691,6 +698,8 @@ const ACTIONS={
       if(close&&o.readable)m+=' There is writing on it; use "read" to read it.';a.result={message:m}}},
   walk_to:{desc:'Walk to an object/feature or to a point {x,y} in feet. Pathfinding and speed are decided by the environment.',params:{target:'object/feature id (optional)',x:'number',y:'number'},
     validate(p){const e=needGround();if(e)return{error:e};let path,desc;
+      const an=targetAnimal(p.target);if(an==='unseen')return{error:NOT_HERE(p.target)};
+      if(an){path=planPath(an.x,an.y,6,false);desc='the jaguar';if(!path)return{error:'No walkable route to the jaguar.'};return startWalk(path,'Walking toward the jaguar','the jaguar')}
       if(p.target!=null&&p.target!==''){const r=needTarget(p,{memory:true});if(r.error)return r;
         if(r.kind==='feature'){const fp=featurePoint(r.id);if(!fp)return{error:'Cannot find '+r.id};path=planPath(fp.x,fp.y,r.id==='hill'?8:7,false);desc='the '+r.id}
         else{const o=r.o;if(o.loc.t==='carried'||o.loc.t==='worn')return{error:'You are already carrying that.'};if(objLevel(o)==='platform')return{error:'That is at the top of the ladder. Walk to the ladder and climb.'};
@@ -708,13 +717,14 @@ const ACTIONS={
     validate(p){const e=needGround();if(e)return{error:e};const deg=parseDir(p.direction);const dd=+p.distance;if(deg==null)return{error:'Give a direction like "N" or 45.'};if(!(dd>0))return{error:'Give a positive distance in feet.'};
       const rad=deg*Math.PI/180;const a=S.agent;let tx=a.x+Math.sin(rad)*dd,ty=a.y-Math.cos(rad)*dd;let i=cellAt(tx,ty),note='';
       // stop before water along the line
-      const steps=Math.ceil(dd/2.5);let lx=a.x,ly=a.y;for(let k=1;k<=steps;k++){const x=a.x+Math.sin(rad)*dd*k/steps,y=a.y-Math.cos(rad)*dd*k/steps;const g=grid[cellAt(x,y)];if(g===T.OCEAN||g===T.POND||g===T.CLIFF){note=g===T.CLIFF?' (stopping at the cliff edge)':' (stopping at the water)';tx=lx;ty=ly;break}lx=x;ly=y}
-      if(dist(tx,ty,a.x,a.y)<1)return{error:'Water is directly in that direction.'};
+      const steps=Math.ceil(dd/2.5);let lx=a.x,ly=a.y;for(let k=1;k<=steps;k++){const x=a.x+Math.sin(rad)*dd*k/steps,y=a.y-Math.cos(rad)*dd*k/steps;const ci=cellAt(x,y),g=grid[ci];if(g===T.OCEAN||g===T.POND||g===T.CLIFF){note=g===T.CLIFF?' (stopping at the cliff edge)':' (stopping at the water)';tx=lx;ty=ly;break}
+        if(isBlocked(ci)){note=g===T.WALL||ci===DOOR_CELL?' (stopping at the wall)':' (something solid is in the way)';tx=lx;ty=ly;break}lx=x;ly=y}
+      if(dist(tx,ty,a.x,a.y)<1)return{error:/wall/.test(note)?'A wall is directly in that direction.':/solid/.test(note)?'Something solid is directly in that direction.':'Water is directly in that direction.'};
       i=cellAt(tx,ty);let path;if(isBlocked(i)){const j=nearestWalkable(tx,ty,10);if(j<0)return{error:'Something solid blocks that direction.'};const c=cellCenter(j);path=planPath(c.x,c.y,0,true)}else path=planPath(tx,ty,0,true);
       if(!path)return{error:'No walkable route in that direction.'};return startWalk(path,'Walking '+compass(deg)+' '+Math.round(dd)+' ft'+note,Math.round(dd)+' ft '+compass(deg))},
     start(a){ACTIONS.walk_to.start(a)},tick:walkTick,complete(a){a.result={message:walkEnd(a,false)}},interrupt(a){a.result={message:walkEnd(a,true)}}},
   climb:{desc:'Climb the ladder (must be at its base, hands free). ~4 minutes for 100 ft.',params:{},
-    validate(){const a=S.agent;if(a.level==='platform')return{error:'You are already on the platform.'};
+    validate(){const a=S.agent;if(a.level==='platform')return{error:'You are already on the platform.'};if((a.health||100)<15)return{error:'You are too badly injured to climb.'};if(a.pose==='down')return{error:'You are on the ground. Get up first.'};
       if(a.level==='ground'){if(dist(a.x,a.y,L.ladder.x,L.ladder.y)>5)return{error:'You are not at the base of the ladder (it is '+Math.round(dist(a.x,a.y,L.ladder.x,L.ladder.y))+' ft away).'}}
       const h=carried().filter(o=>o.size!=='small');if(h.length)return{error:'You need both hands free to climb. You are holding: '+h.map(o=>o.name).join(', ')+'. Put it down or wear it.'};
       const rate=CLIMB_SEC_PER_FT*(worn().some(o=>o.size==='medium')?1.1:1);const left=L.ladderHeight-a.ladderFt;
@@ -738,7 +748,7 @@ const ACTIONS={
   pick_up:{desc:'Pick up a reachable item (also takes items out of open containers or off surfaces). Small items go in pockets; medium items need a free hand.',params:{target:'item id'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot pick that up.'};const o=r.o;
       if(o.kind==='fixture')return{error:'The '+o.name+' cannot be picked up.'};if(o.loc.t==='carried'||o.loc.t==='worn')return{error:'You already have the '+o.name+'.'};
-      const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};if(o.loc.t==='in'&&O(o.loc.id).id==='fire_pit'&&O('fire_pit').state.lit)return{error:'The fire is burning; it is too hot to reach in.'};
+      const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};if((o.loc.t==='in'&&HEARTHS[o.loc.id]&&O(o.loc.id).state.lit)||(isBurning(o)&&!['wood','thinwood'].includes(materialOf(o))))return{error:'It is burning; it is too hot to pick up.'};
       if(o.size==='small'&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
       return{label:'Picking up the '+o.name,duration:o.loc.t==='underwater'?10:3,data:{id:o.id}}},
     complete(a){const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc={t:'carried'};if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
@@ -753,14 +763,14 @@ const ACTIONS={
       return{label:'Putting down the '+o.name+(tgt?(tgt.surface?' on ':' in ')+'the '+tgt.name:''),duration:3,data:{id:o.id,onto:tgt?tgt.id:null}}},
     complete(a){const o=O(a.data.id);if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}
       if(a.data.onto){const t=O(a.data.onto);o.loc={t:t.surface?'on':'in',id:t.id};
-        if(t.id==='fire_pit'&&t.state.lit&&o.burnable&&!o.fuel){o.loc={t:'destroyed'};markChanged();a.result={message:'You put the '+o.name+' into the fire. It burns up.'};logEvent('object','Burned '+o.id+' in the fire. It is destroyed.',{id:o.id});return}}
+        }
       else if(S.agent.level==='platform')o.loc={t:'on',id:'platform'};else placeOnGroundNear(o);
       markChanged();a.result={message:'You put down the '+displayName(o)+' '+locText(o)+'.'};logEvent('object','Put down '+o.id+': now '+locText(o)+'.',{id:o.id,loc:o.loc})}},
   drop:{desc:'Let go of a carried item. It falls: fragile items break; from the ladder or platform it falls to the ground near the ladder base.',params:{target:'item id'},
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='carried')return{error:'You are not carrying that.'};return{label:'Dropping the '+o.name,duration:1,data:{id:o.id}}},
     complete(a){const o=O(a.data.id),ag=S.agent;if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}let fell=ag.level==='ground'?3:ag.ladderFt,msg;
       if(ag.level==='ground'){placeOnGroundNear(o,0)}else{const k=S.nextSeq;o.loc={t:'ground',x:+(L.ladder.x+((k*37)%15)-7).toFixed(1),y:+(L.ladder.y+4+((k*13)%7)).toFixed(1)}}
-      if(o.fragile&&!o.state.broken){o.state.broken=true;o.state.lit=false;msg='The '+o.name+' falls '+Math.round(fell)+' ft and shatters.'}else msg='The '+o.name+' falls '+Math.round(fell)+' ft and lands '+(fell>10?'with a thud ':'')+'at '+fmtPos(o.loc.x,o.loc.y)+'.';
+      if(o.fragile&&!o.state.broken){const wasLit=o.state.lit;o.state.broken=true;o.state.lit=false;msg='The '+o.name+' falls '+Math.round(fell)+' ft and shatters.';if(wasLit){o.state.burningOil=true;o.state.burning=true;o.state.burnLeft=BURN_TIME.oil;msg+=' Burning oil spreads across the ground.'}}else msg='The '+o.name+' falls '+Math.round(fell)+' ft and lands '+(fell>10?'with a thud ':'')+'at '+fmtPos(o.loc.x,o.loc.y)+'.';
       if(fell>10)S.sounds.push({t:S.simTime,x:o.loc.x,y:o.loc.y,msg:'A thud from something hitting the ground'});
       markChanged();a.result={message:msg};logEvent('object','Dropped '+o.id+' from '+Math.round(fell)+' ft: '+msg,{id:o.id,loc:o.loc,broken:!!o.state.broken})}},
   open:{desc:'Open a door or container.',params:{target:'cabin_door | chest'},
@@ -773,19 +783,24 @@ const ACTIONS={
       if((o.door&&!o.state.open)||(o.container&&!o.container.open))return{error:'It is already closed.'};if(o.door&&S.agent.level==='ground'&&cellAt(S.agent.x,S.agent.y)===DOOR_CELL)return{error:'You are standing in the doorway.'};
       return{label:'Closing the '+o.name,duration:o.door?2:3,data:{id:o.id}}},
     complete(a){const o=O(a.data.id);if(o.door)o.state.open=false;else o.container.open=false;markChanged();a.result={message:'You close the '+o.name+'.'};logEvent('object','Closed '+o.id+'.',{id:o.id})}},
-  use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter with fire_pit or lantern; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
+  use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter (or a lit lantern or burning item) with anything flammable, a hearth, or the lantern; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot use the '+r.id+' by itself. Try using an object with it.'};const o=r.o;
       let w=null;if(p.with){w=resolveTarget(p.with);if(!w||(w.kind==='object'&&!knows(w.o))||(w.kind==='feature'&&!featureKnown(w.id)))return{error:NOT_HERE(p.with)}}
       const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(x.loc.t!=='carried'&&x.loc.t!=='worn')return'You need to be holding the '+x.name+'.';return null};
       const reachW=()=>{if(w&&w.kind==='object'){const ri=reachInfo(w.o);if(!ri.ok)return ri.reason}return null};
       if(S.agent.level==='ladder')return{error:'You are holding on to the ladder with both hands.'};
       // accept either order: "use lantern with lighter" means the same as "use lighter with lantern"
-      if(wid==='lighter'&&(o.id==='lantern'||o.id==='fire_pit'))return ACTIONS.use.validate(Object.assign({},p,{target:'lighter',with:o.id}));
+      if(wid==='lighter'&&o.id!=='lighter')return ACTIONS.use.validate(Object.assign({},p,{target:'lighter',with:o.id}));
       if(o.id==='bell'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Ringing the bell',duration:6,data:{k:'bell'}}}
-      if(o.id==='lighter'){let e=need('lighter');if(e)return{error:e};
-        if(wid==='fire_pit'){e=reachW();if(e)return{error:e};if(O('fire_pit').state.lit)return{error:'The fire is already burning.'};return{label:'Lighting the fire',duration:15,data:{k:'fire'}}}
-        if(wid==='lantern'){e=reachW();if(e)return{error:e};const ln=O('lantern');if(ln.state.broken)return{error:'The lantern is broken.'};if(ln.state.lit)return{error:'It is already lit.'};return{label:'Lighting the lantern',duration:8,data:{k:'lantern'}}}
-        if(!wid)return{label:'Flicking the lighter',duration:3,data:{k:'flick'}};return{error:'Using the lighter with "'+p.with+'" is not implemented in this simulation.'}}
+      // anything that makes a flame: the lighter, a lit lantern, or something already burning
+      const isSource=o.id==='lighter'||(o.id==='lantern'&&o.state.lit&&!o.state.broken)||isBurning(o);
+      if(isSource&&(o.id==='lighter'||wid)){let e=o.id==='lighter'?need('lighter'):(o.loc.t==='carried'?null:'You need to be holding the '+o.name+'.');if(e)return{error:e};
+        if(!wid)return{label:'Flicking the lighter',duration:3,data:{k:'flick'}};
+        if(w.kind!=='object')return{error:'You cannot set the '+String(p.with).replace(/_/g,' ')+' alight.'};const t=w.o;e=reachW();if(e)return{error:e};
+        const src=(o.id==='lighter'||o.id==='lantern')?'flame':'fire';
+        if(t.id==='lantern'){if(t.state.broken)return{error:'The lantern is broken.'};if(t.state.lit)return{error:'It is already lit.'};return{label:'Lighting the lantern',duration:8,data:{k:'lantern'}}}
+        if(HEARTHS[t.id])return{label:'Holding the flame to the '+t.name,duration:10,data:{k:'ignite',id:t.id,src}};
+        return{label:'Holding the flame to the '+t.name,duration:{paper:3,cloth:6,rope:10,oil:2}[materialOf(t)]||(src==='fire'?30:8),data:{k:'ignite',id:t.id,src}}}
       if(o.id==='brass_key'){let e=need('brass_key');if(e)return{error:e};if(wid!=='chest')return{error:wid?'The key does not fit the '+p.with+'.':'Use the key with something (e.g. with: "chest").'};e=reachW();if(e)return{error:e};
         return{label:(O('chest').container.locked?'Unlocking':'Locking')+' the chest',duration:6,data:{k:'key'}}}
       if(o.id==='snorkel'){if(!isWearing('snorkel'))return{error:'Wear the snorkel first (action "wear").'};if(S.agent.level!=='ground')return{error:'There is no water up here.'};
@@ -808,8 +823,12 @@ const ACTIONS={
       return{error:'No behavior is implemented for using the '+o.name+(p.with?' with '+p.with:'')+'.'}},
     complete(a){const k=a.data.k,ag=S.agent;
       if(k==='bell'){S.sounds.push({t:S.simTime,x:L.bell.x,y:L.bell.y,msg:'A loud bell rang'});O('bell').state.lastRung=S.simTime;markChanged();a.result={message:'You pull the rope. The bell rings out loudly across the island.'};logEvent('sound','The bell rang (audible across the island).',{});return}
-      if(k==='fire'){const fp=O('fire_pit'),fuel=contentsOf('fire_pit').filter(o=>o.fuel);if(!fuel.length){a.failed=true;a.result={message:'The lighter flame catches nothing. There is no wood in the fire pit.'};logEvent('fail','Fire not lit: no fuel in the fire pit.',{});return}
-        fp.state.lit=true;fp.state.burnLeft=900*fuel.length;markChanged();a.result={message:'The driftwood catches. The fire is burning.'};logEvent('object','Fire lit in the fire pit ('+fuel.length+' log(s), about '+Math.round(fp.state.burnLeft/60)+' min of fuel).',{fuel:fuel.length});return}
+      if(k==='ignite'){const t=O(a.data.id);
+        if(HEARTHS[t.id]){const fuel=contentsOf(t.id).filter(f=>f.loc.t!=='destroyed');const kind=fuel.filter(f=>igniteCheck(f,a.data.src).ok);
+          if(!fuel.length){a.failed=true;a.result={message:'There is nothing in the '+t.name+' to burn.'};return}
+          if(!kind.length){a.failed=true;a.result={message:'The flame licks at the '+fuel.map(f=>f.name).join(' and ')+' but nothing catches. Solid wood needs kindling (paper, cloth or rope) or a fire that is already going.'};return}
+          ignite(kind[0],'lit by the agent');a.result={message:'The '+kind[0].name+' in the '+t.name+' catches fire.'};return}
+        const ck=igniteCheck(t,a.data.src);if(!ck.ok){a.failed=true;a.result={message:ck.why};return}ignite(t,'set alight by the agent');a.result={message:'The '+t.name+' catches fire.'};return}
       if(k==='lantern'){const ln=O('lantern');ln.state.lit=true;markChanged();a.result={message:'The lantern wick catches and glows.'};logEvent('object','Lantern lit.',{});return}
       if(k==='flick'){a.result={message:'A small flame appears, then you let it go out.'};return}
       if(k==='key'){const c=O('chest').container;if(c.open){a.failed=true;a.result={message:'Close the chest before locking it.'};return}c.locked=!c.locked;markChanged();a.result={message:'The key turns. The chest is now '+(c.locked?'locked':'unlocked')+'.'};logEvent('object','Chest '+(c.locked?'locked':'unlocked')+'.',{});return}
@@ -846,8 +865,8 @@ const ACTIONS={
     interrupt(a){const w=a.data.written;if(w){commitJournal(w,true);a.result={message:'You stop writing. Written so far: "'+w+'"'}}else a.result={message:'You stop before writing anything.'}}},
   sit:{desc:'Sit down.',params:{},validate(){const e=S.agent.level==='ladder'?'Not on the ladder.':null;if(e)return{error:e};if(S.agent.pose==='sitting')return{error:'You are already sitting.'};return{label:'Sitting down',duration:3}},
     complete(a){S.agent.pose='sitting';markChanged();a.result={message:'You sit down.'};logEvent('move','Sat down.',{})}},
-  stand:{desc:'Stand up.',params:{},validate(){if(S.agent.pose!=='sitting')return{error:'You are already standing.'};return{label:'Standing up',duration:2}},
-    complete(a){S.agent.pose='standing';markChanged();a.result={message:'You stand up.'};logEvent('move','Stood up.',{})}},
+  stand:{desc:'Stand up.',params:{},validate(){if(S.agent.pose!=='sitting'&&S.agent.pose!=='down')return{error:'You are already standing.'};return{label:S.agent.pose==='down'?'Getting up off the ground':'Standing up',duration:S.agent.pose==='down'?3:2}},
+    complete(a){S.agent.pose='standing';S.agent.down=false;markChanged();a.result={message:'You stand up.'};logEvent('move','Stood up.',{})}},
   rest:{desc:'Rest for a number of seconds (keeps current pose).',params:{seconds:'1-1800'},
     validate(p){const s=+p.seconds;if(!(s>=1&&s<=1800))return{error:'Give "seconds" between 1 and 1800.'};return{label:'Resting ('+fmtDur(s)+')',duration:s}},complete(a){a.result={message:'You rest for '+fmtDur(a.duration)+'.'}}},
   wait:{desc:'Wait for a number of seconds.',params:{seconds:'1-1800'},
@@ -855,6 +874,58 @@ const ACTIONS={
 };
 ACTIONS.put_in=Object.assign({},ACTIONS.put_down,{desc:'Alias of put_down with "container".'});
 ACTIONS.take=Object.assign({},ACTIONS.pick_up,{desc:'Alias of pick_up.'});
+// running: same routes, faster, tiring after ~30 s
+ACTIONS.run_to=Object.assign({},ACTIONS.walk_to,{desc:'Run to something or to a point. Much faster than walking for a short while, then tiring.',
+  validate(p){const v=ACTIONS.walk_to.validate(p);if(v.error)return v;v.label=v.label.replace(/^Walking/,'Running');v.duration=v.duration/2.6;v.data.pace='run';return v}});
+ACTIONS.run=Object.assign({},ACTIONS.walk,{desc:'Run a distance in a compass direction.',
+  validate(p){const v=ACTIONS.walk.validate(p);if(v.error)return v;v.label=v.label.replace(/^Walking/,'Running');v.duration=v.duration/2.6;v.data.pace='run';return v}});
+ACTIONS.shout={desc:'Shout or make a loud noise.',params:{},
+  validate(){if(S.agent.dead)return{error:'You cannot.'};return{label:'Shouting',duration:3}},
+  complete(a){S.sounds.push({t:S.simTime,x:S.agent.x,y:S.agent.y,msg:'A loud human shout'});a.result={message:'You shout as loudly as you can.'};logEvent('sound','The agent shouts loudly.',{})}};
+function weaponStats(w){if(!w)return{name:'bare hands',hit:.25,dmg:[2,6]};
+  if(w.id==='sword')return{name:'sword',hit:.55,dmg:[25,55]};if(isBurning(w)&&['wood','thinwood'].includes(materialOf(w)))return{name:'burning '+w.name,hit:.5,dmg:[8,16],fire:true};
+  if(w.id==='lantern'&&w.state.lit&&!w.state.broken)return{name:'lit lantern',hit:.45,dmg:[5,10],fire:true,breaks:true};
+  if(['oar','driftwood_1','driftwood_2','stepladder'].includes(w.id))return{name:w.name,hit:.45,dmg:[10,22]};
+  if(w.id.startsWith('stone'))return{name:w.name,hit:.4,dmg:[6,14]};return{name:w.name,hit:.3,dmg:[1,5]}}
+function targetAnimal(t){if(t==null)return null;const s=String(t).trim().toLowerCase().replace(/\s+/g,'_');const j=jaguar();if(j&&(s==='jaguar'||s==='cat'||s==='big_cat')){return perceiveAnimals().jaguar?j:'unseen'}return null}
+ACTIONS.attack={desc:'Strike something, optionally using an object you carry.',params:{target:'id',with:'carried object (optional)'},
+  validate(p){const ag=S.agent;if(ag.level==='ladder')return{error:'You need both hands to hold on to the ladder.'};
+    let w=null,draw=0;if(p.with){const r=resolveTarget(p.with);if(!r||r.kind!=='object')return{error:NOT_HERE(p.with)};w=r.o;if(w.loc.t==='worn'&&w.id==='sword')draw=2;else if(w.loc.t!=='carried')return{error:'You are not holding the '+w.name+'.'}}
+    const an=targetAnimal(p.target);if(an==='unseen')return{error:NOT_HERE(p.target)};
+    if(an){if(an.state==='dead')return{error:'The jaguar is already dead.'};const d=dist(an.x,an.y,ag.x,ag.y);if(d>8)return{error:'The jaguar is '+Math.round(d)+' ft away, out of reach.'};
+      return{label:(draw?'Drawing the sword and striking':'Striking')+' at the jaguar'+(w&&!draw?' with the '+w.name:draw?'':' with bare hands'),duration:2+draw,data:{animal:an.id,w:w?w.id:null}}}
+    const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'There is nothing there to strike.'};const ri=reachInfo(r.o);if(!ri.ok)return{error:ri.reason};
+    return{label:'Striking the '+r.o.name+(w?' with the '+w.name:''),duration:2+draw,data:{obj:r.o.id,w:w?w.id:null}}},
+  complete(a){const w=a.data.w?O(a.data.w):null;const ws=weaponStats(w);
+    if(a.data.animal){const j=jaguar();if(!j||j.state==='dead'){a.result={message:'There is nothing left to strike.'};return}
+      if(dist(j.x,j.y,S.agent.x,S.agent.y)>9){a.failed=true;a.result={message:'The jaguar is no longer within reach.'};logEvent('animal','The agent swings at the jaguar, but it is out of reach.',{});return}
+      const pHit=ws.hit*(S.agent.pose==='down'?.6:1)*(healthFactor()<.6?.7:1);const roll=rnd();
+      if(roll<pHit){const dmg=rint(ws.dmg[0],ws.dmg[1]);a.result={message:'You hit the jaguar with the '+ws.name+'.'};hurtJaguar(dmg,'The agent hits the jaguar with the '+ws.name+'.',ws.fire&&rnd()<.7)}
+      else{a.result={message:'You swing the '+ws.name+' at the jaguar and miss.'};logEvent('animal','The agent swings the '+ws.name+' at the jaguar and misses.',{})}
+      if(ws.breaks&&w){w.state.broken=true;w.state.lit=false;w.state.burningOil=true;w.state.burning=true;w.state.burnLeft=BURN_TIME.oil;w.loc={t:'ground',x:+S.agent.x.toFixed(1),y:+S.agent.y.toFixed(1)};
+        a.result.message+=' The lantern shatters and burning oil splashes across the ground.';if(j.state!=='dead'&&rnd()<.6){hurtJaguar(rint(8,15),'Burning oil splashes onto the jaguar.',true)}markChanged()}
+      return}
+    const o=O(a.data.obj);if(o.fragile&&!o.state.broken){o.state.broken=true;o.state.lit=false;markChanged();a.result={message:'The '+o.name+' shatters.'};logEvent('object','The agent smashes the '+o.name+'.',{id:o.id});return}
+    a.result={message:'You strike the '+o.name+(w?' with the '+w.name:'')+'. It is not noticeably damaged.'}}};
+ACTIONS.throw={desc:'Throw something you carry at something you can see.',params:{target:'carried object',at:'id'},
+  validate(p){const r=resolveTarget(p.target);if(!r||r.kind!=='object'||r.o.loc.t!=='carried')return{error:'You are not holding that.'};const o=r.o;if(S.agent.level==='ladder')return{error:'You need your hands to hold on to the ladder.'};
+    const range=o.weight<=2?80:o.weight<=6?40:15;const at=p.at||p.with;if(!at)return{error:'Say what to throw it at ("at").'};
+    const an=targetAnimal(at);if(an==='unseen')return{error:NOT_HERE(at)};let tp;
+    if(an)tp={x:an.x,y:an.y,animal:an.id};else{const t=resolveTarget(at);if(!t||(t.kind==='object'&&!knows(t.o))||(t.kind==='feature'&&!featureKnown(t.id)))return{error:NOT_HERE(at)};const q=t.kind==='object'?objPos(t.o):featurePoint(t.id);tp={x:q.x,y:q.y}}
+    const d=dist(tp.x,tp.y,S.agent.x,S.agent.y);if(d>range)return{error:'That is '+Math.round(d)+' ft away; you can throw the '+o.name+' about '+range+' ft.'};
+    return{label:'Throwing the '+o.name,duration:2,data:{id:o.id,tp,d}}},
+  complete(a){const o=O(a.data.id);if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}const tp=a.data.tp;const sc=Math.max(2,a.data.d*.12);
+    let x=tp.x+(rnd()-.5)*sc,y=tp.y+(rnd()-.5)*sc;if(a.data.tp.animal){const j=jaguar();if(j){x=j.x+(rnd()-.5)*sc;y=j.y+(rnd()-.5)*sc}}
+    const g=grid[cellAt(x,y)];let msg='You throw the '+o.name+'.';
+    if(g===T.OCEAN||g===T.CLIFF){o.loc={t:'destroyed'};msg+=' It falls into the sea and is gone.'}
+    else if(g===T.POND){o.loc={t:'underwater',x:+x.toFixed(1),y:+y.toFixed(1)};o.state.wet=true;if(isBurning(o))o.state.burning=false;msg+=' It splashes into the pond and sinks.'}
+    else{o.loc={t:'ground',x:+x.toFixed(1),y:+y.toFixed(1)};if(o.fragile&&!o.state.broken){const lit=o.state.lit;o.state.broken=true;o.state.lit=false;msg+=' It shatters where it lands.';if(lit){o.state.burningOil=true;o.state.burning=true;o.state.burnLeft=BURN_TIME.oil;msg+=' Burning oil spreads across the ground.'}}}
+    if(a.data.tp.animal){const j=jaguar();if(j&&j.state!=='dead'){const hitP=(o.id.startsWith('stone')?.45:.35)*(a.data.d<15?1.2:1);
+      if(rnd()<hitP){const dmg=o.id==='sword'?rint(8,20):o.id.startsWith('stone')?rint(4,10):o.id==='lantern'?rint(3,6):rint(0,3);msg+=' It hits the jaguar.';
+        const fire=(o.state.burningOil||isBurning(o));hurtJaguar(dmg+(fire?rint(8,15):0),'A thrown '+o.name+' hits the jaguar'+(fire?' and burning oil splashes over it':'')+'.',fire||(j.state!=='attacking'&&rnd()<.5))}
+      else{msg+=' It misses the jaguar.';logEvent('animal','The agent throws the '+o.name+' at the jaguar and misses.',{})}}}
+    markChanged();a.result={message:msg};logEvent('object','Threw '+o.id+': now '+locText(o)+'.',{id:o.id,loc:o.loc})}};
+
 function commitJournal(text,interrupted){const a=S.agent;const e={n:S.journal.entries.length+1,simTime:+S.simTime.toFixed(1),wall:new Date().toISOString(),text,interrupted:!!interrupted,
   where:a.level==='platform'?'on the platform':a.level==='ladder'?'on the ladder':agentIndoors()?'in the cabin':TNAME[terrainAt(a.x,a.y)]+' '+fmtPos(a.x,a.y)};
   S.journal.entries.push(e);markChanged();logEvent('journal','Journal entry #'+e.n+(interrupted?' (interrupted)':'')+': "'+text+'"',{entry:e})}
@@ -902,9 +973,7 @@ function tickAction(dt){const a=S.action;if(!a)return 0;const def=ACTIONS[a.type
 /* =====================================================================================
    10. SIMULATION CLOCK
    ===================================================================================== */
-function worldTick(dt){const fp=O('fire_pit');if(fp.state.lit){fp.state.burnLeft-=dt;const fuel=contentsOf('fire_pit').filter(o=>o.fuel);const need=Math.ceil(Math.max(0,fp.state.burnLeft)/900);
-    while(fuel.length>need){const o=fuel.shift();o.loc={t:'destroyed'};markChanged();logEvent('object','A '+o.name+' ('+o.id+') burned away.',{id:o.id})}
-    if(fp.state.burnLeft<=0){fp.state.lit=false;fp.state.burnLeft=0;markChanged();logEvent('object','The fire burned out.',{})}}
+function worldTick(dt){fireTick(dt);jaguarTick(dt);
   if(S.sounds.length&&S.simTime-S.sounds[0].t>120)S.sounds.shift()}
 function runElapsed(){if(!S.run.startSim&&S.run.startSim!==0)return 0;const end=S.run.ended?S.run.endSim:S.simTime;return+Math.max(0,end-S.run.startSim).toFixed(1)}
 function runRemaining(){return+Math.max(0,S.run.durationSec-runElapsed()).toFixed(1)}
@@ -928,7 +997,7 @@ function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).'
 /* =====================================================================================
    11. RESET / SAVE / RESTORE / EXPORT
    ===================================================================================== */
-function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
   logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
   if(UI.onReset)UI.onReset();return{ok:true}}
 function exportState(){return clone(snapState())}
@@ -970,7 +1039,7 @@ function inheritWorld(data,opts){opts=opts||{};if(typeof data==='string')data=JS
 let LIVE_SENT=null;
 function exportLiveChunk(c){if(!c){c={f:0,s:0,l:0};LIVE_SENT={objs:{},j:0,r:0}}recordSnapshotIfDirty();recordFrame(true);
   const delta=x=>{const objs={};for(const id in x.objects){const js=JSON.stringify(x.objects[id]);if(LIVE_SENT.objs[id]!==js){objs[id]=x.objects[id];LIVE_SENT.objs[id]=js}}
-    const je=x.journal.entries,re=x.reflections;const d={objects:objs,agent:Object.assign({},x.agent,{trail:[]}),journalAdd:je.slice(LIVE_SENT.j),reflAdd:re.slice(LIVE_SENT.r),run:x.run,speed:x.speed,
+    const je=x.journal.entries,re=x.reflections;const d={animals:x.animals||[],objects:objs,agent:Object.assign({},x.agent,{trail:[]}),journalAdd:je.slice(LIVE_SENT.j),reflAdd:re.slice(LIVE_SENT.r),run:x.run,speed:x.speed,
       action:x.action&&x.action.type==='write_journal'?{type:'write_journal',data:{text:x.action.data.text}}:null};LIVE_SENT.j=je.length;LIVE_SENT.r=re.length;return d};
   return clone({frames:REC.frames.slice(c.f),snapshots:REC.snapshots.slice(c.s).map(x=>({t:x.t,d:delta(x.s)})),log:LOG.slice(c.l),endSim:+S.simTime.toFixed(3),
     cursor:{f:REC.frames.length,s:REC.snapshots.length,l:LOG.length}})}
@@ -1047,6 +1116,7 @@ function buildTerrainCanvas(){
   c.strokeStyle='rgba(80,55,30,.4)';c.lineWidth=.4;for(let y=CAB_IN.y0;y<CAB_IN.y1;y+=2.5){c.beginPath();c.moveTo(CAB_IN.x0,y);c.lineTo(CAB_IN.x1,y);c.stroke()}
   c.fillStyle='#6f8fb0';c.fillRect(CAB_IN.x1-8,CAB_IN.y0+1,7,9);c.fillStyle='#e8e2d0';c.fillRect(CAB_IN.x1-8,CAB_IN.y0+1,7,2.4);c.fillStyle='#9e3d32';c.fillRect(CAB_IN.x0+10,CAB_IN.y1-8,9,6);
   c.fillStyle='#7a5532';c.fillRect(TABLE_POS.x-3,TABLE_POS.y-2.5,6,5);
+  c.fillStyle='#8c8680';c.fillRect(HEARTH_POS.x-3,HEARTH_POS.y-2.5,6,5);c.fillStyle='#3b3631';c.fillRect(HEARTH_POS.x-2,HEARTH_POS.y-1.5,4,3);
   // bushes, then trees (shadow then canopy)
   for(const bu of PALMS){c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.arc(bu.x+1.2,bu.y+1,bu.r,0,7);c.fill();c.fillStyle=bu.tone<.12?'#9a7ab8':(bu.tone<.2?'#e0d060':(bu.tone<.6?'#4d8a3c':'#5f9a44'));c.beginPath();c.arc(bu.x,bu.y,bu.r,0,7);c.fill()}
   for(const t of TREES){c.fillStyle='rgba(0,0,0,.22)';c.beginPath();c.ellipse(t.x+t.r*.35,t.y+t.r*.3,t.r,t.r*.85,0,0,7);c.fill()}
@@ -1094,10 +1164,11 @@ function drawItemIcon(c,o,x,y,sz,isTop){const id=o.id.replace(/_\d+$/,'');c.save
 function drawFigure(c,sx,sy,sz,pose,facing,phase,t,carry,wornIds,onLadder){
   c.save();c.translate(sx,sy);const k=sz/16;c.scale(k,k);
   // highlight ring
-  const pulse=.5+.5*Math.sin(t*4);c.strokeStyle='rgba(255,215,64,'+(.55+.35*pulse)+')';c.lineWidth=2;c.beginPath();c.ellipse(0,1,9+pulse*2,4.5+pulse,0,0,7);c.stroke();
+  const pulse=.5+.5*Math.sin(t*4);c.strokeStyle=pose==='dead'?'rgba(160,160,160,.6)':'rgba(255,215,64,'+(.55+.35*pulse)+')';c.lineWidth=2;c.beginPath();c.ellipse(0,1,9+pulse*2,4.5+pulse,0,0,7);c.stroke();
   c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(0,1,5,2,0,0,7);c.fill();
   const body='#ff5a36',skin='#f1c9a0',leg='#24476b';const sw=Math.sin(phase);
-  if(pose==='climbing'||pose==='holding on'){// back view on ladder
+  if(pose==='dead'||pose==='down'){c.rotate(Math.PI/2);c.globalAlpha=pose==='dead'?.6:1;c.strokeStyle=leg;c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(-1.6,-6);c.lineTo(-1.6,0);c.moveTo(1.6,-6);c.lineTo(1.6,0);c.stroke();c.fillStyle=body;c.fillRect(-3.5,-14,7,8.5);c.fillStyle=skin;c.beginPath();c.arc(0,-17,3.3,0,7);c.fill();c.globalAlpha=1}
+  else if(pose==='climbing'||pose==='holding on'){// back view on ladder
     const a1=pose==='climbing'?sw*3:0;c.strokeStyle=leg;c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(-2,-6);c.lineTo(-3,-1+a1);c.moveTo(2,-6);c.lineTo(3,-1-a1);c.stroke();
     c.fillStyle=body;c.fillRect(-3.5,-14,7,9);c.strokeStyle=skin;c.lineWidth=2.2;c.beginPath();c.moveTo(-3.5,-13);c.lineTo(-5,-18-a1);c.moveTo(3.5,-13);c.lineTo(5,-18+a1);c.stroke();
     c.fillStyle='#5a3a22';c.beginPath();c.arc(0,-17,3.4,0,7);c.fill()}
@@ -1175,16 +1246,29 @@ function drawWorld(c,view,t){
   if(since<8){for(let i=0;i<3;i++){const r=((since*40+i*25)%90);c.strokeStyle='rgba(255,230,150,'+(.6*(1-r/90))+')';c.lineWidth=1.5/s;c.beginPath();c.arc(L.bell.x,L.bell.y-3,r,0,7);c.stroke()}}
   // ground objects
   for(const o of Object.values(objs)){if(o.kind==='fixture')continue;const lt=o.loc.t;if(lt!=='ground'&&lt!=='underwater')continue;const inside=isIndoors(o.loc.x,o.loc.y);drawItemIcon(c,o,o.loc.x,o.loc.y,Math.max(2.5,(o.size==='large'?9:o.size==='medium'?7:5)/s),false)}
+  // flames on anything burning (ground level)
+  for(const o of Object.values(objs)){if(!(o.state&&o.state.burning)||o.loc.t==='destroyed')continue;let p;try{p=o.loc.t==='ground'||o.loc.t==='underwater'?{x:o.loc.x,y:o.loc.y}:(o.kind==='fixture'&&o.loc.t==='ground')?o.loc:null}catch(_){p=null}
+    if(!p&&(o.loc.t==='in'||o.loc.t==='on')){const par=objs[o.loc.id];if(par&&par.loc&&par.loc.t==='ground')p={x:par.loc.x,y:par.loc.y}}if(!p&&o.loc.t==='carried')p={x:a.x,y:a.y-1.5};if(!p)continue;
+    const big=o.id==='cabin'?14:o.kind==='fixture'?5:1.6;const g=c.createRadialGradient(p.x,p.y,.5,p.x,p.y,big*4);g.addColorStop(0,'rgba(255,150,40,.5)');g.addColorStop(1,'rgba(255,120,20,0)');c.fillStyle=g;c.beginPath();c.arc(p.x,p.y,big*4,0,7);c.fill();
+    for(let i=0;i<(o.id==='cabin'?14:5);i++){const ph=t*6+i*1.7;c.fillStyle=i%2?'#ffd35c':'#ff7b1c';c.beginPath();c.ellipse(p.x+Math.sin(ph+i)*big*.6,p.y-big*.4-Math.abs(Math.sin(ph*.7))*big*.6,big*.35,big*.8,0,0,7);c.fill()}
+    for(let i=0;i<4;i++){const q=((t*.15+i*.25)%1);c.fillStyle='rgba(190,190,190,'+(.3*(1-q))+')';c.beginPath();c.arc(p.x+q*big*6,p.y-q*big*9,big*(1+q*3),0,7);c.fill()}}
   // cabin roof / door
   const ind=a.level==='ground'&&isIndoors(a.x,a.y);const dOpen=objs.cabin_door.state.open;
   c.fillStyle='#4a2f1a';c.fillRect(DOOR_POS.x-2.5,CAB.y+CAB.h-5,5,5);
   c.strokeStyle='#c49a6c';c.lineWidth=1.2;c.beginPath();if(dOpen){c.moveTo(DOOR_POS.x-2.5,CAB.y+CAB.h);c.lineTo(DOOR_POS.x-2.5,CAB.y+CAB.h+4.5)}else{c.moveTo(DOOR_POS.x-2.5,CAB.y+CAB.h-.5);c.lineTo(DOOR_POS.x+2.5,CAB.y+CAB.h-.5)}c.stroke();
-  c.globalAlpha=ind?.18:(dOpen?.82:.95);c.fillStyle='#7a3b2e';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,CAB.h+3);c.fillStyle='#8f4a3a';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,(CAB.h+3)/2);
+  c.globalAlpha=ind?.18:(dOpen?.82:.95);if(objs.cabin.state&&objs.cabin.state.burnt)c.globalAlpha=.15;c.fillStyle='#7a3b2e';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,CAB.h+3);c.fillStyle='#8f4a3a';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,(CAB.h+3)/2);
   c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=.5;for(let x=CAB.x;x<CAB.x+CAB.w;x+=3){c.beginPath();c.moveTo(x,CAB.y-1.5);c.lineTo(x,CAB.y+CAB.h+1.5);c.stroke()}
   c.fillStyle='#6a6a6a';c.fillRect(CAB.x+CAB.w-9,CAB.y+3,4,4);c.globalAlpha=1;
   if(!ind){c.fillStyle='#c49a6c';c.fillRect(DOOR_POS.x-2.5,CAB.y+CAB.h-.3,5,.6)}
   // trail
   if(a.trail&&a.trail.length>1){c.fillStyle='rgba(255,230,150,.55)';for(let i=0;i<a.trail.length;i++){const p=a.trail[i];c.globalAlpha=.15+.6*i/a.trail.length;c.beginPath();c.arc(p[0],p[1],Math.max(.6,1.4/s),0,7);c.fill()}c.globalAlpha=1}
+  // wildlife
+  for(const j of(view.animals||[])){c.save();c.translate(j.x,j.y);c.rotate(j.facing||0);const dead=j.state==='dead';const sz=Math.max(1,2.2/Math.max(.6,s*.7));c.scale(sz,sz);
+    c.fillStyle='rgba(0,0,0,.25)';c.beginPath();c.ellipse(.8,.8,2.2,4.2,0,0,7);c.fill();
+    c.fillStyle=dead?'#9c7a4a':'#d89a3a';c.beginPath();c.ellipse(0,0,1.9,3.8,0,0,7);c.fill();
+    c.beginPath();c.arc(0,-4.4,1.5,0,7);c.fill();c.fillStyle='#3a2a15';for(const[dx,dy]of[[-.8,-1.5],[.7,-.4],[-.5,1],[.6,2.1],[-.2,-2.6],[.9,1.2],[-.9,.2]]){c.beginPath();c.arc(dx,dy,.35,0,7);c.fill()}
+    const sw=Math.sin((j.stepDist||0)*.6)*.6;c.strokeStyle=dead?'#9c7a4a':'#d89a3a';c.lineWidth=.6;c.beginPath();c.moveTo(0,3.6);c.quadraticCurveTo(sw*2,5.5,sw*2.5,7);c.stroke();c.restore();
+    if(s>1.2&&!dead){c.fillStyle='rgba(255,200,120,.9)';c.font=(8/s*1.1)+'px system-ui';c.textAlign='center';c.fillText('jaguar · '+j.state,j.x,j.y-9/Math.max(.6,s*.7)*1.2)}}
   drawLadder(c,view,t);
   // the figure
   const ay=a.level==='ground'?a.y:(a.level==='platform'?L.foundation.y-L.ladderHeight*K_OBLIQUE+6:ladderScreenY(a.ladderFt)+4);const[sx,sy]=w2s(a.x,ay);
@@ -1243,6 +1327,8 @@ function feedItem(e){const d=e.data||{};switch(e.kind){
   case'interrupt':return{c:'resp bad',l:'Island responds',t:(d.result&&d.result.reason==='run ended'?'Time ran out. ':'Stopped before finishing. ')+plainMsg(d.result&&d.result.message||'')};
   case'journal':return d.entry?{c:'jr',l:'Journal'+(d.entry.interrupted?' (writing interrupted)':''),t:d.entry.text}:null;
   case'sound':return{c:'resp',l:'Island responds',t:e.msg};
+  case'animal':return{c:'resp bad',l:'Jaguar (observer view)',t:e.msg};
+  case'body':return{c:'resp bad',l:'Island responds',t:e.msg};
   case'system':if(/^Run started/.test(e.msg))return{c:'note',l:'Island',t:'The experiment began.'};if(/^Run ended/.test(e.msg))return{c:'note',l:'Island',t:'The experiment ended.'};return null;
   case'controller':if(/chose no action/.test(e.msg))return{c:'does',l:'Agent does',t:'Nothing for now.'};if(/error|timeout|took|unavailable|Stop/i.test(e.msg))return{c:'note',l:'Technical note',t:e.msg};return null;
   default:return null}}
@@ -1256,7 +1342,7 @@ function renderJournal(entries,writing){const key=entries.length+'|'+(writing||'
   if(writing!=null)h+='<div class="jent writing"><div class="m">✎ writing now…</div>'+esc(writing||'')+'▍</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
 function renderRefl(list){const key=list.length+'';if(key===rfKey)return;rfKey=key;const el=$('reflList');let h=list.length?'':'<div class="empty">Nothing said yet. These are the words the agent chooses to say. They are not a complete record of its reasoning.</div>';
   for(const r of list)h+='<div class="rent"><div class="m">#'+r.n+' · sim '+fmtDur(r.simTime)+' · agent-reported</div>'+esc(r.text)+'</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
-function liveView(){const a=S.action;return{objects:S.objects,agent:S.agent,simTime:S.simTime,pose:displayPose(),actLabel:a?a.label:null,actProg:a?(a.progress||0):null,actType:a?a.type:null,journal:S.journal,reflections:S.reflections,run:S.run,speed:S.speed,writing:a&&a.type==='write_journal'?a.data.written:null,log:LOG,logN:LOG.length,action:a,paused:S.paused}}
+function liveView(){const a=S.action;return{animals:S.animals||[],objects:S.objects,agent:S.agent,simTime:S.simTime,pose:displayPose(),actLabel:a?a.label:null,actProg:a?(a.progress||0):null,actType:a?a.type:null,journal:S.journal,reflections:S.reflections,run:S.run,speed:S.speed,writing:a&&a.type==='write_journal'?a.data.written:null,log:LOG,logN:LOG.length,action:a,paused:S.paused}}
 function currentView(){return UI.replay&&UI.replay.view?UI.replay.view:liveView()}
 function renderPanels(v){const run=v.run;const el=run.startSim==null?0:Math.max(0,(run.ended?run.endSim:v.simTime)-run.startSim);const rem=Math.max(0,run.durationSec-el);
   $('elapsed').textContent=fmtDur(el);$('remain').textContent=fmtDur(rem);$('remain').classList.toggle('low',run.active&&rem<300);
@@ -1285,13 +1371,14 @@ function replayStateAt(rep,t){const si=Math.max(0,bsearch(rep.snapshots,t,'t'));
   if(fi>=0){fr=rep.frames[fi];const nx=rep.frames[fi+1];let x=fr.x,y=fr.y,lf=fr.lf,sd=fr.sd;
     if(nx&&nx.t>fr.t&&nx.lv===fr.lv){const k=clamp((t-fr.t)/(nx.t-fr.t),0,1);x+=(nx.x-fr.x)*k;y+=(nx.y-fr.y)*k;lf+=(nx.lf-fr.lf)*k;sd+=(nx.sd-fr.sd)*k}
     Object.assign(ag,{x,y,level:fr.lv,ladderFt:lf,facing:fr.f,stepDist:sd})}
+  let animals=snap.animals||[];if(fr&&fr.an){const nx=rep.frames[fi+1];animals=animals.map((j,k)=>{const f=fr.an[k];if(!f)return j;let x=f[0],y=f[1];if(nx&&nx.an&&nx.an[k]&&nx.t>fr.t){const q=clamp((t-fr.t)/(nx.t-fr.t),0,1);x+=(nx.an[k][0]-f[0])*q;y+=(nx.an[k][1]-f[1])*q}return Object.assign({},j,{x,y,state:f[2],facing:f[3],stepDist:f[4]})})}
   const li=bsearch(rep.log,t,'sim');const n=li+1;
   // trail from frames
   const trail=[];for(let i=Math.max(0,fi-600);i<=fi;i+=2){const f=rep.frames[i];if(f&&f.lv==='ground'){const lp=trail[trail.length-1];if(!lp||dist(lp[0],lp[1],f.x,f.y)>6)trail.push([f.x,f.y])}}ag.trail=trail.slice(-160);
   let prog=fr?fr.ap:null;if(fr&&rep.frames[fi+1]&&rep.frames[fi+1].al===fr.al){const nx=rep.frames[fi+1];prog=fr.ap+(nx.ap-fr.ap)*clamp((t-fr.t)/((nx.t-fr.t)||1),0,1)}
   let writing=null;if(fr&&fr.at==='write_journal'&&snap.action&&snap.action.type==='write_journal'){const w=snap.action.data.text.split(/\s+/);writing=w.slice(0,Math.floor((prog||0)*w.length)).join(' ')}
   const speed=n>0?rep.log[n-1].speed:snap.speed;
-  return{objects:snap.objects,agent:ag,simTime:t,pose:fr?fr.p:snap.agent.pose,actLabel:fr?fr.al:null,actProg:fr&&fr.al?prog:null,actType:fr?fr.at:null,journal:snap.journal,reflections:snap.reflections,run:snap.run,speed,writing,log:rep.log,logN:n,action:null}}
+  return{animals,objects:snap.objects,agent:ag,simTime:t,pose:fr?fr.p:snap.agent.pose,actLabel:fr?fr.al:null,actProg:fr&&fr.al?prog:null,actType:fr?fr.at:null,journal:snap.journal,reflections:snap.reflections,run:snap.run,speed,writing,log:rep.log,logN:n,action:null}}
 function enterReplay(rep){if(typeof rep==='string')rep=JSON.parse(rep);if(!rep||rep.format!=='watchable-island-replay'||!rep.snapshots||!rep.frames)return{ok:false,error:'Not a Watchable Island replay file.'};
   const end=Math.max(rep.endSim||0,rep.frames.length?rep.frames[rep.frames.length-1].t:0,rep.log.length?rep.log[rep.log.length-1].sim:0);
   UI.replay={rep,t:0,end,playing:false,speed:+$('rpSpeed').value,view:null};UI.replay.view=replayStateAt(rep,0);logRendered=0;$('logList').innerHTML='';feedRendered=0;$('feedList').innerHTML='';jrKey='';rfKey='';
@@ -1386,6 +1473,138 @@ async function runDemo(){const steps=[{type:'write_journal',text:'Arrived on the
   apiMsg('Demo running through the same API a controller would use. Tip: set TEST speed to watch quickly.');
   for(const st of steps){while(S.action)await new Promise(r=>setTimeout(r,200));const r=submitAction(st);if(!r.ok){apiMsg('Demo stopped: '+r.error,true);return}await new Promise(r=>setTimeout(r,300))}}
 
+/* =====================================================================================
+   19. PHYSICS: FIRE, THE AGENT'S BODY, AND WILDLIFE
+   Simplified but consistent real-world rules. Chance outcomes use a seeded generator stored
+   in the world state (S.rng), so saves, restores and replays reproduce them exactly.
+   ===================================================================================== */
+function rnd(){S.rng=(Math.imul(S.rng||1,1664525)+1013904223)>>>0;return S.rng/4294967296}
+const rint=(a,b)=>a+Math.floor(rnd()*(b-a+1));
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+// ---- materials and fire ----
+const MATERIAL={journal:'paper',pencil:'thinwood',oar:'wood',rope:'rope',paper:'paper',blanket:'cloth',blocks:'thinwood',driftwood_1:'wood',driftwood_2:'wood',
+  folded_paper:'paper',letter_cabin:'paper',letter_tower:'paper',stepladder:'wood',ball:'rubber',crate:'wood',chest:'wood',picnic_table:'wood',cabin_table:'wood',
+  boat:'wood',bed:'cloth',bridge:'wood',cabin:'structure',cabin_door:'wood',platform_table:'wood',wheelbarrow:'metal',lighter:'metal',sword:'metal',snorkel:'rubber',
+  tin_cup:'metal',stone_1:'stone',stone_2:'stone',lantern:'glass',mirror:'glass',ladder:'metal',platform:'metal',bell:'metal',fire_pit:'stone',fireplace:'stone',stone_circle:'stone'};
+const BURN_TIME={paper:25,cloth:180,rope:300,rubber:300,thinwood:420,wood:1200,structure:2700,oil:75};
+const IGNITE_HEAT={paper:1,cloth:4,rope:8,rubber:25,thinwood:10,wood:20,structure:120,oil:0.5};   // seconds of exposure to flame/fire needed
+const FROM_SMALL_FLAME={paper:1,cloth:1,rope:1,oil:1};                                            // a lighter alone can light these
+const HEARTHS={fire_pit:1,fireplace:1};
+const materialOf=o=>o&&(o.state&&o.state.burningOil?'oil':(o.material||MATERIAL[o.id]||(o.id.startsWith('old_journal')?'paper':o.id.startsWith('old_pencil')?'thinwood':null)));
+const isBurning=o=>!!(o&&o.state&&o.state.burning);
+function igniteCheck(o,source){const m=materialOf(o);if(!m||m==='metal'||m==='glass'||m==='stone')return{ok:false,why:'The '+o.name+' does not burn.'};
+  if(o.loc.t==='destroyed')return{ok:false,why:'It is gone.'};if(o.loc.t==='underwater'||o.state.wet)return{ok:false,why:'The '+o.name+' is wet and will not light.'};
+  if(isBurning(o))return{ok:false,why:'The '+o.name+' is already burning.'};
+  if(source==='flame'&&!FROM_SMALL_FLAME[m])return{ok:false,why:'The small flame blackens the '+o.name+' but it does not catch. Solid wood needs a fire that is already going, or kindling such as paper, cloth or rope.'};
+  return{ok:true}}
+function ignite(o,cause){if(isBurning(o))return;const m=materialOf(o);o.state.burning=true;o.state.burnLeft=BURN_TIME[m]||300;o.state.heat=0;markChanged();
+  logEvent('object',cap(o.name)+' catches fire'+(cause?' ('+cause+')':'')+'.',{id:o.id,fire:true})}
+function burnOut(o){o.state.burning=false;markChanged();
+  if(o.id==='cabin'){o.state.burnt=true;o.desc='The blackened shell of a log cabin. The roof has fallen in.';logEvent('object','The cabin has burned down to a charred shell.',{id:'cabin'});return}
+  if(o.kind==='fixture'){o.state.burnt=true;o.desc='The charred remains of the '+o.name+'.';logEvent('object','The '+o.name+' has burned down to charred remains.',{id:o.id});return}
+  if(o.id==='lantern'){logEvent('object','The spilled lamp oil has burned away.',{id:o.id});o.state.burningOil=false;return}
+  const from=locText(o);o.loc={t:'destroyed'};logEvent('object',cap(o.name)+' burned away to ash ('+from+').',{id:o.id})}
+function firePos(o){return objPos(o)}
+function burningNear(x,y,r){return Object.values(S.objects).filter(o=>isBurning(o)&&o.loc.t!=='destroyed'&&objLevel(o)==='ground'&&(()=>{const p=objPos(o);return dist(p.x,p.y,x,y)<=r})())}
+function agentHasFlame(){return carried().some(o=>isBurning(o)||(o.id==='lantern'&&o.state.lit&&!o.state.broken))}
+function fireNearAgent(r){return agentHasFlame()||burningNear(S.agent.x,S.agent.y,r).length>0}
+function fireTick(dt){
+  const all=Object.values(S.objects);
+  for(const o of all){if(!isBurning(o)||o.loc.t==='destroyed')continue;o.state.burnLeft-=dt;
+    const p=objPos(o),lvl=objLevel(o),inHearth=(o.loc.t==='in'&&HEARTHS[o.loc.id]);
+    // what this fire touches
+    const touch=[];
+    for(const c of contentsOf(o.id))touch.push(c);                                                    // things in/on a burning container or surface
+    if((o.loc.t==='in'||o.loc.t==='on')&&!inHearth)touch.push(O(o.loc.id));                          // the container or surface itself
+    if(inHearth)for(const c of contentsOf(o.loc.id))if(c!==o)touch.push(c);                          // other fuel in the same hearth
+    if(o.loc.t==='ground'&&lvl==='ground'){for(const q of all){if(q===o||q.loc.t==='destroyed'||q.loc.t==='carried'||q.loc.t==='worn')continue;if(objLevel(q)!=='ground')continue;
+        const qp=objPos(q),r=q.kind==='fixture'?({cabin:16,boat:9,bridge:12}[q.id]||4):3;if(dist(qp.x,qp.y,p.x,p.y)<=r&&(q.loc.t==='ground'))touch.push(q)}}
+    if(o.id!=='cabin'&&!inHearth&&isIndoors(p.x,p.y))touch.push(O('cabin'));                          // a fire inside the cabin heats the cabin
+    if(o.id==='cabin')for(const q of all)if(q.loc.t==='ground'&&isIndoors(q.loc.x,q.loc.y)||['cabin_table','bed','cabin_door'].includes(q.id))touch.push(q);
+    for(const q of touch){if(!q||isBurning(q))continue;const ck=igniteCheck(q,'fire');if(!ck.ok)continue;q.state.heat=(q.state.heat||0)+dt;
+      if(q.state.heat>=(IGNITE_HEAT[materialOf(q)]||30))ignite(q,'from the burning '+o.name)}
+    // the agent
+    const ag=S.agent;
+    if(o.loc.t==='carried'&&['paper','cloth','rope','rubber','oil'].includes(materialOf(o))){if(!o.state.burnedHand||S.simTime-o.state.burnedHand>3){o.state.burnedHand=S.simTime;hurt(materialOf(o)==='paper'?3:6,'The flames from the '+o.name+' burn your hands.')}}
+    if(o.id==='cabin'&&agentIndoors()&&(!ag.lastSmoke||S.simTime-ag.lastSmoke>=2)){ag.lastSmoke=S.simTime;hurt(10,'Smoke and heat fill the burning cabin.')}
+    if(o.state.burnLeft<=0)burnOut(o)}
+  for(const h of['fire_pit','fireplace']){const f=O(h);if(!f)continue;const lit=contentsOf(h).some(isBurning);if(!!f.state.lit!==lit){f.state.lit=lit;markChanged();if(!lit)logEvent('object','The fire in the '+f.name+' has gone out.',{id:h})}}
+  // things lying in the stream or pond get wet
+  for(const o of all)if(o.loc.t==='ground'&&!o.state.wet&&materialOf(o)&&grid[cellAt(o.loc.x,o.loc.y)]===T.STREAM){o.state.wet=true;if(isBurning(o)){o.state.burning=false;logEvent('object','The '+o.name+' lands in the stream; the fire goes out.',{id:o.id})}markChanged()}}
+// ---- the agent's body ----
+function conditionText(h){return h>=95?'unhurt':h>=70?'lightly injured':h>=40?'injured and bleeding':h>=15?'badly injured':'critically injured'}
+function hurt(n,why){const ag=S.agent;if(ag.dead)return;ag.health=Math.max(0,Math.round((ag.health-n)*10)/10);markChanged();
+  logEvent('body',why+' (condition: '+conditionText(ag.health)+')',{damage:n,health:ag.health});
+  if(ag.health<=0){ag.dead=true;ag.pose='dead';if(S.action)interrupt('the agent died');logEvent('body','The agent has died.',{dead:true});if(S.run.active&&!S.run.ended)endRun('the agent died')}}
+function healthFactor(){const h=S.agent.health==null?100:S.agent.health;return h>=70?1:h>=40?.8:h>=15?.55:.35}
+// ---- wildlife ----
+const JAG={roam:2.5,stalk:4,charge:36,chase:20,flee:22,swim:3,detectOpen:260,detectForest:130,reach:5};
+function jaguar(){return(S.animals||[]).find(a=>a.id==='jaguar')}
+function spawnJaguar(){const j=nearestWalkable(150,330,30);const c=cellCenter(j);
+  S.animals=[{id:'jaguar',kind:'jaguar',name:'jaguar',x:c.x,y:c.y,facing:0,state:'roaming',health:100,hunger:1,stateT:0,path:null,pathT:0,wp:null,lastBite:0,stepDist:0,noticed:false,waitT:0}]}
+function jagBlocked(i){const g=grid[i];if(g===T.OCEAN||g===T.CLIFF||g===T.WALL||g===T.OBST)return true;if(i===DOOR_CELL&&!(S.objects.cabin_door&&(S.objects.cabin_door.state.open||(O('cabin').state.burnt))))return true;return false}
+function jagPath(j,tx,ty){const start=cellAt(j.x,j.y);const gi=cellAt(tx,ty);const cells=astar(start,i=>i===gi||dist(cellCenter(i).x,cellCenter(i).y,tx,ty)<5,i=>{const c=cellCenter(i);return dist(c.x,c.y,tx,ty)},jagBlocked,true);
+  return cells?cells.map(cellCenter).map(p=>[p.x,p.y]):null}
+function jagMove(j,speed,dt){if(!j.path||!j.path.length)return;let rem=speed*dt*(j.health<50?.7:1);
+  while(rem>0&&j.path.length){const[tx,ty]=j.path[0];const d=dist(j.x,j.y,tx,ty);const g=grid[cellAt(j.x,j.y)];const sp=(g===T.POND||g===T.STREAM)?Math.min(1,JAG.swim/speed+.35):1;
+    const step=Math.min(d,rem*sp);if(d<1e-6){j.path.shift();continue}j.facing=Math.atan2(tx-j.x,-(ty-j.y));j.x+=(tx-j.x)*step/d;j.y+=(ty-j.y)*step/d;j.stepDist+=step;rem-=step/sp;if(step>=d-1e-9)j.path.shift()}}
+function agentReachable(){const ag=S.agent;if(ag.dead)return true;if(ag.level==='platform')return false;if(ag.level==='ladder')return ag.ladderFt<7;
+  if(agentIndoors()&&!(O('cabin_door').state.open||O('cabin').state.burnt))return false;return true}
+function jagSetState(j,s,why){if(j.state===s)return;j.state=s;j.stateT=0;j.path=null;markChanged();if(why)logEvent('animal',why,{state:s,x:+j.x.toFixed(1),y:+j.y.toFixed(1)})}
+function jagNoticeRange(j){return grid[cellAt(S.agent.x,S.agent.y)]===T.FOREST?JAG.detectForest:JAG.detectOpen}
+function jaguarTick(dt){const j=jaguar();if(!j||j.state==='dead')return;const ag=S.agent;j.stateT+=dt;j.pathT-=dt;
+  const d=dist(j.x,j.y,ag.x,ag.y);const reach=agentReachable();
+  const recentSound=S.sounds.filter(s=>S.simTime-s.t<1.5&&!s.jagHeard);for(const s of recentSound){s.jagHeard=true;
+    if(['roaming','stalking','waiting','circling'].includes(j.state)&&dist(s.x,s.y,j.x,j.y)<450&&/bell|shout/i.test(s.msg)){if(rnd()<(/bell/i.test(s.msg)?.45:.3)){jagSetState(j,'fleeing','The loud noise startles the jaguar; it bolts away.');j.fleeFrom=[s.x,s.y]}}
+    if(j.state==='charging'&&/shout/i.test(s.msg)&&d>15&&rnd()<.3){jagSetState(j,'circling','The shout makes the jaguar break off its charge.')}}
+  const fire25=fireNearAgent(25);
+  switch(j.state){
+    case'roaming':{if(!j.path||!j.path.length){const zs=[[200,300],[330,230],[110,430],[420,135],[150,520],[260,350]];const z=zs[Math.floor(rnd()*zs.length)];j.path=jagPath(j,z[0]+rint(-40,40),z[1]+rint(-40,40))||[]}
+      jagMove(j,JAG.roam,dt);
+      if(!ag.dead&&d<jagNoticeRange(j)&&!(agentIndoors()&&!O('cabin_door').state.open)){j.noticed=true;jagSetState(j,'stalking','The jaguar has noticed the agent and begins to stalk.')}break}
+    case'stalking':{if(ag.dead){jagSetState(j,'feeding');break}
+      if(!reach){jagSetState(j,'waiting',ag.level!=='ground'?'The jaguar cannot climb the steel ladder. It prowls at the base, watching.':'The jaguar cannot get through the closed door. It circles the cabin.');break}
+      if(fire25&&d<45){jagSetState(j,'circling','The jaguar keeps its distance from the fire.');break}
+      if(d>420){jagSetState(j,'roaming','The jaguar loses the scent and wanders off.');break}
+      if(d<=45&&j.stateT>2){jagSetState(j,'charging','The jaguar bursts from cover and charges.');S.sounds.push({t:S.simTime,x:j.x,y:j.y,msg:'A sudden rush of movement, very close'});break}
+      if(j.pathT<=0||!j.path||!j.path.length){j.path=jagPath(j,ag.x,ag.y)||[];j.pathT=2}jagMove(j,JAG.stalk,dt);
+      if(d<110&&rnd()<.012*dt*4)S.sounds.push({t:S.simTime,x:j.x,y:j.y,msg:'A low growl from somewhere close'});break}
+    case'charging':{if(ag.dead){jagSetState(j,'feeding');break}if(!reach){jagSetState(j,'waiting');break}
+      if(fire25&&d<25&&rnd()<.6*dt){jagSetState(j,'circling','The jaguar swerves away from the flames.');break}
+      j.path=[[ag.x,ag.y]];jagMove(j,JAG.charge,dt);if(dist(j.x,j.y,ag.x,ag.y)<=JAG.reach){jagSetState(j,'attacking','The jaguar reaches the agent and attacks.');j.lastBite=S.simTime-1.2;
+        if(S.action)interrupt('attacked by a jaguar');if(ag.level==='ground'){ag.pose='down';ag.down=true}hurt(rint(10,22),'A jaguar slams into you and knocks you to the ground, biting.')}
+      if(j.stateT>8)jagSetState(j,'stalking');break}
+    case'attacking':{if(ag.dead){jagSetState(j,'feeding','The jaguar stands over the body.');break}
+      if(!reach||dist(j.x,j.y,ag.x,ag.y)>12){jagSetState(j,'stalking');break}
+      j.x=ag.x-Math.sin(j.facing)*2;j.y=ag.y+Math.cos(j.facing)*2;
+      if(S.simTime-j.lastBite>=2){j.lastBite=S.simTime;const down=ag.pose==='down';const p=down?.8:.6;if(rnd()<p)hurt(rint(12,28)*(down?1.15:1),pickBite());else logEvent('animal','The jaguar lunges and misses.',{})}break}
+    case'feeding':break;
+    case'circling':{if(ag.dead){jagSetState(j,'feeding');break}if(!reach){jagSetState(j,'waiting');break}
+      const want=50,ang=Math.atan2(j.y-ag.y,j.x-ag.x)+.3;if(!j.path||!j.path.length||j.pathT<=0){j.path=jagPath(j,ag.x+Math.cos(ang)*want,ag.y+Math.sin(ang)*want)||[];j.pathT=3}jagMove(j,JAG.stalk,dt);
+      if(!fire25&&j.stateT>6&&rnd()<.15*dt)jagSetState(j,'stalking');if(j.stateT>180)jagSetState(j,'roaming','The jaguar gives up and slinks away into the trees.');break}
+    case'waiting':{if(reach){jagSetState(j,'stalking');break}const tgt=ag.level!=='ground'?[L.ladder.x+rint(-15,15),L.ladder.y+rint(4,20)]:[DOOR_POS.x+rint(-20,20),DOOR_POS.y+rint(6,20)];
+      if(!j.path||!j.path.length){if(rnd()<.3*dt)j.path=jagPath(j,tgt[0],tgt[1])||[]}jagMove(j,JAG.roam,dt);
+      if(j.stateT>240){jagSetState(j,'roaming','After a long wait, the jaguar gives up and moves off.');j.path=null}break}
+    case'fleeing':{const from=j.fleeFrom||[ag.x,ag.y];if(!j.path||!j.path.length){const ang=Math.atan2(j.y-from[1],j.x-from[0]);j.path=jagPath(j,clamp(j.x+Math.cos(ang)*250,60,940),clamp(j.y+Math.sin(ang)*250,90,740))||[]}
+      jagMove(j,JAG.flee,dt);if(j.stateT>12){j.fleeFrom=null;jagSetState(j,j.health<40?'recovering':'roaming',j.health<40?'The wounded jaguar lies low in the undergrowth.':null)}break}
+    case'recovering':{if(j.stateT>300){j.health=Math.min(100,j.health+15);jagSetState(j,'roaming')}break}}
+  if(S.simTime-(j.lastFrameMove||0)>0.5)j.lastFrameMove=S.simTime}
+function pickBite(){return['The jaguar bites into your arm.','The jaguar\'s claws rake across your back.','The jaguar bites your shoulder.','The jaguar clamps onto your leg.'][Math.floor(rnd()*4)]}
+function hurtJaguar(n,why,scare){const j=jaguar();if(!j||j.state==='dead')return;j.health=Math.max(0,j.health-n);markChanged();logEvent('animal',why+' (jaguar: '+(j.health>=70?'barely hurt':j.health>=40?'wounded':j.health>0?'badly wounded':'dead')+')',{damage:n,health:j.health});
+  if(j.health<=0){j.state='dead';j.path=null;logEvent('animal','The jaguar collapses and dies.',{dead:true});if(S.agent.pose==='down'){}return}
+  if(j.health<40||scare){j.fleeFrom=[S.agent.x,S.agent.y];jagSetState(j,'fleeing',j.health<40?'The badly hurt jaguar breaks away and flees.':'The jaguar recoils and runs.')}}
+// what the agent can see of the jaguar
+function perceiveAnimals(){const out={},ag=S.agent;if(ag.dead)return out;const j=jaguar();if(!j)return out;const d=dist(j.x,j.y,ag.x,ag.y);const high=ag.level==='ground'?0:ag.ladderFt;
+  const inForest=grid[cellAt(j.x,j.y)]===T.FOREST;const ind=agentIndoors();const jIn=isIndoors(j.x,j.y);
+  if(ind!==jIn&&!(O('cabin_door').state.open&&d<40)&&!O('cabin').state.burnt)return out;
+  let range;if(['charging','attacking'].includes(j.state))range=250;else if(j.state==='stalking')range=inForest?30:90;else if(j.state==='dead'||j.state==='feeding')range=inForest?40:150;else range=inForest?45:200;
+  if(high>30)range=inForest?0:Math.max(range,500);if(d<=range)out.jaguar={d};return out}
+function jaguarDesc(j,d){const s=j.state;if(s==='dead')return'A dead jaguar lying on the ground.';
+  const hurtTxt=j.health<40?' It is badly wounded.':j.health<70?' It is wounded.':'';
+  return({roaming:'A jaguar: a large, muscular spotted cat, padding through the area.',stalking:'A jaguar, crouched low, moving slowly toward you with its eyes fixed on you.',charging:'A jaguar sprinting straight at you.',
+    attacking:'A jaguar is on you, biting and clawing.',feeding:'A jaguar crouched over something on the ground.',circling:'A jaguar pacing back and forth at a distance, watching you.',
+    waiting:'A jaguar prowling below, watching you.',fleeing:'A jaguar running away from you.',recovering:'A jaguar lying low in the undergrowth.'}[s]||'A jaguar.')+hurtTxt}
+
 /* Experiment setup panel (shown by an external controller; the page itself never calls an AI) */
 function showExperimentSetup(o){o=o||{};return new Promise(res=>{const box=$('expSetup');box.style.display='flex';let saved=null,savedName=null;
   $('esInfo').innerHTML=esc(o.info||'');$('esModel').innerHTML=(o.models||[]).map(m=>'<option value="'+esc(m.id)+'"'+(m.id===o.defaultModel?' selected':'')+'>'+esc(m.label||m.id)+'</option>').join('');
@@ -1431,7 +1650,7 @@ window.Island={
   experimentStopRequested:()=>!!UI.stopRequested,
   on:(fn)=>{listeners.push(fn);return()=>{const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1)}},
   layout:LAYOUT,
-  _debug:{heightAt,terrainAt:(x,y)=>TNAME[terrainAt(x,y)],islandS,TREES}
+  _debug:{spawnJaguar:(x,y)=>{spawnJaguar();if(x!=null){S.animals[0].x=x;S.animals[0].y=y}markChanged();return true},heightAt,terrainAt:(x,y)=>TNAME[terrainAt(x,y)],islandS,TREES}
 };
 
 /* boot */
@@ -1489,7 +1708,7 @@ async function initLiveViewer(){
         while(pending[next]){const c=pending[next];delete pending[next];next++;
           for(const f of c.frames||[]){const l=rep.frames[rep.frames.length-1];if(l&&l.t===f.t)rep.frames[rep.frames.length-1]=f;else if(!l||f.t>l.t)rep.frames.push(f)}
           for(const x of c.snapshots||[]){const prev=rep.snapshots[rep.snapshots.length-1];const ps=prev?prev.s:{objects:{},journal:{entries:[]},reflections:[]};
-            const full=x.s||{objects:Object.assign({},ps.objects,x.d.objects),agent:x.d.agent,journal:{entries:ps.journal.entries.concat(x.d.journalAdd||[])},reflections:ps.reflections.concat(x.d.reflAdd||[]),run:x.d.run,speed:x.d.speed,action:x.d.action};
+            const full=x.s||{animals:x.d.animals||ps.animals||[],objects:Object.assign({},ps.objects,x.d.objects),agent:x.d.agent,journal:{entries:ps.journal.entries.concat(x.d.journalAdd||[])},reflections:ps.reflections.concat(x.d.reflAdd||[]),run:x.d.run,speed:x.d.speed,action:x.d.action};
             if(prev&&prev.t===x.t)prev.s=full;else rep.snapshots.push({t:x.t,s:full})}
           for(const e of c.log||[])rep.log.push(e);
           R.end=Math.max(R.end,c.endSim||0);rep.endSim=R.end;lastChunkWall=Date.parse(c.wall)||Date.now();if(c.meta)runMeta=Object.assign({},runMeta||{},c.meta);

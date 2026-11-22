@@ -31,7 +31,7 @@ const opts = {
   headless: flag('headless'), autoStart: flag('auto-start'), start: arg('start', 'fresh'), saved: arg('saved', null),
   priorJournal: arg('prior-journal', 'keep'), video: flag('video'), historyTurns: +arg('history', 60),
   report: !flag('no-report'), check: !flag('no-check'), out: path.resolve(arg('out', path.join(__dirname, '..', 'runs'))),
-  startAt: arg('start-at', 'beach'),
+  startAt: arg('start-at', 'beach'), predator: flag('predator'), seed: +arg('world-seed', 20261122),
   liveDir: arg('live-dir', null), liveInterval: +arg('live-interval', 20),
   priceIn: arg('price-in', null), priceOut: arg('price-out', null), mockSeed: +arg('seed', 7),
 };
@@ -99,7 +99,7 @@ async function listOpenAIModels() {
   page.on('download', async d => { try { await d.saveAs(path.join(dir, d.suggestedFilename())); console.log('Video saved:', d.suggestedFilename()); } catch (e) { console.error('video save failed', e.message); } });
 
   // ---------------- starting island ----------------
-  await isl(([s, at]) => Island.reset({ speed: s, startAt: at }), [opts.speed, opts.startAt]);
+  await isl(([s, at, pr, sd]) => Island.reset({ speed: s, startAt: at, predator: pr, seed: sd }), [opts.speed, opts.startAt, opts.predator, opts.seed]);
   let startInfo = { type: 'fresh' };
   if (choice.start === 'saved') {
     const raw = JSON.stringify(choice.saved);
@@ -118,7 +118,7 @@ async function listOpenAIModels() {
     observationMode: obsMode, aerialImage: obsMode === 'aerial' ? path.basename(AERIAL) : null,
     durationMinutes: opts.minutes, timeSpeed: opts.speed, checkinSeconds: opts.checkin, modelTimeoutSeconds: opts.timeoutSec,
     spendingLimitUsd: choice.maxCostUsd, maxModelCalls: opts.maxCalls, historyTurnsKept: opts.historyTurns,
-    startingIsland: startInfo, introduction: P.introFor(startPhrase), startingPlace: opts.startAt, systemPrompt: sys, responseSchema: P.RESPONSE_SCHEMA, video: !!choice.video,
+    startingIsland: startInfo, introduction: P.introFor(startPhrase), startingPlace: opts.startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: P.RESPONSE_SCHEMA, video: !!choice.video,
     credentials: provName === 'mock' ? 'none' : 'OPENAI_API_KEY environment variable (value never recorded)', startedWall: status.startedWall,
   };
   W('config.json', config);
@@ -204,7 +204,7 @@ async function listOpenAIModels() {
   if (choice.video) { const v = await isl(() => Island.startVideo({})); if (!v.ok) await note('Video not started: ' + v.error); }
   await isl(d => Island.startRun({ durationSec: d }), opts.minutes * 60);
   await note(`Controller attached: ${provider.label}, ${obsMode} observations, check-ins every ${opts.checkin} s, spending limit $${choice.maxCostUsd}.${isTest ? ' TEST RUN.' : ''}`);
-  let lastObsSummary = null;
+  let lastObsSummary = null, lastSalient = null;
   let first = true, rejected = null, lastResultId = null, lastCheckinSim = 0, idleUntil = null, idleFrom = null, lastAutosave = Date.now(), stopReason = null;
   try {
     while (true) {
@@ -237,7 +237,10 @@ async function listOpenAIModels() {
         if (!action) { const now = (await isl(() => Island.getStatus())).simTimeSec; idleFrom = now; idleUntil = now + opts.checkin; await note(`Agent chose no action; it will be asked again in ${opts.checkin} s.`); continue; }
         const r = await isl(a => Island.submitAction(a), action);
         if (!r.ok) rejected = r.error; else lastCheckinSim = (await isl(() => Island.getStatus())).simTimeSec;
-      } else if (st.simTimeSec - lastCheckinSim >= opts.checkin) {
+      } else if (st.simTimeSec - lastCheckinSim >= opts.checkin || await (async () => {
+          // an immediate check-in when an animal comes into view or a new sound is heard (perception, like noticing)
+          const sal = await isl(() => { const o = Island.getObservation(); return { a: o.visibleObjects.filter(v => v.type === 'animal').map(v => v.id + ':' + v.description).join('|'), s: o.soundsHeard.map(x => x.description).join('|') }; });
+          const key = sal.a + '#' + sal.s; const changed = lastSalient !== null && key !== lastSalient && (sal.a || sal.s); lastSalient = key; return changed; })()) {
         lastCheckinSim = st.simTimeSec;
         const obs = await isl(() => Island.getObservation());
         const out = await callModel('checkin', P.checkinMessage({ observation: obs, action: st.action }));
@@ -281,8 +284,9 @@ async function listOpenAIModels() {
   try { const v = fs.readdirSync(dir).find(f => /\.webm$/.test(f)); if (v) { const { spawnSync } = require('child_process');
     const r = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(dir, v), '-vf', 'scale=1280:-2', '-r', '15', '-c:v', 'libx264', '-preset', 'medium', '-crf', '30', '-tune', 'stillimage', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', path.join(dir, v.replace(/\.webm$/, '.mp4'))], { stdio: 'ignore' });
     if (r.status === 0) console.log('MP4 copy saved:', v.replace(/\.webm$/, '.mp4')); } } catch (_) {}
+  try { const fs2 = await isl(() => Island.exportState()); if (fs2.agent.dead && !stopReason) status.died = true; } catch (_) {}
   status.status = stopReason ? (stopReason.startsWith('stopped') ? 'stopped' : 'interrupted') : 'completed';
-  status.reason = stopReason || 'the run reached its time limit';
+  status.reason = stopReason || (status.died ? 'the agent died' : 'the run reached its time limit');
   status.endedWall = new Date().toISOString(); status.modelCalls = calls; status.estimatedCostUsd = +spent.toFixed(4);
   W('status.json', status);
   if (live) { try { await live.flush({ status: 'ended', result: status.status }); } catch (e) { console.error('live flush failed', e.message); } }

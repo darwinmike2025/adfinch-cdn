@@ -77,7 +77,7 @@ class MockProvider {
     const txt = typeof last.content === 'string' ? last.content : last.content.map(p => p.text || '').join('');
     const obsTxt = txt.slice(txt.indexOf('Observation:') + 12).trim();
     let obs = null; try { obs = JSON.parse(obsTxt.split('\n\nWhat do you do?')[0]); } catch (_) {}
-    const blank = { type: null, target: null, with: null, onto: null, x: null, y: null, direction: null, distance: null, seconds: null, text: null };
+    const blank = { type: null, target: null, with: null, onto: null, at: null, x: null, y: null, direction: null, distance: null, seconds: null, text: null };
     const A = (o) => Object.assign({}, blank, o);
     const r = this.rng();
     if (txt.startsWith('Check-in')) {
