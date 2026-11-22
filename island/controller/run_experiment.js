@@ -83,7 +83,7 @@ async function listOpenAIModels() {
     if (choice.cancelled) { console.log('Cancelled.'); await browser.close(); return; }
   }
   const provName = choice.model === 'MOCK' ? 'mock' : opts.provider;
-  const provider = makeProvider({ provider: provName, model: choice.model, reasoning: opts.reasoning, timeoutMs: opts.timeoutSec * 1000, seed: opts.mockSeed });
+  const provider = makeProvider({ provider: provName, model: choice.model, reasoning: opts.reasoning, timeoutMs: opts.timeoutSec * 1000, seed: opts.mockSeed, latencyMs: arg('mock-latency', null) != null ? +arg('mock-latency') : undefined });
   if (!provider.hasKey()) throw new Error('OPENAI_API_KEY is not set. Set it in your shell (never in a file here), or choose the MOCK policy.');
   const price = provName === 'mock' ? { in: 0, cached: 0, out: 0, source: 'mock' } : priceFor(choice.model, opts.priceIn != null ? { in: +opts.priceIn, out: +opts.priceOut } : null);
   const obsMode = choice.obsMode === 'aerial' && provider.supportsImages ? 'aerial' : 'text';
@@ -202,6 +202,7 @@ async function listOpenAIModels() {
   if (choice.video) { const v = await isl(() => Island.startVideo({})); if (!v.ok) await note('Video not started: ' + v.error); }
   await isl(d => Island.startRun({ durationSec: d }), opts.minutes * 60);
   await note(`Controller attached: ${provider.label}, ${obsMode} observations, check-ins every ${opts.checkin} s, spending limit $${choice.maxCostUsd}.${isTest ? ' TEST RUN.' : ''}`);
+  let lastObsSummary = null;
   let first = true, rejected = null, lastResultId = null, lastCheckinSim = 0, idleUntil = null, idleFrom = null, lastAutosave = Date.now(), stopReason = null;
   try {
     while (true) {
@@ -223,11 +224,13 @@ async function listOpenAIModels() {
         if (st.lastResult && st.lastResult.id !== lastResultId) { lastResultId = st.lastResult.id; lastResult = { type: st.lastResult.type, status: st.lastResult.status, message: st.lastResult.result && st.lastResult.result.message }; }
         const idleNote = idleFrom != null ? `You did nothing for ${Math.round(st.simTimeSec - idleFrom)} seconds.` : null;
         idleUntil = null; idleFrom = null;
+        { const sum = P.observationSummary(obs); if (sum !== lastObsSummary) { lastObsSummary = sum; await isl(t => Island.noteObservation(t), sum); } }
         const msg = P.decisionMessage({ observation: obs, lastResult, rejected, idleNote, first, aerialNote: obsMode === 'aerial' ? 'Attached is an aerial picture of the whole island, taken from above. It is not your view from where you stand.' : null });
         const out = await callModel('decision', msg, first && aerialDataUrl ? aerialDataUrl : null);
         first = false; rejected = null;
         if (out.__error) { idleFrom = (await isl(() => Island.getStatus())).simTimeSec; idleUntil = idleFrom + 10; await note('No decision received; the agent stands still. Trying again in about 10 s.'); continue; }
-        if (out.reflection) await isl(t => Island.addReflection(t), out.reflection);
+        if ((await isl(() => Island.getStatus())).run.ended) { await note('A reply arrived after time ran out; it is kept in transcript.jsonl but not applied.'); break; }
+        { const said = out.say != null ? out.say : out.reflection; if (said && String(said).trim()) await isl(t => Island.addReflection(t), said); }
         const action = P.toIslandAction(out.action);
         if (!action) { const now = (await isl(() => Island.getStatus())).simTimeSec; idleFrom = now; idleUntil = now + opts.checkin; await note(`Agent chose no action; it will be asked again in ${opts.checkin} s.`); continue; }
         const r = await isl(a => Island.submitAction(a), action);
@@ -237,7 +240,8 @@ async function listOpenAIModels() {
         const obs = await isl(() => Island.getObservation());
         const out = await callModel('checkin', P.checkinMessage({ observation: obs, action: st.action }));
         if (out.__error) continue;
-        if (out.reflection) await isl(t => Island.addReflection(t), out.reflection);
+        if ((await isl(() => Island.getStatus())).run.ended) { await note('A reply arrived after time ran out; it is kept in transcript.jsonl but not applied.'); break; }
+        { const said = out.say != null ? out.say : out.reflection; if (said && String(said).trim()) await isl(t => Island.addReflection(t), said); }
         const action = P.toIslandAction(out.action);
         if (action) {
           const still = await isl(() => Island.getStatus());

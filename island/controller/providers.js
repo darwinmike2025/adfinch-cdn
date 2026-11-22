@@ -94,7 +94,7 @@ class MockProvider {
     if (r < 0.88) return this._out(null, 'MOCK: doing nothing for now.');
     return this._out(A({ type: 'wait', seconds: 10 }), null);
   }
-  _out(action, reflection) { const parsed = { action, reflection }; return { raw: JSON.stringify(parsed), parsed, usage: { prompt_tokens: 0, completion_tokens: 0 }, finish: 'stop', servedModel: 'MOCK' }; }
+  _out(action, say) { const parsed = { say, action }; return { raw: JSON.stringify(parsed), parsed, usage: { prompt_tokens: 0, completion_tokens: 0 }, finish: 'stop', servedModel: 'MOCK' }; }
   async text() { await new Promise(r => setTimeout(r, this.latencyMs)); return { text: '# MOCK report\n\nThis report was produced by the MOCK policy, not an AI model. It only exists to test the end-of-run pipeline.', usage: { prompt_tokens: 0, completion_tokens: 0 }, servedModel: 'MOCK' }; }
 }
 

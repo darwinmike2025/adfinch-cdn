@@ -70,6 +70,16 @@ aside{border-left:1px solid var(--line);display:flex;flex-direction:column;min-h
 .panel .ph small{color:var(--muted);font-size:10px}
 #logPanel{flex:1.4}
 #logList{flex:1;overflow:auto;padding:4px 0;font:11.5px/1.35 ui-monospace,Menlo,Consolas,monospace}
+#feedList{flex:1;overflow:auto;padding:6px 10px;min-width:0}
+.tabs{display:flex;gap:4px}.tab{padding:2px 9px;font-size:11px;border-radius:999px}.tab.on{border-color:var(--accent);color:var(--accent)}
+.fe{margin:0 0 8px;padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);overflow-wrap:anywhere}
+.fe .fl{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:2px;display:flex;justify-content:space-between;gap:8px}
+.fe .fl span:last-child{color:var(--muted);font-weight:400;letter-spacing:0}
+.fe.says{background:#221a33;border-color:#45346a;color:#e6dcff}.fe.says .fl{color:var(--refl)}.fe.says .tx{font-size:14px;line-height:1.45}
+.fe.does .fl{color:var(--accent)}.fe.resp .fl{color:var(--env)}.fe.bad{border-color:#7a3b3b}.fe.bad .fl{color:var(--err)}
+.fe.obs{background:transparent;border-style:dashed}.fe.obs .fl{color:var(--muted)}.fe.obs .tx{color:var(--muted);font-size:12px}
+.fe.jr{background:#2a2518;border-color:#4a4128}.fe.jr .fl{color:var(--journal)}.fe.jr .tx{font-family:Georgia,serif;color:var(--journal);font-size:14px}
+.fe.note .fl{color:#ffa657}.fe.note .tx{color:var(--muted);font-size:12px}
 .le{padding:2px 12px;display:grid;grid-template-columns:52px 46px minmax(0,1fr);gap:6px;border-left:3px solid transparent}
 .le>span:last-child{overflow-wrap:anywhere;min-width:0}
 aside,.panel,#logList,#journalList,#reflList{min-width:0}
@@ -91,7 +101,7 @@ aside,.panel,#logList,#journalList,#reflList{min-width:0}
 .rent{background:#221a33;border:1px solid #45346a;color:var(--refl);border-radius:6px;padding:6px 8px;margin-bottom:6px;font-style:italic;white-space:pre-wrap;word-wrap:break-word}
 .rent .m{font:normal 10px system-ui,sans-serif;color:#9a86c4;margin-bottom:3px}
 .empty{color:var(--muted);font-size:12px;font-style:italic;padding:4px}
-@media (max-width:900px){#elev{width:92px;height:154px;left:6px;bottom:6px}#viewBtns{right:6px;top:6px;gap:4px}#viewBtns button{padding:3px 7px;font-size:12px}#hdrNote{display:none}header{padding:6px 10px;gap:8px}header h1{font-size:15px}#replayBar{flex-wrap:wrap;gap:6px}#replayBar input[type=range]{flex:1 1 100%;order:-1}#rpTime{white-space:nowrap;font-size:11px}main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);height:70vh}#app{height:auto}#viewWrap{height:60vh}}
+@media (max-width:900px){#elev{width:92px;height:154px;left:6px;bottom:6px}#viewBtns{right:6px;top:6px;gap:4px}#viewBtns button{padding:3px 7px;font-size:12px}#hdrNote{display:none}header{padding:6px 10px;gap:8px}header h1{font-size:15px}#replayBar{flex-wrap:wrap;gap:6px}#replayBar input[type=range]{flex:1 1 100%;order:-1}#rpTime{white-space:nowrap;font-size:11px}main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);height:auto}#logPanel{height:72vh;flex:none}#jrRow{height:45vh;flex:none}#app{height:auto}#viewWrap{height:60vh}}
 </style>
 <div id="app">
 <header>
@@ -220,12 +230,13 @@ aside,.panel,#logList,#journalList,#reflList{min-width:0}
     <div id="carry"></div>
   </div>
   <div class="panel" id="logPanel">
-    <div class="ph"><h3>Activity log</h3><small>ENV = decided by the environment</small></div>
-    <div id="logList"></div>
+    <div class="ph"><div class="tabs"><button id="tabFeed" class="tab on">Experience</button><button id="tabLog" class="tab">Detailed log</button></div><small id="tabNote">The agent's own words, in order</small></div>
+    <div id="feedList"></div>
+    <div id="logList" style="display:none"></div>
   </div>
   <div id="jrRow">
     <div class="panel"><div class="ph"><h3>Journal</h3><small>in-world</small></div><div id="journalList"></div></div>
-    <div class="panel"><div class="ph"><h3>Reflections</h3><small>agent-reported</small></div><div id="reflList"></div></div>
+    <div class="panel"><div class="ph"><h3>Agent says</h3><small>its own words</small></div><div id="reflList"></div></div>
   </div>
 </aside>
 </main>
@@ -501,8 +512,8 @@ function freshState(){
    5. LOGGING + RECORDING
    kinds: request | start | complete | fail | interrupt | rejected | move | object | journal | reflection | sound | system | error
    ===================================================================================== */
-const KIND_CLASS={controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
-const KIND_TAG={controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
+const KIND_CLASS={observe:'sys',controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
+const KIND_TAG={observe:'SEES',controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
 const listeners=[];
 function logEvent(kind,msg,data){const e={seq:S.nextSeq++,sim:+S.simTime.toFixed(3),wall:new Date().toISOString(),speed:S.speed,kind,msg,data:data||null};
   LOG.push(e);recordFrame(true);for(const f of listeners){try{f(e)}catch(_){}}UI.onLog&&UI.onLog(e);return e}
@@ -1213,11 +1224,32 @@ function renderLogUpTo(log,n){const el=$('logList');const atBottom=el.scrollHeig
   if(n<logRendered){el.innerHTML='';logRendered=0}const start=Math.max(logRendered,n-600);if(start>logRendered){el.innerHTML='';logRendered=start}
   const frag=document.createDocumentFragment();for(let i=logRendered;i<n;i++)frag.appendChild(logRow(log[i]));el.appendChild(frag);logRendered=n;
   while(el.childNodes.length>700)el.removeChild(el.firstChild);if(atBottom)el.scrollTop=el.scrollHeight}
+// ---- Experience feed: plain-English view built from the log (agent words kept exactly) ----
+function plainMsg(t){return String(t||'').replace(/ ?\(\d+, \d+\)/g,'').replace(/ after [\d.]+ ft in \d\d:\d\d( \(avg [\d.]+ ft\/s\))?/g,'').replace(/ after \d\d:\d\d\./g,'.').replace(/ ?\(estimated \d\d:\d\d\)/g,'').replace(/\s+\./g,'.').trim()}
+function plainReq(r){if(!r)return'an action';const t=(r.type||'').replace(/_/g,' ');const tg=r.target?' '+String(r.target).replace(/_/g,' '):'';const w=r.with?' with '+String(r.with).replace(/_/g,' '):'';const o=r.onto?' onto '+String(r.onto).replace(/_/g,' '):'';
+  const d=r.direction?' '+r.direction+(r.distance?' '+r.distance+' ft':''):'';const sec=r.seconds?' '+r.seconds+' s':'';return(t+tg+w+o+d+sec+(r.type==='walk_to'&&!r.target&&r.x!=null?' to a spot':'')).trim()}
+function feedItem(e){const d=e.data||{};switch(e.kind){
+  case'observe':return{c:'obs',l:'Agent observes',t:e.msg};
+  case'reflection':return d.reflection?{c:'says',l:'Agent says',t:'“'+d.reflection.text+'”'}:null;
+  case'start':return{c:'does',l:'Agent does',t:plainMsg(e.msg.replace(/^Started: /,''))};
+  case'rejected':return{c:'resp bad',l:'Island responds',t:'Not possible ('+plainReq(d.request)+'): '+plainMsg(e.msg)};
+  case'complete':return{c:'resp',l:'Island responds',t:plainMsg(d.result&&d.result.message||e.msg)};
+  case'fail':return{c:'resp bad',l:'Island responds',t:'It didn’t work: '+plainMsg(d.result&&d.result.message||e.msg)};
+  case'interrupt':return{c:'resp bad',l:'Island responds',t:(d.result&&d.result.reason==='run ended'?'Time ran out. ':'Stopped before finishing. ')+plainMsg(d.result&&d.result.message||'')};
+  case'journal':return d.entry?{c:'jr',l:'Journal'+(d.entry.interrupted?' (writing interrupted)':''),t:d.entry.text}:null;
+  case'sound':return{c:'resp',l:'Island responds',t:e.msg};
+  case'system':if(/^Run started/.test(e.msg))return{c:'note',l:'Island',t:'The experiment began.'};if(/^Run ended/.test(e.msg))return{c:'note',l:'Island',t:'The experiment ended.'};return null;
+  case'controller':if(/chose no action/.test(e.msg))return{c:'does',l:'Agent does',t:'Nothing for now.'};if(/error|timeout|took|unavailable|Stop/i.test(e.msg))return{c:'note',l:'Technical note',t:e.msg};return null;
+  default:return null}}
+let feedRendered=0;
+function renderFeedUpTo(log,n){const el=$('feedList');if(!el)return;const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<60;if(n<feedRendered){el.innerHTML='';feedRendered=0}
+  const frag=document.createDocumentFragment();for(let i=feedRendered;i<n;i++){const it=feedItem(log[i]);if(!it)continue;const d=document.createElement('div');d.className='fe '+it.c;d.innerHTML='<div class="fl"><span>'+esc(it.l)+'</span><span>'+fmtDur(log[i].sim)+'</span></div><div class="tx"></div>';d.querySelector('.tx').textContent=it.t;frag.appendChild(d)}
+  el.appendChild(frag);feedRendered=n;while(el.childNodes.length>800)el.removeChild(el.firstChild);if(atBottom)el.scrollTop=el.scrollHeight}
 let jrKey='',rfKey='';
 function renderJournal(entries,writing){const key=entries.length+'|'+(writing||'');if(key===jrKey)return;jrKey=key;const el=$('journalList');
   let h=entries.length?'':'<div class="empty">The journal is blank.</div>';for(const e of entries)h+='<div class="jent"><div class="m">#'+e.n+' · sim '+fmtDur(e.simTime)+' · '+esc(e.where)+(e.interrupted?' · interrupted':'')+'</div>'+esc(e.text)+'</div>';
   if(writing!=null)h+='<div class="jent writing"><div class="m">✎ writing now…</div>'+esc(writing||'')+'▍</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
-function renderRefl(list){const key=list.length+'';if(key===rfKey)return;rfKey=key;const el=$('reflList');let h=list.length?'':'<div class="empty">None yet. A future agent may report reflections here; they are not verified by the environment.</div>';
+function renderRefl(list){const key=list.length+'';if(key===rfKey)return;rfKey=key;const el=$('reflList');let h=list.length?'':'<div class="empty">Nothing said yet. These are the words the agent chooses to say. They are not a complete record of its reasoning.</div>';
   for(const r of list)h+='<div class="rent"><div class="m">#'+r.n+' · sim '+fmtDur(r.simTime)+' · agent-reported</div>'+esc(r.text)+'</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
 function liveView(){const a=S.action;return{objects:S.objects,agent:S.agent,simTime:S.simTime,pose:displayPose(),actLabel:a?a.label:null,actProg:a?(a.progress||0):null,actType:a?a.type:null,journal:S.journal,reflections:S.reflections,run:S.run,speed:S.speed,writing:a&&a.type==='write_journal'?a.data.written:null,log:LOG,logN:LOG.length,action:a,paused:S.paused}}
 function currentView(){return UI.replay&&UI.replay.view?UI.replay.view:liveView()}
@@ -1228,7 +1260,7 @@ function renderPanels(v){const run=v.run;const el=run.startSim==null?0:Math.max(
   else{$('actLabel').textContent='Idle ('+v.agent.pose+')';const last=UI.replay?null:S.history[S.history.length-1];$('actStatus').textContent=last?('Last: '+last.label+' → '+last.status):'Waiting for an action';$('actBar').style.width='0%'}
   const car=Object.values(v.objects).filter(o=>o.loc.t==='carried').map(displayName),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn').map(o=>o.name);
   const a=v.agent;$('carry').innerHTML='Position <b>'+fmtPos(a.x,a.y)+'</b> ft · '+(a.level==='ground'?'ground':a.level)+' · height <b>'+Math.round(a.level==='ground'?0:a.ladderFt)+' ft</b><br>Carrying: <b>'+(car.join(', ')||'nothing')+'</b>'+(wo.length?' · Wearing: <b>'+wo.join(', ')+'</b>':'');
-  renderLogUpTo(v.log,v.logN);renderJournal(v.journal.entries,v.writing);renderRefl(v.reflections);
+  renderLogUpTo(v.log,v.logN);renderFeedUpTo(v.log,v.logN);renderJournal(v.journal.entries,v.writing);renderRefl(v.reflections);
   const sc=$('speedChip');sc.textContent=v.speed===1?'1× REAL TIME':'TEST SPEED '+v.speed+'×';sc.className='chip '+(v.speed===1?'speed1':'speedtest');
   $('pauseChip').style.display=(!UI.replay&&S.paused)?'inline-block':'none';$('modeChip').textContent=UI.replay?(UI.replay.live?'WATCHING':'REPLAY'):'LIVE';$('modeChip').className='chip '+(UI.replay?'replay':'live')}
 let lastPanel=0,lastFrameT=performance.now();
@@ -1237,7 +1269,7 @@ function renderAll(fromHidden){const now=performance.now();const t=now/1000;if(U
   if(VID.rec)drawVideoFrame(v)}
 UI.renderAll=renderAll;
 function raf(){try{renderAll(false)}catch(e){console.error(e)}requestAnimationFrame(raf)}
-UI.onReset=()=>{logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';renderLogUpTo(LOG,LOG.length);syncSpeedSelect()};
+UI.onReset=()=>{logRendered=0;$('logList').innerHTML='';feedRendered=0;$('feedList').innerHTML='';jrKey='';rfKey='';renderLogUpTo(LOG,LOG.length);syncSpeedSelect()};
 UI.onRunEnd=()=>{if(VID.rec&&VID.autoStop)stopVideo()};
 
 /* =====================================================================================
@@ -1257,9 +1289,9 @@ function replayStateAt(rep,t){const si=Math.max(0,bsearch(rep.snapshots,t,'t'));
   return{objects:snap.objects,agent:ag,simTime:t,pose:fr?fr.p:snap.agent.pose,actLabel:fr?fr.al:null,actProg:fr&&fr.al?prog:null,actType:fr?fr.at:null,journal:snap.journal,reflections:snap.reflections,run:snap.run,speed,writing,log:rep.log,logN:n,action:null}}
 function enterReplay(rep){if(typeof rep==='string')rep=JSON.parse(rep);if(!rep||rep.format!=='watchable-island-replay'||!rep.snapshots||!rep.frames)return{ok:false,error:'Not a Watchable Island replay file.'};
   const end=Math.max(rep.endSim||0,rep.frames.length?rep.frames[rep.frames.length-1].t:0,rep.log.length?rep.log[rep.log.length-1].sim:0);
-  UI.replay={rep,t:0,end,playing:false,speed:+$('rpSpeed').value,view:null};UI.replay.view=replayStateAt(rep,0);logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';
+  UI.replay={rep,t:0,end,playing:false,speed:+$('rpSpeed').value,view:null};UI.replay.view=replayStateAt(rep,0);logRendered=0;$('logList').innerHTML='';feedRendered=0;$('feedList').innerHTML='';jrKey='';rfKey='';
   $('replayBar').classList.add('on');$('replayBanner').style.display='block';$('rpSlider').max=1000;updateReplayUI();return{ok:true,durationSec:end}}
-function exitReplay(){if(!UI.replay)return;if(VID.rec&&VID.fromReplay)stopVideo();UI.replay=null;$('replayBar').classList.remove('on');$('replayBanner').style.display='none';logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';renderLogUpTo(LOG,LOG.length)}
+function exitReplay(){if(!UI.replay)return;if(VID.rec&&VID.fromReplay)stopVideo();UI.replay=null;$('replayBar').classList.remove('on');$('replayBanner').style.display='none';logRendered=0;$('logList').innerHTML='';feedRendered=0;$('feedList').innerHTML='';jrKey='';rfKey='';renderLogUpTo(LOG,LOG.length)}
 UI.exitReplay=exitReplay;
 function replaySeek(t){const R=UI.replay;if(!R)return;R.t=clamp(t,0,R.end);R.view=replayStateAt(R.rep,R.t);updateReplayUI()}
 UI.replayTick=(dms)=>{const R=UI.replay;if(!R||!R.playing||!R.rep.snapshots.length)return;R.t=Math.min(R.end,R.t+dms/1000*R.speed);R.view=replayStateAt(R.rep,R.t);if(R.t>=R.end&&!R.live){R.playing=false;if(VID.rec&&VID.fromReplay)stopVideo()}updateReplayUI()};
@@ -1292,11 +1324,11 @@ function drawVideoFrame(v){const c=VID.ctx;if(!c)return;const Wv=1280,Hv=720,mw=
   c.fillStyle='#8ea2b4';c.fillText('CURRENT ACTION',x0,152);c.fillStyle='#fff';c.font='600 15px system-ui';c.fillText(v.actLabel||('Idle ('+v.pose+')'),x0,172);if(v.actLabel){c.fillStyle='#0a1118';c.fillRect(x0,180,pw,7);c.fillStyle='#f2c14e';c.fillRect(x0,180,pw*(v.actProg||0),7)}
   const car=Object.values(v.objects).filter(o=>o.loc.t==='carried').map(o=>o.name),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn').map(o=>o.name);c.font='12px system-ui';c.fillStyle='#cfd8e3';
   wrapText(c,'Carrying: '+(car.join(', ')||'nothing')+(wo.length?' · Wearing: '+wo.join(', '):'')+' · height '+Math.round(v.agent.level==='ground'?0:v.agent.ladderFt)+' ft',x0,206,pw,15,2);
-  c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('ACTIVITY LOG',x0,244);c.font='11px ui-monospace,monospace';let y=262;const items=v.log.slice(Math.max(0,v.logN-11),v.logN);
-  for(const e of items){c.fillStyle=e.kind==='journal'?'#e9d8a6':e.kind==='reflection'?'#c9a7ff':(e.kind==='rejected'||e.kind==='fail'||e.kind==='error')?'#ff7b72':e.kind==='request'?'#9fb3c8':'#6cb6ff';y=wrapText(c,fmtDur(e.sim)+' '+(KIND_TAG[e.kind]||'ENV')+' '+e.msg,x0,y,pw,14,2)}
+  c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('EXPERIENCE',x0,244);c.font='12px system-ui';let y=262;const items=[];for(let i=v.logN-1;i>=0&&items.length<8;i--){const it=feedItem(v.log[i]);if(it&&it.c!=='obs')items.unshift(it)}
+  for(const it of items){c.fillStyle=it.c==='says'?'#c9a7ff':it.c==='jr'?'#e9d8a6':/bad/.test(it.c)?'#ff7b72':it.c==='does'?'#f2c14e':'#6cb6ff';y=wrapText(c,it.l+': '+it.t,x0,y,pw,15,3)}
   y=Math.max(y+6,520);c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('JOURNAL (latest)',x0,y);y+=16;c.font='13px Georgia,serif';c.fillStyle='#e9d8a6';const je=v.journal.entries;
   if(v.writing!=null)y=wrapText(c,'✎ '+v.writing+'▍',x0,y,pw,16,3);else if(je.length)y=wrapText(c,'#'+je[je.length-1].n+' '+je[je.length-1].text,x0,y,pw,16,3);else{c.fillText('(blank)',x0,y);y+=16}
-  y+=6;c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('AGENT-REPORTED REFLECTION (latest)',x0,y);y+=16;c.font='italic 12px system-ui';c.fillStyle='#c9a7ff';const rf=v.reflections;wrapText(c,rf.length?rf[rf.length-1].text:'(none)',x0,y,pw,15,3)}
+  y+=6;c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('AGENT SAYS (latest, its own words)',x0,y);y+=16;c.font='italic 12px system-ui';c.fillStyle='#c9a7ff';const rf=v.reflections;wrapText(c,rf.length?rf[rf.length-1].text:'(none)',x0,y,pw,15,3)}
 
 /* =====================================================================================
    16. FILE HELPERS + MANUAL TEST CONTROLS
@@ -1330,7 +1362,7 @@ function bindUI(){
   $('tReplayCur').onclick=()=>{if(S.run.active&&!confirm('A run is active. The simulation keeps running in the background while you watch the replay. Continue?'))return;const r=enterReplay(clone(exportReplay()));apiMsg(r.ok?'Replaying this session ('+fmtDur(r.durationSec)+').':r.error,!r.ok)};
   $('tVideo').onclick=()=>{if(VID.rec){stopVideo()}else{const r=startVideo({});apiMsg(r.ok?'Recording video ('+r.mime+'). Keep this tab visible.':r.error,!r.ok)}};
   $('tObs').onclick=()=>{const b=$('obsBox');const on=b.style.display!=='block';b.style.display=on?'block':'none';$('tObs').textContent=on?'Hide agent\'s observation':'Show agent\'s observation (JSON)';if(on)b.textContent=JSON.stringify(getObservation(),null,1)};
-  $('tDemo').onclick=runDemo;$('expStop').onclick=()=>{if(confirm('Stop the experiment now? The run will be saved and marked as stopped by the experimenter.')){UI.stopRequested=true;$('expStop').disabled=true;$('expStop').textContent='Stopping…'}};
+  $('tDemo').onclick=runDemo;$('tabFeed').onclick=()=>{$('tabFeed').classList.add('on');$('tabLog').classList.remove('on');$('feedList').style.display='';$('logList').style.display='none';$('tabNote').textContent='The agent\'s own words, in order'};$('tabLog').onclick=()=>{$('tabLog').classList.add('on');$('tabFeed').classList.remove('on');$('feedList').style.display='none';$('logList').style.display='';$('tabNote').textContent='ENV = decided by the environment'};$('expStop').onclick=()=>{if(confirm('Stop the experiment now? The run will be saved and marked as stopped by the experimenter.')){UI.stopRequested=true;$('expStop').disabled=true;$('expStop').textContent='Stopping…'}};
   $('rpPlay').onclick=()=>{const R=UI.replay;if(!R)return;if(R.t>=R.end)R.t=0;R.playing=!R.playing;updateReplayUI()};$('rpSlider').oninput=e=>{const R=UI.replay;if(R)replaySeek(e.target.value/1000*R.end)};
   $('rpSpeed').onchange=e=>{if(UI.replay)UI.replay.speed=+e.target.value};$('rpExit').onclick=exitReplay;
   $('rpVideo').onclick=()=>{if(VID.rec){stopVideo();return}const R=UI.replay;if(!R)return;R.t=0;R.playing=true;const r=startVideo({fromReplay:true});apiMsg(r.ok?'Recording replay to video; it stops at the end of the replay.':r.error,!r.ok)};
@@ -1385,7 +1417,8 @@ window.Island={
   saveRun:()=>clone(saveRun()),restoreRun:(d)=>restoreRun(d),
   enterReplay:(r)=>enterReplay(r),exitReplay:()=>exitReplay(),replaySeek:(t)=>replaySeek(t),replayPlay:(p)=>{if(UI.replay){UI.replay.playing=p!==false;updateReplayUI()}},replayView:()=>UI.replay?clone({t:UI.replay.t,agent:UI.replay.view.agent,objects:UI.replay.view.objects,journal:UI.replay.view.journal,logN:UI.replay.view.logN}):null,
   startVideo:(o)=>startVideo(o),stopVideo:()=>stopVideo(),videoSupported:()=>videoSupport(),lastVideo:()=>VID.lastBlob?{bytes:VID.lastBlob.size,type:VID.lastBlob.type,url:VID.lastUrl}:null,
-  controllerNote:(msg,data)=>logEvent('controller',String(msg),data||null), // controller-side events (model waits, errors); observer-only
+  controllerNote:(msg,data)=>logEvent('controller',String(msg),data||null),
+  noteObservation:(text)=>logEvent('observe',String(text),null), // plain summary of what the agent was shown (generated mechanically) // controller-side events (model waits, errors); observer-only
   inheritWorld:(d,o)=>inheritWorld(d,o),
   exportLiveChunk:(c)=>exportLiveChunk(c),   // incremental replay data for the cloud live viewer
   showExperimentSetup:(o)=>showExperimentSetup(o),
@@ -1445,7 +1478,7 @@ async function initLiveViewer(){
     else setStatus('Run '+(m.result||'ended')+'. Use the timeline to replay it.'+(m.reportReady?' The agent\'s report is under Report.':''));
     rptBtn.style.display=m.reportReady?'inline-block':'none'};
   db.collection('live').doc('current').onSnapshot(d=>{const m=d.exists?d.data():null;
-    if(m&&m.runId!==runId){runId=m.runId;rep.snapshots.length=0;rep.frames.length=0;rep.log.length=0;R.t=0;R.end=0;R.view=null;R.follow=true;R.playing=true;logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';report=null;
+    if(m&&m.runId!==runId){runId=m.runId;rep.snapshots.length=0;rep.frames.length=0;rep.log.length=0;R.t=0;R.end=0;R.view=null;R.follow=true;R.playing=true;logRendered=0;$('logList').innerHTML='';feedRendered=0;$('feedList').innerHTML='';jrKey='';rfKey='';report=null;
       if(unsubChunks)unsubChunks();let next=1;const pending={};
       unsubChunks=db.collection('runs/'+runId+'/chunks').orderBy('n').onSnapshot(snap=>{for(const ch of snap.docChanges()){if(ch.type==='removed')continue;const c=ch.doc.data();if(c&&c.n>=next)pending[c.n]=c}
         while(pending[next]){const c=pending[next];delete pending[next];next++;

@@ -112,7 +112,7 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
     check('A6. Replay reconstructs the recorded positions and end state', maxErr < 1 && endV.journal.entries.length === fin.journal.entries.length && Math.hypot(endV.agent.x - fin.agent.x, endV.agent.y - fin.agent.y) < 1, `${pts.length} logged positions, max error ${maxErr.toFixed(2)} ft`);
     // A7: journal entries and reflections were recorded during the run, at the time they happened
     const jl = log.filter(e => e.kind === 'journal' && /entry #/.test(e.msg)), rl = log.filter(e => e.kind === 'reflection');
-    const tm = tr.filter(t => t.reply && t.reply.reflection);
+    const tm = tr.filter(t => t.reply && (t.reply.say || t.reply.reflection) && (t.kind === 'decision' || t.kind === 'checkin') && t.simAtReply <= JSON.parse(fs.readFileSync(rdp('state-at-end.json'),'utf8')).run.endSim + 0.5);
     check('A7. Journal entries and reflections were logged during the run, when they happened', jl.every(e => e.sim <= fin.run.endSim) && rl.length === tm.length && rl.every((e, i) => Math.abs(e.sim - tm[i].simAtReply) < 3), `${jl.length} journal entries, ${rl.length} reflections`);
     // A8: no secrets in any file
     const files = fs.readdirSync(runDir).filter(f => /\.(json|jsonl|md|txt)$/.test(f));
