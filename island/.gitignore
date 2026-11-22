@@ -1,4 +1,6 @@
 tests/output/
 controller/output/
 runs/
+live/
+live2/
 node_modules/

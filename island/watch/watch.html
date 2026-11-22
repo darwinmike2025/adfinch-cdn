@@ -1,0 +1,1467 @@
+<title>Watchable Island</title>
+<!--
+  WATCHABLE ISLAND - a self-contained, offline simulation environment for an AI agent.
+  No network access, no API keys, no AI calls. Open this file directly in a modern browser.
+  Controller interface: window.Island (see README.md / the "API" section near the bottom of the script).
+-->
+<style>
+:root{color-scheme:dark;
+  --bg:#0d141b;--panel:#151f29;--panel2:#1b2733;--line:#2a3a4a;--text:#e6edf3;--muted:#8ea2b4;
+  --accent:#f2c14e;--env:#6cb6ff;--journal:#e9d8a6;--refl:#c9a7ff;--err:#ff7b72;--ok:#7ee787;--req:#9fb3c8;--sys:#a5d6a7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,select,input,textarea{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+button{cursor:pointer}
+button:hover{border-color:#4b6278}
+button.primary{background:#2a5d8f;border-color:#3b78b5}
+button.warn{background:#5c2b2b;border-color:#8a3d3d}
+button:disabled{opacity:.45;cursor:default}
+#app{display:grid;grid-template-rows:auto 1fr;height:100%}
+header{display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--line);background:#101922;flex-wrap:wrap}
+header h1{font-size:16px;margin:0;letter-spacing:.3px}
+.chip{padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid var(--line);background:var(--panel2)}
+.chip.live{color:var(--ok);border-color:#2f6b3a}
+.chip.replay{color:#000;background:var(--refl);border-color:var(--refl)}
+.chip.speed1{color:var(--ok)}
+.chip.speedtest{color:#000;background:#ffa657;border-color:#ffa657}
+.chip.rec{color:#fff;background:#c62828;border-color:#c62828;display:none}
+.chip.rec.on{display:inline-block;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.5}}
+header .spacer{flex:1}
+main{display:grid;grid-template-columns:1fr 400px;min-height:0}
+#left{display:flex;flex-direction:column;min-width:0;min-height:0}
+#viewWrap{position:relative;flex:1;min-height:260px;background:#0b3a5c;overflow:hidden}
+#map{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+#elev{position:absolute;left:10px;bottom:10px;width:150px;height:250px;border-radius:8px;border:1px solid var(--line)}
+#viewBtns{position:absolute;right:10px;top:10px;display:flex;gap:6px}
+#viewBtns button{background:rgba(16,25,34,.85)}
+#viewBtns button.on{border-color:var(--accent);color:var(--accent)}
+#legend{position:absolute;right:10px;bottom:10px;background:rgba(10,18,26,.78);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:11px;color:var(--muted);max-width:260px}
+#replayBanner{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--refl);color:#000;font-weight:700;padding:4px 12px;border-radius:999px;display:none}
+#replayBar{display:none;align-items:center;gap:8px;padding:6px 10px;border-top:1px solid var(--line);background:#1a1430}
+#replayBar input[type=range]{flex:1}
+#replayBar.on{display:flex}
+details#tests{border-top:1px solid var(--line);background:#111a23;max-height:46vh;overflow:auto}
+details#tests summary{padding:6px 12px;cursor:pointer;color:var(--accent);font-weight:600}
+.trow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 12px}
+.trow label{color:var(--muted);font-size:12px}
+.trow .grp{display:flex;gap:6px;align-items:center;padding:4px 8px;border:1px solid var(--line);border-radius:8px}
+.trow .grp b{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+#obsBox{white-space:pre;font:11px/1.35 ui-monospace,Menlo,Consolas,monospace;background:#0a1118;border:1px solid var(--line);border-radius:6px;padding:8px;margin:4px 12px 10px;max-height:300px;overflow:auto;display:none}
+#apiMsg{color:var(--muted);font-size:12px;padding:2px 12px 8px}
+aside{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--panel)}
+.card{padding:10px 12px;border-bottom:1px solid var(--line)}
+.card h3{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+#clock{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+#clock .big{font:600 26px/1.1 ui-monospace,Menlo,Consolas,monospace}
+#clock .lbl{font-size:11px;color:var(--muted)}
+#remain.low{color:#ffa657}
+#runState{grid-column:1/3;font-size:12px;color:var(--muted)}
+#actLabel{font-size:15px;font-weight:600}
+#actStatus{font-size:12px;color:var(--muted);margin-top:2px}
+.bar{height:8px;background:#0a1118;border-radius:4px;overflow:hidden;margin-top:6px;border:1px solid var(--line)}
+.bar>div{height:100%;background:var(--accent);width:0}
+#carry{font-size:12px;color:var(--muted);margin-top:6px}
+#carry b{color:var(--text);font-weight:600}
+.panel{display:flex;flex-direction:column;min-height:0}
+.panel .ph{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--line)}
+.panel .ph h3{margin:0;font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.panel .ph small{color:var(--muted);font-size:10px}
+#logPanel{flex:1.4}
+#logList{flex:1;overflow:auto;padding:4px 0;font:11.5px/1.35 ui-monospace,Menlo,Consolas,monospace}
+.le{padding:2px 12px;display:grid;grid-template-columns:52px 46px minmax(0,1fr);gap:6px;border-left:3px solid transparent}
+.le>span:last-child{overflow-wrap:anywhere;min-width:0}
+aside,.panel,#logList,#journalList,#reflList{min-width:0}
+.le .t{color:var(--muted)}
+.le .k{font-weight:700;font-size:10px;padding-top:1px}
+.le.env{border-left-color:var(--env)} .le.env .k{color:var(--env)}
+.le.req{border-left-color:var(--req)} .le.req .k{color:var(--req)}
+.le.err{border-left-color:var(--err)} .le.err .k{color:var(--err)}
+.le.jr{border-left-color:var(--journal)} .le.jr .k{color:var(--journal)}
+.le.rf{border-left-color:var(--refl)} .le.rf .k{color:var(--refl)}
+.le.sys{border-left-color:var(--sys)} .le.sys .k{color:var(--sys)}
+.le.ctl{border-left-color:#ffa657} .le.ctl .k{color:#ffa657}
+#jrRow{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0;border-top:1px solid var(--line)}
+#jrRow .panel+.panel{border-left:1px solid var(--line)}
+#journalList,#reflList{flex:1;overflow:auto;padding:6px 10px}
+.jent{background:#2a2518;border:1px solid #4a4128;color:var(--journal);border-radius:6px;padding:6px 8px;margin-bottom:6px;font-family:Georgia,"Times New Roman",serif;font-size:13px;white-space:pre-wrap;word-wrap:break-word}
+.jent .m{font:10px system-ui,sans-serif;color:#b5a57a;margin-bottom:3px}
+.jent.writing{border-style:dashed;opacity:.85}
+.rent{background:#221a33;border:1px solid #45346a;color:var(--refl);border-radius:6px;padding:6px 8px;margin-bottom:6px;font-style:italic;white-space:pre-wrap;word-wrap:break-word}
+.rent .m{font:normal 10px system-ui,sans-serif;color:#9a86c4;margin-bottom:3px}
+.empty{color:var(--muted);font-size:12px;font-style:italic;padding:4px}
+@media (max-width:900px){#elev{width:92px;height:154px;left:6px;bottom:6px}#viewBtns{right:6px;top:6px;gap:4px}#viewBtns button{padding:3px 7px;font-size:12px}#hdrNote{display:none}header{padding:6px 10px;gap:8px}header h1{font-size:15px}#replayBar{flex-wrap:wrap;gap:6px}#replayBar input[type=range]{flex:1 1 100%;order:-1}#rpTime{white-space:nowrap;font-size:11px}main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);height:70vh}#app{height:auto}#viewWrap{height:60vh}}
+</style>
+<div id="app">
+<header>
+  <h1>🏝️ Watchable Island</h1>
+  <span id="modeChip" class="chip live">LIVE</span>
+  <span id="speedChip" class="chip speed1">1× REAL TIME</span>
+  <span id="pauseChip" class="chip" style="display:none;color:#ffa657">CLOCK PAUSED</span>
+  <span id="recChip" class="chip rec">● REC VIDEO</span>
+  <span id="expChip" class="chip" style="display:none;color:#c9a7ff;border-color:#45346a"></span>
+  <button id="expStop" class="warn" style="display:none">Stop experiment</button>
+  <span class="spacer"></span>
+  <span id="hdrNote" style="color:var(--muted);font-size:12px">Offline simulation · no AI connected · coordinates in feet</span>
+</header>
+<main>
+<section id="left">
+  <div id="viewWrap">
+    <canvas id="map"></canvas>
+    <canvas id="elev" width="150" height="250"></canvas>
+    <div id="viewBtns">
+      <button id="btnFit" class="on" title="Show the whole island">Whole island</button>
+      <button id="btnFollow" title="Zoom in and follow the figure">Follow figure</button>
+      <button id="btnZoomIn">+</button><button id="btnZoomOut">−</button>
+    </div>
+    <div id="replayBanner">REPLAY · reconstructed from recorded events</div>
+    <div id="legend">Yellow ring = agent. Ladder drawn rising "up the screen" (100 ft tall); side gauge at left shows height. Scroll to zoom, drag to pan.</div>
+  </div>
+  <div id="replayBar">
+    <button id="rpPlay">▶ Play</button>
+    <input id="rpSlider" type="range" min="0" max="1000" value="0" step="1">
+    <span id="rpTime" style="font-family:ui-monospace,monospace">00:00 / 00:00</span>
+    <label style="color:var(--muted)">Speed <select id="rpSpeed"><option>1</option><option>2</option><option selected>5</option><option>10</option><option>30</option><option>60</option></select>×</label>
+    <button id="rpVideo" title="Record this replay to a video file">● Record replay video</button>
+    <button id="rpExit" class="warn">Exit replay</button>
+  </div>
+  <details id="tests">
+    <summary>Manual test controls (testing only · the future experiment lets the AI choose actions)</summary>
+    <div class="trow">
+      <span class="grp"><b>Action</b>
+        <select id="tAction"></select>
+        <label>target <select id="tTarget"></select></label>
+        <label>with <select id="tWith"></select></label>
+      </span>
+      <span class="grp"><b>Params</b>
+        <label>x <input id="tX" type="number" style="width:64px"></label>
+        <label>y <input id="tY" type="number" style="width:64px"></label>
+        <label>dir <input id="tDir" placeholder="N / 45" style="width:58px"></label>
+        <label>dist <input id="tDist" type="number" style="width:56px"></label>
+        <label>sec <input id="tSec" type="number" value="30" style="width:56px"></label>
+      </span>
+    </div>
+    <div class="trow">
+      <input id="tText" placeholder="Text for write_journal or a test reflection" style="flex:1;min-width:200px">
+      <button id="tSubmit" class="primary">Submit action</button>
+      <button id="tStop" class="warn">Stop / interrupt</button>
+      <button id="tRefl">Add test reflection</button>
+      <label><input type="checkbox" id="tClickWalk" checked> click map to walk there</label>
+    </div>
+    <div class="trow">
+      <span class="grp"><b>Quick</b>
+        <button data-q='{"type":"look"}'>Look</button>
+        <button data-q='{"type":"walk_to","target":"ladder"}'>Walk to ladder</button>
+        <button data-q='{"type":"climb"}'>Climb</button>
+        <button data-q='{"type":"descend"}'>Descend</button>
+        <button data-q='{"type":"walk_to","target":"boat"}'>Walk to boat</button>
+        <button data-q='{"type":"sit"}'>Sit</button>
+        <button data-q='{"type":"stand"}'>Stand</button>
+        <button id="tDemo">Run demo sequence</button>
+      </span>
+    </div>
+    <div class="trow">
+      <span class="grp"><b>Clock</b>
+        <select id="tSpeed">
+          <option value="1">1× real time (default)</option>
+          <option value="2">TEST 2×</option><option value="5">TEST 5×</option><option value="10">TEST 10×</option>
+          <option value="30">TEST 30×</option><option value="60">TEST 60×</option>
+        </select>
+        <button id="tPause">Pause clock</button>
+      </span>
+      <span class="grp"><b>Run</b>
+        <button id="tStartRun" class="primary">Start 30-min run</button>
+        <button id="tEndRun">End run</button>
+      </span>
+      <span class="grp"><b>World</b>
+        <button id="tReset" class="warn">Reset island</button>
+        <button id="tSave">Save to file</button>
+        <button id="tLoad">Restore from file</button>
+        <button id="tQSave">Quick save</button>
+        <button id="tQLoad">Quick restore</button>
+      </span>
+    </div>
+    <div class="trow">
+      <span class="grp"><b>Export</b>
+        <button id="tExpJournal">Journal (.txt)</button>
+        <button id="tExpLog">Activity log (.json)</button>
+        <button id="tExpLogCsv">Activity log (.csv)</button>
+        <button id="tExpReplay">Replay file (.json)</button>
+      </span>
+      <span class="grp"><b>Replay</b>
+        <button id="tReplayCur">Replay this session</button>
+        <button id="tReplayLoad">Load replay file</button>
+      </span>
+      <span class="grp"><b>Video</b>
+        <button id="tVideo">● Start video recording</button>
+      </span>
+      <button id="tObs">Show agent's observation (JSON)</button>
+    </div>
+    <div id="apiMsg"></div>
+    <div id="obsBox"></div>
+    <input type="file" id="fileIn" accept=".json,application/json" style="display:none">
+  </details>
+</section>
+<aside>
+  <div class="card">
+    <h3>Clock</h3>
+    <div id="clock">
+      <div><div class="lbl">Run elapsed</div><div class="big" id="elapsed">00:00</div></div>
+      <div><div class="lbl">Run time remaining</div><div class="big" id="remain">30:00</div></div>
+      <div id="runState">Run not started · simulation clock 00:00</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Current action</h3>
+    <div id="actLabel">Idle</div>
+    <div id="actStatus">Waiting for an action</div>
+    <div class="bar"><div id="actBar"></div></div>
+    <div id="carry"></div>
+  </div>
+  <div class="panel" id="logPanel">
+    <div class="ph"><h3>Activity log</h3><small>ENV = decided by the environment</small></div>
+    <div id="logList"></div>
+  </div>
+  <div id="jrRow">
+    <div class="panel"><div class="ph"><h3>Journal</h3><small>in-world</small></div><div id="journalList"></div></div>
+    <div class="panel"><div class="ph"><h3>Reflections</h3><small>agent-reported</small></div><div id="reflList"></div></div>
+  </div>
+</aside>
+</main>
+</div>
+
+<div id="expSetup" style="display:none;position:fixed;inset:0;background:rgba(5,10,15,.78);z-index:50;align-items:center;justify-content:center">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;width:min(560px,94vw);max-height:92vh;overflow:auto">
+    <h2 style="margin:0 0 4px;font-size:18px">Start experiment</h2>
+    <div id="esInfo" style="color:var(--muted);font-size:12px;margin-bottom:12px"></div>
+    <div style="display:grid;gap:12px">
+      <div><b>Starting island</b><br>
+        <label><input type="radio" name="esStart" value="fresh" checked> Original island (fresh, initial state)</label><br>
+        <label><input type="radio" name="esStart" value="saved"> Saved island (left by an earlier run)</label>
+        <div id="esSavedRow" style="margin:6px 0 0 22px;display:none">
+          <input type="file" id="esFile" accept=".json,application/json"><div id="esFileInfo" style="color:var(--muted);font-size:12px"></div>
+          <label style="font-size:12px">Previous journal: <select id="esPriorJ"><option value="keep">leave it on the island (its writing can be found)</option><option value="remove">remove it</option></select></label>
+        </div></div>
+      <div><b>Model</b><br><select id="esModel" style="width:100%"></select></div>
+      <div><b>What the agent receives</b><br><select id="esObs" style="width:100%">
+        <option value="text">Text observations only (default)</option>
+        <option value="aerial">Full aerial reference image once at the start, then text observations</option></select>
+        <div id="esObsNote" style="color:var(--muted);font-size:12px;margin-top:4px"></div></div>
+      <div><b>Spending limit</b> (USD, the run stops if the estimate reaches it)<br><input id="esCost" type="number" step="0.5" min="0" style="width:120px"></div>
+      <div><label><input type="checkbox" id="esVideo"> Record video of the screen (keep this window visible)</label></div>
+      <div id="esWarn" style="color:#ffa657;font-size:12px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end"><button id="esCancel">Cancel</button><button id="esGo" class="primary">Start Experiment</button></div>
+    </div></div></div>
+<script>window.ISLAND_LIVE_VIEWER=true;</script>
+<script>
+'use strict';
+(function(){
+/* =====================================================================================
+   1. LAYOUT  (all positions in FEET)
+   Coordinate system: origin (0,0) at the NORTH-WEST corner of a 1000 x 800 ft map.
+   x increases to the EAST, y increases to the SOUTH. "North" is up on screen.
+   Elevation is in feet above sea level. Edit these numbers to match a reference image.
+   ===================================================================================== */
+const VERSION = '1.0.0';
+const LAYOUT = {
+  // Matched to the reference image (camera looking north from the south-west).
+  mapW:1000, mapH:800,
+  coast:{cx:480, cy:430,                            // island outline: radius (ft) by compass angle (deg, 0=east, 90=south)
+    radii:[[8.6,470],[23,488],[42,432],[65,376],[95,346],[125,384],[147,427],[168,449],[187,423],[216,408],[245,353],[277,342],[305,380],[335,430],[350,457]]},
+  shore:{beach:[72,188], cliffs:[318,64]},           // sandy beach S/SW/W, rocky cliffs E/NE/SE, rocky edge elsewhere
+  hill:{x:525, y:170, peak:58, sigma:80},            // north hill with boulders on top
+  pond:{x:590, y:420, rx:70, ry:38},                 // lily pond, centre-east
+  stream:[[470,250],[462,300],[452,350],[440,400],[432,450],[430,505],[440,560],[460,610],[490,660],[515,710],[540,795]], // hill steps -> south beach
+  bridge:{x:430, y:505, len:26, wid:8},              // arched footbridge
+  cabin:{x:245, y:395, w:40, h:30},                  // in the western trees; door on the south wall
+  chest:{x:302, y:432},                              // outside, beside the cabin door
+  mirror:{x:160, y:455},                             // round standing mirror by a tree
+  wheelbarrow:{x:205, y:522},
+  firePit:{x:286, y:570},
+  picnicTable:{x:361, y:640},                        // driftwood table with a paper on it
+  boat:{x:260, y:705, len:17, beam:6, angle:0.1},
+  start:{x:268, y:714},                              // agent start, beside the boat
+  rope:{x:400, y:720},
+  crate:{x:455, y:725},
+  ladder:{x:690, y:549},                             // where you stand to climb (south face of the foundation)
+  foundation:{x:690, y:530, size:30},                // concrete foundation; tower legs splay out to its corners
+  ladderHeight:100,
+  stepladder:{x:575, y:520},
+  ball:{x:582, y:610}, blanket:{x:645, y:615}, blocks:{x:735, y:612},
+  stoneCircle:{x:800, y:420, r:7, n:11},             // low ring of stones near the eastern cliffs
+  bell:{x:845, y:310},                               // bell on a wooden frame on the north-east headland
+  key:{x:528, y:425},                                // brass key, underwater near the pond's west bank
+  driftwood:[[190,660],[330,745]],
+  stones:[[215,700],[590,752]],
+  boulders:[[515,150],[532,158],[505,162],[548,146],[770,560],[788,548],[806,560],[824,546],[842,562],[812,522],[858,540],[175,690],[560,770],[640,760]],
+  paths:[[[267,428],[310,462],[372,492],[430,505],[500,522],[580,540],[672,550]],
+         [[432,470],[448,400],[458,330],[468,262],[500,205],[522,175]],
+         [[706,520],[760,470],[796,428],[825,370],[845,322]],
+         [[286,575],[330,615],[350,640]]],
+};
+const L = LAYOUT, W = L.mapW, H = L.mapH, CELL = 5, GW = W/CELL, GH = H/CELL;
+const K_OBLIQUE = 0.85;   // screen feet per foot of height when drawing the ladder "up the screen"
+
+/* Movement & timing constants (environment decides all of these) */
+const WALK_SPEED = 4.0;           // ft/s on clear level ground
+const CLIMB_SEC_PER_FT = 2.4;     // 100 ft -> 4:00
+const DESCEND_SEC_PER_FT = 2.1;   // 100 ft -> 3:30
+const ITEM_VIEW_RANGE = 40;       // small objects visible within 40 ft (same level); medium 80 ft, large 120 ft
+const itemRange=o=>o.size==='large'?120:o.size==='medium'?80:ITEM_VIEW_RANGE;
+const DETAIL_RANGE = 10;          // close-up details within 10 ft
+const RUN_SECONDS = 30*60;
+
+/* =====================================================================================
+   2. RNG / NOISE / GEOMETRY
+   ===================================================================================== */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash2(i,j){let h=(i*374761393+j*668265263)|0;h=Math.imul(h^(h>>>13),1274126177);return((h^(h>>>16))>>>0)/4294967296}
+function vnoise(x,y){const i=Math.floor(x),j=Math.floor(y),fx=x-i,fy=y-j;const a=hash2(i,j),b=hash2(i+1,j),c=hash2(i,j+1),d=hash2(i+1,j+1);const u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v}
+function fbm(x,y){return vnoise(x,y)*.5+vnoise(x*2.1+7,y*2.1+3)*.3+vnoise(x*4.3+1,y*4.3+9)*.2}
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const dist=(ax,ay,bx,by)=>Math.hypot(ax-bx,ay-by);
+const toDeg=(dx,dy)=>((Math.atan2(dy,dx)*180/Math.PI)+360)%360;
+function coastRadius(deg){const R=L.coast.radii,n=R.length;let i=n-1;for(let k=0;k<n;k++){if(R[k][0]>deg){i=(k-1+n)%n;break}if(k===n-1)i=n-1}
+  const a=R[i],b=R[(i+1)%n],p0=R[(i-1+n)%n],p3=R[(i+2)%n];let span=(b[0]-a[0]+360)%360||360,t=((deg-a[0]+360)%360)/span;
+  const t2=t*t,t3=t2*t;const r=.5*((2*a[1])+(-p0[1]+b[1])*t+(2*p0[1]-5*a[1]+4*b[1]-p3[1])*t2+(-p0[1]+3*a[1]-3*b[1]+p3[1])*t3);
+  const th=deg*Math.PI/180;return r*(1+.022*Math.sin(7*th+1)+.014*Math.sin(13*th+.4)+.008*Math.sin(23*th+2))}
+function islandS(x,y){const dx=x-L.coast.cx,dy=y-L.coast.cy;return Math.hypot(dx,dy)/coastRadius(toDeg(dx,dy))}
+function inArc(d,a,b){return a<=b?(d>=a&&d<=b):(d>=a||d<=b)}
+function shoreZone(x,y){const d=toDeg(x-L.coast.cx,y-L.coast.cy);if(inArc(d,L.shore.beach[0],L.shore.beach[1]))return'beach';if(inArc(d,L.shore.cliffs[0],L.shore.cliffs[1]))return'cliff';return'rocky'}
+function beachT(x,y){const d=toDeg(x-L.coast.cx,y-L.coast.cy);const[a,b]=L.shore.beach;if(!inArc(d,a,b))return 2;
+  return .80+.08*clamp((d-150)/(b-150),0,1)+.10*clamp((85-d)/(85-a),0,1)}
+function landFactor(s,w){const t=clamp((1-s)/(w||.22),0,1);return t*t*(3-2*t)}
+function g2(x,y,cx,cy,s){const dx=x-cx,dy=y-cy;return Math.exp(-(dx*dx+dy*dy)/(2*s*s))}
+function heightAt(x,y){const s=islandS(x,y);if(s>=1)return 0;
+  const h=L.hill.peak*g2(x,y,L.hill.x,L.hill.y,L.hill.sigma)+7*g2(x,y,800,450,130)+5*g2(x,y,200,330,130)+2.5;
+  return h*landFactor(s,shoreZone(x,y)==='cliff'?.06:.22)}
+function distSeg(px,py,ax,ay,bx,by){const vx=bx-ax,vy=by-ay,l2=vx*vx+vy*vy;let t=l2?((px-ax)*vx+(py-ay)*vy)/l2:0;t=clamp(t,0,1);const qx=ax+t*vx,qy=ay+t*vy;return[Math.hypot(px-qx,py-qy),qx,qy]}
+function nearestOnPoly(px,py,pts){let b=[1e9,0,0];for(let i=0;i<pts.length-1;i++){const r=distSeg(px,py,pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1]);if(r[0]<b[0])b=r}return b}
+function streamNearest(x,y){return nearestOnPoly(x,y,L.stream)}
+function pondE(x,y){const p=L.pond;return Math.hypot((x-p.x)/p.rx,(y-p.y)/p.ry)}
+function pondEdgeDist(x,y){const e=pondE(x,y);if(e<1e-6)return-Math.min(L.pond.rx,L.pond.ry);return dist(x,y,L.pond.x,L.pond.y)*(1-1/e)}
+function pondEdgePoint(x,y){const e=pondE(x,y)||1;return{x:L.pond.x+(x-L.pond.x)/e,y:L.pond.y+(y-L.pond.y)/e}}
+const CAB=L.cabin, CAB_IN={x0:CAB.x+5,y0:CAB.y+5,x1:CAB.x+CAB.w-5,y1:CAB.y+CAB.h-5};
+function isIndoors(x,y){return x>CAB_IN.x0&&x<CAB_IN.x1&&y>CAB_IN.y0&&y<CAB_IN.y1}
+function compass(deg){return['N','NE','E','SE','S','SW','W','NW'][Math.round(((deg%360)+360)%360/45)%8]}
+function bearingDeg(ax,ay,bx,by){return Math.round((Math.atan2(bx-ax,-(by-ay))*180/Math.PI+360)%360)}
+function parseDir(d){if(d==null||d==='')return null;if(typeof d==='number')return d;const s=String(d).trim().toUpperCase();
+  const m={N:0,NNE:22.5,NE:45,ENE:67.5,E:90,ESE:112.5,SE:135,SSE:157.5,S:180,SSW:202.5,SW:225,WSW:247.5,W:270,WNW:292.5,NW:315,NNW:337.5,NORTH:0,EAST:90,SOUTH:180,WEST:270};
+  if(s in m)return m[s];const n=parseFloat(s);return isNaN(n)?null:n}
+
+/* =====================================================================================
+   3. STATIC TERRAIN: trees, walkability grid (5 ft cells)
+   ===================================================================================== */
+const T={OCEAN:0,BEACH:1,GRASS:2,FOREST:3,STREAM:4,POND:5,BRIDGE:6,ROCK:7,FLOOR:8,WALL:9,OBST:10,CLIFF:11};
+const TNAME=['ocean','sandy beach','grass','forest floor (rough)','stream (wading over rocks)','pond','wooden bridge','rocky ground','cabin floor','wall','obstacle','cliff edge'];
+const TSPEED=[0,.85,1,.72,.25,0,1,.65,1,0,0,0];
+const grid=new Uint8Array(GW*GH);
+const cIdx=(c,r)=>r*GW+c, cOf=(x)=>clamp(Math.floor(x/CELL),0,GW-1), rOf=(y)=>clamp(Math.floor(y/CELL),0,GH-1);
+const cellAt=(x,y)=>cIdx(cOf(x),rOf(y));
+const cellCenter=(i)=>({x:(i%GW)*CELL+CELL/2,y:Math.floor(i/GW)*CELL+CELL/2});
+const pathDist=(x,y)=>Math.min(...L.paths.map(p=>nearestOnPoly(x,y,p)[0]));
+
+const TREES=[],PALMS=[];
+(function genTrees(){
+  const rng=mulberry32(20261122);
+  const zones=[[200,300,175,.95],[330,230,115,.9],[110,430,85,.85],[420,135,75,.75],[130,560,55,.45],[650,290,50,.35],[300,500,40,.3]];
+  const keep=[[L.cabin.x+20,L.cabin.y+15,40],[L.chest.x,L.chest.y,14],[L.mirror.x,L.mirror.y,10],[L.wheelbarrow.x,L.wheelbarrow.y,14],[L.firePit.x,L.firePit.y,30],[L.picnicTable.x,L.picnicTable.y,30],
+    [L.hill.x,L.hill.y,45],[L.stoneCircle.x,L.stoneCircle.y,30],[L.bell.x,L.bell.y,25],[L.foundation.x,L.foundation.y,55],[L.bridge.x,L.bridge.y,24],[L.boat.x,L.boat.y,40],[L.stepladder.x,L.stepladder.y,15]];
+  const bad=(x,y)=>{const s=islandS(x,y);if(s>.9||s>beachT(x,y)-.02)return true;
+    if(pondE(x,y)<1.3)return true;if(streamNearest(x,y)[0]<12)return true;if(pathDist(x,y)<9)return true;
+    for(const k of keep)if(dist(x,y,k[0],k[1])<k[2])return true;return false};
+  for(let k=0;k<12000&&TREES.length<300;k++){const x=rng()*W,y=rng()*H;let dens=.012;
+    for(const z of zones){const d=dist(x,y,z[0],z[1]);if(d<z[2])dens=Math.max(dens,z[3]*(1-(d/z[2])**2))}
+    if(rng()>dens||bad(x,y))continue;if(TREES.some(t=>dist(t.x,t.y,x,y)<13))continue;
+    TREES.push({x,y,r:7+rng()*7,tone:rng()})}
+  // low bushes on open ground (decorative, walk-through)
+  for(let k=0;k<4000&&PALMS.length<70;k++){const x=rng()*W,y=rng()*H;const s=islandS(x,y);if(s>.88||bad(x,y)||pathDist(x,y)<6)continue;if(PALMS.some(p=>dist(p.x,p.y,x,y)<18))continue;PALMS.push({x,y,r:2.5+rng()*2.5,tone:rng()})}
+})();
+const STONES=[];for(let i=0;i<L.stoneCircle.n;i++){const a=i/L.stoneCircle.n*Math.PI*2;STONES.push({x:L.stoneCircle.x+Math.cos(a)*L.stoneCircle.r,y:L.stoneCircle.y+Math.sin(a)*L.stoneCircle.r})}
+const BR=(function(){const P=L.stream;let best=0,bd=1e9;for(let i=0;i<P.length-1;i++){const d=distSeg(L.bridge.x,L.bridge.y,P[i][0],P[i][1],P[i+1][0],P[i+1][1])[0];if(d<bd){bd=d;best=i}}
+  let dx=P[best+1][0]-P[best][0],dy=P[best+1][1]-P[best][1];const n=Math.hypot(dx,dy);dx/=n;dy/=n;return{dx,dy,px:-dy,py:dx}})();
+// Cabin cells
+const CAB_C0=cOf(CAB.x+1),CAB_C1=cOf(CAB.x+CAB.w-1),CAB_R0=rOf(CAB.y+1),CAB_R1=rOf(CAB.y+CAB.h-1);
+const DOOR_CELL=cIdx(cOf(CAB.x+CAB.w/2+1),CAB_R1);
+const DOOR_POS={x:cellCenter(DOOR_CELL).x,y:CAB.y+CAB.h};
+const TABLE_CELL=cIdx(CAB_C0+1,CAB_R0+1), CHEST_CELL=cellAt(L.chest.x,L.chest.y);
+const TABLE_POS=cellCenter(TABLE_CELL), CHEST_POS=cellCenter(CHEST_CELL);
+const BEACH_PTS=[],CLIFF_PTS=[];
+
+(function buildGrid(){
+  for(let r=0;r<GH;r++)for(let c=0;c<GW;c++){const x=c*CELL+2.5,y=r*CELL+2.5,s=islandS(x,y);let t;const z=shoreZone(x,y);
+    if(s>=1)t=T.OCEAN;else if(pondE(x,y)<1)t=T.POND;else if(streamNearest(x,y)[0]<5.5)t=T.STREAM;
+    else if(z==='beach'&&s>beachT(x,y))t=T.BEACH;else if(z==='cliff'&&s>.955)t=T.CLIFF;else if(z==='cliff'&&s>.90)t=T.ROCK;else if(z!=='beach'&&s>.972)t=T.ROCK;
+    else if(heightAt(x,y)>50)t=T.ROCK;else t=T.GRASS;grid[cIdx(c,r)]=t}
+  for(const tr of TREES){const rr=tr.r*.8;for(let r=rOf(tr.y-rr);r<=rOf(tr.y+rr);r++)for(let c=cOf(tr.x-rr);c<=cOf(tr.x+rr);c++){const i=cIdx(c,r),cc=cellCenter(i);
+      if(dist(cc.x,cc.y,tr.x,tr.y)<=rr&&grid[i]===T.GRASS)grid[i]=T.FOREST}}
+  for(const tr of TREES)grid[cellAt(tr.x,tr.y)]=T.OBST;
+  // bridge
+  for(let r=rOf(L.bridge.y-20);r<=rOf(L.bridge.y+20);r++)for(let c=cOf(L.bridge.x-20);c<=cOf(L.bridge.x+20);c++){const i=cIdx(c,r),cc=cellCenter(i),vx=cc.x-L.bridge.x,vy=cc.y-L.bridge.y;
+    if(Math.abs(vx*BR.px+vy*BR.py)<=L.bridge.len/2&&Math.abs(vx*BR.dx+vy*BR.dy)<=L.bridge.wid/2+1)grid[i]=T.BRIDGE}
+  // cabin
+  for(let r=CAB_R0;r<=CAB_R1;r++)for(let c=CAB_C0;c<=CAB_C1;c++)grid[cIdx(c,r)]=(r===CAB_R0||r===CAB_R1||c===CAB_C0||c===CAB_C1)?T.WALL:T.FLOOR;
+  grid[DOOR_CELL]=T.FLOOR;grid[TABLE_CELL]=T.OBST;grid[CHEST_CELL]=T.OBST;
+  for(const p of[L.mirror,L.bell,L.picnicTable,L.crate,L.firePit])grid[cellAt(p.x,p.y)]=T.OBST;
+  for(const b of L.boulders)grid[cellAt(b[0],b[1])]=T.OBST;
+  for(let r=rOf(L.boat.y-12);r<=rOf(L.boat.y+12);r++)for(let c=cOf(L.boat.x-12);c<=cOf(L.boat.x+12);c++){const i=cIdx(c,r),cc=cellCenter(i);
+    const ca=Math.cos(-L.boat.angle),sa=Math.sin(-L.boat.angle),vx=cc.x-L.boat.x,vy=cc.y-L.boat.y,u=vx*ca-vy*sa,v=vx*sa+vy*ca;
+    if((u/(L.boat.len/2))**2+(v/(L.boat.beam/2))**2<1)grid[i]=T.OBST}
+  const f=L.foundation;for(let r=rOf(f.y-f.size/2);r<=rOf(f.y+f.size/2);r++)for(let c=cOf(f.x-f.size/2);c<=cOf(f.x+f.size/2);c++){const cc=cellCenter(cIdx(c,r));
+    if(Math.abs(cc.x-f.x)<f.size/2&&Math.abs(cc.y-f.y)<f.size/2)grid[cIdx(c,r)]=T.OBST}
+  for(let i=0;i<GW*GH;i+=1){if(grid[i]===T.BEACH&&i%2===0)BEACH_PTS.push(cellCenter(i));if(grid[i]===T.CLIFF&&i%2===0)CLIFF_PTS.push(cellCenter(i))}
+})();
+const cellH=new Float32Array(GW*GH);for(let i=0;i<GW*GH;i++){const c=cellCenter(i);cellH[i]=heightAt(c.x,c.y)}
+function terrainAt(x,y){return grid[cellAt(x,y)]}
+function isBlocked(i){const g=grid[i];if(g===T.OCEAN||g===T.POND||g===T.WALL||g===T.OBST||g===T.CLIFF)return true;
+  if(i===DOOR_CELL&&S&&S.objects.cabin_door&&!S.objects.cabin_door.state.open)return true;return false}
+
+/* A* over the grid. Cost = travel-time-equivalent feet (terrain + slope). */
+function astar(startIdx,isGoal,heur){
+  const N=GW*GH,g=new Float64Array(N).fill(Infinity),came=new Int32Array(N).fill(-1),closed=new Uint8Array(N);
+  const hp=[],hf=[];const push=(i,f)=>{hp.push(i);hf.push(f);let k=hp.length-1;while(k>0){const p=(k-1)>>1;if(hf[p]<=hf[k])break;[hp[p],hp[k]]=[hp[k],hp[p]];[hf[p],hf[k]]=[hf[k],hf[p]];k=p}};
+  const pop=()=>{const top=hp[0];const li=hp.pop(),lf=hf.pop();if(hp.length){hp[0]=li;hf[0]=lf;let k=0;for(;;){const l=2*k+1,r=l+1;let m=k;if(l<hp.length&&hf[l]<hf[m])m=l;if(r<hp.length&&hf[r]<hf[m])m=r;if(m===k)break;[hp[m],hp[k]]=[hp[k],hp[m]];[hf[m],hf[k]]=[hf[k],hf[m]];k=m}}return top};
+  g[startIdx]=0;push(startIdx,heur(startIdx));
+  const DIRS=[[1,0,5],[-1,0,5],[0,1,5],[0,-1,5],[1,1,7.071],[1,-1,7.071],[-1,1,7.071],[-1,-1,7.071]];
+  while(hp.length){const i=pop();if(closed[i])continue;closed[i]=1;if(isGoal(i)){const path=[];let k=i;while(k!==-1){path.push(k);k=came[k]}return path.reverse()}
+    const c=i%GW,r=(i/GW)|0,hi=cellH[i];
+    for(const[dc,dr,d]of DIRS){const nc=c+dc,nr=r+dr;if(nc<0||nr<0||nc>=GW||nr>=GH)continue;const j=cIdx(nc,nr);if(closed[j]||isBlocked(j))continue;
+      if(dc&&dr&&(isBlocked(cIdx(c+dc,r))||isBlocked(cIdx(c,r+dr))))continue;
+      const dh=cellH[j]-hi;const sp=(TSPEED[grid[i]]+TSPEED[grid[j]])/2||.3;
+      const cost=(d+2.5*Math.max(0,dh)+Math.max(0,-dh))/sp;const ng=g[i]+cost;if(ng<g[j]){g[j]=ng;came[j]=i;push(j,ng+heur(j))}}}
+  return null}
+function nearestWalkable(x,y,maxR){const c0=cOf(x),r0=rOf(y);let best=-1,bd=1e9;const R=Math.ceil(maxR/CELL);
+  for(let r=r0-R;r<=r0+R;r++)for(let c=c0-R;c<=c0+R;c++){if(c<0||r<0||c>=GW||r>=GH)continue;const i=cIdx(c,r);if(isBlocked(i))continue;const cc=cellCenter(i),d=dist(cc.x,cc.y,x,y);if(d<bd&&d<=maxR){bd=d;best=i}}return best}
+function planPath(tx,ty,reach,exact){
+  const a=S.agent;let start=cellAt(a.x,a.y);if(isBlocked(start)){start=nearestWalkable(a.x,a.y,8);if(start<0)return null}
+  let isGoal,heur;
+  if(reach>0){isGoal=i=>{const c=cellCenter(i);return dist(c.x,c.y,tx,ty)<=reach};heur=i=>{const c=cellCenter(i);return Math.max(0,dist(c.x,c.y,tx,ty)-reach)}}
+  else{const gi=cellAt(tx,ty);isGoal=i=>i===gi;heur=i=>{const c=cellCenter(i);return dist(c.x,c.y,tx,ty)}}
+  const cells=astar(start,isGoal,heur);if(!cells)return null;
+  const pts=cells.map(cellCenter).map(p=>[p.x,p.y]);pts.shift();
+  if(exact&&pts.length){pts[pts.length-1]=[tx,ty]}else if(exact){pts.push([tx,ty])}
+  // drop collinear points
+  const out=[];for(let k=0;k<pts.length;k++){if(out.length>=2){const p=out[out.length-2],q=out[out.length-1],n=pts[k];const cr=(q[0]-p[0])*(n[1]-q[1])-(q[1]-p[1])*(n[0]-q[0]);if(Math.abs(cr)<1e-6&&k<pts.length){out[out.length-1]=n;continue}}out.push(pts[k])}
+  return out}
+
+/* =====================================================================================
+   4. WORLD STATE (authoritative). Everything in S is plain JSON (serialisable).
+   ===================================================================================== */
+let S=null, LOG=[], REC=null;
+
+function initialObjects(){
+  const O={};const add=o=>{O[o.id]=Object.assign({kind:'item',size:'small',weight:.5,state:{},reach:5.5},o)};
+  const G=(x,y)=>({t:'ground',x,y});
+  add({id:'journal',name:'journal',weight:.6,burnable:true,desc:'A small notebook with a cloth cover.',loc:{t:'carried'}});
+  add({id:'pencil',name:'pencil',weight:.05,burnable:true,desc:'A sharpened wooden pencil.',loc:{t:'carried'}});
+  add({id:'boat',name:'rowboat',kind:'fixture',desc:'A weathered wooden rowboat pulled up onto the sand.',closeDesc:'The hull is dry and sound. The boat is open on top, so anything inside is visible.',container:{open:true,openable:false,capacity:6},loc:G(L.boat.x,L.boat.y),reach:13,viewRange:400});
+  add({id:'oar',name:'oar',size:'medium',weight:5,awkward:true,burnable:true,desc:'A long wooden oar.',loc:{t:'in',id:'boat'}});
+  add({id:'rope',name:'coil of rope',size:'medium',weight:4,burnable:true,desc:'About 30 feet of hemp rope, coiled on the sand.',loc:G(L.rope.x,L.rope.y)});
+  add({id:'crate',name:'wooden crate',kind:'fixture',desc:'A sturdy wooden crate with a hinged lid, sitting on the beach.',container:{open:false,openable:true,locked:false,capacity:4},loc:G(L.crate.x,L.crate.y),reach:6.5,viewRange:250});
+  add({id:'wheelbarrow',name:'wheelbarrow',size:'large',weight:25,awkward:true,desc:'A rusty metal wheelbarrow with a wooden handle. Pick it up to push it; things inside come along.',container:{open:true,openable:false,capacity:4},loc:G(L.wheelbarrow.x,L.wheelbarrow.y),reach:6});
+  add({id:'mirror',name:'standing mirror',kind:'fixture',desc:'A round mirror in a wooden frame, standing against a tree.',closeDesc:'The glass is clean. You could look into it.',loc:G(L.mirror.x,L.mirror.y),reach:6,viewRange:120});
+  add({id:'picnic_table',name:'driftwood table',kind:'fixture',surface:true,desc:'A rough table built from driftwood.',loc:G(L.picnicTable.x,L.picnicTable.y),reach:6.5,viewRange:200});
+  add({id:'island_map',name:'sheet of paper',burnable:true,desc:'A weathered sheet of paper weighted down on the table.',readable:'A hand-drawn map of the island. It shows: a sandy beach and a rowboat on the south shore; a cabin among trees to the west with a fire pit in front; a stream running from steps on the hill down to the beach, crossed by a footbridge; a pond in the middle; a tall tower east of the pond; a bell on the north-east headland; rocky cliffs along the east side.',loc:{t:'on',id:'picnic_table'}});
+  add({id:'stepladder',name:'stepladder',size:'large',weight:14,awkward:true,desc:'A small wooden A-frame stepladder, about 6 ft tall.',loc:G(L.stepladder.x,L.stepladder.y)});
+  add({id:'ball',name:'red ball',size:'medium',weight:.4,desc:'A bright red rubber ball.',loc:G(L.ball.x,L.ball.y)});
+  add({id:'blanket',name:'blue blanket',size:'medium',weight:2,burnable:true,desc:'A blue cotton blanket.',loc:G(L.blanket.x,L.blanket.y),state:{spread:true}});
+  add({id:'blocks',name:'wooden blocks',size:'medium',weight:3,burnable:true,desc:'A handful of plain wooden cubes.',loc:G(L.blocks.x,L.blocks.y),state:{stacked:true}});
+  add({id:'driftwood_1',name:'driftwood log',size:'medium',weight:7,burnable:true,fuel:true,desc:'A bleached, dry piece of driftwood about 3 ft long.',loc:G(...L.driftwood[0])});
+  add({id:'driftwood_2',name:'driftwood log',size:'medium',weight:6,burnable:true,fuel:true,desc:'A bleached, dry piece of driftwood about 3 ft long.',loc:G(...L.driftwood[1])});
+  add({id:'stone_1',name:'smooth stone',weight:1,desc:'A smooth, palm-sized grey stone.',loc:G(...L.stones[0])});
+  add({id:'stone_2',name:'smooth stone',weight:1.2,desc:'A smooth, palm-sized speckled stone.',loc:G(...L.stones[1])});
+  add({id:'cabin',name:'cabin',kind:'fixture',bothSides:true,desc:'A small log cabin with a single door on its south side.',closeDesc:'Inside: a table and a narrow bed. A stone chimney rises from the roof.',loc:G(CAB.x+CAB.w/2,CAB.y+CAB.h/2),reach:0,viewRange:450});
+  add({id:'cabin_door',name:'cabin door',kind:'fixture',bothSides:true,door:true,desc:'A plank door with an iron latch.',loc:G(DOOR_POS.x,DOOR_POS.y),reach:6,viewRange:300,state:{open:false}});
+  add({id:'cabin_table',name:'cabin table',kind:'fixture',surface:true,desc:'A rough wooden table.',loc:G(TABLE_POS.x,TABLE_POS.y),reach:6.5,viewRange:60});
+  add({id:'lantern',name:'oil lantern',size:'medium',weight:3,fragile:true,desc:'A glass oil lantern, half full of oil.',loc:{t:'on',id:'cabin_table'},state:{lit:false,broken:false}});
+  add({id:'tin_cup',name:'tin cup',weight:.4,desc:'A dented tin cup.',loc:{t:'in',id:'crate'},state:{full:false}});
+  add({id:'chest',name:'wooden chest',kind:'fixture',desc:'A heavy wooden chest with a brass lock, sitting outside beside the cabin door.',container:{open:false,openable:true,locked:true,key:'brass_key',capacity:4},loc:G(CHEST_POS.x,CHEST_POS.y),reach:6.5,viewRange:150});
+  add({id:'old_letter',name:'folded letter',burnable:true,desc:'A folded sheet of paper.',readable:'Supply list, spring: lamp oil, rope, matches (ran out). The tower platform was inspected and the anchors are sound. Do not leave the lantern lit unattended.',loc:{t:'in',id:'chest'}});
+  add({id:'fire_pit',name:'fire pit',kind:'fixture',desc:'A ring of blackened stones around old ashes.',container:{open:true,openable:false,capacity:3,fuelOnly:false},loc:G(L.firePit.x,L.firePit.y),reach:6,viewRange:90,state:{lit:false,burnLeft:0}});
+  add({id:'bell',name:'bronze bell',kind:'fixture',desc:'A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.',closeDesc:'A rope hangs from the clapper. It looks like it would be loud.',loc:G(L.bell.x,L.bell.y),reach:7,viewRange:250});
+  add({id:'stone_circle',name:'stone circle',kind:'fixture',desc:'A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.',loc:G(L.stoneCircle.x,L.stoneCircle.y+0.01),reach:0,viewRange:450});
+  add({id:'bridge',name:'wooden bridge',kind:'fixture',desc:'An arched plank footbridge with handrails over the stream.',loc:G(L.bridge.x,L.bridge.y),reach:0,viewRange:250});
+  add({id:'ladder',name:'tall metal ladder',kind:'fixture',desc:'A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.',closeDesc:'The rails are bolted into the concrete. The rungs are dry and solid. You cannot see what is on the platform from down here.',loc:G(L.ladder.x,L.ladder.y),reach:4,viewRange:2000});
+  add({id:'platform',name:'platform',kind:'fixture',surface:true,platformLevel:true,desc:'A steel platform with a railing at the top of the tower.',loc:{t:'platform'},reach:99,viewRange:2000});
+  add({id:'platform_table',name:'platform table',kind:'fixture',surface:true,platformLevel:true,desc:'A small wooden table fixed to the platform.',loc:{t:'platform'},reach:99,viewRange:0});
+  add({id:'lighter',name:'lighter',weight:.1,desc:'A metal flip-top lighter.',loc:{t:'on',id:'platform_table'}});
+  add({id:'sword',name:'sword',size:'medium',weight:5,awkward:true,wearable:true,desc:'A steel sword in a leather scabbard with a shoulder strap.',loc:{t:'on',id:'platform_table'}});
+  add({id:'snorkel',name:'snorkel',weight:.3,wearable:true,desc:'A snorkel with an attached dive mask.',loc:{t:'on',id:'platform_table'}});
+  add({id:'brass_key',name:'brass key',weight:.1,desc:'A small brass key, slightly green.',loc:{t:'underwater',x:L.key.x,y:L.key.y},reach:12});
+  return O}
+
+function freshState(){
+  return{format:'watchable-island-state',version:VERSION,simTime:0,speed:1,paused:false,
+    run:{active:false,ended:false,startSim:null,endSim:null,durationSec:RUN_SECONDS},
+    agent:{x:L.start.x,y:L.start.y,level:'ground',ladderFt:0,pose:'standing',facing:0,stepDist:0,underwaterView:null,trail:[]},
+    objects:initialObjects(),seen:{},journal:{entries:[]},reflections:[],sounds:[],
+    action:null,history:[],nextActionId:1,nextSeq:1,dirty:true}}
+
+/* =====================================================================================
+   5. LOGGING + RECORDING
+   kinds: request | start | complete | fail | interrupt | rejected | move | object | journal | reflection | sound | system | error
+   ===================================================================================== */
+const KIND_CLASS={controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
+const KIND_TAG={controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
+const listeners=[];
+function logEvent(kind,msg,data){const e={seq:S.nextSeq++,sim:+S.simTime.toFixed(3),wall:new Date().toISOString(),speed:S.speed,kind,msg,data:data||null};
+  LOG.push(e);recordFrame(true);for(const f of listeners){try{f(e)}catch(_){}}UI.onLog&&UI.onLog(e);return e}
+function newRecording(){REC={format:'watchable-island-replay',version:VERSION,createdWall:new Date().toISOString(),initial:clone(snapState()),snapshots:[{t:0,s:clone(snapState())}],frames:[],lastFrameT:-1}}
+function snapState(){const o=Object.assign({},S);delete o.dirty;return o}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function frameOf(){const a=S.agent,ac=S.action;return{t:+S.simTime.toFixed(3),x:+a.x.toFixed(2),y:+a.y.toFixed(2),lv:a.level,lf:+a.ladderFt.toFixed(2),p:displayPose(),f:+a.facing.toFixed(3),sd:+a.stepDist.toFixed(1),
+  al:ac?ac.label:null,ap:ac?+(ac.progress||0).toFixed(4):0,at:ac?ac.type:null}}
+function recordFrame(force){if(!REC)return;if(!force&&S.simTime-REC.lastFrameT<.25)return;const fr=frameOf();const last=REC.frames[REC.frames.length-1];
+  if(last&&last.t===fr.t){REC.frames[REC.frames.length-1]=fr}else REC.frames.push(fr);REC.lastFrameT=S.simTime}
+function markChanged(){S.dirty=true}
+function recordSnapshotIfDirty(){if(!S.dirty||!REC)return;S.dirty=false;const s=clone(snapState());const last=REC.snapshots[REC.snapshots.length-1];
+  if(last&&last.t===+S.simTime.toFixed(3))last.s=s;else REC.snapshots.push({t:+S.simTime.toFixed(3),s})}
+
+/* =====================================================================================
+   6. OBJECT HELPERS: position, level, visibility, reach
+   ===================================================================================== */
+const O=id=>S.objects[id];
+function carried(){return Object.values(S.objects).filter(o=>o.loc.t==='carried')}
+function worn(){return Object.values(S.objects).filter(o=>o.loc.t==='worn')}
+function isWearing(id){return O(id)&&O(id).loc.t==='worn'}
+function isCarrying(id){return O(id)&&O(id).loc.t==='carried'}
+function handsUsed(){return carried().reduce((n,o)=>n+(o.size==='medium'?1:o.size==='large'?2:0),0)}
+function pocketsUsed(){return carried().filter(o=>o.size==='small').length}
+function objLevel(o){if(o.platformLevel)return'platform';if(o.loc.t==='carried'||o.loc.t==='worn')return S.agent.level;if(o.loc.t==='in'||o.loc.t==='on')return objLevel(O(o.loc.id));return'ground'}
+function objPos(o){if(o.loc.t==='platform'||o.platformLevel)return{x:L.foundation.x,y:L.foundation.y};
+  if(o.loc.t==='ground'||o.loc.t==='underwater')return{x:o.loc.x,y:o.loc.y};
+  if(o.loc.t==='carried'||o.loc.t==='worn')return{x:S.agent.x,y:S.agent.y};
+  if(o.loc.t==='in'||o.loc.t==='on')return objPos(O(o.loc.id));return{x:NaN,y:NaN}}
+function hiddenInContainer(o){let c=o;while(c.loc.t==='in'){const p=O(c.loc.id);if(p.container&&!p.container.open)return true;c=p}return false}
+function contentsOf(id){return Object.values(S.objects).filter(o=>(o.loc.t==='in'||o.loc.t==='on')&&o.loc.id===id)}
+function agentIndoors(){return S.agent.level==='ground'&&isIndoors(S.agent.x,S.agent.y)}
+function displayName(o){let n=o.name;if(o.state.broken)n='broken '+n;if(o.state.lit&&o.id!=='fire_pit')n='lit '+n;return n}
+function locText(o){const l=o.loc;if(o.kind==='fixture')return o.platformLevel?'at the top of the ladder':'fixed in place';if(l.t==='carried')return'carried by you';if(l.t==='worn')return'worn by you';if(l.t==='underwater')return'underwater in the pond';
+  if(l.t==='in')return'inside the '+O(l.id).name;if(l.t==='on')return'on the '+O(l.id).name;if(l.t==='platform')return'at the top of the ladder';
+  const tt=terrainAt(l.x,l.y);return'on the ground ('+TNAME[tt]+')'}
+function stateText(o){const s=o.state,p=[];if(o.container&&o.container.openable)p.push(o.container.open?'open':'closed');if(o.container&&o.container.locked)p.push('locked');
+  if(o.door)p.push(s.open?'open':'closed');if(s.lit)p.push(o.id==='fire_pit'?'burning':'lit');if(s.broken)p.push('broken');if(s.full)p.push('full of water');if(o.id==='blanket')p.push(s.spread?'spread out':'folded');if(o.id==='blocks')p.push(s.stacked?'stacked in a tower':'scattered');if(o.id==='journal')p.push(S.journal.entries.length+' entries');return p.join(', ')}
+
+/* Visibility (what the agent can perceive). Returns map id -> {d, detail} */
+const lvlOk=o=>objLevel(o)===S.agent.level||(objLevel(o)==='ground'&&S.agent.level==='ground');
+function perceiveObjects(){
+  const a=S.agent,ax=a.x,ay=a.y,ind=agentIndoors(),high=a.level==='ground'?0:a.ladderFt,res={};
+  const doorView=a.level==='ground'&&S.objects.cabin_door.state.open&&dist(ax,ay,DOOR_POS.x,DOOR_POS.y)<=20; // see through the open doorway
+  for(const o of Object.values(S.objects)){const l=o.loc.t;if(l==='destroyed'||l==='carried'||l==='worn')continue;if(hiddenInContainer(o))continue;
+    const p=objPos(o),lvl=objLevel(o),d=dist(p.x,p.y,ax,ay),oin=isIndoors(p.x,p.y);let vis=false,det=false;
+    if(o.id==='platform'){vis=true;det=a.level==='platform'||high>=85}
+    else if(lvl==='platform'){vis=a.level==='platform'||(a.level==='ladder'&&high>=85);det=vis}
+    else if(l==='underwater'){const uv=a.underwaterView;vis=!!(uv&&isWearing('snorkel')&&a.level==='ground'&&dist(uv.x,uv.y,ax,ay)<3&&dist(p.x,p.y,uv.x,uv.y)<=25);det=vis}
+    else if(!o.bothSides&&ind!==oin&&!doorView){vis=false}
+    else if(ind&&o.bothSides&&o.id==='cabin'){vis=true;det=true}
+    else if(o.kind==='fixture'){let range=o.viewRange||150;if(o.id==='fire_pit'&&o.state.lit)range=2000;if(high>30)range=Math.max(range,o.viewRange?2000:0);if(ind!==oin&&!o.bothSides)range=Math.min(range,ind?150:40);vis=d<=range;det=d<=Math.max(DETAIL_RANGE,o.reach+2)&&high<5}
+    else{vis=high<=20&&d<=(ind!==oin?40:itemRange(o));det=d<=DETAIL_RANGE&&high<5&&ind===oin}
+    if(vis&&!det&&high<5&&o.loc.t!=='underwater'&&lvlOk(o)&&reachInfo(o).ok)det=true; // anything within reach can be examined closely
+    if(vis)res[o.id]={d,detail:det}}
+  return res}
+function reachInfo(o){
+  const a=S.agent;if(!o)return{ok:false,reason:'No such object.'};const l=o.loc.t;
+  if(l==='carried'||l==='worn')return{ok:true};if(l==='destroyed')return{ok:false,reason:'That no longer exists.'};
+  if(hiddenInContainer(o))return{ok:false,reason:'You cannot see that from here.'};
+  if(a.level==='ladder')return{ok:false,reason:'You are on the ladder and need both hands to hold on.'};
+  const lvl=objLevel(o);
+  if(lvl==='platform')return a.level==='platform'?{ok:true}:{ok:false,reason:'That is on the platform at the top of the ladder.'};
+  if(a.level==='platform')return{ok:false,reason:'That is on the ground, about 100 ft below you.'};
+  if(l==='in'||l==='on'){const p=O(o.loc.id);if(l==='in'&&p.container&&!p.container.open)return{ok:false,reason:'The '+p.name+' is closed.'};return reachInfo(p)}
+  const p=objPos(o),d=dist(p.x,p.y,a.x,a.y);
+  if(l==='underwater'){if(!isWearing('snorkel'))return{ok:false,reason:'It is underwater. You would need to see and reach under the surface (a snorkel would help).'};if(d>o.reach)return{ok:false,reason:'It is '+Math.round(d)+' ft away; get within '+o.reach+' ft of it at the pond edge.'};return{ok:true}}
+  if(!o.bothSides&&isIndoors(p.x,p.y)!==agentIndoors())return{ok:false,reason:agentIndoors()?'That is outside the cabin.':'That is inside the cabin.'};
+  const r=(o.reach||5.5)+1;if(d>r)return{ok:false,reason:'It is '+Math.round(d)+' ft away; walk within '+Math.round(r)+' ft first.'};return{ok:true}}
+
+const TERRAIN_FEATURES=['pond','stream','hill','ocean','beach','forest','cliffs'];
+function featurePoint(id){const a=S.agent;
+  if(id==='pond')return pondEdgePoint(a.x,a.y);
+  if(id==='stream'){const n=streamNearest(a.x,a.y);return{x:n[1],y:n[2]}}
+  if(id==='hill')return{x:L.hill.x,y:L.hill.y};
+  const nearestIn=(pts)=>{let b=null,bd=1e9;for(const q of pts){const d=dist(q.x,q.y,a.x,a.y);if(d<bd){bd=d;b=q}}return b};
+  if(id==='ocean'){const s=islandS(a.x,a.y)||1;return{x:L.coast.cx+(a.x-L.coast.cx)/s,y:L.coast.cy+(a.y-L.coast.cy)/s}}
+  if(id==='beach')return nearestIn(BEACH_PTS);
+  if(id==='cliffs')return nearestIn(CLIFF_PTS);
+  if(id==='forest'){let b=null,bd=1e9;for(const t of TREES){const d=dist(t.x,t.y,a.x,a.y);if(d<bd){bd=d;b=t}}return b?{x:b.x,y:b.y}:null}
+  return null}
+function resolveTarget(t){if(t==null||t==='')return null;if(typeof t==='object'&&t.id)t=t.id;const s=String(t).trim().toLowerCase().replace(/\s+/g,'_');
+  if(S.objects[s])return{kind:'object',o:S.objects[s]};if(TERRAIN_FEATURES.includes(s))return{kind:'feature',id:s};
+  const byName=Object.values(S.objects).filter(o=>o.name.toLowerCase().replace(/\s+/g,'_')===s&&o.loc.t!=='destroyed');
+  if(byName.length){const pv=perceiveObjects();const v=byName.filter(o=>pv[o.id]||o.loc.t==='carried'||o.loc.t==='worn');return{kind:'object',o:(v[0]||byName[0])}}
+  if(s==='door')return{kind:'object',o:O('cabin_door')};if(s==='table')return{kind:'object',o:agentIndoors()||S.agent.level!=='platform'?O('cabin_table'):O('platform_table')};
+  return null}
+const knows=(o)=>{if(o.loc.t==='carried'||o.loc.t==='worn')return true;return!!perceiveObjects()[o.id]};
+// memory: fixed features the agent has seen before can be walked back to
+function visibleFeatures(){const a=S.agent,out=[];if(agentIndoors())return out;const high=a.level==='ground'?0:a.ladderFt;
+  for(const f of TERRAIN_FEATURES){const p=featurePoint(f);if(!p)continue;const d=dist(p.x,p.y,a.x,a.y);const range={pond:400,stream:250,hill:2000,ocean:2000,beach:500,forest:350,cliffs:400}[f];if(d>range&&high<30)continue;
+    out.push({id:f,distanceFt:Math.round(d),bearing:d<2?'here':compass(bearingDeg(a.x,a.y,p.x,p.y))})}return out}
+function updateSeen(){if(!S.seen)S.seen={};const pv=perceiveObjects();for(const id in pv)S.seen[id]=+S.simTime.toFixed(1);for(const f of visibleFeatures())S.seen['feature:'+f.id]=+S.simTime.toFixed(1)}
+function featureKnown(id){return!!(S.seen&&S.seen['feature:'+id]!=null)||visibleFeatures().some(f=>f.id===id)}
+const remembers=(o)=>o.kind==='fixture'&&S.seen&&S.seen[o.id]!=null;
+
+/* =====================================================================================
+   7. OBSERVATION (what a controller/agent receives - never the full world state)
+   ===================================================================================== */
+function getObservation(){
+  const a=S.agent,pv=perceiveObjects(),ind=agentIndoors(),gElev=heightAt(a.x,a.y),high=a.level==='ground'?0:a.ladderFt;
+  const objs=[];for(const id in pv){const o=O(id),p=objPos(o),v=pv[id];const e={id,name:displayName(o),distanceFt:Math.round(v.d),bearing:compass(bearingDeg(a.x,a.y,p.x,p.y)),bearingDeg:bearingDeg(a.x,a.y,p.x,p.y),location:locText(o),type:o.kind==='fixture'?'fixture':'item'};
+    if(v.d<1.5||o.platformLevel){delete e.bearing;delete e.bearingDeg}
+    if(v.detail){e.description=o.closeDesc?o.desc+' '+o.closeDesc:o.desc;const st=stateText(o);if(st)e.state=st;if(o.container&&(o.container.open))e.contains=contentsOf(id).filter(c=>c.loc.t!=='destroyed').map(c=>c.id);if(o.surface)e.holds=contentsOf(id).map(c=>c.id)}
+    else e.description=o.id==='platform'?'A platform at the top of the ladder. From here you cannot make out what is on it.':(o.kind==='fixture'?o.desc:'An object, too far away to make out details.');
+    if(id==='platform'&&!v.detail){e.distanceFt=Math.round(Math.hypot(v.d,L.ladderHeight-high))}
+    e.reachable=reachInfo(o).ok;objs.push(e)}
+  objs.sort((p,q)=>p.distanceFt-q.distanceFt);
+  const feats=visibleFeatures();
+  const sounds=S.sounds.filter(s=>S.simTime-s.t<=30).map(s=>({secondsAgo:Math.round(S.simTime-s.t),description:s.msg,bearing:dist(s.x,s.y,a.x,a.y)<5?'here':compass(bearingDeg(a.x,a.y,s.x,s.y)),distanceFt:Math.round(dist(s.x,s.y,a.x,a.y))}));
+  const notes=[];
+  if(pv.platform&&!pv.platform.detail)notes.push('There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.');
+  if(a.level==='platform')notes.push('You are on the platform at the top of the ladder, about 100 ft up. You can see the whole island, but small objects on the ground are too far away to make out.');
+  if(a.level==='ladder')notes.push('You are on the ladder, '+Math.round(a.ladderFt)+' ft above the ground, holding on with both hands.');
+  if(ind)notes.push('You are inside the cabin.'+(O('cabin_door').state.open?' The door is open.':' The door is closed.'));
+  if(a.level==='ground'&&pondEdgeDist(a.x,a.y)<14&&!isWearing('snorkel'))notes.push('The pond water is murky.');
+  const ac=S.action;const last=S.history[S.history.length-1]||null;
+  return{
+    observationOf:'agent',simTimeSec:+S.simTime.toFixed(1),
+    run:{active:S.run.active,ended:S.run.ended,elapsedSec:runElapsed(),remainingSec:runRemaining()},
+    self:{position:{x:+a.x.toFixed(1),y:+a.y.toFixed(1),unit:'ft',axes:'x east, y south, origin at NW corner of map'},
+      groundElevationFt:+gElev.toFixed(1),heightAboveGroundFt:+high.toFixed(1),level:a.level,pose:a.pose,indoors:ind,
+      underfoot:a.level==='ground'?TNAME[terrainAt(a.x,a.y)]:(a.level==='ladder'?'ladder rungs':'steel platform'),
+      carrying:carried().map(o=>({id:o.id,name:displayName(o),in:o.size==='small'?'pocket':'hand'})),wearing:worn().map(o=>({id:o.id,name:o.name})),
+      handsFree:Math.max(0,2-handsUsed())},
+    currentAction:ac?{id:ac.id,type:ac.type,label:ac.label,progress:+(ac.progress||0).toFixed(3),elapsedSec:+ac.elapsed.toFixed(1),estimatedTotalSec:ac.duration!=null?+ac.duration.toFixed(1):null}:null,
+    lastActionResult:last?{id:last.id,type:last.type,status:last.status,message:last.result&&last.result.message}:null,
+    visibleObjects:objs,terrainFeatures:feats,soundsHeard:sounds,notes}}
+
+/* =====================================================================================
+   8. ACTIONS. Each: validate(params)->{error}|{label,duration?,data}; optional tick/complete/interrupt.
+   Effects happen on completion unless noted. The environment decides outcomes.
+   ===================================================================================== */
+function needGround(){const a=S.agent;if(a.level==='ladder')return'You are on the ladder. Climb or descend first.';if(a.level==='platform')return'You are on the platform. Descend the ladder first.';return null}
+const NOT_HERE=t=>'You do not notice anything called "'+t+'" here.';   // same reply for undiscovered and non-existent things
+function needTarget(p,{mustKnow=true,memory=false}={}){if(p.target==null||p.target==='')return{error:'This action needs a "target".'};const r=resolveTarget(p.target);if(!r)return{error:NOT_HERE(p.target)};
+  if(r.kind==='feature'&&!featureKnown(r.id))return{error:NOT_HERE(p.target)};
+  if(r.kind==='object'&&mustKnow&&!knows(r.o)&&!(memory&&remembers(r.o)))return{error:NOT_HERE(p.target)};return r}
+function carryFactor(){let f=1;for(const o of carried())if(o.awkward)f*=.85;const w=carried().reduce((s,o)=>s+o.weight,0);if(w>10)f*=1-Math.min(.4,(w-10)*.012);return f}
+function segSpeed(x0,y0,x1,y1){const d=dist(x0,y0,x1,y1)||1e-6,dh=heightAt(x1,y1)-heightAt(x0,y0),gr=dh/d;const t=grid[cellAt((x0+x1)/2,(y0+y1)/2)];
+  const ts=TSPEED[t]||.3;return WALK_SPEED*ts/(1+2.5*Math.max(0,gr)+Math.max(0,-gr))*carryFactor()}
+function pathTime(path){let x=S.agent.x,y=S.agent.y,t=0,len=0;for(const[px,py]of path){const d=dist(x,y,px,py);if(d>0){t+=d/segSpeed(x,y,px,py);len+=d}x=px;y=py}return{t,len}}
+function placeOnGroundNear(o,dx){const a=S.agent;const f=a.facing;let x=a.x+Math.sin(f)*1.5+(dx||0),y=a.y-Math.cos(f)*1.5;const i=cellAt(x,y);if(isBlocked(i)){x=a.x;y=a.y}o.loc={t:'ground',x:+x.toFixed(2),y:+y.toFixed(2)}}
+const fmtPos=(x,y)=>'('+Math.round(x)+', '+Math.round(y)+')';
+
+function startWalk(path,label,targetDesc){const pt=pathTime(path);return{label,duration:pt.t+(S.agent.pose==='sitting'?2:0),data:{path,idx:0,walked:0,len:pt.len,from:[S.agent.x,S.agent.y],targetDesc,standDelay:S.agent.pose==='sitting'?2:0,lastTerrain:terrainAt(S.agent.x,S.agent.y)}}}
+function walkTick(a,dt){const ag=S.agent,d=a.data;let rem=dt;
+  if(d.standDelay>0){const u=Math.min(d.standDelay,rem);d.standDelay-=u;rem-=u;a.elapsed+=u;if(d.standDelay<=0){ag.pose='standing'}if(rem<=0)return-1}
+  ag.pose='walking';
+  while(rem>1e-9&&d.idx<d.path.length){const[tx,ty]=d.path[d.idx];const dd=dist(ag.x,ag.y,tx,ty);if(dd<1e-6){d.idx++;continue}
+    const v=segSpeed(ag.x,ag.y,tx,ty),step=Math.min(dd,v*rem);ag.facing=Math.atan2(tx-ag.x,-(ty-ag.y));ag.x+=(tx-ag.x)*step/dd;ag.y+=(ty-ag.y)*step/dd;
+    rem-=step/v;a.elapsed+=step/v;d.walked+=step;ag.stepDist+=step;if(step>=dd-1e-9){ag.x=tx;ag.y=ty;d.idx++}
+    const tt=terrainAt(ag.x,ag.y);if(tt!==d.lastTerrain){d.lastTerrain=tt;logEvent('move','Now on '+TNAME[tt]+' at '+fmtPos(ag.x,ag.y)+'.',{x:+ag.x.toFixed(1),y:+ag.y.toFixed(1),terrain:TNAME[tt]})}}
+  a.progress=d.len>0?clamp(d.walked/d.len,0,1):1;
+  if(ag.trail.length===0||dist(ag.trail[ag.trail.length-1][0],ag.trail[ag.trail.length-1][1],ag.x,ag.y)>6){ag.trail.push([+ag.x.toFixed(1),+ag.y.toFixed(1)]);if(ag.trail.length>160)ag.trail.shift()}
+  if(d.idx>=d.path.length){return rem}return-1}
+function walkEnd(a,interrupted){const ag=S.agent,d=a.data;ag.pose='standing';const t=a.elapsed;
+  const msg=(interrupted?'Stopped walking at ':'Arrived at ')+(interrupted?fmtPos(ag.x,ag.y):(d.targetDesc+' '+fmtPos(ag.x,ag.y)))+' after '+Math.round(d.walked)+' ft in '+fmtDur(t)+(t>0?' (avg '+(d.walked/t).toFixed(2)+' ft/s)':'')+'.';
+  logEvent('move',msg,{x:+ag.x.toFixed(2),y:+ag.y.toFixed(2),walkedFt:+d.walked.toFixed(1),seconds:+t.toFixed(1)});markChanged();return msg}
+
+const ACTIONS={
+  look:{desc:'Look around. Returns your current observation.',params:{},
+    validate(){return{label:'Looking around',duration:4}},
+    complete(a){const ob=getObservation();a.result={message:'You look around. You can see '+ob.visibleObjects.length+' things nearby.',observation:ob}}},
+  inspect:{desc:'Examine a visible object or feature closely.',params:{target:'object id or feature'},
+    validate(p){const r=needTarget(p);if(r.error)return r;return{label:'Inspecting '+(r.o?r.o.name:r.id),duration:6,data:{r:r.o?r.o.id:r.id,feat:r.kind==='feature'}}},
+    complete(a){if(a.data.feat){const fd={pond:'A still pond. The water is murky near the banks.',stream:'A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly.',cliffs:'Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down.',hill:'A grassy hill with wildflowers, rising to a top crowned with large boulders. Stone steps climb it beside the stream.',ocean:'The sea surrounds the island. It is too deep and too far to swim anywhere.',beach:'Soft sand along the south-west shore, slow to walk on.',forest:'Dense trees with rough ground underneath.'}[a.data.r];a.result={message:fd};return}
+      const o=O(a.data.r),pv=perceiveObjects()[o.id],car=o.loc.t==='carried'||o.loc.t==='worn';
+      if(!pv&&!car){a.result={message:'You can no longer see the '+o.name+'.'};a.failed=true;return}
+      const close=car||(pv&&pv.detail);let m=close?(o.desc+(o.closeDesc?' '+o.closeDesc:'')):('From here: '+o.desc+' You would need to be closer for details.');
+      const st=stateText(o);if(close&&st)m+=' ('+st+')';if(close&&((o.container&&o.container.open)||o.surface)){const c=contentsOf(o.id).filter(x=>x.loc.t!=='destroyed');m+=c.length?' Contents: '+c.map(displayName).join(', ')+'.':' It is empty.'}
+      if(close&&o.readable)m+=' There is writing on it; use "read" to read it.';a.result={message:m}}},
+  walk_to:{desc:'Walk to an object/feature or to a point {x,y} in feet. Pathfinding and speed are decided by the environment.',params:{target:'object/feature id (optional)',x:'number',y:'number'},
+    validate(p){const e=needGround();if(e)return{error:e};let path,desc;
+      if(p.target!=null&&p.target!==''){const r=needTarget(p,{memory:true});if(r.error)return r;
+        if(r.kind==='feature'){const fp=featurePoint(r.id);if(!fp)return{error:'Cannot find '+r.id};path=planPath(fp.x,fp.y,r.id==='hill'?8:7,false);desc='the '+r.id}
+        else{const o=r.o;if(o.loc.t==='carried'||o.loc.t==='worn')return{error:'You are already carrying that.'};if(objLevel(o)==='platform')return{error:'That is at the top of the ladder. Walk to the ladder and climb.'};
+          const p2=objPos(o);const reach=o.id==='ladder'?3.6:Math.max(3.6,(o.reach||5.5)-.3);path=o.id==='cabin'?(agentIndoors()?[]:planPath(DOOR_POS.x,DOOR_POS.y+3,3,false)):planPath(p2.x,p2.y,reach,false);desc=o.id==='cabin'?'the cabin door (outside)':'the '+o.name}}
+      else if(isFinite(+p.x)&&isFinite(+p.y)&&p.x!==''&&p.y!==''){const x=+p.x,y=+p.y;let i=cellAt(x,y);if(x<0||y<0||x>W||y>H)return{error:'That point is off the map.'};
+        if(isBlocked(i)){const t=grid[i];if(t===T.OCEAN)return{error:'That point is in the sea. You cannot walk there.'};if(t===T.POND)return{error:'That point is in the pond. You cannot walk there.'};if(t===T.CLIFF)return{error:'That point is on the cliff edge. It is too dangerous to go there.'};
+          if(i===DOOR_CELL)return{error:'The cabin door is closed.'};const j=nearestWalkable(x,y,8);if(j<0)return{error:'Something solid is in the way at that point.'};const c=cellCenter(j);path=planPath(c.x,c.y,0,true)}
+        else path=planPath(x,y,0,true);desc='the point'}
+      else return{error:'walk_to needs a "target" or both "x" and "y".'};
+      if(!path)return{error:'No walkable route to '+desc+' from here'+(O('cabin_door').state.open?'':' (the cabin door is closed)')+'.'};
+      const w=startWalk(path,'Walking to '+desc,desc);return w},
+    start(a){logEvent('move','Walking from '+fmtPos(S.agent.x,S.agent.y)+' to '+a.data.targetDesc+': route '+Math.round(a.data.len)+' ft, estimated '+fmtDur(a.duration)+'.',{from:a.data.from,routeFt:+a.data.len.toFixed(1),estSec:+a.duration.toFixed(1),carryFactor:+carryFactor().toFixed(2)})},
+    tick:walkTick,complete(a){a.result={message:walkEnd(a,false)}},interrupt(a){a.result={message:walkEnd(a,true)}}},
+  walk:{desc:'Walk a distance in a compass direction, e.g. {direction:"NE", distance:50}. Stops at the shore if water is in the way.',params:{direction:'N/NE/E... or degrees',distance:'feet'},
+    validate(p){const e=needGround();if(e)return{error:e};const deg=parseDir(p.direction);const dd=+p.distance;if(deg==null)return{error:'Give a direction like "N" or 45.'};if(!(dd>0))return{error:'Give a positive distance in feet.'};
+      const rad=deg*Math.PI/180;const a=S.agent;let tx=a.x+Math.sin(rad)*dd,ty=a.y-Math.cos(rad)*dd;let i=cellAt(tx,ty),note='';
+      // stop before water along the line
+      const steps=Math.ceil(dd/2.5);let lx=a.x,ly=a.y;for(let k=1;k<=steps;k++){const x=a.x+Math.sin(rad)*dd*k/steps,y=a.y-Math.cos(rad)*dd*k/steps;const g=grid[cellAt(x,y)];if(g===T.OCEAN||g===T.POND||g===T.CLIFF){note=g===T.CLIFF?' (stopping at the cliff edge)':' (stopping at the water)';tx=lx;ty=ly;break}lx=x;ly=y}
+      if(dist(tx,ty,a.x,a.y)<1)return{error:'Water is directly in that direction.'};
+      i=cellAt(tx,ty);let path;if(isBlocked(i)){const j=nearestWalkable(tx,ty,10);if(j<0)return{error:'Something solid blocks that direction.'};const c=cellCenter(j);path=planPath(c.x,c.y,0,true)}else path=planPath(tx,ty,0,true);
+      if(!path)return{error:'No walkable route in that direction.'};return startWalk(path,'Walking '+compass(deg)+' '+Math.round(dd)+' ft'+note,Math.round(dd)+' ft '+compass(deg))},
+    start(a){ACTIONS.walk_to.start(a)},tick:walkTick,complete(a){a.result={message:walkEnd(a,false)}},interrupt(a){a.result={message:walkEnd(a,true)}}},
+  climb:{desc:'Climb the ladder (must be at its base, hands free). ~4 minutes for 100 ft.',params:{},
+    validate(){const a=S.agent;if(a.level==='platform')return{error:'You are already on the platform.'};
+      if(a.level==='ground'){if(dist(a.x,a.y,L.ladder.x,L.ladder.y)>5)return{error:'You are not at the base of the ladder (it is '+Math.round(dist(a.x,a.y,L.ladder.x,L.ladder.y))+' ft away).'}}
+      const h=carried().filter(o=>o.size!=='small');if(h.length)return{error:'You need both hands free to climb. You are holding: '+h.map(o=>o.name).join(', ')+'. Put it down or wear it.'};
+      const rate=CLIMB_SEC_PER_FT*(worn().some(o=>o.size==='medium')?1.1:1);const left=L.ladderHeight-a.ladderFt;
+      return{label:'Climbing the ladder',duration:left*rate+(a.pose==='sitting'?2:0),data:{rate,from:a.ladderFt}}},
+    start(a){const ag=S.agent;ag.x=L.ladder.x;ag.y=L.ladder.y;ag.facing=0;ag.level='ladder';ag.pose='climbing';markChanged();logEvent('move','Started climbing at '+Math.round(ag.ladderFt)+' ft (rate '+(1/a.data.rate).toFixed(2)+' ft/s).',{heightFt:ag.ladderFt})},
+    tick(a,dt){const ag=S.agent;const before=ag.ladderFt;const raw=ag.ladderFt+dt/a.data.rate;ag.ladderFt=Math.min(L.ladderHeight,raw);const over=Math.max(0,(raw-L.ladderHeight)*a.data.rate);a.elapsed+=dt-over;
+      a.progress=(ag.ladderFt-a.data.from)/(L.ladderHeight-a.data.from||1);ag.stepDist+=(ag.ladderFt-before)*2;
+      for(const m of[25,50,75])if(before<m&&ag.ladderFt>=m)logEvent('move','Climbing: '+m+' ft up.',{heightFt:m});
+      if(ag.ladderFt>=L.ladderHeight){ag.ladderFt=L.ladderHeight;return over}return-1},
+    complete(a){const ag=S.agent;ag.level='platform';ag.pose='standing';markChanged();a.result={message:'You reach the platform at the top of the ladder, 100 ft up.'};logEvent('move','Reached the platform (100 ft).',{heightFt:100})},
+    interrupt(a){const ag=S.agent;ag.pose='holding on';markChanged();a.result={message:'You stop and hold on to the ladder at '+Math.round(ag.ladderFt)+' ft.'};logEvent('move','Holding on to the ladder at '+ag.ladderFt.toFixed(1)+' ft.',{heightFt:+ag.ladderFt.toFixed(1)})}},
+  descend:{desc:'Climb down the ladder. ~3.5 minutes for 100 ft.',params:{},
+    validate(){const a=S.agent;if(a.level==='ground')return{error:'You are already on the ground.'};const h=carried().filter(o=>o.size!=='small');if(h.length)return{error:'You need both hands free to climb down. You are holding: '+h.map(o=>o.name).join(', ')+'.'};
+      const rate=DESCEND_SEC_PER_FT*(worn().some(o=>o.size==='medium')?1.1:1);return{label:'Descending the ladder',duration:a.ladderFt*rate,data:{rate,from:a.ladderFt}}},
+    start(a){S.agent.level='ladder';S.agent.pose='climbing';markChanged();logEvent('move','Started descending from '+Math.round(S.agent.ladderFt)+' ft.',{heightFt:S.agent.ladderFt})},
+    tick(a,dt){const ag=S.agent,before=ag.ladderFt;const raw=ag.ladderFt-dt/a.data.rate;ag.ladderFt=Math.max(0,raw);const over=Math.max(0,-raw*a.data.rate);a.elapsed+=dt-over;a.progress=(a.data.from-ag.ladderFt)/(a.data.from||1);ag.stepDist+=(before-ag.ladderFt)*2;
+      for(const m of[75,50,25])if(before>m&&ag.ladderFt<=m)logEvent('move','Descending: '+m+' ft up.',{heightFt:m});
+      if(ag.ladderFt<=0){return over}return-1},
+    complete(a){const ag=S.agent;ag.level='ground';ag.ladderFt=0;ag.pose='standing';ag.y=L.ladder.y+1;markChanged();a.result={message:'You step off the ladder onto the ground.'};logEvent('move','Back on the ground at the ladder base.',{heightFt:0})},
+    interrupt(a){ACTIONS.climb.interrupt(a)}},
+  pick_up:{desc:'Pick up a reachable item (also takes items out of open containers or off surfaces). Small items go in pockets; medium items need a free hand.',params:{target:'item id'},
+    validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot pick that up.'};const o=r.o;
+      if(o.kind==='fixture')return{error:'The '+o.name+' cannot be picked up.'};if(o.loc.t==='carried'||o.loc.t==='worn')return{error:'You already have the '+o.name+'.'};
+      const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};if(o.loc.t==='in'&&O(o.loc.id).id==='fire_pit'&&O('fire_pit').state.lit)return{error:'The fire is burning; it is too hot to reach in.'};
+      if(o.size==='small'&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
+      return{label:'Picking up the '+o.name,duration:o.loc.t==='underwater'?10:3,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc={t:'carried'};if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
+      a.result={message:'You pick up the '+displayName(o)+(o.id==='blanket'?', folding it up':'')+'.'};logEvent('object','Picked up '+o.id+' (was '+from+').',{id:o.id,from})}},
+  put_down:{desc:'Set a carried item down gently: on the ground at your feet, or onto/into a reachable surface or open container with "onto".',params:{target:'item id',onto:'surface/container id (optional)'},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='carried')return{error:'You are not carrying that.'};
+      if(S.agent.level==='ladder')return{error:'You are on the ladder; you cannot set things down here. You could drop it.'};
+      const onto=p.onto||p.container||p.with;let tgt=null;if(onto){const t=resolveTarget(onto);if(!t||t.kind!=='object'||!knows(t.o))return{error:NOT_HERE(onto)};tgt=t.o;
+        if(!tgt.surface&&!tgt.container)return{error:'You cannot put things in or on the '+tgt.name+'.'};const ri=reachInfo(tgt);if(!ri.ok)return{error:ri.reason};
+        if(tgt.container&&!tgt.container.open)return{error:'The '+tgt.name+' is closed.'};if(tgt.container&&contentsOf(tgt.id).length>=tgt.container.capacity)return{error:'The '+tgt.name+' is full.'};
+        if(tgt.container&&o.size!=='small'&&tgt.id==='chest')return{error:'The '+o.name+' does not fit in the chest.'};if(tgt.container&&o.size==='large')return{error:'The '+o.name+' is too big to go in the '+tgt.name+'.'};if(tgt.id===o.id)return{error:'You cannot put something inside itself.'}}
+      return{label:'Putting down the '+o.name+(tgt?(tgt.surface?' on ':' in ')+'the '+tgt.name:''),duration:3,data:{id:o.id,onto:tgt?tgt.id:null}}},
+    complete(a){const o=O(a.data.id);if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}
+      if(a.data.onto){const t=O(a.data.onto);o.loc={t:t.surface?'on':'in',id:t.id};
+        if(t.id==='fire_pit'&&t.state.lit&&o.burnable&&!o.fuel){o.loc={t:'destroyed'};markChanged();a.result={message:'You put the '+o.name+' into the fire. It burns up.'};logEvent('object','Burned '+o.id+' in the fire. It is destroyed.',{id:o.id});return}}
+      else if(S.agent.level==='platform')o.loc={t:'on',id:'platform'};else placeOnGroundNear(o);
+      markChanged();a.result={message:'You put down the '+displayName(o)+' '+locText(o)+'.'};logEvent('object','Put down '+o.id+': now '+locText(o)+'.',{id:o.id,loc:o.loc})}},
+  drop:{desc:'Let go of a carried item. It falls: fragile items break; from the ladder or platform it falls to the ground near the ladder base.',params:{target:'item id'},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='carried')return{error:'You are not carrying that.'};return{label:'Dropping the '+o.name,duration:1,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id),ag=S.agent;if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}let fell=ag.level==='ground'?3:ag.ladderFt,msg;
+      if(ag.level==='ground'){placeOnGroundNear(o,0)}else{const k=S.nextSeq;o.loc={t:'ground',x:+(L.ladder.x+((k*37)%15)-7).toFixed(1),y:+(L.ladder.y+4+((k*13)%7)).toFixed(1)}}
+      if(o.fragile&&!o.state.broken){o.state.broken=true;o.state.lit=false;msg='The '+o.name+' falls '+Math.round(fell)+' ft and shatters.'}else msg='The '+o.name+' falls '+Math.round(fell)+' ft and lands '+(fell>10?'with a thud ':'')+'at '+fmtPos(o.loc.x,o.loc.y)+'.';
+      if(fell>10)S.sounds.push({t:S.simTime,x:o.loc.x,y:o.loc.y,msg:'A thud from something hitting the ground'});
+      markChanged();a.result={message:msg};logEvent('object','Dropped '+o.id+' from '+Math.round(fell)+' ft: '+msg,{id:o.id,loc:o.loc,broken:!!o.state.broken})}},
+  open:{desc:'Open a door or container.',params:{target:'cabin_door | chest'},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.door||(o.container&&o.container.openable)))return{error:'That cannot be opened.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};
+      if((o.door&&o.state.open)||(o.container&&o.container.open))return{error:'It is already open.'};return{label:'Opening the '+o.name,duration:o.door?2:3,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id);if(o.container&&o.container.locked){a.failed=true;a.result={message:'You try to open the '+o.name+', but it is locked.'};logEvent('fail','The '+o.name+' is locked.',{id:o.id});return}
+      if(o.door)o.state.open=true;else o.container.open=true;markChanged();const c=o.container?contentsOf(o.id):[];a.result={message:'You open the '+o.name+'.'+(o.container?(c.length?' Inside: '+c.map(displayName).join(', ')+'.':' It is empty.'):'')};logEvent('object','Opened '+o.id+'.',{id:o.id})}},
+  close:{desc:'Close a door or container.',params:{target:'cabin_door | chest'},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.door||(o.container&&o.container.openable)))return{error:'That cannot be closed.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};
+      if((o.door&&!o.state.open)||(o.container&&!o.container.open))return{error:'It is already closed.'};if(o.door&&S.agent.level==='ground'&&cellAt(S.agent.x,S.agent.y)===DOOR_CELL)return{error:'You are standing in the doorway.'};
+      return{label:'Closing the '+o.name,duration:o.door?2:3,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id);if(o.door)o.state.open=false;else o.container.open=false;markChanged();a.result={message:'You close the '+o.name+'.'};logEvent('object','Closed '+o.id+'.',{id:o.id})}},
+  use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter with fire_pit or lantern; brass_key with chest; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
+    validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot use the '+r.id+' by itself. Try using an object with it.'};const o=r.o;
+      let w=null;if(p.with){w=resolveTarget(p.with);if(!w||(w.kind==='object'&&!knows(w.o))||(w.kind==='feature'&&!featureKnown(w.id)))return{error:NOT_HERE(p.with)}}
+      const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(x.loc.t!=='carried'&&x.loc.t!=='worn')return'You need to be holding the '+x.name+'.';return null};
+      const reachW=()=>{if(w&&w.kind==='object'){const ri=reachInfo(w.o);if(!ri.ok)return ri.reason}return null};
+      if(S.agent.level==='ladder')return{error:'You are holding on to the ladder with both hands.'};
+      if(o.id==='bell'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Ringing the bell',duration:6,data:{k:'bell'}}}
+      if(o.id==='lighter'){let e=need('lighter');if(e)return{error:e};
+        if(wid==='fire_pit'){e=reachW();if(e)return{error:e};if(O('fire_pit').state.lit)return{error:'The fire is already burning.'};return{label:'Lighting the fire',duration:15,data:{k:'fire'}}}
+        if(wid==='lantern'){e=reachW();if(e)return{error:e};const ln=O('lantern');if(ln.state.broken)return{error:'The lantern is broken.'};if(ln.state.lit)return{error:'It is already lit.'};return{label:'Lighting the lantern',duration:8,data:{k:'lantern'}}}
+        if(!wid)return{label:'Flicking the lighter',duration:3,data:{k:'flick'}};return{error:'Using the lighter with "'+p.with+'" is not implemented in this simulation.'}}
+      if(o.id==='brass_key'){let e=need('brass_key');if(e)return{error:e};if(wid!=='chest')return{error:wid?'The key does not fit the '+p.with+'.':'Use the key with something (e.g. with: "chest").'};e=reachW();if(e)return{error:e};
+        return{label:(O('chest').container.locked?'Unlocking':'Locking')+' the chest',duration:6,data:{k:'key'}}}
+      if(o.id==='snorkel'){if(!isWearing('snorkel'))return{error:'Wear the snorkel first (action "wear").'};if(S.agent.level!=='ground')return{error:'There is no water up here.'};
+        const pe=pondEdgeDist(S.agent.x,S.agent.y);if(pe<=12)return{label:'Looking underwater in the pond',duration:20,data:{k:'snorkel'}};
+        if(streamNearest(S.agent.x,S.agent.y)[0]<10)return{error:'The stream is too shallow to need a snorkel; you can see its stony bed already.'};return{error:'There is no water deep enough here. Go to the edge of the pond.'}}
+      if(o.id==='tin_cup'){let e=need('tin_cup');if(e)return{error:e};const nearWater=pondEdgeDist(S.agent.x,S.agent.y)<=8||streamNearest(S.agent.x,S.agent.y)[0]<=8;
+        if(wid==='pond'||wid==='stream'){if(!nearWater)return{error:'You need to be at the water\'s edge.'};if(O('tin_cup').state.full)return{error:'The cup is already full.'};return{label:'Filling the cup',duration:5,data:{k:'fill'}}}
+        if(!wid){if(!O('tin_cup').state.full)return{error:'The cup is empty.'};return{label:'Drinking from the cup',duration:6,data:{k:'drink'}}}return{error:'Using the cup with that is not implemented.'}}
+      if(o.id==='mirror'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Looking into the mirror',duration:5,data:{k:'mirror'}}}
+      if(o.id==='ball'){let e=need('ball');if(e)return{error:e};return{label:'Tossing the ball',duration:4,data:{k:'ball'}}}
+      if(o.id==='blanket'){if(o.loc.t==='carried')return{error:'Put the blanket down first, then use it to spread or fold it.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.spread?'Folding':'Spreading out')+' the blanket',duration:6,data:{k:'blanket'}}}
+      if(o.id==='blocks'){if(o.loc.t==='carried')return{error:'Put the blocks down first.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.stacked?'Knocking down':'Stacking')+' the blocks',duration:o.state.stacked?2:15,data:{k:'blocks'}}}
+      if(o.id==='stepladder')return{error:'Standing on the stepladder is not implemented in this simulation.'};
+      if(o.id==='wheelbarrow')return{error:'To move the wheelbarrow, pick it up (you push it) and walk. Put things in it with put_down and "onto": "wheelbarrow".'};
+      if(o.id==='crate')return{error:'Use the actions "open" and "close".'};
+      if(o.id==='boat')return{error:'Launching or rowing the boat is not implemented in this simulation.'};
+      if(o.id==='journal'||o.id==='pencil')return{error:'Use the actions "write_journal" or "read_journal".'};
+      if(o.id==='ladder')return{error:'Use the actions "climb" and "descend".'};
+      if(o.id==='cabin_door'||o.id==='chest')return{error:'Use the actions "open" and "close".'};
+      return{error:'No behavior is implemented for using the '+o.name+(p.with?' with '+p.with:'')+'.'}},
+    complete(a){const k=a.data.k,ag=S.agent;
+      if(k==='bell'){S.sounds.push({t:S.simTime,x:L.bell.x,y:L.bell.y,msg:'A loud bell rang'});O('bell').state.lastRung=S.simTime;markChanged();a.result={message:'You pull the rope. The bell rings out loudly across the island.'};logEvent('sound','The bell rang (audible across the island).',{});return}
+      if(k==='fire'){const fp=O('fire_pit'),fuel=contentsOf('fire_pit').filter(o=>o.fuel);if(!fuel.length){a.failed=true;a.result={message:'The lighter flame catches nothing. There is no wood in the fire pit.'};logEvent('fail','Fire not lit: no fuel in the fire pit.',{});return}
+        fp.state.lit=true;fp.state.burnLeft=900*fuel.length;markChanged();a.result={message:'The driftwood catches. The fire is burning.'};logEvent('object','Fire lit in the fire pit ('+fuel.length+' log(s), about '+Math.round(fp.state.burnLeft/60)+' min of fuel).',{fuel:fuel.length});return}
+      if(k==='lantern'){const ln=O('lantern');ln.state.lit=true;markChanged();a.result={message:'The lantern wick catches and glows.'};logEvent('object','Lantern lit.',{});return}
+      if(k==='flick'){a.result={message:'A small flame appears, then you let it go out.'};return}
+      if(k==='key'){const c=O('chest').container;if(c.open){a.failed=true;a.result={message:'Close the chest before locking it.'};return}c.locked=!c.locked;markChanged();a.result={message:'The key turns. The chest is now '+(c.locked?'locked':'unlocked')+'.'};logEvent('object','Chest '+(c.locked?'locked':'unlocked')+'.',{});return}
+      if(k==='snorkel'){ag.underwaterView={x:+ag.x.toFixed(2),y:+ag.y.toFixed(2)};markChanged();const seen=Object.values(S.objects).filter(o=>o.loc.t==='underwater'&&dist(o.loc.x,o.loc.y,ag.x,ag.y)<=25);
+        a.result={message:'You put your face in the water and look around beneath the surface.'+(seen.length?' You see: '+seen.map(o=>o.name+' about '+Math.round(dist(o.loc.x,o.loc.y,ag.x,ag.y))+' ft away').join('; ')+'.':' Only mud and weeds nearby.')};logEvent('object','Looked underwater: found '+(seen.map(o=>o.id).join(', ')||'nothing')+'.',{found:seen.map(o=>o.id)});return}
+      if(k==='mirror'){const car=carried().map(displayName),wo=worn().map(x=>x.name);a.result={message:'In the mirror you see a small human figure in a red shirt and blue trousers'+(wo.length?', wearing '+wo.join(' and '):'')+(car.length?', carrying '+car.join(', '):'')+'. It looks back at you.'};logEvent('object','Looked into the mirror.',{});return}
+      if(k==='ball'){a.result={message:'You toss the red ball into the air and catch it.'};return}
+      if(k==='blanket'){const b=O('blanket');b.state.spread=!b.state.spread;markChanged();a.result={message:b.state.spread?'You spread the blanket out on the ground.':'You fold the blanket up.'};logEvent('object','Blanket '+(b.state.spread?'spread out':'folded')+'.',{});return}
+      if(k==='blocks'){const b=O('blocks');b.state.stacked=!b.state.stacked;markChanged();a.result={message:b.state.stacked?'You stack the wooden blocks into a small tower.':'The stack of blocks tumbles into a scattered pile.'};logEvent('object','Blocks '+(b.state.stacked?'stacked':'knocked over')+'.',{});return}
+      if(k==='fill'){O('tin_cup').state.full=true;markChanged();a.result={message:'You fill the cup with cool water.'};logEvent('object','Filled tin_cup with water.',{});return}
+      if(k==='drink'){O('tin_cup').state.full=false;markChanged();a.result={message:'You drink the water.'};logEvent('object','Drank from tin_cup (now empty).',{});return}}},
+  wear:{desc:'Put on a wearable item (snorkel; sword via its shoulder strap). Worn items do not use your hands.',params:{target:'snorkel | sword'},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!o.wearable)return{error:'You cannot wear that.'};if(o.loc.t==='worn')return{error:'You are already wearing it.'};
+      if(o.loc.t!=='carried'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason}}if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};return{label:'Putting on the '+o.name,duration:6,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id);const from=locText(o);o.loc={t:'worn'};markChanged();a.result={message:'You put on the '+o.name+'.'};logEvent('object','Now wearing '+o.id+' (was '+from+').',{id:o.id})}},
+  remove:{desc:'Take off a worn item (it goes into your hands/pocket).',params:{target:'worn item id'},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='worn')return{error:'You are not wearing that.'};if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};
+      if(o.size!=='small'&&handsUsed()>=2)return{error:'Your hands are full.'};return{label:'Taking off the '+o.name,duration:5,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id);o.loc={t:'carried'};if(o.id==='snorkel')S.agent.underwaterView=null;markChanged();a.result={message:'You take off the '+o.name+' and carry it.'};logEvent('object','Took off '+o.id+'.',{id:o.id})}},
+  read:{desc:'Read something with writing on it (the folded letter, or the journal).',params:{target:'old_letter | journal'},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o)return{error:'Nothing to read there.'};if(o.id==='journal')return ACTIONS.read_journal.validate({});
+      if(!o.readable)return{error:'There is nothing written on the '+o.name+'.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Reading the '+o.name,duration:Math.max(5,o.readable.split(/\s+/).length*.3),data:{id:o.id}}},
+    complete(a){if(a.data.journal)return ACTIONS.read_journal.complete(a);const o=O(a.data.id);a.result={message:'It reads: "'+o.readable+'"',text:o.readable};logEvent('object','Read '+o.id+'.',{id:o.id})}},
+  read_journal:{desc:'Read your journal (must be carried or within reach).',params:{},
+    validate(){const j=O('journal');if(j.loc.t==='destroyed')return{error:'The journal no longer exists.'};const ri=reachInfo(j);if(!ri.ok)return{error:'Your journal is not with you: '+ri.reason};
+      const n=S.journal.entries.reduce((s,e)=>s+e.text.split(/\s+/).length,0);return{label:'Reading the journal',duration:Math.max(5,n*.3),data:{journal:true}}},
+    complete(a){const e=S.journal.entries;a.result={message:e.length?'You read '+e.length+' journal entr'+(e.length>1?'ies':'y')+'.':'The journal is blank.',entries:clone(e)};logEvent('journal','Read the journal ('+e.length+' entries).',{})}},
+  write_journal:{desc:'Write text in the journal. Needs journal and pencil carried. About 2.5 s per word (handwriting). If interrupted, the words written so far remain.',params:{text:'what to write'},
+    validate(p){const t=(p.text||'').trim();if(!t)return{error:'Give the "text" to write.'};if(S.agent.level==='ladder')return{error:'You cannot write while holding on to the ladder.'};
+      const j=O('journal');if(j.loc.t==='destroyed')return{error:'The journal no longer exists.'};if(!isCarrying('journal'))return{error:'You are not carrying the journal.'};if(!isCarrying('pencil'))return{error:'You need the pencil to write.'};
+      const words=t.split(/\s+/);return{label:'Writing in the journal',duration:Math.max(8,words.length*2.5),data:{text:t,words:words.length,written:''}}},
+    tick(a,dt){a.elapsed+=dt;a.progress=clamp(a.elapsed/a.duration,0,1);const w=a.data.text.split(/\s+/);a.data.written=w.slice(0,Math.floor(a.progress*w.length+1e-9)).join(' ');if(a.elapsed>=a.duration)return a.elapsed-a.duration;return-1},
+    complete(a){commitJournal(a.data.text,false);a.result={message:'You finish writing the entry.'}},
+    interrupt(a){const w=a.data.written;if(w){commitJournal(w,true);a.result={message:'You stop writing. Written so far: "'+w+'"'}}else a.result={message:'You stop before writing anything.'}}},
+  sit:{desc:'Sit down.',params:{},validate(){const e=S.agent.level==='ladder'?'Not on the ladder.':null;if(e)return{error:e};if(S.agent.pose==='sitting')return{error:'You are already sitting.'};return{label:'Sitting down',duration:3}},
+    complete(a){S.agent.pose='sitting';markChanged();a.result={message:'You sit down.'};logEvent('move','Sat down.',{})}},
+  stand:{desc:'Stand up.',params:{},validate(){if(S.agent.pose!=='sitting')return{error:'You are already standing.'};return{label:'Standing up',duration:2}},
+    complete(a){S.agent.pose='standing';markChanged();a.result={message:'You stand up.'};logEvent('move','Stood up.',{})}},
+  rest:{desc:'Rest for a number of seconds (keeps current pose).',params:{seconds:'1-1800'},
+    validate(p){const s=+p.seconds;if(!(s>=1&&s<=1800))return{error:'Give "seconds" between 1 and 1800.'};return{label:'Resting ('+fmtDur(s)+')',duration:s}},complete(a){a.result={message:'You rest for '+fmtDur(a.duration)+'.'}}},
+  wait:{desc:'Wait for a number of seconds.',params:{seconds:'1-1800'},
+    validate(p){const s=+p.seconds;if(!(s>=1&&s<=1800))return{error:'Give "seconds" between 1 and 1800.'};return{label:'Waiting ('+fmtDur(s)+')',duration:s}},complete(a){a.result={message:'You wait for '+fmtDur(a.duration)+'.'}}},
+};
+ACTIONS.put_in=Object.assign({},ACTIONS.put_down,{desc:'Alias of put_down with "container".'});
+ACTIONS.take=Object.assign({},ACTIONS.pick_up,{desc:'Alias of pick_up.'});
+function commitJournal(text,interrupted){const a=S.agent;const e={n:S.journal.entries.length+1,simTime:+S.simTime.toFixed(1),wall:new Date().toISOString(),text,interrupted:!!interrupted,
+  where:a.level==='platform'?'on the platform':a.level==='ladder'?'on the ladder':agentIndoors()?'in the cabin':TNAME[terrainAt(a.x,a.y)]+' '+fmtPos(a.x,a.y)};
+  S.journal.entries.push(e);markChanged();logEvent('journal','Journal entry #'+e.n+(interrupted?' (interrupted)':'')+': "'+text+'"',{entry:e})}
+function displayPose(){const ac=S.action,a=S.agent;if(!ac)return a.pose;const m={walk_to:'walking',walk:'walking',climb:'climbing',descend:'climbing',write_journal:'writing',read_journal:'reading',read:'reading',pick_up:'reaching',take:'reaching',put_down:'reaching',put_in:'reaching',drop:'reaching',look:'looking',inspect:'interacting',use:'interacting',open:'interacting',close:'interacting',wear:'interacting',remove:'interacting',sit:'sitting',stand:'standing'};
+  if(ac.type==='walk_to'||ac.type==='walk'){if(ac.data.standDelay>0)return'sitting';}if(ac.type==='climb'||ac.type==='descend')return'climbing';return m[ac.type]||a.pose}
+
+/* =====================================================================================
+   9. ACTION LIFECYCLE
+   ===================================================================================== */
+function normalizeReq(req){if(typeof req==='string'){try{req=JSON.parse(req)}catch(_){req={type:req}}}req=Object.assign({},req||{});if(!req.type&&req.action)req.type=req.action;
+  if(req.params&&typeof req.params==='object'){req=Object.assign({},req.params,req);delete req.params}req.type=String(req.type||'').trim().toLowerCase();return req}
+function submitAction(reqIn){
+  const req=normalizeReq(reqIn);const shown=JSON.stringify(req);
+  logEvent('request','Action requested: '+shown,{request:req});
+  const reject=(err,code)=>{logEvent('rejected',err,{request:req,code});return{ok:false,error:err,code:code||'rejected'}};
+  if(UI.replay)return reject('The island is in replay mode.','replay_mode');
+  if(req.type==='stop'||req.type==='interrupt'){const r=interrupt('requested by controller');return r.ok?r:reject(r.error,'nothing_to_stop')}
+  if(S.run.ended)return reject('The run is over. No more actions are accepted.','run_over');
+  const def=ACTIONS[req.type];if(!def)return reject('Unsupported action "'+req.type+'". Supported: '+Object.keys(ACTIONS).concat('stop').join(', ')+'.','unsupported');
+  if(S.action){if(!req.interruptCurrent)return reject('Busy: "'+S.action.label+'" is still in progress. Wait, or send {type:"stop"} first.','busy');
+    // check the replacement first, so an invalid one leaves the current action running
+    let pre;try{pre=def.validate(req)}catch(err){pre={error:'Environment error validating action: '+err.message}}
+    if(pre.error)return reject(pre.error+' (Your current action continues.)','invalid');
+    interrupt('replaced by new action')}
+  let v;try{v=def.validate(req)}catch(err){return reject('Environment error validating action: '+err.message,'env_error')}
+  if(v.error)return reject(v.error,'invalid');
+  const a={id:S.nextActionId++,type:req.type,params:req,label:v.label,status:'running',startSim:+S.simTime.toFixed(3),endSim:null,duration:v.duration!=null?v.duration:null,elapsed:0,progress:0,data:v.data||{}};
+  S.action=a;markChanged();
+  logEvent('start','Started: '+a.label+(a.duration!=null?' (estimated '+fmtDur(a.duration)+')':''),{actionId:a.id,type:a.type,estSec:a.duration});
+  if(def.start)def.start(a);
+  return{ok:true,actionId:a.id,label:a.label,estimatedDurationSec:a.duration!=null?+a.duration.toFixed(1):null}}
+function finishAction(a,status){const def=ACTIONS[a.type];a.status=status;a.endSim=+S.simTime.toFixed(3);
+  const rec={id:a.id,type:a.type,params:a.params,label:a.label,status,startSim:a.startSim,endSim:a.endSim,durationSec:+(a.endSim-a.startSim).toFixed(2),result:a.result||null};
+  S.history.push(rec);if(S.history.length>200)S.history.shift();S.action=null;markChanged();
+  logEvent(status==='completed'?'complete':status==='failed'?'fail':'interrupt',(status==='completed'?'Completed: ':status==='failed'?'Failed: ':'Interrupted: ')+a.label+' after '+fmtDur(rec.durationSec)+'. '+(a.result&&a.result.message?a.result.message:''),{actionId:a.id,status,result:a.result?{message:a.result.message,progressAtStop:a.result.progressAtStop}:null});return rec}
+function interrupt(reason){const a=S.action;if(!a)return{ok:false,error:'No action is in progress.'};const def=ACTIONS[a.type];
+  if(def.interrupt)def.interrupt(a);else{a.result={message:'You stop before finishing. Nothing changed.'}}
+  if(reason)a.result.reason=reason;a.result.progressAtStop=+(a.progress||0).toFixed(3);const rec=finishAction(a,'interrupted');return{ok:true,interrupted:rec}}
+function tickAction(dt){const a=S.action;if(!a)return 0;const def=ACTIONS[a.type];let left;
+  if(def.tick){left=def.tick(a,dt)}else{a.elapsed+=dt;a.progress=a.duration?clamp(a.elapsed/a.duration,0,1):1;left=a.elapsed>=a.duration?a.elapsed-a.duration:-1}
+  if(left>=0){const t0=S.simTime;S.simTime=t0+(dt-left);a.progress=1;try{def.complete&&def.complete(a)}catch(err){a.failed=true;a.result={message:'Environment error: '+err.message}}
+    if(!a.result)a.result={message:'Done.'};finishAction(a,a.failed?'failed':'completed');S.simTime=t0;return left}
+  return 0}
+
+/* =====================================================================================
+   10. SIMULATION CLOCK
+   ===================================================================================== */
+function worldTick(dt){const fp=O('fire_pit');if(fp.state.lit){fp.state.burnLeft-=dt;const fuel=contentsOf('fire_pit').filter(o=>o.fuel);const need=Math.ceil(Math.max(0,fp.state.burnLeft)/900);
+    while(fuel.length>need){const o=fuel.shift();o.loc={t:'destroyed'};markChanged();logEvent('object','A '+o.name+' ('+o.id+') burned away.',{id:o.id})}
+    if(fp.state.burnLeft<=0){fp.state.lit=false;fp.state.burnLeft=0;markChanged();logEvent('object','The fire burned out.',{})}}
+  if(S.sounds.length&&S.simTime-S.sounds[0].t>120)S.sounds.shift()}
+function runElapsed(){if(!S.run.startSim&&S.run.startSim!==0)return 0;const end=S.run.ended?S.run.endSim:S.simTime;return+Math.max(0,end-S.run.startSim).toFixed(1)}
+function runRemaining(){return+Math.max(0,S.run.durationSec-runElapsed()).toFixed(1)}
+function simStep(total){while(total>1e-9){const d=Math.min(.25,total);total-=d;const t0=S.simTime;
+    tickAction(d);
+    S.simTime=t0+d;worldTick(d);if(Math.floor(S.simTime)!==Math.floor(t0))updateSeen();
+    if(S.run.active&&!S.run.ended&&S.simTime-S.run.startSim>=S.run.durationSec){endRun('time limit reached')}
+    recordFrame(false);recordSnapshotIfDirty()}}
+function endRun(why){if(!S.run.active||S.run.ended)return{ok:false,error:'No run is active.'};if(S.action)interrupt('run ended');S.run.ended=true;S.run.active=false;S.run.endSim=+Math.min(S.simTime,S.run.startSim+S.run.durationSec).toFixed(3);markChanged();
+  logEvent('system','Run ended ('+why+') at run time '+fmtDur(runElapsed())+'.',{why});recordSnapshotIfDirty();if(UI.onRunEnd)UI.onRunEnd();return{ok:true}}
+function startRun(opts){opts=opts||{};if(S.run.active)return{ok:false,error:'A run is already active.'};if(S.run.ended)return{ok:false,error:'This island already had a run. Reset first.'};
+  S.run={active:true,ended:false,startSim:+S.simTime.toFixed(3),endSim:null,durationSec:opts.durationSec||RUN_SECONDS};markChanged();
+  logEvent('system','Run started: '+fmtDur(S.run.durationSec)+' at '+S.speed+'× ('+(S.speed===1?'real time':'TEST SPEED')+').',{durationSec:S.run.durationSec,speed:S.speed});recordSnapshotIfDirty();return{ok:true,startSim:S.run.startSim}}
+let lastWall=performance.now();
+function loop(){const now=performance.now();let dtw=(now-lastWall)/1000;lastWall=now;if(dtw>60)dtw=60;if(!S.paused&&!UI.replay)simStep(dtw*S.speed);if(document.hidden){if(UI.renderAll)UI.renderAll(true)}}
+setInterval(loop,50);
+function setSpeed(n){n=+n;if(![1,2,5,10,30,60].includes(n))return{ok:false,error:'Speed must be one of 1,2,5,10,30,60.'};const old=S.speed;S.speed=n;markChanged();
+  logEvent('system','Time speed changed '+old+'× → '+n+'×'+(n===1?' (real time)':' (TEST SPEED, not real time)')+'.',{from:old,to:n});return{ok:true,speed:n}}
+function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).':'Clock resumed.',{});return{ok:true,paused:S.paused}}
+
+/* =====================================================================================
+   11. RESET / SAVE / RESTORE / EXPORT
+   ===================================================================================== */
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState();updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+  logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
+  if(UI.onReset)UI.onReset();return{ok:true}}
+function exportState(){return clone(snapState())}
+function exportLog(){return clone(LOG)}
+function exportReplay(){recordSnapshotIfDirty();recordFrame(true);return{format:'watchable-island-replay',version:VERSION,createdWall:REC.createdWall,exportedWall:new Date().toISOString(),
+  endSim:+S.simTime.toFixed(3),initial:REC.initial,snapshots:REC.snapshots,frames:REC.frames,log:LOG}}
+function saveRun(){recordSnapshotIfDirty();return{format:'watchable-island-save',version:VERSION,savedWall:new Date().toISOString(),state:snapState(),log:LOG,recording:REC}}
+function restoreRun(data){if(typeof data==='string')data=JSON.parse(data);if(!data||data.format!=='watchable-island-save')return{ok:false,error:'Not a Watchable Island save file.'};
+
+  if(UI.replay&&UI.exitReplay)UI.exitReplay();S=clone(data.state);S.dirty=false;LOG=clone(data.log||[]);REC=clone(data.recording);S.nextSeq=Math.max(S.nextSeq,(LOG.length?LOG[LOG.length-1].seq+1:1));
+  if(UI.onReset)UI.onReset();logEvent('system','Restored saved state from '+data.savedWall+' (sim time '+fmtDur(S.simTime)+').',{savedWall:data.savedWall});return{ok:true,simTimeSec:S.simTime}}
+/* Start a NEW run on the physical island left by an earlier run ("saved island").
+   Kept: object positions/states (moved, opened, broken, burned, lit), fire, door, chest, writing.
+   Reset: the agent (back beside the boat, standing), its memory of what it has seen, the run clock,
+   journal entries panel, reflections, sounds, action history and the log/recording.
+   Items the previous agent was carrying or wearing are left where it was when its run ended
+   (on the ground; on the platform if it was there; at the ladder base if it was on the ladder).
+   The previous journal stays on the island as a "used journal" (its writing readable) unless
+   priorJournal:'remove'. The new agent gets a fresh blank journal and pencil. */
+function inheritWorld(data,opts){opts=opts||{};if(typeof data==='string')data=JSON.parse(data);
+  if(!data||data.format!=='watchable-island-save'||!data.state)return{ok:false,error:'Not a Watchable Island save file.'};
+  const prev=clone(data.state),pa=prev.agent;reset({speed:opts.speed||1});
+  const objs=prev.objects,moved=[];let k=0;
+  const dropLoc=()=>{k++;if(pa.level==='platform')return{t:'on',id:'platform'};if(pa.level==='ladder')return{t:'ground',x:+(L.ladder.x-6+k*3).toFixed(1),y:+(L.ladder.y+5).toFixed(1)};
+    const ang=k*1.3;let x=pa.x+Math.cos(ang)*1.5,y=pa.y+Math.sin(ang)*1.5;if(isBlocked(cellAt(x,y))){x=pa.x;y=pa.y}return{t:'ground',x:+x.toFixed(1),y:+y.toFixed(1)}};
+  for(const id in objs){const o=objs[id];if(o.loc.t==='carried'||o.loc.t==='worn'){o.loc=dropLoc();moved.push(id)}}
+  let n=1;while(objs['old_journal_'+n])n++;let oldJ=null;
+  if(objs.journal){const J=objs.journal;delete objs.journal;
+    if(J.loc.t!=='destroyed'&&opts.priorJournal!=='remove'){const ents=(prev.journal&&prev.journal.entries)||[];oldJ='old_journal_'+n;
+      objs[oldJ]=Object.assign(J,{id:oldJ,name:'used journal',desc:ents.length?'A small notebook with a cloth cover. Some pages have handwriting.':'A small notebook with a cloth cover. The pages are blank.',readable:ents.length?ents.map(e=>e.text).join('\n\n'):null})}}
+  if(objs.pencil){const P=objs.pencil;delete objs.pencil;if(P.loc.t!=='destroyed'){let m=1;while(objs['old_pencil_'+m])m++;objs['old_pencil_'+m]=Object.assign(P,{id:'old_pencil_'+m,name:'pencil'});const q=moved.indexOf('pencil');if(q>=0)moved[q]='old_pencil_'+m}}
+  {const q=moved.indexOf('journal');if(q>=0){if(oldJ)moved[q]=oldJ;else moved.splice(q,1)}}
+  const fresh=initialObjects();objs.journal=fresh.journal;objs.pencil=fresh.pencil;
+  S.objects=objs;S.inherited={savedWall:data.savedWall||null,sourceLabel:opts.sourceLabel||null,previousSimTime:prev.simTime,carriedItemsLeft:moved,previousJournal:oldJ,priorJournal:opts.priorJournal||'keep'};
+  S.seen={};updateSeen();LOG=[];newRecording();
+  logEvent('system','Island loaded from a saved island state'+(opts.sourceLabel?' ('+opts.sourceLabel+')':'')+'. Physical changes kept; new agent beside the boat with a fresh journal and pencil.'+(moved.length?' Items the previous agent held were left at its final position: '+moved.join(', ')+'.':''),{inherited:S.inherited});
+  if(UI.onReset)UI.onReset();return{ok:true,carriedItemsLeft:moved,previousJournal:oldJ}}
+// Live chunks carry snapshots as DELTAS (changed objects, new journal entries, new reflections) to stay small.
+let LIVE_SENT=null;
+function exportLiveChunk(c){if(!c){c={f:0,s:0,l:0};LIVE_SENT={objs:{},j:0,r:0}}recordSnapshotIfDirty();recordFrame(true);
+  const delta=x=>{const objs={};for(const id in x.objects){const js=JSON.stringify(x.objects[id]);if(LIVE_SENT.objs[id]!==js){objs[id]=x.objects[id];LIVE_SENT.objs[id]=js}}
+    const je=x.journal.entries,re=x.reflections;const d={objects:objs,agent:Object.assign({},x.agent,{trail:[]}),journalAdd:je.slice(LIVE_SENT.j),reflAdd:re.slice(LIVE_SENT.r),run:x.run,speed:x.speed,
+      action:x.action&&x.action.type==='write_journal'?{type:'write_journal',data:{text:x.action.data.text}}:null};LIVE_SENT.j=je.length;LIVE_SENT.r=re.length;return d};
+  return clone({frames:REC.frames.slice(c.f),snapshots:REC.snapshots.slice(c.s).map(x=>({t:x.t,d:delta(x.s)})),log:LOG.slice(c.l),endSim:+S.simTime.toFixed(3),
+    cursor:{f:REC.frames.length,s:REC.snapshots.length,l:LOG.length}})}
+function journalText(){const e=S.journal.entries;let s='Watchable Island - Journal\nExported '+new Date().toISOString()+'\n\n';if(!e.length)s+='(The journal is blank.)\n';
+  for(const x of e)s+='#'+x.n+'  [sim '+fmtDur(x.simTime)+' | '+x.wall+' | '+x.where+']'+(x.interrupted?' (interrupted)':'')+'\n'+x.text+'\n\n';
+  if(S.reflections.length){s+='\n--- Agent-reported reflections (not part of the in-world journal) ---\n\n';for(const r of S.reflections)s+='['+fmtDur(r.simTime)+'] '+r.text+'\n\n'}return s}
+function logCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return'seq,sim_seconds,wall_time,speed,kind,message,data\n'+LOG.map(e=>[e.seq,e.sim,e.wall,e.speed,e.kind,q(e.msg),q(e.data?JSON.stringify(e.data):'')].join(',')).join('\n')}
+function addReflection(text){text=String(text||'').trim();if(!text)return{ok:false,error:'Empty reflection.'};const r={n:S.reflections.length+1,simTime:+S.simTime.toFixed(1),wall:new Date().toISOString(),text};
+  S.reflections.push(r);markChanged();logEvent('reflection','Agent-reported reflection #'+r.n+': "'+text+'"',{reflection:r});return{ok:true,n:r.n}}
+function getStatus(){const a=S.action;return{simTimeSec:+S.simTime.toFixed(2),speed:S.speed,paused:S.paused,run:{active:S.run.active,ended:S.run.ended,elapsedSec:runElapsed(),remainingSec:runRemaining(),durationSec:S.run.durationSec},
+  action:a?{id:a.id,type:a.type,label:a.label,status:a.status,progress:+(a.progress||0).toFixed(4),elapsedSec:+a.elapsed.toFixed(2),estimatedTotalSec:a.duration!=null?+a.duration.toFixed(2):null}:null,
+  lastResult:S.history.length?clone(S.history[S.history.length-1]):null,mode:UI.replay?'replay':'live'}}
+function getActionResult(id){const h=S.history.find(x=>x.id===id);if(h)return clone(h);if(S.action&&S.action.id===id)return{id,status:'running',progress:S.action.progress};return null}
+function getActionSchema(){const o={};for(const k in ACTIONS)o[k]={description:ACTIONS[k].desc,params:ACTIONS[k].params};o.stop={description:'Interrupt the current action. Walking stops in place; climbing holds on at the current height; writing keeps words already written; other actions have no effect if stopped early.',params:{}};return o}
+
+/* =====================================================================================
+   12. RENDERING
+   ===================================================================================== */
+const UI={replay:null};
+const mapC=document.getElementById('map'),mctx=mapC.getContext('2d'),elevC=document.getElementById('elev'),ectx=elevC.getContext('2d');
+let terrainCanvas=null;
+function buildTerrainCanvas(){
+  const R=1,raw=document.createElement('canvas');raw.width=W*R;raw.height=H*R;const rc=raw.getContext('2d'),img=rc.createImageData(W*R,H*R),px=img.data;
+  for(let y=0;y<H*R;y++)for(let x=0;x<W*R;x++){const wx=(x+.5)/R,wy=(y+.5)/R,s=islandS(wx,wy),n=fbm(wx/18,wy/18),k=(y*W*R+x)*4;let r,g,b;
+    if(s>=1){const t=clamp((s-1)/.12,0,1);r=40+(1-t)*45;g=110+(1-t)*70;b=160+(1-t)*35;const wv=fbm(wx/40+3,wy/12)*.08;r*=1-wv;g*=1-wv;
+      if(s<1.03&&shoreZone(wx,wy)!=='beach'){const f=(1-(s-1)/.03)*(.5+.5*fbm(wx/6,wy/6));r+=(235-r)*f*.8;g+=(240-g)*f*.8;b+=(245-b)*f*.8}}
+    else{const h=heightAt(wx,wy),hx=heightAt(wx+1,wy),hy=heightAt(wx,wy+1);const shade=clamp(1+((hx-h)+(hy-h))*.6,.72,1.22);const z=shoreZone(wx,wy),bt=beachT(wx,wy);
+      const rockStart=z==='cliff'?.9:(z==='rocky'?.972:2);
+      if(s>bt){const wet=clamp((s-.975)/.025,0,1);r=228-wet*40;g=210-wet*40;b=158-wet*30;r+=(n-.5)*18;g+=(n-.5)*16;b+=(n-.5)*10}
+      else if(s>rockStart){const m=fbm(wx/5,wy/5),dk=s>.955&&z==='cliff'?.7:.95;r=(110+m*60)*dk;g=(106+m*56)*dk;b=(98+m*50)*dk}
+      else{r=104+(n-.5)*30;g=150+(n-.5)*36;b=70+(n-.5)*18;const fl=fbm(wx/3+40,wy/3);if(fl>.78){r+=40;g+=30;b+=10}
+        if(h>48){const m=clamp((h-48)/10,0,1);r=r*(1-m)+130*m;g=g*(1-m)+140*m;b=b*(1-m)+95*m}
+        if(bt<2){const tr=clamp((bt-s)/.04,0,1);r=r*tr+210*(1-tr);g=g*tr+200*(1-tr);b=b*tr+150*(1-tr)}
+        if(rockStart<2){const tr=clamp((rockStart-s)/.03,0,1);r=r*tr+125*(1-tr);g=g*tr+122*(1-tr);b=b*tr+100*(1-tr)}
+        r*=shade;g*=shade;b*=shade;
+        if(h>12&&(Math.floor(h/10)!==Math.floor(hx/10)||Math.floor(h/10)!==Math.floor(hy/10))){r*=.85;g*=.85;b*=.83}}}
+    px[k]=r;px[k+1]=g;px[k+2]=b;px[k+3]=255}
+  rc.putImageData(img,0,0);
+  const SC=2,tc=document.createElement('canvas');tc.width=W*SC;tc.height=H*SC;const c=tc.getContext('2d');c.imageSmoothingEnabled=true;c.drawImage(raw,0,0,W*SC,H*SC);c.scale(SC,SC);
+  const rr=mulberry32(7);
+  // cliff rocks and surf along the east
+  for(const q of CLIFF_PTS){if(rr()>.55)continue;const x=q.x+(rr()-.5)*5,y=q.y+(rr()-.5)*5,sz=2+rr()*4;c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(x+1.5,y+1.5,sz,sz*.8,0,0,7);c.fill();
+    const t=90+rr()*50;c.fillStyle='rgb('+t+','+(t-4)+','+(t-10)+')';c.beginPath();c.ellipse(x,y,sz,sz*.8,rr(),0,7);c.fill();c.fillStyle='rgba(255,255,255,.18)';c.beginPath();c.ellipse(x-sz*.3,y-sz*.3,sz*.45,sz*.3,0,0,7);c.fill()}
+  // dirt paths
+  for(const pth of L.paths){c.lineCap='round';c.lineJoin='round';c.beginPath();pth.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.strokeStyle='rgba(150,120,80,.55)';c.lineWidth=5;c.stroke();c.strokeStyle='rgba(190,160,110,.45)';c.lineWidth=2.5;c.stroke()}
+  // stream (rocky, with stones)
+  {const pts=L.stream;c.lineCap='round';c.lineJoin='round';c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));
+    c.strokeStyle='#7d7a70';c.lineWidth=13;c.stroke();c.strokeStyle='#3d7fa8';c.lineWidth=10;c.stroke();c.strokeStyle='#5fa8cf';c.lineWidth=6;c.stroke();c.strokeStyle='rgba(220,240,255,.45)';c.lineWidth=1.2;c.setLineDash([3,5]);c.stroke();c.setLineDash([]);
+    for(let i=0;i<pts.length-1;i++){for(let k=0;k<6;k++){const t=rr(),x=pts[i][0]+(pts[i+1][0]-pts[i][0])*t+(rr()-.5)*14,y=pts[i][1]+(pts[i+1][1]-pts[i][1])*t+(rr()-.5)*6;c.fillStyle='rgba(140,140,132,.9)';c.beginPath();c.ellipse(x,y,1+rr()*1.4,.8+rr(),0,0,7);c.fill()}}
+    // stone steps on the hill beside the stream
+    c.fillStyle='#a49d8c';for(let i=0;i<8;i++){const y=258+i*7,x=476-i*1.2;c.fillRect(x-3,y,7,2.6)}}
+  // pond with lily pads and reeds
+  const p=L.pond;let gr=c.createRadialGradient(p.x,p.y,5,p.x,p.y,p.rx);gr.addColorStop(0,'#1f5d86');gr.addColorStop(1,'#4c95bf');c.fillStyle=gr;c.beginPath();c.ellipse(p.x,p.y,p.rx,p.ry,0,0,7);c.fill();
+  c.strokeStyle='#6b8f4e';c.lineWidth=2.5;c.stroke();c.strokeStyle='#4f7a35';c.lineWidth=.8;
+  for(let i=0;i<90;i++){const a=rr()*6.283,e=.97+rr()*.08,x=p.x+Math.cos(a)*p.rx*e,y=p.y+Math.sin(a)*p.ry*e;c.beginPath();c.moveTo(x,y);c.lineTo(x+(rr()-.5)*2,y-3-rr()*3);c.stroke()}
+  for(let i=0;i<22;i++){const a=rr()*6.283,e=.35+rr()*.55,x=p.x+Math.cos(a)*p.rx*e,y=p.y+Math.sin(a)*p.ry*e;c.fillStyle='#5f9a48';c.beginPath();c.arc(x,y,1.6+rr(),0.4,6.0);c.lineTo(x,y);c.fill()}
+  // bridge (arched, with rails)
+  c.save();c.translate(L.bridge.x,L.bridge.y);c.rotate(Math.atan2(BR.py,BR.px));c.fillStyle='rgba(0,0,0,.25)';c.fillRect(-L.bridge.len/2+1,-L.bridge.wid/2+1.5,L.bridge.len,L.bridge.wid);
+  c.fillStyle='#9a6b3f';c.fillRect(-L.bridge.len/2,-L.bridge.wid/2,L.bridge.len,L.bridge.wid);c.strokeStyle='#6d4824';c.lineWidth=.5;for(let x=-L.bridge.len/2;x<=L.bridge.len/2;x+=2){c.beginPath();c.moveTo(x,-L.bridge.wid/2);c.lineTo(x,L.bridge.wid/2);c.stroke()}
+  c.fillStyle='#5a3b1d';c.fillRect(-L.bridge.len/2,-L.bridge.wid/2-.8,L.bridge.len,.9);c.fillRect(-L.bridge.len/2,L.bridge.wid/2-.1,L.bridge.len,.9);
+  for(const x of[-L.bridge.len/2,-L.bridge.len/4,0,L.bridge.len/4,L.bridge.len/2]){c.fillRect(x-.6,-L.bridge.wid/2-1.2,1.2,1.6);c.fillRect(x-.6,L.bridge.wid/2-.4,1.2,1.6)}c.restore();
+  // fire pit ring
+  c.fillStyle='#3b3631';c.beginPath();c.arc(L.firePit.x,L.firePit.y,3.6,0,7);c.fill();c.fillStyle='#8c8680';for(let i=0;i<12;i++){const a=i/12*6.283;c.beginPath();c.arc(L.firePit.x+Math.cos(a)*4.3,L.firePit.y+Math.sin(a)*4.3,1.1,0,7);c.fill()}
+  // low stone circle
+  for(const s of STONES){c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(s.x+1,s.y+1,1.9,1.5,0,0,7);c.fill();c.fillStyle='#a3a39c';c.beginPath();c.ellipse(s.x,s.y,1.8,1.4,0,0,7);c.fill()}
+  // boulders
+  for(const b of L.boulders){const sz=b[1]<200?4.5:2.8;c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(b[0]+1.5,b[1]+1.5,sz,sz*.8,0,0,7);c.fill();c.fillStyle='#9a978e';c.beginPath();c.ellipse(b[0],b[1],sz,sz*.8,0,0,7);c.fill();c.fillStyle='#c4c1b8';c.beginPath();c.ellipse(b[0]-sz*.3,b[1]-sz*.3,sz*.45,sz*.35,0,0,7);c.fill()}
+  // foundation + shadow of the tower
+  const f=L.foundation,hf=f.size/2;c.fillStyle='rgba(0,0,0,.16)';c.beginPath();c.moveTo(f.x-hf,f.y-hf);c.lineTo(f.x+hf,f.y-hf);c.lineTo(f.x+8+70,f.y-8-38);c.lineTo(f.x-8+70,f.y-8-38);c.closePath();c.fill();
+  c.fillStyle='rgba(0,0,0,.3)';c.fillRect(f.x-hf+1.5,f.y-hf+1.5,f.size,f.size);c.fillStyle='#bdbcb4';c.fillRect(f.x-hf,f.y-hf,f.size,f.size);c.strokeStyle='#8a8a84';c.lineWidth=.8;c.strokeRect(f.x-hf,f.y-hf,f.size,f.size);
+  c.strokeStyle='rgba(120,120,112,.5)';c.lineWidth=.4;c.beginPath();c.moveTo(f.x,f.y-hf);c.lineTo(f.x,f.y+hf);c.moveTo(f.x-hf,f.y);c.lineTo(f.x+hf,f.y);c.stroke();
+  // cabin floor and walls (roof drawn dynamically)
+  c.fillStyle='#8b6a46';c.fillRect(CAB.x,CAB.y,CAB.w,CAB.h);c.fillStyle='#a5845c';c.fillRect(CAB_IN.x0,CAB_IN.y0,CAB_IN.x1-CAB_IN.x0,CAB_IN.y1-CAB_IN.y0);
+  c.strokeStyle='rgba(80,55,30,.4)';c.lineWidth=.4;for(let y=CAB_IN.y0;y<CAB_IN.y1;y+=2.5){c.beginPath();c.moveTo(CAB_IN.x0,y);c.lineTo(CAB_IN.x1,y);c.stroke()}
+  c.fillStyle='#6f8fb0';c.fillRect(CAB_IN.x1-8,CAB_IN.y0+1,7,9);c.fillStyle='#e8e2d0';c.fillRect(CAB_IN.x1-8,CAB_IN.y0+1,7,2.4);c.fillStyle='#9e3d32';c.fillRect(CAB_IN.x0+10,CAB_IN.y1-8,9,6);
+  c.fillStyle='#7a5532';c.fillRect(TABLE_POS.x-3,TABLE_POS.y-2.5,6,5);
+  // bushes, then trees (shadow then canopy)
+  for(const bu of PALMS){c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.arc(bu.x+1.2,bu.y+1,bu.r,0,7);c.fill();c.fillStyle=bu.tone<.12?'#9a7ab8':(bu.tone<.2?'#e0d060':(bu.tone<.6?'#4d8a3c':'#5f9a44'));c.beginPath();c.arc(bu.x,bu.y,bu.r,0,7);c.fill()}
+  for(const t of TREES){c.fillStyle='rgba(0,0,0,.22)';c.beginPath();c.ellipse(t.x+t.r*.35,t.y+t.r*.3,t.r,t.r*.85,0,0,7);c.fill()}
+  for(const t of TREES){const gg=c.createRadialGradient(t.x-t.r*.3,t.y-t.r*.3,1,t.x,t.y,t.r);const base=t.tone<.5?[44,98,40]:[62,118,46];gg.addColorStop(0,'rgb('+(base[0]+50)+','+(base[1]+50)+','+(base[2]+25)+')');gg.addColorStop(1,'rgb('+base+')');
+    c.fillStyle=gg;c.beginPath();c.arc(t.x,t.y,t.r,0,7);c.fill()}
+  terrainCanvas=tc}
+
+const cam={mode:'fit',scale:1,ox:0,oy:0,tScale:1,tx:500,ty:420,cx:500,cy:420,zoomMul:3.2};
+let dpr=1,CW=800,CH=600;
+function resize(){dpr=window.devicePixelRatio||1;const r=mapC.getBoundingClientRect();CW=Math.max(100,r.width);CH=Math.max(100,r.height);mapC.width=Math.round(CW*dpr);mapC.height=Math.round(CH*dpr)}
+window.addEventListener('resize',resize);
+function fitScale(){return Math.min(CW/950,CH/715)}
+function updateCam(view){const fs=fitScale();const a=view.agent;const ay=a.y-(a.level==='ground'?0:a.ladderFt*K_OBLIQUE);
+  if(cam.mode==='fit'){cam.tScale=fs;cam.tx=497;cam.ty=432}else if(cam.mode==='follow'){cam.tScale=fs*cam.zoomMul;cam.tx=a.x;cam.ty=ay}
+  const k=.15;cam.scale+=(cam.tScale-cam.scale)*k;cam.cx+=(cam.tx-cam.cx)*k;cam.cy+=(cam.ty-cam.cy)*k;if(Math.abs(cam.scale-cam.tScale)<1e-4)cam.scale=cam.tScale;
+  cam.ox=CW/2-cam.cx*cam.scale;cam.oy=CH/2-cam.cy*cam.scale}
+const w2s=(x,y)=>[x*cam.scale+cam.ox,y*cam.scale+cam.oy];
+const s2w=(sx,sy)=>[(sx-cam.ox)/cam.scale,(sy-cam.oy)/cam.scale];
+
+function drawItemIcon(c,o,x,y,sz,isTop){const id=o.id.replace(/_\d+$/,'');c.save();c.translate(x,y);const s=sz;
+  if(o.loc.t==='underwater'){c.globalAlpha=.55}
+  switch(id){
+    case'journal':c.fillStyle='#7b4a2a';c.fillRect(-s*.45,-s*.6,s*.9,s*1.2);c.fillStyle='#f0e6c8';c.fillRect(-s*.32,-s*.5,s*.1,s*1);break;
+    case'pencil':c.strokeStyle='#f2c14e';c.lineWidth=s*.22;c.beginPath();c.moveTo(-s*.6,s*.4);c.lineTo(s*.6,-s*.4);c.stroke();break;
+    case'driftwood':c.fillStyle='#c9b48f';c.save();c.rotate(.5);c.fillRect(-s*1.2,-s*.25,s*2.4,s*.5);c.restore();break;
+    case'stone':c.fillStyle='#9aa0a6';c.beginPath();c.ellipse(0,0,s*.45,s*.35,0,0,7);c.fill();break;
+    case'oar':c.strokeStyle='#b8874f';c.lineWidth=s*.18;c.beginPath();c.moveTo(-s,s*.5);c.lineTo(s*.6,-s*.3);c.stroke();c.fillStyle='#b8874f';c.beginPath();c.ellipse(s*.8,-s*.4,s*.35,s*.18,-.45,0,7);c.fill();break;
+    case'rope':c.strokeStyle='#c8a15a';c.lineWidth=s*.16;for(let i=1;i<=3;i++){c.beginPath();c.arc(0,0,s*.18*i,0,7);c.stroke()}break;
+    case'lantern':if(o.state.broken){c.fillStyle='#6b6b6b';c.fillRect(-s*.4,-s*.2,s*.8,s*.4);c.fillStyle='#bde';for(let i=0;i<4;i++)c.fillRect(-s*.6+i*s*.35,s*.3,s*.12,s*.12)}else{if(o.state.lit){const g=c.createRadialGradient(0,0,1,0,0,s*3);g.addColorStop(0,'rgba(255,210,100,.7)');g.addColorStop(1,'rgba(255,210,100,0)');c.fillStyle=g;c.beginPath();c.arc(0,0,s*3,0,7);c.fill()}c.fillStyle='#444';c.fillRect(-s*.35,-s*.55,s*.7,s*1.1);c.fillStyle=o.state.lit?'#ffd35c':'#cfe3ea';c.fillRect(-s*.22,-s*.35,s*.44,s*.7)}break;
+    case'tin_cup':c.fillStyle='#b8c0c8';c.fillRect(-s*.3,-s*.35,s*.6,s*.7);if(o.state.full){c.fillStyle='#5fa8cf';c.fillRect(-s*.22,-s*.3,s*.44,s*.2)}break;
+    case'old_letter':c.fillStyle='#f4f1e8';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#999';c.lineWidth=.6;c.strokeRect(-s*.45,-s*.32,s*.9,s*.64);break;
+    case'lighter':c.fillStyle='#d64541';c.fillRect(-s*.22,-s*.35,s*.44,s*.7);c.fillStyle='#ddd';c.fillRect(-s*.22,-s*.35,s*.44,s*.18);break;
+    case'sword':c.strokeStyle='#d9dee3';c.lineWidth=s*.16;c.beginPath();c.moveTo(-s*.9,s*.5);c.lineTo(s*.7,-s*.4);c.stroke();c.strokeStyle='#8a6a3a';c.lineWidth=s*.22;c.beginPath();c.moveTo(-s*.7,s*.1);c.lineTo(-s*.45,s*.6);c.stroke();break;
+    case'snorkel':c.strokeStyle='#ff8c1a';c.lineWidth=s*.18;c.beginPath();c.moveTo(s*.4,-s*.7);c.lineTo(s*.4,s*.3);c.stroke();c.fillStyle='#2f9bd8';c.beginPath();c.ellipse(-s*.1,s*.25,s*.45,s*.28,0,0,7);c.fill();break;
+    case'brass_key':c.strokeStyle='#d9a521';c.lineWidth=s*.16;c.beginPath();c.arc(-s*.35,0,s*.22,0,7);c.stroke();c.beginPath();c.moveTo(-s*.13,0);c.lineTo(s*.6,0);c.lineTo(s*.6,s*.2);c.stroke();break;
+    case'wheelbarrow':c.fillStyle='#8a8f94';c.beginPath();c.moveTo(-s*.7,-s*.35);c.lineTo(s*.4,-s*.4);c.lineTo(s*.25,s*.35);c.lineTo(-s*.55,s*.35);c.closePath();c.fill();c.strokeStyle='#6b4a2a';c.lineWidth=s*.1;c.beginPath();c.moveTo(s*.3,-s*.25);c.lineTo(s*1,-s*.45);c.moveTo(s*.3,s*.25);c.lineTo(s*1,s*.4);c.stroke();c.fillStyle='#333';c.beginPath();c.arc(-s*.8,0,s*.18,0,7);c.fill();break;
+    case'stepladder':c.strokeStyle='#b58a52';c.lineWidth=s*.12;c.beginPath();c.moveTo(-s*.5,s*.6);c.lineTo(-s*.15,-s*.6);c.lineTo(s*.2,s*.6);c.moveTo(-s*.4,s*.25);c.lineTo(s*.1,s*.25);c.moveTo(-s*.3,-s*.1);c.lineTo(0,-s*.1);c.stroke();break;
+    case'ball':c.fillStyle='#d92d2d';c.beginPath();c.arc(0,0,s*.32,0,7);c.fill();c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.arc(-s*.1,-s*.1,s*.1,0,7);c.fill();break;
+    case'blanket':c.fillStyle='#2f5fd0';if(o.state.spread){c.save();c.rotate(-.2);c.fillRect(-s*.9,-s*.55,s*1.8,s*1.1);c.fillStyle='rgba(255,255,255,.15)';c.fillRect(-s*.9,-s*.55,s*1.8,s*.2);c.restore()}else{c.fillRect(-s*.4,-s*.3,s*.8,s*.6)}break;
+    case'blocks':c.fillStyle='#d9a96a';c.strokeStyle='#8a6438';c.lineWidth=s*.05;if(o.state.stacked){for(const[bx,by]of[[-.3,.15],[.05,.15],[-.12,-.2],[.4,.15]]){c.fillRect(bx*s,by*s,s*.3,s*.3);c.strokeRect(bx*s,by*s,s*.3,s*.3)}}else{for(const[bx,by]of[[-.6,0],[.1,.3],[.4,-.4],[-.2,-.5]]){c.fillRect(bx*s,by*s,s*.3,s*.3);c.strokeRect(bx*s,by*s,s*.3,s*.3)}}break;
+    case'island_map':c.fillStyle='#efe6cf';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#8a7a5a';c.lineWidth=s*.05;c.beginPath();c.ellipse(0,0,s*.3,s*.18,0,0,7);c.stroke();break;
+    default:c.fillStyle='#fff';c.beginPath();c.arc(0,0,s*.3,0,7);c.fill()}
+  c.restore()}
+
+function drawFigure(c,sx,sy,sz,pose,facing,phase,t,carry,wornIds,onLadder){
+  c.save();c.translate(sx,sy);const k=sz/16;c.scale(k,k);
+  // highlight ring
+  const pulse=.5+.5*Math.sin(t*4);c.strokeStyle='rgba(255,215,64,'+(.55+.35*pulse)+')';c.lineWidth=2;c.beginPath();c.ellipse(0,1,9+pulse*2,4.5+pulse,0,0,7);c.stroke();
+  c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(0,1,5,2,0,0,7);c.fill();
+  const body='#ff5a36',skin='#f1c9a0',leg='#24476b';const sw=Math.sin(phase);
+  if(pose==='climbing'||pose==='holding on'){// back view on ladder
+    const a1=pose==='climbing'?sw*3:0;c.strokeStyle=leg;c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(-2,-6);c.lineTo(-3,-1+a1);c.moveTo(2,-6);c.lineTo(3,-1-a1);c.stroke();
+    c.fillStyle=body;c.fillRect(-3.5,-14,7,9);c.strokeStyle=skin;c.lineWidth=2.2;c.beginPath();c.moveTo(-3.5,-13);c.lineTo(-5,-18-a1);c.moveTo(3.5,-13);c.lineTo(5,-18+a1);c.stroke();
+    c.fillStyle='#5a3a22';c.beginPath();c.arc(0,-17,3.4,0,7);c.fill()}
+  else if(pose==='sitting'||(pose==='writing')||(pose==='reading')){
+    c.strokeStyle=leg;c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(-2,-3);c.lineTo(-4,0);c.lineTo(-4,2);c.moveTo(2,-3);c.lineTo(4,0);c.lineTo(4,2);c.stroke();
+    c.fillStyle=body;c.fillRect(-3.5,-10,7,7);c.fillStyle=skin;c.beginPath();c.arc(0,-13,3.2,0,7);c.fill();
+    if(pose==='writing'||pose==='reading'){c.fillStyle='#7b4a2a';c.fillRect(-3,-5,6,3.5);c.fillStyle='#f0e6c8';c.fillRect(-2.5,-4.6,5,2.6);if(pose==='writing'){c.strokeStyle='#f2c14e';c.lineWidth=1.2;const wv=Math.sin(t*14)*1.2;c.beginPath();c.moveTo(1+wv,-3.6);c.lineTo(4+wv,-7);c.stroke()}}}
+  else{const walking=pose==='walking';const lg=walking?sw*3.2:0,bob=walking?Math.abs(Math.cos(phase))*-1:0;const lean=pose==='reaching'?3:0;
+    c.strokeStyle=leg;c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(-1.6,-6);c.lineTo(-1.6+lg*.5,0);c.moveTo(1.6,-6);c.lineTo(1.6-lg*.5,0);c.stroke();
+    c.translate(0,bob+lean*.6);c.fillStyle=body;c.fillRect(-3.5,-14,7,8.5);
+    c.strokeStyle=skin;c.lineWidth=2;c.beginPath();if(pose==='interacting'||pose==='reaching'){const dx=Math.sin(facing)*6,dy=-Math.cos(facing)*3;c.moveTo(3,-12);c.lineTo(3+dx*.8,-9+dy+lean);c.moveTo(-3,-12);c.lineTo(-4,-7-lg*.3)}else{c.moveTo(-3.5,-13);c.lineTo(-4.5-lg*.4,-7);c.moveTo(3.5,-13);c.lineTo(4.5+lg*.4,-7)}c.stroke();
+    c.fillStyle=skin;c.beginPath();c.arc(0,-17,3.3,0,7);c.fill();
+    const fx=Math.sin(facing)*1.8,fy=-Math.cos(facing)*1.2;c.fillStyle='#222';c.beginPath();c.arc(fx,-17+fy*.6-.2,.7,0,7);c.fill()}
+  if(wornIds.includes('snorkel')){c.fillStyle='#2f9bd8';c.fillRect(-3,-18.5,6,2);c.strokeStyle='#ff8c1a';c.lineWidth=1.3;c.beginPath();c.moveTo(3.5,-17);c.lineTo(4,-22);c.stroke()}
+  if(wornIds.includes('sword')){c.strokeStyle='#cfd6dc';c.lineWidth=1.3;c.beginPath();c.moveTo(-5,-4);c.lineTo(5,-16);c.stroke()}
+  // carried items (small icons beside the figure)
+  let ix=7;for(const o of carry){if(o.id==='journal'&&(pose==='writing'||pose==='reading'))continue;drawItemIcon(c,o,ix,-9,5,false);ix+=5}
+  c.restore()}
+
+function drawWaves(c,t){c.save();c.strokeStyle='rgba(255,255,255,.14)';c.lineWidth=1/cam.scale*1.2;for(let i=0;i<70;i++){const a=i/70*6.283,r=1.02+((t*.01+i*.137)%0.12);const cr=coastRadius(a*180/Math.PI)*r;
+    const x=L.coast.cx+Math.cos(a)*cr,y=L.coast.cy+Math.sin(a)*cr;c.beginPath();c.arc(x,y,8,a-1.2,a-.3);c.stroke()}c.restore()}
+
+const LADDER_TOP_Y=()=>L.foundation.y+8;     // ground-plane y where the ladder meets the platform's front edge
+function ladderScreenY(h){const yb=L.foundation.y+L.foundation.size/2;return yb+(LADDER_TOP_Y()-yb)*h/100-h*K_OBLIQUE}
+function drawLadder(c,view,t){const f=L.foundation,top=L.ladderHeight*K_OBLIQUE,s=cam.scale,hf=f.size/2-2,hp=8;
+  const P=(x,y,h)=>[x,y-h*K_OBLIQUE];const leg=(sx,sy,col,w)=>{const a=P(f.x+sx*hf,f.y+sy*hf,0),b=P(f.x+sx*hp,f.y+sy*hp,100);c.strokeStyle=col;c.lineWidth=w;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();return[a,b]};
+  const lw=Math.max(.8,1.8/s);leg(-1,-1,'rgba(120,128,136,.85)',lw);leg(1,-1,'rgba(120,128,136,.85)',lw);
+  // braces on the back and sides
+  c.strokeStyle='rgba(120,128,136,.55)';c.lineWidth=Math.max(.4,.8/s);for(const h of[25,50,75]){const k=h/100,w=hf+(hp-hf)*k;for(const[ax,ay,bx,by]of[[-1,-1,1,-1],[-1,-1,-1,1],[1,-1,1,1]]){const p1=P(f.x+ax*w,f.y+ay*w,h),p2=P(f.x+bx*w,f.y+by*w,h);c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1]);c.stroke()}}
+  // platform (top face) with railing and table
+  const py=f.y-top;c.fillStyle='rgba(0,0,0,.25)';c.fillRect(f.x-hp+1,py-hp+1.5,hp*2,hp*2);c.fillStyle='#7d8790';c.fillRect(f.x-hp,py-hp,hp*2,hp*2);c.strokeStyle='#c4ccd3';c.lineWidth=Math.max(.6,1.1/s);c.strokeRect(f.x-hp,py-hp,hp*2,hp*2);
+  c.strokeStyle='rgba(210,215,220,.8)';c.lineWidth=Math.max(.4,.6/s);c.strokeRect(f.x-hp-.8,py-hp-2.2,hp*2+1.6,hp*2+1.6);
+  c.fillStyle='#8a6440';c.fillRect(f.x-4.5,py-4.5,9,5.5);c.strokeStyle='#5d4027';c.lineWidth=Math.max(.3,.5/s);c.strokeRect(f.x-4.5,py-4.5,9,5.5);
+  const sz=Math.max(2.4,5/s);Object.values(view.objects).filter(o=>(o.loc.t==='on'&&o.loc.id==='platform_table')).forEach((o,i)=>drawItemIcon(c,o,f.x-3+i*3,py-1.8,sz,true));
+  Object.values(view.objects).filter(o=>(o.loc.t==='on'&&o.loc.id==='platform')).forEach((o,i)=>drawItemIcon(c,o,f.x-5+i*3,py+4.5,sz,true));
+  // front legs (drawn over the platform underside) and front braces
+  leg(-1,1,'rgba(170,178,186,.95)',lw*1.15);leg(1,1,'rgba(170,178,186,.95)',lw*1.15);
+  c.strokeStyle='rgba(170,178,186,.6)';c.lineWidth=Math.max(.4,.8/s);for(const h of[25,50,75]){const k=h/100,w=hf+(hp-hf)*k;const p1=P(f.x-w,f.y+w,h),p2=P(f.x+w,f.y+w,h);c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1]);c.stroke()}
+  // ladder up the middle (front)
+  c.strokeStyle='#dfe4e8';c.lineWidth=Math.max(.8,1.6/s);for(const dx of[-2,2]){c.beginPath();c.moveTo(f.x+dx,ladderScreenY(0)+.5);c.lineTo(f.x+dx,ladderScreenY(100));c.stroke()}
+  c.lineWidth=Math.max(.4,.7/s);const step=s>3?1:2;for(let h=0;h<=100;h+=step){const y=ladderScreenY(h);c.beginPath();c.moveTo(f.x-2,y);c.lineTo(f.x+2,y);c.stroke()}
+  if(s>1.6){c.fillStyle='rgba(255,255,255,.85)';c.font=(9/s*1.2)+'px system-ui';c.textAlign='left';for(const h of[25,50,75,100]){c.fillText(h+' ft',f.x+hf+3-(hf-hp)*h/100,ladderScreenY(h)+1)}}}
+
+function drawWorld(c,view,t){
+  c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#14537d';c.fillRect(0,0,CW,CH);
+  c.setTransform(dpr*cam.scale,0,0,dpr*cam.scale,dpr*cam.ox,dpr*cam.oy);
+  if(terrainCanvas)c.drawImage(terrainCanvas,0,0,W,H);drawWaves(c,t);
+  const objs=view.objects,s=cam.scale,a=view.agent;
+  // boat
+  c.save();c.translate(L.boat.x,L.boat.y);c.rotate(L.boat.angle);c.fillStyle='rgba(0,0,0,.25)';c.beginPath();c.ellipse(1.5,1.5,L.boat.len/2,L.boat.beam/2,0,0,7);c.fill();
+  c.fillStyle='#8a5a33';c.beginPath();c.moveTo(-L.boat.len/2,0);c.quadraticCurveTo(-L.boat.len/2+2,-L.boat.beam/2,0,-L.boat.beam/2);c.lineTo(L.boat.len/2-3,-L.boat.beam/2+.5);c.quadraticCurveTo(L.boat.len/2+1,0,L.boat.len/2-3,L.boat.beam/2-.5);c.lineTo(0,L.boat.beam/2);c.quadraticCurveTo(-L.boat.len/2+2,L.boat.beam/2,-L.boat.len/2,0);c.fill();
+  c.fillStyle='#b98656';c.beginPath();c.ellipse(0,0,L.boat.len/2-1.6,L.boat.beam/2-1,0,0,7);c.fill();c.fillStyle='#6d4523';c.fillRect(-1,-L.boat.beam/2+1,1.4,L.boat.beam-2);c.fillRect(-5,-L.boat.beam/2+1,1.2,L.boat.beam-2);c.restore();
+  // crate
+  {const cr=objs.crate,x=L.crate.x,y=L.crate.y;c.fillStyle='rgba(0,0,0,.3)';c.fillRect(x-3,y-2,7,5.2);c.fillStyle='#a07a4c';c.fillRect(x-3.5,y-2.6,7,5.2);c.strokeStyle='#6d4f2e';c.lineWidth=.4;c.strokeRect(x-3.5,y-2.6,7,5.2);
+    if(cr.container.open){c.fillStyle='#3a2a18';c.fillRect(x-3,y-2.1,6,4.2);c.fillStyle='#a07a4c';c.fillRect(x-3.5,y-5,7,2.2)}else{c.beginPath();c.moveTo(x-3.5,y-2.6);c.lineTo(x+3.5,y+2.6);c.moveTo(x+3.5,y-2.6);c.lineTo(x-3.5,y+2.6);c.stroke()}}
+  // driftwood table
+  {const x=L.picnicTable.x,y=L.picnicTable.y;c.fillStyle='rgba(0,0,0,.25)';c.fillRect(x-5,y-2.5,11,6);c.fillStyle='#c8b28c';c.fillRect(x-5.5,y-3,11,6);c.strokeStyle='#8e7a58';c.lineWidth=.4;for(let i=-2;i<=2;i+=1.3){c.beginPath();c.moveTo(x-5.5,y+i);c.lineTo(x+5.5,y+i);c.stroke()}}
+  // standing mirror
+  {const x=L.mirror.x,y=L.mirror.y;c.fillStyle='#6b4a2a';c.beginPath();c.arc(x,y,3.2,0,7);c.fill();const g=c.createLinearGradient(x-2,y-2,x+2,y+2);g.addColorStop(0,'#e8f4fb');g.addColorStop(1,'#9fb8c8');c.fillStyle=g;c.beginPath();c.arc(x,y,2.5,0,7);c.fill()}
+  // chest (outside the cabin door)
+  {const chest=objs.chest;c.fillStyle='rgba(0,0,0,.3)';c.fillRect(CHEST_POS.x-2.5,CHEST_POS.y-1.7,6,4.4);c.fillStyle='#6b4423';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-2.2,6,4.4);
+    if(chest.container.open){c.fillStyle='#2a1a0c';c.fillRect(CHEST_POS.x-2.5,CHEST_POS.y-1.7,5,3.4);c.fillStyle='#7a5230';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-4.6,6,2.4)}else{c.fillStyle='#8a5c32';c.fillRect(CHEST_POS.x-3,CHEST_POS.y-2.2,6,1.6);c.fillStyle='#d9a521';c.fillRect(CHEST_POS.x-.5,CHEST_POS.y-.8,1,1.2)}}
+  // contents of containers and surfaces on the ground (boat, crate, chest, tables, wheelbarrow)
+  {const isz=Math.max(2,4.5/s);const groups={};for(const o of Object.values(objs)){if((o.loc.t==='in'||o.loc.t==='on')&&o.loc.id!=='fire_pit'){const par=objs[o.loc.id];if(!par||par.platformLevel)continue;if(par.loc.t!=='ground')continue;if(par.container&&!par.container.open)continue;(groups[par.id]=groups[par.id]||[]).push(o)}}
+    for(const pid in groups){const par=objs[pid],pp={x:par.loc.x,y:par.loc.y};groups[pid].forEach((o,i)=>{const off=pid==='boat'?[-4+i*4,-.5]:[-2+i*2.4,-.6];drawItemIcon(c,o,pp.x+off[0],pp.y+off[1],pid==='boat'?Math.max(2.5,6/s):isz,false)})}}
+  // fire
+  const fp=objs.fire_pit;Object.values(objs).filter(o=>o.loc.t==='in'&&o.loc.id==='fire_pit').forEach((o,i)=>drawItemIcon(c,o,L.firePit.x,L.firePit.y-1+i*1.5,2.2));
+  if(fp.state.lit){const g=c.createRadialGradient(L.firePit.x,L.firePit.y,1,L.firePit.x,L.firePit.y,22);g.addColorStop(0,'rgba(255,160,40,.55)');g.addColorStop(1,'rgba(255,120,20,0)');c.fillStyle=g;c.beginPath();c.arc(L.firePit.x,L.firePit.y,22,0,7);c.fill();
+    for(let i=0;i<6;i++){const ph=t*6+i*1.3;c.fillStyle=i%2?'#ffd35c':'#ff7b1c';c.beginPath();c.ellipse(L.firePit.x+Math.sin(ph)*1.3,L.firePit.y-1.5-Math.abs(Math.sin(ph*.7))*2,1,2.2,0,0,7);c.fill()}
+    for(let i=0;i<5;i++){const p=((t*.15+i*.2)%1);c.fillStyle='rgba(200,200,200,'+(.35*(1-p))+')';c.beginPath();c.arc(L.firePit.x+p*30+Math.sin(p*9+i)*3,L.firePit.y-p*45,2+p*8,0,7);c.fill()}}
+  // bell frame
+  const bell=objs.bell;c.strokeStyle='#5a3b1d';c.lineWidth=1.4;c.beginPath();c.moveTo(L.bell.x-4,L.bell.y+2);c.lineTo(L.bell.x-4,L.bell.y-6);c.lineTo(L.bell.x+4,L.bell.y-6);c.lineTo(L.bell.x+4,L.bell.y+2);c.stroke();
+  const since=view.simTime-(bell.state.lastRung==null?-999:bell.state.lastRung);const swing=since<8?Math.sin(since*8)*.5*(1-since/8):0;
+  c.save();c.translate(L.bell.x,L.bell.y-6);c.rotate(swing);c.fillStyle='#c08a2b';c.beginPath();c.moveTo(-2.2,4.5);c.quadraticCurveTo(-2,0,0,0);c.quadraticCurveTo(2,0,2.2,4.5);c.closePath();c.fill();c.restore();
+  if(since<8){for(let i=0;i<3;i++){const r=((since*40+i*25)%90);c.strokeStyle='rgba(255,230,150,'+(.6*(1-r/90))+')';c.lineWidth=1.5/s;c.beginPath();c.arc(L.bell.x,L.bell.y-3,r,0,7);c.stroke()}}
+  // ground objects
+  for(const o of Object.values(objs)){if(o.kind==='fixture')continue;const lt=o.loc.t;if(lt!=='ground'&&lt!=='underwater')continue;const inside=isIndoors(o.loc.x,o.loc.y);drawItemIcon(c,o,o.loc.x,o.loc.y,Math.max(2.5,(o.size==='large'?9:o.size==='medium'?7:5)/s),false)}
+  // cabin roof / door
+  const ind=a.level==='ground'&&isIndoors(a.x,a.y);const dOpen=objs.cabin_door.state.open;
+  c.fillStyle='#4a2f1a';c.fillRect(DOOR_POS.x-2.5,CAB.y+CAB.h-5,5,5);
+  c.strokeStyle='#c49a6c';c.lineWidth=1.2;c.beginPath();if(dOpen){c.moveTo(DOOR_POS.x-2.5,CAB.y+CAB.h);c.lineTo(DOOR_POS.x-2.5,CAB.y+CAB.h+4.5)}else{c.moveTo(DOOR_POS.x-2.5,CAB.y+CAB.h-.5);c.lineTo(DOOR_POS.x+2.5,CAB.y+CAB.h-.5)}c.stroke();
+  c.globalAlpha=ind?.18:(dOpen?.82:.95);c.fillStyle='#7a3b2e';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,CAB.h+3);c.fillStyle='#8f4a3a';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,(CAB.h+3)/2);
+  c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=.5;for(let x=CAB.x;x<CAB.x+CAB.w;x+=3){c.beginPath();c.moveTo(x,CAB.y-1.5);c.lineTo(x,CAB.y+CAB.h+1.5);c.stroke()}
+  c.fillStyle='#6a6a6a';c.fillRect(CAB.x+CAB.w-9,CAB.y+3,4,4);c.globalAlpha=1;
+  if(!ind){c.fillStyle='#c49a6c';c.fillRect(DOOR_POS.x-2.5,CAB.y+CAB.h-.3,5,.6)}
+  // trail
+  if(a.trail&&a.trail.length>1){c.fillStyle='rgba(255,230,150,.55)';for(let i=0;i<a.trail.length;i++){const p=a.trail[i];c.globalAlpha=.15+.6*i/a.trail.length;c.beginPath();c.arc(p[0],p[1],Math.max(.6,1.4/s),0,7);c.fill()}c.globalAlpha=1}
+  drawLadder(c,view,t);
+  // the figure
+  const ay=a.level==='ground'?a.y:(a.level==='platform'?L.foundation.y-L.ladderHeight*K_OBLIQUE+6:ladderScreenY(a.ladderFt)+4);const[sx,sy]=w2s(a.x,ay);
+  c.setTransform(dpr,0,0,dpr,0,0);const sz=clamp(15*Math.sqrt(cam.scale/fitScale()),15,44);
+  const pose=view.pose,carry=Object.values(objs).filter(o=>o.loc.t==='carried'),wornIds=Object.values(objs).filter(o=>o.loc.t==='worn').map(o=>o.id);
+  drawFigure(c,sx,sy,sz,pose,a.facing,a.stepDist*.55,t,carry,wornIds,a.level!=='ground');
+  // action bubble
+  if(view.actLabel){const txt=view.actLabel+(view.actProg!=null?'  '+Math.round(view.actProg*100)+'%':'');c.font='600 12px system-ui';const tw=c.measureText(txt).width+14;const bx=clamp(sx-tw/2,4,CW-tw-4),by=sy-sz*1.6-24;
+    c.fillStyle='rgba(12,20,28,.88)';c.strokeStyle='rgba(242,193,78,.8)';c.lineWidth=1;roundRect(c,bx,by,tw,20,6);c.fill();c.stroke();c.fillStyle='#fff';c.textAlign='left';c.fillText(txt,bx+7,by+14);
+    if(view.actProg!=null){c.fillStyle='#f2c14e';c.fillRect(bx+4,by+17,(tw-8)*view.actProg,2)}}
+  // compass + scale bar
+  c.fillStyle='rgba(10,18,26,.7)';roundRect(c,10,10,46,46,8);c.fill();c.fillStyle='#fff';c.font='700 12px system-ui';c.textAlign='center';c.fillText('N',33,26);c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.moveTo(33,30);c.lineTo(33,50);c.stroke();c.beginPath();c.moveTo(28,36);c.lineTo(33,30);c.lineTo(38,36);c.stroke();
+  const sbFt=cam.scale>3?50:100,sbPx=sbFt*cam.scale;c.fillStyle='rgba(10,18,26,.7)';roundRect(c,64,10,sbPx+20,26,8);c.fill();c.fillStyle='#fff';c.fillRect(74,26,sbPx,3);c.font='11px system-ui';c.textAlign='left';c.fillText(sbFt+' ft',74,22)}
+function roundRect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+
+function drawElevation(view,t){const c=ectx,w=elevC.width,h=elevC.height,a=view.agent;c.clearRect(0,0,w,h);c.fillStyle='rgba(10,18,26,.92)';roundRect(c,0,0,w,h,8);c.fill();
+  c.fillStyle='#cfd8e3';c.font='700 11px system-ui';c.textAlign='left';c.fillText('LADDER · SIDE VIEW',8,15);
+  const gy=h-30,top=34,sc=(gy-top)/100,lx=52;c.fillStyle='#5b7f45';c.fillRect(0,gy,w,30);c.fillStyle='#b8b8b2';c.fillRect(lx-12,gy-4,30,8);
+  c.strokeStyle='#8a96a2';c.lineWidth=1;for(let hh=0;hh<=100;hh+=25){const y=gy-hh*sc;c.beginPath();c.moveTo(lx-20,y);c.lineTo(lx-14,y);c.stroke();c.fillStyle='#8ea2b4';c.font='10px system-ui';c.textAlign='right';c.fillText(hh+'',lx-22,y+3)}
+  c.strokeStyle='#d7dde2';c.lineWidth=1.6;c.beginPath();c.moveTo(lx-4,gy);c.lineTo(lx-4,gy-100*sc);c.moveTo(lx+4,gy);c.lineTo(lx+4,gy-100*sc);c.stroke();c.lineWidth=.7;for(let hh=0;hh<100;hh+=5){const y=gy-hh*sc;c.beginPath();c.moveTo(lx-4,y);c.lineTo(lx+4,y);c.stroke()}
+  const py=gy-100*sc;c.fillStyle='#7d8790';c.fillRect(lx-8,py-3,38,4);c.strokeStyle='#c4ccd3';c.beginPath();c.moveTo(lx-8,py-3);c.lineTo(lx-8,py-12);c.lineTo(lx+30,py-12);c.lineTo(lx+30,py-3);c.stroke();
+  c.fillStyle='#6e5034';c.fillRect(lx+12,py-9,12,2);c.fillRect(lx+13,py-7,1.5,4);c.fillRect(lx+21.5,py-7,1.5,4);
+  const onT=Object.values(view.objects).filter(o=>o.loc.t==='on'&&o.loc.id==='platform_table');onT.forEach((o,i)=>{c.fillStyle={lighter:'#d64541',sword:'#d9dee3',snorkel:'#ff8c1a'}[o.id]||'#fff';c.fillRect(lx+13+i*3.6,py-11.5,2.6,2.4)});
+  const hgt=a.level==='ground'?0:a.ladderFt;const near=a.level!=='ground'||dist(a.x,a.y,L.ladder.x,L.ladder.y)<30;
+  elevC.style.display=(window.innerWidth<900&&!near&&a.level==='ground'&&dist(a.x,a.y,L.ladder.x,L.ladder.y)>80)?'none':'block';
+  const fy=gy-hgt*sc-(a.level==='platform'?3:0),fx=a.level==='platform'?lx+6:(a.level==='ladder'?lx:lx+24);
+  if(near||a.level!=='ground'){c.fillStyle='#ff5a36';c.fillRect(fx-2.5,fy-12,5,7);c.fillStyle='#f1c9a0';c.beginPath();c.arc(fx,fy-15,2.6,0,7);c.fill();c.strokeStyle='#24476b';c.lineWidth=2;const sw=view.pose==='climbing'?Math.sin(a.stepDist*.55)*2:0;c.beginPath();c.moveTo(fx-1.5,fy-5);c.lineTo(fx-1.5,fy+sw);c.moveTo(fx+1.5,fy-5);c.lineTo(fx+1.5,fy-sw);c.stroke();
+    c.strokeStyle='rgba(255,215,64,.9)';c.setLineDash([2,3]);c.beginPath();c.moveTo(lx+36,fy-8);c.lineTo(w-6,fy-8);c.stroke();c.setLineDash([])}
+  c.fillStyle='#fff';c.font='600 12px system-ui';c.textAlign='left';c.fillText(Math.round(hgt)+' ft',lx+40,Math.min(gy-6,Math.max(top+10,fy-4)));
+  c.font='10px system-ui';c.fillStyle='#8ea2b4';c.fillText(a.level==='ground'?(near?'at ladder base':'agent on ground'):a.level==='platform'?'on platform':(view.pose==='climbing'?(view.actType==='descend'?'descending':'climbing'):'holding on'),8,h-12);
+  c.fillText('ground elev '+Math.round(heightAt(a.x,a.y))+' ft',8,h-2)}
+
+/* =====================================================================================
+   13. UI PANELS
+   ===================================================================================== */
+const $=id=>document.getElementById(id);
+function fmtDur(s){s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):String(m).padStart(2,'0'))+':'+String(x).padStart(2,'0')}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+let logRendered=0;
+function logRow(e){const d=document.createElement('div');d.className='le '+(KIND_CLASS[e.kind]||'env');d.innerHTML='<span class="t">'+fmtDur(e.sim)+'</span><span class="k">'+(KIND_TAG[e.kind]||'ENV')+'</span><span>'+esc(e.msg)+'</span>';d.title=e.wall+' · speed '+e.speed+'× · '+e.kind;return d}
+function renderLogUpTo(log,n){const el=$('logList');const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<40;
+  if(n<logRendered){el.innerHTML='';logRendered=0}const start=Math.max(logRendered,n-600);if(start>logRendered){el.innerHTML='';logRendered=start}
+  const frag=document.createDocumentFragment();for(let i=logRendered;i<n;i++)frag.appendChild(logRow(log[i]));el.appendChild(frag);logRendered=n;
+  while(el.childNodes.length>700)el.removeChild(el.firstChild);if(atBottom)el.scrollTop=el.scrollHeight}
+let jrKey='',rfKey='';
+function renderJournal(entries,writing){const key=entries.length+'|'+(writing||'');if(key===jrKey)return;jrKey=key;const el=$('journalList');
+  let h=entries.length?'':'<div class="empty">The journal is blank.</div>';for(const e of entries)h+='<div class="jent"><div class="m">#'+e.n+' · sim '+fmtDur(e.simTime)+' · '+esc(e.where)+(e.interrupted?' · interrupted':'')+'</div>'+esc(e.text)+'</div>';
+  if(writing!=null)h+='<div class="jent writing"><div class="m">✎ writing now…</div>'+esc(writing||'')+'▍</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
+function renderRefl(list){const key=list.length+'';if(key===rfKey)return;rfKey=key;const el=$('reflList');let h=list.length?'':'<div class="empty">None yet. A future agent may report reflections here; they are not verified by the environment.</div>';
+  for(const r of list)h+='<div class="rent"><div class="m">#'+r.n+' · sim '+fmtDur(r.simTime)+' · agent-reported</div>'+esc(r.text)+'</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
+function liveView(){const a=S.action;return{objects:S.objects,agent:S.agent,simTime:S.simTime,pose:displayPose(),actLabel:a?a.label:null,actProg:a?(a.progress||0):null,actType:a?a.type:null,journal:S.journal,reflections:S.reflections,run:S.run,speed:S.speed,writing:a&&a.type==='write_journal'?a.data.written:null,log:LOG,logN:LOG.length,action:a,paused:S.paused}}
+function currentView(){return UI.replay&&UI.replay.view?UI.replay.view:liveView()}
+function renderPanels(v){const run=v.run;const el=run.startSim==null?0:Math.max(0,(run.ended?run.endSim:v.simTime)-run.startSim);const rem=Math.max(0,run.durationSec-el);
+  $('elapsed').textContent=fmtDur(el);$('remain').textContent=fmtDur(rem);$('remain').classList.toggle('low',run.active&&rem<300);
+  $('runState').textContent=(run.ended?'Run complete':run.active?'Run in progress':'Run not started')+' · simulation clock '+fmtDur(v.simTime)+' · '+(v.speed===1?'real time':'TEST '+v.speed+'×');
+  if(v.actLabel){$('actLabel').textContent=v.actLabel;$('actStatus').textContent='In progress · '+Math.round((v.actProg||0)*100)+'%'+(v.action&&v.action.duration!=null?' · elapsed '+fmtDur(v.action.elapsed)+' of ~'+fmtDur(v.action.duration):'');$('actBar').style.width=(100*(v.actProg||0))+'%'}
+  else{$('actLabel').textContent='Idle ('+v.agent.pose+')';const last=UI.replay?null:S.history[S.history.length-1];$('actStatus').textContent=last?('Last: '+last.label+' → '+last.status):'Waiting for an action';$('actBar').style.width='0%'}
+  const car=Object.values(v.objects).filter(o=>o.loc.t==='carried').map(displayName),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn').map(o=>o.name);
+  const a=v.agent;$('carry').innerHTML='Position <b>'+fmtPos(a.x,a.y)+'</b> ft · '+(a.level==='ground'?'ground':a.level)+' · height <b>'+Math.round(a.level==='ground'?0:a.ladderFt)+' ft</b><br>Carrying: <b>'+(car.join(', ')||'nothing')+'</b>'+(wo.length?' · Wearing: <b>'+wo.join(', ')+'</b>':'');
+  renderLogUpTo(v.log,v.logN);renderJournal(v.journal.entries,v.writing);renderRefl(v.reflections);
+  const sc=$('speedChip');sc.textContent=v.speed===1?'1× REAL TIME':'TEST SPEED '+v.speed+'×';sc.className='chip '+(v.speed===1?'speed1':'speedtest');
+  $('pauseChip').style.display=(!UI.replay&&S.paused)?'inline-block':'none';$('modeChip').textContent=UI.replay?(UI.replay.live?'WATCHING':'REPLAY'):'LIVE';$('modeChip').className='chip '+(UI.replay?'replay':'live')}
+let lastPanel=0,lastFrameT=performance.now();
+function renderAll(fromHidden){const now=performance.now();const t=now/1000;if(UI.replay)UI.replayTick(now-lastFrameT);lastFrameT=now;const v=currentView();
+  updateCam(v);drawWorld(mctx,v,t);drawElevation(v,t);if(now-lastPanel>180||fromHidden){renderPanels(v);lastPanel=now;if($('obsBox').style.display==='block'&&!UI.replay)$('obsBox').textContent=JSON.stringify(getObservation(),null,1)}
+  if(VID.rec)drawVideoFrame(v)}
+UI.renderAll=renderAll;
+function raf(){try{renderAll(false)}catch(e){console.error(e)}requestAnimationFrame(raf)}
+UI.onReset=()=>{logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';renderLogUpTo(LOG,LOG.length);syncSpeedSelect()};
+UI.onRunEnd=()=>{if(VID.rec&&VID.autoStop)stopVideo()};
+
+/* =====================================================================================
+   14. REPLAY (reconstructs from recorded snapshots, frames and log; never re-simulates)
+   ===================================================================================== */
+function bsearch(arr,t,key){let lo=0,hi=arr.length-1,ans=-1;while(lo<=hi){const m=(lo+hi)>>1;if(arr[m][key]<=t){ans=m;lo=m+1}else hi=m-1}return ans}
+function replayStateAt(rep,t){const si=Math.max(0,bsearch(rep.snapshots,t,'t'));const snap=rep.snapshots[si].s;const fi=bsearch(rep.frames,t,'t');let ag=Object.assign({},snap.agent),fr=null;
+  if(fi>=0){fr=rep.frames[fi];const nx=rep.frames[fi+1];let x=fr.x,y=fr.y,lf=fr.lf,sd=fr.sd;
+    if(nx&&nx.t>fr.t&&nx.lv===fr.lv){const k=clamp((t-fr.t)/(nx.t-fr.t),0,1);x+=(nx.x-fr.x)*k;y+=(nx.y-fr.y)*k;lf+=(nx.lf-fr.lf)*k;sd+=(nx.sd-fr.sd)*k}
+    Object.assign(ag,{x,y,level:fr.lv,ladderFt:lf,facing:fr.f,stepDist:sd})}
+  const li=bsearch(rep.log,t,'sim');const n=li+1;
+  // trail from frames
+  const trail=[];for(let i=Math.max(0,fi-600);i<=fi;i+=2){const f=rep.frames[i];if(f&&f.lv==='ground'){const lp=trail[trail.length-1];if(!lp||dist(lp[0],lp[1],f.x,f.y)>6)trail.push([f.x,f.y])}}ag.trail=trail.slice(-160);
+  let prog=fr?fr.ap:null;if(fr&&rep.frames[fi+1]&&rep.frames[fi+1].al===fr.al){const nx=rep.frames[fi+1];prog=fr.ap+(nx.ap-fr.ap)*clamp((t-fr.t)/((nx.t-fr.t)||1),0,1)}
+  let writing=null;if(fr&&fr.at==='write_journal'&&snap.action&&snap.action.type==='write_journal'){const w=snap.action.data.text.split(/\s+/);writing=w.slice(0,Math.floor((prog||0)*w.length)).join(' ')}
+  const speed=n>0?rep.log[n-1].speed:snap.speed;
+  return{objects:snap.objects,agent:ag,simTime:t,pose:fr?fr.p:snap.agent.pose,actLabel:fr?fr.al:null,actProg:fr&&fr.al?prog:null,actType:fr?fr.at:null,journal:snap.journal,reflections:snap.reflections,run:snap.run,speed,writing,log:rep.log,logN:n,action:null}}
+function enterReplay(rep){if(typeof rep==='string')rep=JSON.parse(rep);if(!rep||rep.format!=='watchable-island-replay'||!rep.snapshots||!rep.frames)return{ok:false,error:'Not a Watchable Island replay file.'};
+  const end=Math.max(rep.endSim||0,rep.frames.length?rep.frames[rep.frames.length-1].t:0,rep.log.length?rep.log[rep.log.length-1].sim:0);
+  UI.replay={rep,t:0,end,playing:false,speed:+$('rpSpeed').value,view:null};UI.replay.view=replayStateAt(rep,0);logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';
+  $('replayBar').classList.add('on');$('replayBanner').style.display='block';$('rpSlider').max=1000;updateReplayUI();return{ok:true,durationSec:end}}
+function exitReplay(){if(!UI.replay)return;if(VID.rec&&VID.fromReplay)stopVideo();UI.replay=null;$('replayBar').classList.remove('on');$('replayBanner').style.display='none';logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';renderLogUpTo(LOG,LOG.length)}
+UI.exitReplay=exitReplay;
+function replaySeek(t){const R=UI.replay;if(!R)return;R.t=clamp(t,0,R.end);R.view=replayStateAt(R.rep,R.t);updateReplayUI()}
+UI.replayTick=(dms)=>{const R=UI.replay;if(!R||!R.playing||!R.rep.snapshots.length)return;R.t=Math.min(R.end,R.t+dms/1000*R.speed);R.view=replayStateAt(R.rep,R.t);if(R.t>=R.end&&!R.live){R.playing=false;if(VID.rec&&VID.fromReplay)stopVideo()}updateReplayUI()};
+function updateReplayUI(){const R=UI.replay;if(!R)return;if(R.live&&UI.liveUI)return UI.liveUI();$('rpSlider').value=R.end?Math.round(R.t/R.end*1000):0;$('rpTime').textContent=fmtDur(R.t)+' / '+fmtDur(R.end);$('rpPlay').textContent=R.playing?'❚❚ Pause':'▶ Play'}
+
+/* =====================================================================================
+   15. VIDEO RECORDING (canvas compositing + MediaRecorder; no permissions needed)
+   ===================================================================================== */
+const VID={rec:null,chunks:[],canvas:null,ctx:null,mime:'',autoStop:true,fromReplay:false,lastBlob:null,lastUrl:null,startedWall:0};
+function videoSupport(){const c=document.createElement('canvas');if(!c.captureStream||!window.MediaRecorder)return null;
+  return['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4;codecs=avc1','video/mp4'].find(m=>{try{return MediaRecorder.isTypeSupported(m)}catch(_){return false}})||null}
+function startVideo(opts){opts=opts||{};if(VID.rec)return{ok:false,error:'Already recording.'};const mime=videoSupport();if(!mime)return{ok:false,error:'This browser cannot record canvas video (needs MediaRecorder + canvas.captureStream).'};
+  VID.canvas=document.createElement('canvas');VID.canvas.width=1280;VID.canvas.height=720;VID.ctx=VID.canvas.getContext('2d');VID.mime=mime;VID.chunks=[];VID.fromReplay=!!opts.fromReplay;VID.autoDownload=opts.autoDownload!==false;
+  drawVideoFrame(currentView());const stream=VID.canvas.captureStream(30);
+  VID.rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:opts.bitrate||1500000});VID.rec.ondataavailable=e=>{if(e.data&&e.data.size)VID.chunks.push(e.data)};
+  VID.rec.onstop=()=>{const blob=new Blob(VID.chunks,{type:mime.split(';')[0]});VID.lastBlob=blob;if(VID.lastUrl)URL.revokeObjectURL(VID.lastUrl);VID.lastUrl=URL.createObjectURL(blob);
+    if(VID.autoDownload)download(VID.lastUrl,'island-'+(VID.fromReplay?'replay':'run')+'-video-'+stamp()+(mime.includes('mp4')?'.mp4':'.webm'),true);VID.rec=null;$('recChip').classList.remove('on');$('tVideo').textContent='● Start video recording';$('rpVideo').textContent='● Record replay video';
+    if(!UI.replay)logEvent('system','Video recording stopped ('+(blob.size/1048576).toFixed(1)+' MB, '+mime+').',{bytes:blob.size,mime});apiMsg('Video saved: '+(blob.size/1048576).toFixed(1)+' MB ('+mime.split(';')[0]+').')};
+  VID.rec.start(1000);VID.startedWall=Date.now();$('recChip').classList.add('on');$('tVideo').textContent='■ Stop video recording';if(VID.fromReplay)$('rpVideo').textContent='■ Stop replay video';
+  if(!UI.replay)logEvent('system','Video recording started ('+mime+', 1280×720). Keep this tab visible for smooth video.',{mime});return{ok:true,mime}}
+function stopVideo(){if(!VID.rec)return{ok:false,error:'Not recording.'};VID.rec.stop();return{ok:true}}
+function wrapText(c,text,x,y,maxW,lh,maxLines){const words=String(text).split(/\s+/);let line='',n=0;for(const w of words){const test=line?line+' '+w:w;if(c.measureText(test).width>maxW&&line){c.fillText(line,x,y);y+=lh;n++;line=w;if(n>=maxLines-1){c.fillText(line+(words.indexOf(w)<words.length-1?' …':''),x,y);return y+lh}}else line=test}if(line){c.fillText(line,x,y);y+=lh}return y}
+function drawVideoFrame(v){const c=VID.ctx;if(!c)return;const Wv=1280,Hv=720,mw=860;c.fillStyle='#0d141b';c.fillRect(0,0,Wv,Hv);
+  const sw=mapC.width,sh=mapC.height,k=Math.min(mw/sw,Hv/sh),dw=sw*k,dh=sh*k;c.drawImage(mapC,(mw-dw)/2,(Hv-dh)/2,dw,dh);
+  const ew=elevC.width*1.1,eh=elevC.height*1.1;c.globalAlpha=.95;c.drawImage(elevC,8,Hv-eh-8,ew,eh);c.globalAlpha=1;
+  const x0=mw+14,pw=Wv-mw-24;c.fillStyle='#151f29';c.fillRect(mw,0,Wv-mw,Hv);c.fillStyle='#e6edf3';c.font='700 18px system-ui';c.textAlign='left';c.fillText('Watchable Island'+(UI.replay?' · REPLAY':''),x0,30);
+  const run=v.run,el=run.startSim==null?0:Math.max(0,(run.ended?run.endSim:v.simTime)-run.startSim);c.font='600 13px system-ui';c.fillStyle=v.speed===1?'#7ee787':'#ffa657';c.fillText(v.speed===1?'1× real time':'TEST SPEED '+v.speed+'×',x0,50);
+  c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('RUN ELAPSED',x0,76);c.fillText('REMAINING',x0+190,76);c.fillStyle='#fff';c.font='600 30px ui-monospace,monospace';c.fillText(fmtDur(el),x0,108);c.fillText(fmtDur(run.durationSec-el),x0+190,108);
+  c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText((run.ended?'Run complete':run.active?'Run in progress':'Run not started')+' · sim clock '+fmtDur(v.simTime),x0,126);
+  c.fillStyle='#8ea2b4';c.fillText('CURRENT ACTION',x0,152);c.fillStyle='#fff';c.font='600 15px system-ui';c.fillText(v.actLabel||('Idle ('+v.pose+')'),x0,172);if(v.actLabel){c.fillStyle='#0a1118';c.fillRect(x0,180,pw,7);c.fillStyle='#f2c14e';c.fillRect(x0,180,pw*(v.actProg||0),7)}
+  const car=Object.values(v.objects).filter(o=>o.loc.t==='carried').map(o=>o.name),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn').map(o=>o.name);c.font='12px system-ui';c.fillStyle='#cfd8e3';
+  wrapText(c,'Carrying: '+(car.join(', ')||'nothing')+(wo.length?' · Wearing: '+wo.join(', '):'')+' · height '+Math.round(v.agent.level==='ground'?0:v.agent.ladderFt)+' ft',x0,206,pw,15,2);
+  c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('ACTIVITY LOG',x0,244);c.font='11px ui-monospace,monospace';let y=262;const items=v.log.slice(Math.max(0,v.logN-11),v.logN);
+  for(const e of items){c.fillStyle=e.kind==='journal'?'#e9d8a6':e.kind==='reflection'?'#c9a7ff':(e.kind==='rejected'||e.kind==='fail'||e.kind==='error')?'#ff7b72':e.kind==='request'?'#9fb3c8':'#6cb6ff';y=wrapText(c,fmtDur(e.sim)+' '+(KIND_TAG[e.kind]||'ENV')+' '+e.msg,x0,y,pw,14,2)}
+  y=Math.max(y+6,520);c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('JOURNAL (latest)',x0,y);y+=16;c.font='13px Georgia,serif';c.fillStyle='#e9d8a6';const je=v.journal.entries;
+  if(v.writing!=null)y=wrapText(c,'✎ '+v.writing+'▍',x0,y,pw,16,3);else if(je.length)y=wrapText(c,'#'+je[je.length-1].n+' '+je[je.length-1].text,x0,y,pw,16,3);else{c.fillText('(blank)',x0,y);y+=16}
+  y+=6;c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('AGENT-REPORTED REFLECTION (latest)',x0,y);y+=16;c.font='italic 12px system-ui';c.fillStyle='#c9a7ff';const rf=v.reflections;wrapText(c,rf.length?rf[rf.length-1].text:'(none)',x0,y,pw,15,3)}
+
+/* =====================================================================================
+   16. FILE HELPERS + MANUAL TEST CONTROLS
+   ===================================================================================== */
+function stamp(){return new Date().toISOString().replace(/[:.]/g,'-').slice(0,19)}
+function download(urlOrData,name,isUrl,type){let url=urlOrData;if(!isUrl){const blob=new Blob([urlOrData],{type:type||'application/json'});url=URL.createObjectURL(blob);setTimeout(()=>URL.revokeObjectURL(url),60000)}
+  const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function apiMsg(m,isErr){const el=$('apiMsg');el.textContent=m;el.style.color=isErr?'var(--err)':'var(--muted)'}
+function syncSpeedSelect(){$('tSpeed').value=String(S.speed)}
+function populateSelects(){const acts=Object.keys(ACTIONS).filter(k=>k!=='put_in'&&k!=='take');$('tAction').innerHTML=acts.map(a=>'<option>'+a+'</option>').join('');
+  const ids=Object.keys(S.objects).concat(TERRAIN_FEATURES);$('tTarget').innerHTML='<option value="">(none)</option>'+ids.map(i=>'<option>'+i+'</option>').join('');$('tWith').innerHTML='<option value="">(none)</option>'+ids.map(i=>'<option>'+i+'</option>').join('')}
+function submitFromForm(){const type=$('tAction').value,req={type};const tg=$('tTarget').value,wi=$('tWith').value;if(tg)req.target=tg;if(wi){if(type==='put_down')req.onto=wi;else req.with=wi}
+  if(type==='walk_to'&&!tg){req.x=+$('tX').value;req.y=+$('tY').value}if(type==='walk'){req.direction=$('tDir').value;req.distance=+$('tDist').value}
+  if(type==='rest'||type==='wait')req.seconds=+$('tSec').value;if(type==='write_journal')req.text=$('tText').value;const r=submitAction(req);apiMsg(r.ok?'Started #'+r.actionId+': '+r.label+(r.estimatedDurationSec!=null?' (~'+fmtDur(r.estimatedDurationSec)+')':''):'Rejected: '+r.error,!r.ok)}
+function bindUI(){
+  $('tSubmit').onclick=submitFromForm;$('tStop').onclick=()=>{const r=interrupt('stopped from test controls');apiMsg(r.ok?'Interrupted.':r.error,!r.ok)};
+  $('tRefl').onclick=()=>{const r=addReflection($('tText').value||'(test reflection)');apiMsg(r.ok?'Reflection added.':r.error,!r.ok)};
+  document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const r=submitAction(JSON.parse(b.dataset.q));apiMsg(r.ok?'Started: '+r.label+(r.estimatedDurationSec!=null?' (~'+fmtDur(r.estimatedDurationSec)+')':''):'Rejected: '+r.error,!r.ok)});
+  $('tSpeed').onchange=e=>{setSpeed(+e.target.value)};$('tPause').onclick=()=>{setPaused(!S.paused);$('tPause').textContent=S.paused?'Resume clock':'Pause clock'};
+  $('tStartRun').onclick=()=>{const r=startRun();apiMsg(r.ok?'30-minute run started.':r.error,!r.ok)};$('tEndRun').onclick=()=>{const r=endRun('ended manually');apiMsg(r.ok?'Run ended.':r.error,!r.ok)};
+  $('tReset').onclick=()=>{if(confirm('Reset the island? Unsaved progress will be lost.'))reset({})};
+  $('tSave').onclick=()=>{download(JSON.stringify(saveRun()),'island-save-'+stamp()+'.json');logEvent('system','Saved state to a file.',{})};
+  let fileMode='save';$('tLoad').onclick=()=>{fileMode='save';$('fileIn').click()};$('tReplayLoad').onclick=()=>{fileMode='replay';$('fileIn').click()};
+  $('fileIn').onchange=async e=>{const f=e.target.files[0];if(!f)return;const txt=await f.text();e.target.value='';try{const r=fileMode==='save'?restoreRun(txt):enterReplay(txt);apiMsg(r.ok?(fileMode==='save'?'Restored.':'Replay loaded.'):r.error,!r.ok)}catch(err){apiMsg('Could not read file: '+err.message,true)}};
+  $('tQSave').onclick=()=>{try{localStorage.setItem('watchable-island-quicksave',JSON.stringify(saveRun()));logEvent('system','Quick-saved to this browser.',{});apiMsg('Quick-saved.')}catch(err){apiMsg('Quick save failed (browser storage unavailable or full): '+err.message,true)}};
+  $('tQLoad').onclick=()=>{try{const s=localStorage.getItem('watchable-island-quicksave');if(!s)return apiMsg('No quick save found.',true);const r=restoreRun(s);apiMsg(r.ok?'Quick-restored.':r.error,!r.ok)}catch(err){apiMsg('Quick restore failed: '+err.message,true)}};
+  $('tExpJournal').onclick=()=>download(journalText(),'island-journal-'+stamp()+'.txt',false,'text/plain');
+  $('tExpLog').onclick=()=>download(JSON.stringify({format:'watchable-island-log',version:VERSION,exportedWall:new Date().toISOString(),log:LOG},null,1),'island-log-'+stamp()+'.json');
+  $('tExpLogCsv').onclick=()=>download(logCsv(),'island-log-'+stamp()+'.csv',false,'text/csv');
+  $('tExpReplay').onclick=()=>download(JSON.stringify(exportReplay()),'island-replay-'+stamp()+'.json');
+  $('tReplayCur').onclick=()=>{if(S.run.active&&!confirm('A run is active. The simulation keeps running in the background while you watch the replay. Continue?'))return;const r=enterReplay(clone(exportReplay()));apiMsg(r.ok?'Replaying this session ('+fmtDur(r.durationSec)+').':r.error,!r.ok)};
+  $('tVideo').onclick=()=>{if(VID.rec){stopVideo()}else{const r=startVideo({});apiMsg(r.ok?'Recording video ('+r.mime+'). Keep this tab visible.':r.error,!r.ok)}};
+  $('tObs').onclick=()=>{const b=$('obsBox');const on=b.style.display!=='block';b.style.display=on?'block':'none';$('tObs').textContent=on?'Hide agent\'s observation':'Show agent\'s observation (JSON)';if(on)b.textContent=JSON.stringify(getObservation(),null,1)};
+  $('tDemo').onclick=runDemo;$('expStop').onclick=()=>{if(confirm('Stop the experiment now? The run will be saved and marked as stopped by the experimenter.')){UI.stopRequested=true;$('expStop').disabled=true;$('expStop').textContent='Stopping…'}};
+  $('rpPlay').onclick=()=>{const R=UI.replay;if(!R)return;if(R.t>=R.end)R.t=0;R.playing=!R.playing;updateReplayUI()};$('rpSlider').oninput=e=>{const R=UI.replay;if(R)replaySeek(e.target.value/1000*R.end)};
+  $('rpSpeed').onchange=e=>{if(UI.replay)UI.replay.speed=+e.target.value};$('rpExit').onclick=exitReplay;
+  $('rpVideo').onclick=()=>{if(VID.rec){stopVideo();return}const R=UI.replay;if(!R)return;R.t=0;R.playing=true;const r=startVideo({fromReplay:true});apiMsg(r.ok?'Recording replay to video; it stops at the end of the replay.':r.error,!r.ok)};
+  const setMode=m=>{cam.mode=m;$('btnFit').classList.toggle('on',m==='fit');$('btnFollow').classList.toggle('on',m==='follow')};
+  $('btnFit').onclick=()=>setMode('fit');$('btnFollow').onclick=()=>setMode('follow');
+  const zoom=(f,sx,sy)=>{if(cam.mode==='follow'){cam.zoomMul=clamp(cam.zoomMul*f,1,12);return}const[wx,wy]=s2w(sx==null?CW/2:sx,sy==null?CH/2:sy);cam.mode='free';setMode('free');cam.tScale=clamp(cam.tScale*f,fitScale()*.8,fitScale()*14);
+    cam.scale=cam.tScale;cam.cx=wx-((sx==null?CW/2:sx)-CW/2)/cam.scale;cam.cy=wy-((sy==null?CH/2:sy)-CH/2)/cam.scale;cam.tx=cam.cx;cam.ty=cam.cy};
+  $('btnZoomIn').onclick=()=>zoom(1.4);$('btnZoomOut').onclick=()=>zoom(1/1.4);
+  mapC.addEventListener('wheel',e=>{e.preventDefault();const r=mapC.getBoundingClientRect();zoom(e.deltaY<0?1.15:1/1.15,e.clientX-r.left,e.clientY-r.top)},{passive:false});
+  let drag=null;mapC.addEventListener('mousedown',e=>{drag={x:e.clientX,y:e.clientY,moved:false,cx:cam.cx,cy:cam.cy}});
+  window.addEventListener('mousemove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>4){drag.moved=true;if(cam.mode!=='free'){cam.tScale=cam.scale;setMode('free')}cam.cx=drag.cx-dx/cam.scale;cam.cy=drag.cy-dy/cam.scale;cam.tx=cam.cx;cam.ty=cam.cy}});
+  window.addEventListener('mouseup',e=>{if(drag&&!drag.moved&&$('tClickWalk').checked&&!UI.replay){const r=mapC.getBoundingClientRect();const[wx,wy]=s2w(e.clientX-r.left,e.clientY-r.top);$('tX').value=Math.round(wx);$('tY').value=Math.round(wy);
+    if(S.action&&(S.action.type==='walk_to'||S.action.type==='walk'))interrupt('new walk target from test controls');const res=submitAction({type:'walk_to',x:Math.round(wx),y:Math.round(wy)});apiMsg(res.ok?'Walking to ('+Math.round(wx)+', '+Math.round(wy)+') ~'+fmtDur(res.estimatedDurationSec):'Rejected: '+res.error,!res.ok)}drag=null});
+}
+async function runDemo(){const steps=[{type:'write_journal',text:'Arrived on the beach beside the boat.'},{type:'walk_to',target:'ladder'},{type:'climb'},{type:'look'},{type:'pick_up',target:'snorkel'},{type:'wear',target:'snorkel'},{type:'pick_up',target:'lighter'},{type:'descend'},{type:'walk_to',x:532,y:403},{type:'use',target:'snorkel'},{type:'pick_up',target:'brass_key'},{type:'walk_to',target:'bell'},{type:'use',target:'bell'},{type:'sit'},{type:'write_journal',text:'Rang the bell on the hill.'}];
+  apiMsg('Demo running through the same API a controller would use. Tip: set TEST speed to watch quickly.');
+  for(const st of steps){while(S.action)await new Promise(r=>setTimeout(r,200));const r=submitAction(st);if(!r.ok){apiMsg('Demo stopped: '+r.error,true);return}await new Promise(r=>setTimeout(r,300))}}
+
+/* Experiment setup panel (shown by an external controller; the page itself never calls an AI) */
+function showExperimentSetup(o){o=o||{};return new Promise(res=>{const box=$('expSetup');box.style.display='flex';let saved=null,savedName=null;
+  $('esInfo').innerHTML=esc(o.info||'');$('esModel').innerHTML=(o.models||[]).map(m=>'<option value="'+esc(m.id)+'"'+(m.id===o.defaultModel?' selected':'')+'>'+esc(m.label||m.id)+'</option>').join('');
+  $('esCost').value=o.defaultMaxCost!=null?o.defaultMaxCost:2;$('esVideo').checked=!!o.defaultVideo;$('esWarn').textContent=o.warning||'';
+  const obsNote=()=>{$('esObsNote').textContent=$('esObs').value==='aerial'?'The aerial picture shows the whole island from above, including things a person on the beach could not see (for example the items on the tower platform). After it, the agent gets text observations only.':'The agent only gets text describing what it can perceive from where it is. It never sees the island picture.';
+    const m=(o.models||[]).find(x=>x.id===$('esModel').value);$('esObs').querySelector('option[value=aerial]').disabled=m&&m.images===false};
+  $('esObs').onchange=obsNote;$('esModel').onchange=obsNote;obsNote();
+  document.querySelectorAll('input[name=esStart]').forEach(r=>r.onchange=()=>{$('esSavedRow').style.display=r.value==='saved'&&r.checked?'block':($('esSavedRow').style.display)});
+  document.querySelector('input[name=esStart][value=fresh]').onchange=()=>{$('esSavedRow').style.display='none'};
+  document.querySelector('input[name=esStart][value=saved]').onchange=()=>{$('esSavedRow').style.display='block'};
+  $('esFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.format!=='watchable-island-save')throw new Error('not a save file');saved=d;savedName=f.name;$('esFileInfo').textContent='Loaded '+f.name+' (saved '+(d.savedWall||'?')+')'}catch(err){saved=null;$('esFileInfo').textContent='Could not use that file: '+err.message}};
+  $('esCancel').onclick=()=>{box.style.display='none';res({cancelled:true})};
+  $('esGo').onclick=()=>{const start=document.querySelector('input[name=esStart]:checked').value;if(start==='saved'&&!saved){$('esWarn').textContent='Choose a saved island file first.';return}
+    box.style.display='none';res({cancelled:false,start,saved:start==='saved'?saved:null,savedName,priorJournal:$('esPriorJ').value,model:$('esModel').value,obsMode:$('esObs').value,maxCostUsd:+$('esCost').value,video:$('esVideo').checked})}})}
+
+/* =====================================================================================
+   17. PUBLIC CONTROLLER API  (window.Island)
+   ===================================================================================== */
+window.Island={
+  version:VERSION,
+  reset:(o)=>reset(o),                          // fresh island
+  getObservation:()=>clone(getObservation()),   // what the agent can perceive
+  submitAction:(a)=>submitAction(a),            // {type, ...params}
+  interrupt:()=>interrupt('requested by controller'),
+  getStatus:()=>getStatus(),                    // clock, run timer, action progress
+  getActionResult:(id)=>getActionResult(id),
+  getActionSchema:()=>getActionSchema(),
+  addReflection:(t)=>addReflection(t),          // agent-reported, not an in-world action
+  startRun:(o)=>startRun(o),endRun:()=>endRun('ended by controller'),
+  setSpeed:(n)=>setSpeed(n),setPaused:(p)=>setPaused(p),
+  advanceTime:(sec)=>{if(UI.replay)return{ok:false,error:'replay mode'};simStep(Math.max(0,+sec||0));return{ok:true,simTimeSec:S.simTime}}, // TEST ONLY: jump the clock
+  exportState:()=>exportState(),                // FULL world state (observer/debug only - do not give to the agent)
+  exportLog:()=>exportLog(),exportJournal:()=>journalText(),exportLogCsv:()=>logCsv(),exportReplay:()=>clone(exportReplay()),
+  saveRun:()=>clone(saveRun()),restoreRun:(d)=>restoreRun(d),
+  enterReplay:(r)=>enterReplay(r),exitReplay:()=>exitReplay(),replaySeek:(t)=>replaySeek(t),replayPlay:(p)=>{if(UI.replay){UI.replay.playing=p!==false;updateReplayUI()}},replayView:()=>UI.replay?clone({t:UI.replay.t,agent:UI.replay.view.agent,objects:UI.replay.view.objects,journal:UI.replay.view.journal,logN:UI.replay.view.logN}):null,
+  startVideo:(o)=>startVideo(o),stopVideo:()=>stopVideo(),videoSupported:()=>videoSupport(),lastVideo:()=>VID.lastBlob?{bytes:VID.lastBlob.size,type:VID.lastBlob.type,url:VID.lastUrl}:null,
+  controllerNote:(msg,data)=>logEvent('controller',String(msg),data||null), // controller-side events (model waits, errors); observer-only
+  inheritWorld:(d,o)=>inheritWorld(d,o),
+  exportLiveChunk:(c)=>exportLiveChunk(c),   // incremental replay data for the cloud live viewer
+  showExperimentSetup:(o)=>showExperimentSetup(o),
+  setExperimentBanner:(t)=>{const c=$('expChip');c.style.display=t?'inline-block':'none';c.textContent=t||'';$('expStop').style.display=t?'inline-block':'none'},
+  experimentStopRequested:()=>!!UI.stopRequested,
+  on:(fn)=>{listeners.push(fn);return()=>{const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1)}},
+  layout:LAYOUT,
+  _debug:{heightAt,terrainAt:(x,y)=>TNAME[terrainAt(x,y)],islandS,TREES}
+};
+
+/* boot */
+S=freshState();updateSeen();newRecording();resize();buildTerrainCanvas();populateSelects();bindUI();
+logEvent('system','Island ready. Version '+VERSION+'. Time speed 1× (real time). The agent stands beside the boat with a blank journal and a pencil.',{version:VERSION,speed:1});
+syncSpeedSelect();requestAnimationFrame(raf);
+window.dispatchEvent(new Event('island-ready'));
+if(window.ISLAND_LIVE_VIEWER)initLiveViewer();
+
+/* =====================================================================================
+   18. CLOUD LIVE VIEWER (only when published as the private watch page)
+   Receives recorded chunks (positions, state snapshots, log) through the page's database and
+   plays them back a little behind the island. It never runs the experiment itself.
+   ===================================================================================== */
+async function initLiveViewer(){
+  $('tests').style.display='none';$('rpExit').style.display='none';$('rpVideo').style.display='none';$('legend').style.display='none';
+  const bar=$('replayBar');bar.classList.add('on');
+  const live=document.createElement('button');live.id='rpLive';live.textContent='Go live';bar.insertBefore(live,$('rpTime'));
+  const rptBtn=document.createElement('button');rptBtn.id='rpReport';rptBtn.textContent='Report';rptBtn.style.display='none';bar.appendChild(rptBtn);
+  const status=document.createElement('div');status.id='liveStatus';status.title='Tap to hide';status.onclick=()=>{status.style.display='none'};status.style.cssText='cursor:pointer;position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(10,18,26,.88);border:1px solid var(--line);color:var(--text);padding:6px 12px;border-radius:999px;font-size:12px;max-width:92%;text-align:center';$('viewWrap').appendChild(status);
+  const setStatus=t=>{status.textContent=t;status.style.display=t?'block':'none'};
+  $('hdrNote').textContent='Watching a cloud run · read-only';
+  const rep={format:'watchable-island-replay',snapshots:[],frames:[],log:[],endSim:0};
+  const R=UI.replay={rep,t:0,end:0,playing:true,speed:1,view:null,live:true,follow:true};
+  let lastChunkWall=0,runMeta=null,runId=null,unsubChunks=null,report=null;
+  UI.liveUI=()=>{const lag=R.end-R.t+(lastChunkWall?Math.max(0,(Date.now()-lastChunkWall)/1000):0);$('rpSlider').value=R.end?Math.round(R.t/R.end*1000):0;
+    $('rpTime').textContent=fmtDur(R.t)+' / '+fmtDur(R.end)+(runMeta&&runMeta.status==='running'&&R.follow?'  ·  about '+Math.round(lag)+' s behind':'');$('rpPlay').textContent=R.playing?'❚❚':'▶';
+    live.disabled=!(runMeta&&runMeta.status==='running')||R.follow;};
+  $('rpPlay').onclick=()=>{R.playing=!R.playing;if(!R.playing)R.follow=false;UI.liveUI()};
+  $('rpSlider').oninput=e=>{R.follow=false;if(R.rep.snapshots.length){R.t=e.target.value/1000*R.end;R.view=replayStateAt(R.rep,R.t)}UI.liveUI()};
+  $('rpSpeed').value='1';$('rpSpeed').onchange=e=>{R.speed=+e.target.value;if(R.speed!==1)R.follow=false;UI.liveUI()};
+  live.onclick=()=>{R.follow=true;R.playing=true;R.speed=1;$('rpSpeed').value='1';R.t=Math.max(0,R.end-2);UI.liveUI()};
+  rptBtn.onclick=()=>{const box=document.createElement('div');box.style.cssText='position:fixed;inset:0;background:rgba(5,10,15,.85);z-index:60;overflow:auto;padding:16px';
+    box.innerHTML='<div style="max-width:760px;width:100%;box-sizing:border-box;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="display:flex;justify-content:flex-end;position:sticky;top:0;padding-bottom:8px;background:var(--panel)"><button id="rptClose">Close</button></div><div class="rptText" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5;min-width:0"></div></div>';
+    box.querySelector('.rptText').textContent=(report&&report.summary?report.summary+'\n\n────────\n\n':'')+(report&&report.report||'');document.body.appendChild(box);box.querySelector('#rptClose').onclick=()=>box.remove()};
+  setStatus('Connecting…');
+  const db=await claude?.use?.('db');
+  if(!db){setStatus('Open this page in claude.ai while signed in to watch the experiment.');return}
+  const user=await claude.use('user');
+  // owner-only Stop button (two taps, since pages cannot show confirm dialogs)
+  if(user&&await user.isOwner()){const b=$('expStop');let armed=false;b.onclick=async()=>{if(!armed){armed=true;b.textContent='Tap again to stop the run';setTimeout(()=>{armed=false;if(!b.disabled)b.textContent='Stop experiment'},5000);return}
+    b.disabled=true;b.textContent='Stop requested…';try{await db.collection('control').doc('stop').set({runId,requestedAt:new Date().toISOString()})}catch(err){b.textContent='Could not send stop: '+(err.code||err.message);b.disabled=false}}}
+  const applyMeta=m=>{runMeta=m;if(!m){setStatus('No experiment has been started yet. This page will update by itself.');return}
+    const t=(m.test?'TEST · ':'')+m.model+' · '+m.obsMode+' observations'+(m.spend!=null?' · $'+(+m.spend).toFixed(3):'');
+    $('expChip').style.display='inline-block';$('expChip').textContent=t;
+    $('expStop').style.display=(m.status==='running'&&user&&$('expStop').onclick)?'inline-block':'none';
+    if(m.status==='waiting')setStatus('The island is ready. Waiting for the experiment to start…');
+    else if(m.status==='running')setStatus(R.rep.snapshots.length?'':'Experiment starting…');
+    else setStatus('Run '+(m.result||'ended')+'. Use the timeline to replay it.'+(m.reportReady?' The agent\'s report is under Report.':''));
+    rptBtn.style.display=m.reportReady?'inline-block':'none'};
+  db.collection('live').doc('current').onSnapshot(d=>{const m=d.exists?d.data():null;
+    if(m&&m.runId!==runId){runId=m.runId;rep.snapshots.length=0;rep.frames.length=0;rep.log.length=0;R.t=0;R.end=0;R.view=null;R.follow=true;R.playing=true;logRendered=0;$('logList').innerHTML='';jrKey='';rfKey='';report=null;
+      if(unsubChunks)unsubChunks();let next=1;const pending={};
+      unsubChunks=db.collection('runs/'+runId+'/chunks').orderBy('n').onSnapshot(snap=>{for(const ch of snap.docChanges()){if(ch.type==='removed')continue;const c=ch.doc.data();if(c&&c.n>=next)pending[c.n]=c}
+        while(pending[next]){const c=pending[next];delete pending[next];next++;
+          for(const f of c.frames||[]){const l=rep.frames[rep.frames.length-1];if(l&&l.t===f.t)rep.frames[rep.frames.length-1]=f;else if(!l||f.t>l.t)rep.frames.push(f)}
+          for(const x of c.snapshots||[]){const prev=rep.snapshots[rep.snapshots.length-1];const ps=prev?prev.s:{objects:{},journal:{entries:[]},reflections:[]};
+            const full=x.s||{objects:Object.assign({},ps.objects,x.d.objects),agent:x.d.agent,journal:{entries:ps.journal.entries.concat(x.d.journalAdd||[])},reflections:ps.reflections.concat(x.d.reflAdd||[]),run:x.d.run,speed:x.d.speed,action:x.d.action};
+            if(prev&&prev.t===x.t)prev.s=full;else rep.snapshots.push({t:x.t,s:full})}
+          for(const e of c.log||[])rep.log.push(e);
+          R.end=Math.max(R.end,c.endSim||0);rep.endSim=R.end;lastChunkWall=Date.parse(c.wall)||Date.now();if(c.meta)runMeta=Object.assign({},runMeta||{},c.meta);
+          if(R.follow&&R.end-R.t>60)R.t=Math.max(0,R.end-25);}
+        if(rep.snapshots.length&&!R.view){R.t=0;R.view=replayStateAt(rep,0)}
+        applyMeta(runMeta);UI.liveUI()},err=>setStatus('Live data stopped ('+err.code+'). Reload the page to reconnect.'));
+      db.collection('runs/'+runId+'/final').doc('report').onSnapshot(d=>{report=d.exists?d.data():null;applyMeta(runMeta)});}
+    applyMeta(m)},err=>setStatus('Could not read live data ('+err.code+').'));
+  setTimeout(()=>{if(status.textContent==='Connecting…')setStatus('Still connecting… If this persists, reload the page.')},10000);
+}
+})();
+</script>

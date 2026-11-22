@@ -172,6 +172,18 @@ Then click **Start Experiment**. The run lasts 30 real minutes. Watch the figure
 
 Never put the key in a file in this folder. The controller reads it from the environment and never writes it anywhere.
 
+### Watching from a phone (cloud run, nothing to install)
+
+The run can happen in a Claude Code cloud session and be watched on a private claude.ai page:
+
+- **Watch page:** `watch/watch.html`, published as a private claude.ai page that only its owner can open. It is `island.html` in viewer mode: no test controls, and no simulation of its own.
+- **How data reaches it:** the controller runs with `--live-dir live --live-interval 20` and writes a small chunk every 20 seconds (positions, state changes, log lines). Claude copies each chunk into the page's database, and the page plays it back. Chunks carry only what changed and split if large, staying far below the 256 KB document limit.
+- **Delay:** the page runs about 20 to 30 seconds behind the island. **Go live** jumps to the newest data. The timeline replays anything already received. Once the run ends, the same page is a full replay, and **Report** shows the agent's report and the experimenter summary.
+- **Stop:** the owner can tap **Stop experiment** twice. The page writes `control/stop`, the relay creates `live/STOP`, and the controller ends the run cleanly and marks it stopped.
+- **Requirements:** the relay only runs while Claude's session keeps working through the run, about 90 copy steps for 30 minutes. If the session is interrupted, the run itself carries on and is fully recorded in `runs/`, but the page stops updating until the relay resumes. Missed chunks are then copied in order.
+- **Key safety:** the OpenAI key is saved in the cloud environment's network settings and added by its proxy. It never appears in the page, the database, the chunks or any file.
+- **Tests:** `watch/test_watch_page.js` checks the page at iPhone size against a stand-in database fed from real chunk files.
+
 ### How a turn works
 
 1. The controller asks the island for the agent's observation: only what it can perceive from where it stands. It never sees the full world state.

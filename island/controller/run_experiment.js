@@ -31,6 +31,7 @@ const opts = {
   headless: flag('headless'), autoStart: flag('auto-start'), start: arg('start', 'fresh'), saved: arg('saved', null),
   priorJournal: arg('prior-journal', 'keep'), video: flag('video'), historyTurns: +arg('history', 60),
   report: !flag('no-report'), check: !flag('no-check'), out: path.resolve(arg('out', path.join(__dirname, '..', 'runs'))),
+  liveDir: arg('live-dir', null), liveInterval: +arg('live-interval', 20),
   priceIn: arg('price-in', null), priceOut: arg('price-out', null), mockSeed: +arg('seed', 7),
 };
 const ISLAND = 'file://' + path.resolve(__dirname, '..', 'island.html');
@@ -121,6 +122,25 @@ async function listOpenAIModels() {
   W('config.json', config);
   console.log(`Run ${runId}\n  ${provider.label} · ${obsMode} observations · limit $${choice.maxCostUsd} · ${opts.minutes} min at ${opts.speed}×${isTest ? '  [TEST]' : ''}\n  Files: ${dir}`);
 
+  // ---- cloud live viewer feed: chunk files a relay copies to the private watch page ----
+  let live = null;
+  if (opts.liveDir) {
+    const ld = path.resolve(opts.liveDir); fs.mkdirSync(ld, { recursive: true });
+    for (const f of fs.readdirSync(ld)) if (/^(chunk-\d+|current|final)\.json$|^STOP$/.test(f)) fs.unlinkSync(path.join(ld, f));
+    const wj = (f, o) => { const tmp = path.join(ld, f + '.tmp'); fs.writeFileSync(tmp, JSON.stringify(o)); fs.renameSync(tmp, path.join(ld, f)); };
+    live = { ld, wj, n: 0, cursor: null, meta: { runId, model: provider.label, obsMode, test: isTest, testLabel: testLabel || null, startedWall: status.startedWall } };
+    live.flush = async (extra) => { const c = await isl(cur => Island.exportLiveChunk(cur), live.cursor); live.cursor = c.cursor; delete c.cursor; live.n++;
+      // split so that no chunk document comes near the page database's 256 KiB limit
+      const parts = []; const split = (x) => { const js = JSON.stringify(x); if (js.length < 180000 || (x.frames.length + x.snapshots.length + x.log.length) < 4) { parts.push(x); return; }
+        const mid = x.frames.length ? x.frames[Math.floor(x.frames.length / 2)].t : (x.snapshots.length ? x.snapshots[Math.floor(x.snapshots.length / 2)].t : x.log[Math.floor(x.log.length / 2)].sim);
+        const a = { frames: x.frames.filter(f => f.t < mid), snapshots: x.snapshots.filter(f => f.t < mid), log: x.log.filter(e => e.sim < mid), endSim: mid };
+        const b = { frames: x.frames.filter(f => f.t >= mid), snapshots: x.snapshots.filter(f => f.t >= mid), log: x.log.filter(e => e.sim >= mid), endSim: x.endSim };
+        if (!a.frames.length && !a.snapshots.length && !a.log.length) { parts.push(x); return; } split(a); split(b); };
+      split(c);
+      parts.forEach((pt, k) => { if (k > 0) live.n++; wj('chunk-' + String(live.n).padStart(4, '0') + '.json', Object.assign({ n: live.n, runId, wall: new Date().toISOString(), meta: Object.assign({ status: 'running', spend: +spentNow().toFixed(4) }, k === parts.length - 1 ? (extra || {}) : {}) }, pt)); }); };
+    wj('current.json', Object.assign({ status: 'running' }, live.meta));
+  }
+  const stopFileSeen = () => live && fs.existsSync(path.join(live.ld, 'STOP'));
   await page.exposeFunction('__islandEvent', e => { A('island-events.jsonl', e); });
   await isl(() => Island.on(e => window.__islandEvent(e)));
   const note = (msg, data) => isl(([m, d]) => Island.controllerNote(m, d), [msg, data || null]).catch(() => {});
@@ -143,6 +163,7 @@ async function listOpenAIModels() {
     }
     return msgs;
   }
+  const spentNow = () => spent;
   let calls = 0, spent = 0, priceUnknownWarned = false, consecutiveErrors = 0;
   const reserve = Math.min(0.1 * choice.maxCostUsd, 0.25);
   const banner = s => isl(t => Island.setExperimentBanner(t), `AI: ${provider.label}${isTest ? ' [TEST]' : ''} · ${obsMode} · $${spent.toFixed(3)} of $${choice.maxCostUsd}${s ? ' · ' + s : ''}`).catch(() => {});
@@ -191,6 +212,8 @@ async function listOpenAIModels() {
       if (await isl(() => Island.experimentStopRequested())) { stopReason = 'stopped by the experimenter'; await note('Experimenter pressed Stop.'); await isl(() => Island.endRun()); break; }
       if ((price && spent >= choice.maxCostUsd - reserve) || calls >= opts.maxCalls) { stopReason = `stopped: spending limit reached ($${spent.toFixed(3)} of $${choice.maxCostUsd}, ${calls} calls)`; await note(stopReason); await isl(() => Island.endRun()); break; }
       if (consecutiveErrors >= 5) { stopReason = 'interrupted: the model was unavailable for 5 decisions in a row'; await note(stopReason); await isl(() => Island.endRun()); break; }
+      if (stopFileSeen()) { stopReason = 'stopped by the experimenter (from the watch page)'; await note('Experimenter pressed Stop on the watch page.'); await isl(() => Island.endRun()); break; }
+      if (live && Date.now() - (live.lastFlush || 0) >= opts.liveInterval * 1000) { live.lastFlush = Date.now(); await live.flush(); }
       if (Date.now() - lastAutosave > 60000) { W('autosave.json', await isl(() => Island.saveRun())); lastAutosave = Date.now(); }
 
       if (!st.action) {
@@ -252,6 +275,7 @@ async function listOpenAIModels() {
   status.reason = stopReason || 'the run reached its time limit';
   status.endedWall = new Date().toISOString(); status.modelCalls = calls; status.estimatedCostUsd = +spent.toFixed(4);
   W('status.json', status);
+  if (live) { try { await live.flush({ status: 'ended', result: status.status }); } catch (e) { console.error('live flush failed', e.message); } }
 
   // ---------------- final report (agent) and experimenter summary ----------------
   if (finalState && opts.report) {
@@ -307,6 +331,11 @@ async function listOpenAIModels() {
     W('summary.md', lines.join('\n'));
   } catch (e) { console.error('summary failed', e.message); }
   status.estimatedCostUsd = +spent.toFixed(4); W('status.json', status);
+  if (live) {
+    const rd = f => { try { return fs.readFileSync(path.join(dir, f), 'utf8'); } catch (_) { return ''; } };
+    live.wj('final.json', { report: rd('report.md').slice(0, 120000), summary: rd('summary.md').slice(0, 60000), wall: new Date().toISOString() });
+    live.wj('current.json', Object.assign({}, live.meta, { status: 'ended', result: status.status, reportReady: true, spend: +spent.toFixed(4) }));
+  }
   await isl(t => Island.setExperimentBanner(t), `Run ${status.status}. Files saved in runs/${runId}`).catch(() => {});
   console.log(`\nRun ${status.status}: ${status.reason}\nModel calls ${calls}, estimated cost $${spent.toFixed(4)}\nFiles: ${dir}`);
   if (!opts.headless && !pageClosed) { console.log('The island window stays open for replay. Close it (or press Ctrl+C) when done.'); await new Promise(r => page.on('close', r)); }
