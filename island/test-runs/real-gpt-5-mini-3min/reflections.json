@@ -1,0 +1,80 @@
+[
+ {
+  "n": 1,
+  "simTime": 2.8,
+  "wall": "2026-11-22T05:30:10.771Z",
+  "text": "I'll walk to the rowboat to look inside and inspect the oar; I may pick it up if useful."
+ },
+ {
+  "n": 2,
+  "simTime": 5.9,
+  "wall": "2026-11-22T05:30:13.919Z",
+  "text": "Examine the oar's condition and size to see if it's usable or could be useful as a tool."
+ },
+ {
+  "n": 3,
+  "simTime": 14.4,
+  "wall": "2026-11-22T05:30:22.354Z",
+  "text": "I'll pick up the oar to carry it—could be useful for paddling or as a tool."
+ },
+ {
+  "n": 4,
+  "simTime": 19.6,
+  "wall": "2026-11-22T05:30:27.520Z",
+  "text": "Check inside the rowboat for supplies, damage, or anything useful."
+ },
+ {
+  "n": 5,
+  "simTime": 28.9,
+  "wall": "2026-11-22T05:30:36.856Z",
+  "text": "Walk to the shoreline to check the water, look for seaweed, shells, currents, or anything washed up."
+ },
+ {
+  "n": 6,
+  "simTime": 40.4,
+  "wall": "2026-11-22T05:30:48.354Z",
+  "text": "Head to the driftwood log to inspect it for size, condition, and whether I can use it for shelter, firewood, or tools."
+ },
+ {
+  "n": 7,
+  "simTime": 72.9,
+  "wall": "2026-11-22T05:31:20.853Z",
+  "text": "Grab the 3 ft driftwood to use as firewood or a tool, then I'll decide whether to go examine the nearby rope or crate."
+ },
+ {
+  "n": 8,
+  "simTime": 78.9,
+  "wall": "2026-11-22T05:31:26.886Z",
+  "text": "Walk east to the coil of rope to inspect it and see if it's usable (length, condition). I'll check the nearby crate afterward."
+ },
+ {
+  "n": 9,
+  "simTime": 111,
+  "wall": "2026-11-22T05:31:58.986Z",
+  "text": "Pick up the coil of rope (about 30 ft). I'll carry it — could be useful for climbing, hauling, or tying things; may consider using it on the ladder or to reach the platform later."
+ },
+ {
+  "n": 10,
+  "simTime": 116,
+  "wall": "2026-11-22T05:32:04.003Z",
+  "text": "Set the driftwood down so one hand is free, then I'll pick up the coil of rope."
+ },
+ {
+  "n": 11,
+  "simTime": 125,
+  "wall": "2026-11-22T05:32:13.016Z",
+  "text": "Pick up the coil of rope so I have it with the oar; then I'll consider heading toward the ladder/tower to inspect it."
+ },
+ {
+  "n": 12,
+  "simTime": 131.3,
+  "wall": "2026-11-22T05:32:19.305Z",
+  "text": "Head to the tall metal ladder/tower to inspect it and check if I can climb up to the platform. I'll keep the oar and rope with me."
+ },
+ {
+  "n": 13,
+  "simTime": 164.1,
+  "wall": "2026-11-22T05:32:52.079Z",
+  "text": "Let the walk continue to the ladder; once there I'll inspect the ladder and decide whether to climb with the rope/oar."
+ }
+]

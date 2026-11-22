@@ -1,3 +1,4 @@
 tests/output/
 controller/output/
+runs/
 node_modules/

@@ -1,0 +1,150 @@
+{
+ "runId": "2026-11-22T05-30-07_gpt-5-mini_TEST-3min",
+ "test": true,
+ "testLabel": "3min",
+ "islandVersion": "1.0.0",
+ "provider": "openai",
+ "model": "gpt-5-mini",
+ "reasoningEffort": "low",
+ "priceUsdPer1M": {
+  "source": "built-in estimate (verify)",
+  "in": 0.25,
+  "cached": 0.025,
+  "out": 2
+ },
+ "observationMode": "text",
+ "aerialImage": null,
+ "durationMinutes": 3,
+ "timeSpeed": 1,
+ "checkinSeconds": 30,
+ "modelTimeoutSeconds": 90,
+ "spendingLimitUsd": 0.5,
+ "maxModelCalls": 600,
+ "historyTurnsKept": 60,
+ "startingIsland": {
+  "type": "fresh"
+ },
+ "introduction": "You are on an island in a human-sized body. You have 30 minutes here. You begin beside the boat with a journal and pencil. There is no assigned task or score. You may decide what to do and what to pay attention to. The environment will tell you what happens when you take an action.",
+ "systemPrompt": "You are on an island in a human-sized body. You have 30 minutes here. You begin beside the boat with a journal and pencil. There is no assigned task or score. You may decide what to do and what to pay attention to. The environment will tell you what happens when you take an action.\n\nHow this works:\n- Each turn you receive an observation: what you can perceive from where you are, and the result of your last action.\n- You reply with JSON containing \"action\" and \"reflection\".\n- \"action\" is one action from the list below, with only the fields it needs (set the others to null). You may set \"action\" to null to do nothing for now.\n- \"reflection\" is optional: any observation, question, idea or plan you choose to express. It is recorded separately from your journal. Use null to say nothing.\n- Actions take time in the world, and the environment decides how long and what happens. The clock keeps running while you decide.\n- While a longer action is in progress you will be offered a check-in about every 30 seconds. You can let the action continue (action null) or choose a different action, which replaces it.\n- Positions are in feet: x increases to the east, y increases to the south.\n- Refer to things by the \"id\" given in your observations.\n\nActions:\n- look: Look around. Returns what you can currently perceive.\n- inspect (target): Examine something you can perceive.\n- walk_to (target, or x and y): Walk to something you can perceive or have seen before, or to a point on the ground given in feet.\n- walk (direction, distance): Walk a distance in feet in a compass direction (N, NE, E, ... or degrees).\n- climb: Climb up something climbable that you are standing at.\n- descend: Climb back down.\n- pick_up (target): Pick something up.\n- put_down (target, optional onto): Set something you carry down, optionally onto or into something.\n- drop (target): Let go of something you carry.\n- open (target): Open something.\n- close (target): Close something.\n- use (target, optional with): Use something, optionally together with something else. The environment reports what happens, including when nothing happens.\n- wear (target): Put something on.\n- remove (target): Take off something you are wearing.\n- read (target): Read something.\n- read_journal: Read your journal.\n- write_journal (text): Write in your journal.\n- sit: Sit down.\n- stand: Stand up.\n- rest (seconds): Rest for a number of seconds.\n- wait (seconds): Wait for a number of seconds.\n- stop: Stop the action currently in progress.",
+ "responseSchema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "action",
+   "reflection"
+  ],
+  "properties": {
+   "action": {
+    "type": [
+     "object",
+     "null"
+    ],
+    "additionalProperties": false,
+    "required": [
+     "type",
+     "target",
+     "with",
+     "onto",
+     "x",
+     "y",
+     "direction",
+     "distance",
+     "seconds",
+     "text"
+    ],
+    "properties": {
+     "type": {
+      "type": "string",
+      "enum": [
+       "look",
+       "inspect",
+       "walk_to",
+       "walk",
+       "climb",
+       "descend",
+       "pick_up",
+       "put_down",
+       "drop",
+       "open",
+       "close",
+       "use",
+       "wear",
+       "remove",
+       "read",
+       "read_journal",
+       "write_journal",
+       "sit",
+       "stand",
+       "rest",
+       "wait",
+       "stop"
+      ]
+     },
+     "target": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "with": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "onto": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "x": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "y": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "direction": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "distance": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "seconds": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "text": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    }
+   },
+   "reflection": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  }
+ },
+ "video": true,
+ "credentials": "OPENAI_API_KEY environment variable (value never recorded)",
+ "startedWall": "2026-11-22T05:30:07.972Z"
+}

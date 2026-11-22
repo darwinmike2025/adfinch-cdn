@@ -84,6 +84,7 @@ aside{border-left:1px solid var(--line);display:flex;flex-direction:column;min-h
 .le.jr{border-left-color:var(--journal)} .le.jr .k{color:var(--journal)}
 .le.rf{border-left-color:var(--refl)} .le.rf .k{color:var(--refl)}
 .le.sys{border-left-color:var(--sys)} .le.sys .k{color:var(--sys)}
+.le.ctl{border-left-color:#ffa657} .le.ctl .k{color:#ffa657}
 #jrRow{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0;border-top:1px solid var(--line)}
 #jrRow .panel+.panel{border-left:1px solid var(--line)}
 #journalList,#reflList{flex:1;overflow:auto;padding:6px 10px}
@@ -104,6 +105,8 @@ aside{border-left:1px solid var(--line);display:flex;flex-direction:column;min-h
   <span id="speedChip" class="chip speed1">1× REAL TIME</span>
   <span id="pauseChip" class="chip" style="display:none;color:#ffa657">CLOCK PAUSED</span>
   <span id="recChip" class="chip rec">● REC VIDEO</span>
+  <span id="expChip" class="chip" style="display:none;color:#c9a7ff;border-color:#45346a"></span>
+  <button id="expStop" class="warn" style="display:none">Stop experiment</button>
   <span class="spacer"></span>
   <span style="color:var(--muted);font-size:12px">Offline simulation · no AI connected · coordinates in feet</span>
 </header>
@@ -233,6 +236,28 @@ aside{border-left:1px solid var(--line);display:flex;flex-direction:column;min-h
 </main>
 </div>
 
+<div id="expSetup" style="display:none;position:fixed;inset:0;background:rgba(5,10,15,.78);z-index:50;align-items:center;justify-content:center">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;width:min(560px,94vw);max-height:92vh;overflow:auto">
+    <h2 style="margin:0 0 4px;font-size:18px">Start experiment</h2>
+    <div id="esInfo" style="color:var(--muted);font-size:12px;margin-bottom:12px"></div>
+    <div style="display:grid;gap:12px">
+      <div><b>Starting island</b><br>
+        <label><input type="radio" name="esStart" value="fresh" checked> Original island (fresh, initial state)</label><br>
+        <label><input type="radio" name="esStart" value="saved"> Saved island (left by an earlier run)</label>
+        <div id="esSavedRow" style="margin:6px 0 0 22px;display:none">
+          <input type="file" id="esFile" accept=".json,application/json"><div id="esFileInfo" style="color:var(--muted);font-size:12px"></div>
+          <label style="font-size:12px">Previous journal: <select id="esPriorJ"><option value="keep">leave it on the island (its writing can be found)</option><option value="remove">remove it</option></select></label>
+        </div></div>
+      <div><b>Model</b><br><select id="esModel" style="width:100%"></select></div>
+      <div><b>What the agent receives</b><br><select id="esObs" style="width:100%">
+        <option value="text">Text observations only (default)</option>
+        <option value="aerial">Full aerial reference image once at the start, then text observations</option></select>
+        <div id="esObsNote" style="color:var(--muted);font-size:12px;margin-top:4px"></div></div>
+      <div><b>Spending limit</b> (USD, the run stops if the estimate reaches it)<br><input id="esCost" type="number" step="0.5" min="0" style="width:120px"></div>
+      <div><label><input type="checkbox" id="esVideo"> Record video of the screen (keep this window visible)</label></div>
+      <div id="esWarn" style="color:#ffa657;font-size:12px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end"><button id="esCancel">Cancel</button><button id="esGo" class="primary">Start Experiment</button></div>
+    </div></div></div>
 <script>
 'use strict';
 (function(){
@@ -481,8 +506,8 @@ function freshState(){
    5. LOGGING + RECORDING
    kinds: request | start | complete | fail | interrupt | rejected | move | object | journal | reflection | sound | system | error
    ===================================================================================== */
-const KIND_CLASS={request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
-const KIND_TAG={request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
+const KIND_CLASS={controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
+const KIND_TAG={controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
 const listeners=[];
 function logEvent(kind,msg,data){const e={seq:S.nextSeq++,sim:+S.simTime.toFixed(3),wall:new Date().toISOString(),speed:S.speed,kind,msg,data:data||null};
   LOG.push(e);recordFrame(true);for(const f of listeners){try{f(e)}catch(_){}}UI.onLog&&UI.onLog(e);return e}
@@ -523,6 +548,7 @@ function stateText(o){const s=o.state,p=[];if(o.container&&o.container.openable)
   if(o.door)p.push(s.open?'open':'closed');if(s.lit)p.push(o.id==='fire_pit'?'burning':'lit');if(s.broken)p.push('broken');if(s.full)p.push('full of water');if(o.id==='blanket')p.push(s.spread?'spread out':'folded');if(o.id==='blocks')p.push(s.stacked?'stacked in a tower':'scattered');if(o.id==='journal')p.push(S.journal.entries.length+' entries');return p.join(', ')}
 
 /* Visibility (what the agent can perceive). Returns map id -> {d, detail} */
+const lvlOk=o=>objLevel(o)===S.agent.level||(objLevel(o)==='ground'&&S.agent.level==='ground');
 function perceiveObjects(){
   const a=S.agent,ax=a.x,ay=a.y,ind=agentIndoors(),high=a.level==='ground'?0:a.ladderFt,res={};
   const doorView=a.level==='ground'&&S.objects.cabin_door.state.open&&dist(ax,ay,DOOR_POS.x,DOOR_POS.y)<=20; // see through the open doorway
@@ -535,6 +561,7 @@ function perceiveObjects(){
     else if(ind&&o.bothSides&&o.id==='cabin'){vis=true;det=true}
     else if(o.kind==='fixture'){let range=o.viewRange||150;if(o.id==='fire_pit'&&o.state.lit)range=2000;if(high>30)range=Math.max(range,o.viewRange?2000:0);if(ind!==oin&&!o.bothSides)range=Math.min(range,ind?150:40);vis=d<=range;det=d<=Math.max(DETAIL_RANGE,o.reach+2)&&high<5}
     else{vis=high<=20&&d<=(ind!==oin?40:itemRange(o));det=d<=DETAIL_RANGE&&high<5&&ind===oin}
+    if(vis&&!det&&high<5&&o.loc.t!=='underwater'&&lvlOk(o)&&reachInfo(o).ok)det=true; // anything within reach can be examined closely
     if(vis)res[o.id]={d,detail:det}}
   return res}
 function reachInfo(o){
@@ -570,7 +597,11 @@ function resolveTarget(t){if(t==null||t==='')return null;if(typeof t==='object'&
   return null}
 const knows=(o)=>{if(o.loc.t==='carried'||o.loc.t==='worn')return true;return!!perceiveObjects()[o.id]};
 // memory: fixed features the agent has seen before can be walked back to
-function updateSeen(){if(!S.seen)S.seen={};const pv=perceiveObjects();for(const id in pv)S.seen[id]=+S.simTime.toFixed(1)}
+function visibleFeatures(){const a=S.agent,out=[];if(agentIndoors())return out;const high=a.level==='ground'?0:a.ladderFt;
+  for(const f of TERRAIN_FEATURES){const p=featurePoint(f);if(!p)continue;const d=dist(p.x,p.y,a.x,a.y);const range={pond:400,stream:250,hill:2000,ocean:2000,beach:500,forest:350,cliffs:400}[f];if(d>range&&high<30)continue;
+    out.push({id:f,distanceFt:Math.round(d),bearing:d<2?'here':compass(bearingDeg(a.x,a.y,p.x,p.y))})}return out}
+function updateSeen(){if(!S.seen)S.seen={};const pv=perceiveObjects();for(const id in pv)S.seen[id]=+S.simTime.toFixed(1);for(const f of visibleFeatures())S.seen['feature:'+f.id]=+S.simTime.toFixed(1)}
+function featureKnown(id){return!!(S.seen&&S.seen['feature:'+id]!=null)||visibleFeatures().some(f=>f.id===id)}
 const remembers=(o)=>o.kind==='fixture'&&S.seen&&S.seen[o.id]!=null;
 
 /* =====================================================================================
@@ -585,15 +616,14 @@ function getObservation(){
     if(id==='platform'&&!v.detail){e.distanceFt=Math.round(Math.hypot(v.d,L.ladderHeight-high))}
     e.reachable=reachInfo(o).ok;objs.push(e)}
   objs.sort((p,q)=>p.distanceFt-q.distanceFt);
-  const feats=[];if(!ind){for(const f of TERRAIN_FEATURES){const p=featurePoint(f);if(!p)continue;const d=dist(p.x,p.y,a.x,a.y);const range={pond:400,stream:250,hill:2000,ocean:2000,beach:500,forest:350,cliffs:400}[f];if(d>range&&high<30)continue;
-    feats.push({id:f,distanceFt:Math.round(d),bearing:d<2?'here':compass(bearingDeg(a.x,a.y,p.x,p.y))})}}
+  const feats=visibleFeatures();
   const sounds=S.sounds.filter(s=>S.simTime-s.t<=30).map(s=>({secondsAgo:Math.round(S.simTime-s.t),description:s.msg,bearing:dist(s.x,s.y,a.x,a.y)<5?'here':compass(bearingDeg(a.x,a.y,s.x,s.y)),distanceFt:Math.round(dist(s.x,s.y,a.x,a.y))}));
   const notes=[];
   if(pv.platform&&!pv.platform.detail)notes.push('There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.');
   if(a.level==='platform')notes.push('You are on the platform at the top of the ladder, about 100 ft up. You can see the whole island, but small objects on the ground are too far away to make out.');
   if(a.level==='ladder')notes.push('You are on the ladder, '+Math.round(a.ladderFt)+' ft above the ground, holding on with both hands.');
   if(ind)notes.push('You are inside the cabin.'+(O('cabin_door').state.open?' The door is open.':' The door is closed.'));
-  if(a.level==='ground'&&pondEdgeDist(a.x,a.y)<14&&!isWearing('snorkel'))notes.push('The pond water is murky; you cannot see the bottom from the bank.');
+  if(a.level==='ground'&&pondEdgeDist(a.x,a.y)<14&&!isWearing('snorkel'))notes.push('The pond water is murky.');
   const ac=S.action;const last=S.history[S.history.length-1]||null;
   return{
     observationOf:'agent',simTimeSec:+S.simTime.toFixed(1),
@@ -612,8 +642,10 @@ function getObservation(){
    Effects happen on completion unless noted. The environment decides outcomes.
    ===================================================================================== */
 function needGround(){const a=S.agent;if(a.level==='ladder')return'You are on the ladder. Climb or descend first.';if(a.level==='platform')return'You are on the platform. Descend the ladder first.';return null}
-function needTarget(p,{mustKnow=true,memory=false}={}){const r=resolveTarget(p.target);if(!r)return{error:p.target?'Unknown target "'+p.target+'".':'This action needs a "target".'};
-  if(r.kind==='object'&&mustKnow&&!knows(r.o)&&!(memory&&remembers(r.o)))return{error:'You cannot see "'+p.target+'" from here.'};return r}
+const NOT_HERE=t=>'You do not notice anything called "'+t+'" here.';   // same reply for undiscovered and non-existent things
+function needTarget(p,{mustKnow=true,memory=false}={}){if(p.target==null||p.target==='')return{error:'This action needs a "target".'};const r=resolveTarget(p.target);if(!r)return{error:NOT_HERE(p.target)};
+  if(r.kind==='feature'&&!featureKnown(r.id))return{error:NOT_HERE(p.target)};
+  if(r.kind==='object'&&mustKnow&&!knows(r.o)&&!(memory&&remembers(r.o)))return{error:NOT_HERE(p.target)};return r}
 function carryFactor(){let f=1;for(const o of carried())if(o.awkward)f*=.85;const w=carried().reduce((s,o)=>s+o.weight,0);if(w>10)f*=1-Math.min(.4,(w-10)*.012);return f}
 function segSpeed(x0,y0,x1,y1){const d=dist(x0,y0,x1,y1)||1e-6,dh=heightAt(x1,y1)-heightAt(x0,y0),gr=dh/d;const t=grid[cellAt((x0+x1)/2,(y0+y1)/2)];
   const ts=TSPEED[t]||.3;return WALK_SPEED*ts/(1+2.5*Math.max(0,gr)+Math.max(0,-gr))*carryFactor()}
@@ -705,7 +737,7 @@ const ACTIONS={
   put_down:{desc:'Set a carried item down gently: on the ground at your feet, or onto/into a reachable surface or open container with "onto".',params:{target:'item id',onto:'surface/container id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='carried')return{error:'You are not carrying that.'};
       if(S.agent.level==='ladder')return{error:'You are on the ladder; you cannot set things down here. You could drop it.'};
-      const onto=p.onto||p.container||p.with;let tgt=null;if(onto){const t=resolveTarget(onto);if(!t||t.kind!=='object')return{error:'Unknown place "'+onto+'".'};tgt=t.o;
+      const onto=p.onto||p.container||p.with;let tgt=null;if(onto){const t=resolveTarget(onto);if(!t||t.kind!=='object'||!knows(t.o))return{error:NOT_HERE(onto)};tgt=t.o;
         if(!tgt.surface&&!tgt.container)return{error:'You cannot put things in or on the '+tgt.name+'.'};const ri=reachInfo(tgt);if(!ri.ok)return{error:ri.reason};
         if(tgt.container&&!tgt.container.open)return{error:'The '+tgt.name+' is closed.'};if(tgt.container&&contentsOf(tgt.id).length>=tgt.container.capacity)return{error:'The '+tgt.name+' is full.'};
         if(tgt.container&&o.size!=='small'&&tgt.id==='chest')return{error:'The '+o.name+' does not fit in the chest.'};if(tgt.container&&o.size==='large')return{error:'The '+o.name+' is too big to go in the '+tgt.name+'.'};if(tgt.id===o.id)return{error:'You cannot put something inside itself.'}}
@@ -734,7 +766,7 @@ const ACTIONS={
     complete(a){const o=O(a.data.id);if(o.door)o.state.open=false;else o.container.open=false;markChanged();a.result={message:'You close the '+o.name+'.'};logEvent('object','Closed '+o.id+'.',{id:o.id})}},
   use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter with fire_pit or lantern; brass_key with chest; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot use the '+r.id+' by itself. Try using an object with it.'};const o=r.o;
-      let w=null;if(p.with){w=resolveTarget(p.with);if(!w)return{error:'Unknown object "'+p.with+'".'};if(w.kind==='object'&&!knows(w.o))return{error:'You cannot see "'+p.with+'" from here.'}}
+      let w=null;if(p.with){w=resolveTarget(p.with);if(!w||(w.kind==='object'&&!knows(w.o))||(w.kind==='feature'&&!featureKnown(w.id)))return{error:NOT_HERE(p.with)}}
       const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(x.loc.t!=='carried'&&x.loc.t!=='worn')return'You need to be holding the '+x.name+'.';return null};
       const reachW=()=>{if(w&&w.kind==='object'){const ri=reachInfo(w.o);if(!ri.ok)return ri.reason}return null};
       if(S.agent.level==='ladder')return{error:'You are holding on to the ladder with both hands.'};
@@ -829,9 +861,13 @@ function submitAction(reqIn){
   const reject=(err,code)=>{logEvent('rejected',err,{request:req,code});return{ok:false,error:err,code:code||'rejected'}};
   if(UI.replay)return reject('The island is in replay mode.','replay_mode');
   if(req.type==='stop'||req.type==='interrupt'){const r=interrupt('requested by controller');return r.ok?r:reject(r.error,'nothing_to_stop')}
-  if(S.run.ended)return reject('The 30-minute run is over. Reset the island to start again.','run_over');
+  if(S.run.ended)return reject('The run is over. No more actions are accepted.','run_over');
   const def=ACTIONS[req.type];if(!def)return reject('Unsupported action "'+req.type+'". Supported: '+Object.keys(ACTIONS).concat('stop').join(', ')+'.','unsupported');
-  if(S.action){if(req.interruptCurrent)interrupt('replaced by new action');else return reject('Busy: "'+S.action.label+'" is still in progress. Wait, or send {type:"stop"} first.','busy')}
+  if(S.action){if(!req.interruptCurrent)return reject('Busy: "'+S.action.label+'" is still in progress. Wait, or send {type:"stop"} first.','busy');
+    // check the replacement first, so an invalid one leaves the current action running
+    let pre;try{pre=def.validate(req)}catch(err){pre={error:'Environment error validating action: '+err.message}}
+    if(pre.error)return reject(pre.error+' (Your current action continues.)','invalid');
+    interrupt('replaced by new action')}
   let v;try{v=def.validate(req)}catch(err){return reject('Environment error validating action: '+err.message,'env_error')}
   if(v.error)return reject(v.error,'invalid');
   const a={id:S.nextActionId++,type:req.type,params:req,label:v.label,status:'running',startSim:+S.simTime.toFixed(3),endSim:null,duration:v.duration!=null?v.duration:null,elapsed:0,progress:0,data:v.data||{}};
@@ -842,10 +878,10 @@ function submitAction(reqIn){
 function finishAction(a,status){const def=ACTIONS[a.type];a.status=status;a.endSim=+S.simTime.toFixed(3);
   const rec={id:a.id,type:a.type,params:a.params,label:a.label,status,startSim:a.startSim,endSim:a.endSim,durationSec:+(a.endSim-a.startSim).toFixed(2),result:a.result||null};
   S.history.push(rec);if(S.history.length>200)S.history.shift();S.action=null;markChanged();
-  logEvent(status==='completed'?'complete':status==='failed'?'fail':'interrupt',(status==='completed'?'Completed: ':status==='failed'?'Failed: ':'Interrupted: ')+a.label+' after '+fmtDur(rec.durationSec)+'. '+(a.result&&a.result.message?a.result.message:''),{actionId:a.id,status,result:a.result?{message:a.result.message}:null});return rec}
+  logEvent(status==='completed'?'complete':status==='failed'?'fail':'interrupt',(status==='completed'?'Completed: ':status==='failed'?'Failed: ':'Interrupted: ')+a.label+' after '+fmtDur(rec.durationSec)+'. '+(a.result&&a.result.message?a.result.message:''),{actionId:a.id,status,result:a.result?{message:a.result.message,progressAtStop:a.result.progressAtStop}:null});return rec}
 function interrupt(reason){const a=S.action;if(!a)return{ok:false,error:'No action is in progress.'};const def=ACTIONS[a.type];
   if(def.interrupt)def.interrupt(a);else{a.result={message:'You stop before finishing. Nothing changed.'}}
-  if(reason)a.result.reason=reason;const rec=finishAction(a,'interrupted');return{ok:true,interrupted:rec}}
+  if(reason)a.result.reason=reason;a.result.progressAtStop=+(a.progress||0).toFixed(3);const rec=finishAction(a,'interrupted');return{ok:true,interrupted:rec}}
 function tickAction(dt){const a=S.action;if(!a)return 0;const def=ACTIONS[a.type];let left;
   if(def.tick){left=def.tick(a,dt)}else{a.elapsed+=dt;a.progress=a.duration?clamp(a.elapsed/a.duration,0,1):1;left=a.elapsed>=a.duration?a.elapsed-a.duration:-1}
   if(left>=0){const t0=S.simTime;S.simTime=t0+(dt-left);a.progress=1;try{def.complete&&def.complete(a)}catch(err){a.failed=true;a.result={message:'Environment error: '+err.message}}
@@ -890,8 +926,35 @@ function exportReplay(){recordSnapshotIfDirty();recordFrame(true);return{format:
   endSim:+S.simTime.toFixed(3),initial:REC.initial,snapshots:REC.snapshots,frames:REC.frames,log:LOG}}
 function saveRun(){recordSnapshotIfDirty();return{format:'watchable-island-save',version:VERSION,savedWall:new Date().toISOString(),state:snapState(),log:LOG,recording:REC}}
 function restoreRun(data){if(typeof data==='string')data=JSON.parse(data);if(!data||data.format!=='watchable-island-save')return{ok:false,error:'Not a Watchable Island save file.'};
+
   if(UI.replay&&UI.exitReplay)UI.exitReplay();S=clone(data.state);S.dirty=false;LOG=clone(data.log||[]);REC=clone(data.recording);S.nextSeq=Math.max(S.nextSeq,(LOG.length?LOG[LOG.length-1].seq+1:1));
   if(UI.onReset)UI.onReset();logEvent('system','Restored saved state from '+data.savedWall+' (sim time '+fmtDur(S.simTime)+').',{savedWall:data.savedWall});return{ok:true,simTimeSec:S.simTime}}
+/* Start a NEW run on the physical island left by an earlier run ("saved island").
+   Kept: object positions/states (moved, opened, broken, burned, lit), fire, door, chest, writing.
+   Reset: the agent (back beside the boat, standing), its memory of what it has seen, the run clock,
+   journal entries panel, reflections, sounds, action history and the log/recording.
+   Items the previous agent was carrying or wearing are left where it was when its run ended
+   (on the ground; on the platform if it was there; at the ladder base if it was on the ladder).
+   The previous journal stays on the island as a "used journal" (its writing readable) unless
+   priorJournal:'remove'. The new agent gets a fresh blank journal and pencil. */
+function inheritWorld(data,opts){opts=opts||{};if(typeof data==='string')data=JSON.parse(data);
+  if(!data||data.format!=='watchable-island-save'||!data.state)return{ok:false,error:'Not a Watchable Island save file.'};
+  const prev=clone(data.state),pa=prev.agent;reset({speed:opts.speed||1});
+  const objs=prev.objects,moved=[];let k=0;
+  const dropLoc=()=>{k++;if(pa.level==='platform')return{t:'on',id:'platform'};if(pa.level==='ladder')return{t:'ground',x:+(L.ladder.x-6+k*3).toFixed(1),y:+(L.ladder.y+5).toFixed(1)};
+    const ang=k*1.3;let x=pa.x+Math.cos(ang)*1.5,y=pa.y+Math.sin(ang)*1.5;if(isBlocked(cellAt(x,y))){x=pa.x;y=pa.y}return{t:'ground',x:+x.toFixed(1),y:+y.toFixed(1)}};
+  for(const id in objs){const o=objs[id];if(o.loc.t==='carried'||o.loc.t==='worn'){o.loc=dropLoc();moved.push(id)}}
+  let n=1;while(objs['old_journal_'+n])n++;let oldJ=null;
+  if(objs.journal){const J=objs.journal;delete objs.journal;
+    if(J.loc.t!=='destroyed'&&opts.priorJournal!=='remove'){const ents=(prev.journal&&prev.journal.entries)||[];oldJ='old_journal_'+n;
+      objs[oldJ]=Object.assign(J,{id:oldJ,name:'used journal',desc:ents.length?'A small notebook with a cloth cover. Some pages have handwriting.':'A small notebook with a cloth cover. The pages are blank.',readable:ents.length?ents.map(e=>e.text).join('\n\n'):null})}}
+  if(objs.pencil){const P=objs.pencil;delete objs.pencil;if(P.loc.t!=='destroyed'){let m=1;while(objs['old_pencil_'+m])m++;objs['old_pencil_'+m]=Object.assign(P,{id:'old_pencil_'+m,name:'pencil'});const q=moved.indexOf('pencil');if(q>=0)moved[q]='old_pencil_'+m}}
+  {const q=moved.indexOf('journal');if(q>=0){if(oldJ)moved[q]=oldJ;else moved.splice(q,1)}}
+  const fresh=initialObjects();objs.journal=fresh.journal;objs.pencil=fresh.pencil;
+  S.objects=objs;S.inherited={savedWall:data.savedWall||null,sourceLabel:opts.sourceLabel||null,previousSimTime:prev.simTime,carriedItemsLeft:moved,previousJournal:oldJ,priorJournal:opts.priorJournal||'keep'};
+  S.seen={};updateSeen();LOG=[];newRecording();
+  logEvent('system','Island loaded from a saved island state'+(opts.sourceLabel?' ('+opts.sourceLabel+')':'')+'. Physical changes kept; new agent beside the boat with a fresh journal and pencil.'+(moved.length?' Items the previous agent held were left at its final position: '+moved.join(', ')+'.':''),{inherited:S.inherited});
+  if(UI.onReset)UI.onReset();return{ok:true,carriedItemsLeft:moved,previousJournal:oldJ}}
 function journalText(){const e=S.journal.entries;let s='Watchable Island - Journal\nExported '+new Date().toISOString()+'\n\n';if(!e.length)s+='(The journal is blank.)\n';
   for(const x of e)s+='#'+x.n+'  [sim '+fmtDur(x.simTime)+' | '+x.wall+' | '+x.where+']'+(x.interrupted?' (interrupted)':'')+'\n'+x.text+'\n\n';
   if(S.reflections.length){s+='\n--- Agent-reported reflections (not part of the in-world journal) ---\n\n';for(const r of S.reflections)s+='['+fmtDur(r.simTime)+'] '+r.text+'\n\n'}return s}
@@ -1263,7 +1326,7 @@ function bindUI(){
   $('tReplayCur').onclick=()=>{if(S.run.active&&!confirm('A run is active. The simulation keeps running in the background while you watch the replay. Continue?'))return;const r=enterReplay(clone(exportReplay()));apiMsg(r.ok?'Replaying this session ('+fmtDur(r.durationSec)+').':r.error,!r.ok)};
   $('tVideo').onclick=()=>{if(VID.rec){stopVideo()}else{const r=startVideo({});apiMsg(r.ok?'Recording video ('+r.mime+'). Keep this tab visible.':r.error,!r.ok)}};
   $('tObs').onclick=()=>{const b=$('obsBox');const on=b.style.display!=='block';b.style.display=on?'block':'none';$('tObs').textContent=on?'Hide agent\'s observation':'Show agent\'s observation (JSON)';if(on)b.textContent=JSON.stringify(getObservation(),null,1)};
-  $('tDemo').onclick=runDemo;
+  $('tDemo').onclick=runDemo;$('expStop').onclick=()=>{if(confirm('Stop the experiment now? The run will be saved and marked as stopped by the experimenter.')){UI.stopRequested=true;$('expStop').disabled=true;$('expStop').textContent='Stopping…'}};
   $('rpPlay').onclick=()=>{const R=UI.replay;if(!R)return;if(R.t>=R.end)R.t=0;R.playing=!R.playing;updateReplayUI()};$('rpSlider').oninput=e=>{const R=UI.replay;if(R)replaySeek(e.target.value/1000*R.end)};
   $('rpSpeed').onchange=e=>{if(UI.replay)UI.replay.speed=+e.target.value};$('rpExit').onclick=exitReplay;
   $('rpVideo').onclick=()=>{if(VID.rec){stopVideo();return}const R=UI.replay;if(!R)return;R.t=0;R.playing=true;const r=startVideo({fromReplay:true});apiMsg(r.ok?'Recording replay to video; it stops at the end of the replay.':r.error,!r.ok)};
@@ -1281,6 +1344,21 @@ function bindUI(){
 async function runDemo(){const steps=[{type:'write_journal',text:'Arrived on the beach beside the boat.'},{type:'walk_to',target:'ladder'},{type:'climb'},{type:'look'},{type:'pick_up',target:'snorkel'},{type:'wear',target:'snorkel'},{type:'pick_up',target:'lighter'},{type:'descend'},{type:'walk_to',x:532,y:403},{type:'use',target:'snorkel'},{type:'pick_up',target:'brass_key'},{type:'walk_to',target:'bell'},{type:'use',target:'bell'},{type:'sit'},{type:'write_journal',text:'Rang the bell on the hill.'}];
   apiMsg('Demo running through the same API a controller would use. Tip: set TEST speed to watch quickly.');
   for(const st of steps){while(S.action)await new Promise(r=>setTimeout(r,200));const r=submitAction(st);if(!r.ok){apiMsg('Demo stopped: '+r.error,true);return}await new Promise(r=>setTimeout(r,300))}}
+
+/* Experiment setup panel (shown by an external controller; the page itself never calls an AI) */
+function showExperimentSetup(o){o=o||{};return new Promise(res=>{const box=$('expSetup');box.style.display='flex';let saved=null,savedName=null;
+  $('esInfo').innerHTML=esc(o.info||'');$('esModel').innerHTML=(o.models||[]).map(m=>'<option value="'+esc(m.id)+'"'+(m.id===o.defaultModel?' selected':'')+'>'+esc(m.label||m.id)+'</option>').join('');
+  $('esCost').value=o.defaultMaxCost!=null?o.defaultMaxCost:2;$('esVideo').checked=!!o.defaultVideo;$('esWarn').textContent=o.warning||'';
+  const obsNote=()=>{$('esObsNote').textContent=$('esObs').value==='aerial'?'The aerial picture shows the whole island from above, including things a person on the beach could not see (for example the items on the tower platform). After it, the agent gets text observations only.':'The agent only gets text describing what it can perceive from where it is. It never sees the island picture.';
+    const m=(o.models||[]).find(x=>x.id===$('esModel').value);$('esObs').querySelector('option[value=aerial]').disabled=m&&m.images===false};
+  $('esObs').onchange=obsNote;$('esModel').onchange=obsNote;obsNote();
+  document.querySelectorAll('input[name=esStart]').forEach(r=>r.onchange=()=>{$('esSavedRow').style.display=r.value==='saved'&&r.checked?'block':($('esSavedRow').style.display)});
+  document.querySelector('input[name=esStart][value=fresh]').onchange=()=>{$('esSavedRow').style.display='none'};
+  document.querySelector('input[name=esStart][value=saved]').onchange=()=>{$('esSavedRow').style.display='block'};
+  $('esFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.format!=='watchable-island-save')throw new Error('not a save file');saved=d;savedName=f.name;$('esFileInfo').textContent='Loaded '+f.name+' (saved '+(d.savedWall||'?')+')'}catch(err){saved=null;$('esFileInfo').textContent='Could not use that file: '+err.message}};
+  $('esCancel').onclick=()=>{box.style.display='none';res({cancelled:true})};
+  $('esGo').onclick=()=>{const start=document.querySelector('input[name=esStart]:checked').value;if(start==='saved'&&!saved){$('esWarn').textContent='Choose a saved island file first.';return}
+    box.style.display='none';res({cancelled:false,start,saved:start==='saved'?saved:null,savedName,priorJournal:$('esPriorJ').value,model:$('esModel').value,obsMode:$('esObs').value,maxCostUsd:+$('esCost').value,video:$('esVideo').checked})}})}
 
 /* =====================================================================================
    17. PUBLIC CONTROLLER API  (window.Island)
@@ -1303,6 +1381,11 @@ window.Island={
   saveRun:()=>clone(saveRun()),restoreRun:(d)=>restoreRun(d),
   enterReplay:(r)=>enterReplay(r),exitReplay:()=>exitReplay(),replaySeek:(t)=>replaySeek(t),replayPlay:(p)=>{if(UI.replay){UI.replay.playing=p!==false;updateReplayUI()}},replayView:()=>UI.replay?clone({t:UI.replay.t,agent:UI.replay.view.agent,objects:UI.replay.view.objects,journal:UI.replay.view.journal,logN:UI.replay.view.logN}):null,
   startVideo:(o)=>startVideo(o),stopVideo:()=>stopVideo(),videoSupported:()=>videoSupport(),lastVideo:()=>VID.lastBlob?{bytes:VID.lastBlob.size,type:VID.lastBlob.type,url:VID.lastUrl}:null,
+  controllerNote:(msg,data)=>logEvent('controller',String(msg),data||null), // controller-side events (model waits, errors); observer-only
+  inheritWorld:(d,o)=>inheritWorld(d,o),
+  showExperimentSetup:(o)=>showExperimentSetup(o),
+  setExperimentBanner:(t)=>{const c=$('expChip');c.style.display=t?'inline-block':'none';c.textContent=t||'';$('expStop').style.display=t?'inline-block':'none'},
+  experimentStopRequested:()=>!!UI.stopRequested,
   on:(fn)=>{listeners.push(fn);return()=>{const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1)}},
   layout:LAYOUT,
   _debug:{heightAt,terrainAt:(x,y)=>TNAME[terrainAt(x,y)],islandS,TREES}

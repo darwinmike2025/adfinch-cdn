@@ -1,0 +1,11 @@
+{
+ "runId": "2026-11-22T05-30-07_gpt-5-mini_TEST-3min",
+ "status": "completed",
+ "startedWall": "2026-11-22T05:30:07.972Z",
+ "test": true,
+ "reason": "the run reached its time limit",
+ "endedWall": "2026-11-22T05:33:09.478Z",
+ "modelCalls": 13,
+ "estimatedCostUsd": 0.0168,
+ "reportCheck": "None — every statement in the report is supported by the activity record and journal reflections."
+}

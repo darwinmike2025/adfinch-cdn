@@ -148,26 +148,98 @@ Example observation, trimmed:
 }
 ```
 
-## Connecting an AI later
+## Running an AI agent on the island
 
-A web page opened from a file can't accept connections from another program. Browsers don't let pages listen on a network port. So a separate controller has to reach into the page. The simplest method, **built and tested**:
+`controller/run_experiment.js` connects a real model (OpenAI) to the island. The island still decides everything physical: clock, movement, durations, objects and outcomes. The model can only *choose* actions; it cannot make one succeed by claiming it did.
 
-**Browser automation (Playwright).** `controller/example_controller.js` opens `island.html` in a visible Chromium window. It then loops: read the observation, decide, submit the action, wait for it to finish. It streams events to the terminal and saves the replay, log, journal and (optionally) video at the end. It was tested headless at 60× for 12- and 14-minute runs: the timer ended the run on schedule and all files were written.
+### Launch (on your computer, to watch live)
 
 ```
+cd island
 npm i playwright && npx playwright install chromium
-node controller/example_controller.js                     # real time, visible window, 30-minute run
-node controller/example_controller.js --speed 60 --headless --minutes 5 --video   # quick test
+export OPENAI_API_KEY=sk-...        # Windows PowerShell: $env:OPENAI_API_KEY="sk-..."
+node controller/run_experiment.js
 ```
 
-To plug in a model, replace `decideNextAction(observation, schema, history)` with a call to Claude, ChatGPT or any other model. Send it the observation, the action schema and recent results, and parse its reply into one action (and optionally a reflection). Keep API keys in the controller's environment variables, never in `island.html`. **This model connection has not been built or tested yet.**
+A browser window opens on the island with a **Start experiment** panel. In it you choose:
+- the starting island (original, or a saved island file from an earlier run)
+- the model
+- what the agent receives (text only, or the aerial picture plus text)
+- a spending limit
+- whether to record video
 
-Things to decide when you build it:
-- The clock keeps running while the model thinks, as in real life. To pause the world during model calls, use `setPaused(true/false)` around each call. That changes the meaning of "30 real minutes", so record which you chose.
-- What the model receives: text observation only, a screenshot (Playwright can capture the map), or both.
-- How often to call the model. The example waits for each action to finish, but a controller can also interrupt.
+Then click **Start Experiment**. The run lasts 30 real minutes. Watch the figure, clock, log, journal and reflections as they happen. The header shows the model, the estimated spend so far, and a **Stop experiment** button.
 
-Other options, **not built**: a small local server that relays between the page and a model (would need the page to poll it), or pasting a controller script into the browser's developer console (not recommended if it involves API keys).
+Never put the key in a file in this folder. The controller reads it from the environment and never writes it anywhere.
+
+### How a turn works
+
+1. The controller asks the island for the agent's observation: only what it can perceive from where it stands. It never sees the full world state.
+2. The model gets the neutral introduction (verbatim), a neutral action list (no objects named, no examples), the result of its last action, and the observation.
+3. It replies in strict JSON: `{"action": {...} or null, "reflection": "..." or null}`.
+4. The controller submits the action to the island unchanged. Rejected or impossible actions get the island's real reply on the next turn. Nothing is substituted.
+5. During any action longer than 30 s, the model gets a **check-in** about every 30 s. It can continue (`action: null`), add a reflection, or choose a different action, which replaces the current one. An invalid replacement leaves the current action running.
+6. `action: null` at a decision means "do nothing for now". The agent stays put and is asked again 30 s later.
+7. The clock never stops for the model. Slow replies (over 10 s), errors, timeouts and retries are logged as **CTRL** lines.
+8. At the deadline, the island interrupts any action exactly where it is and refuses new ones.
+9. Afterwards, the model gets its journal and the factual activity record and writes `report.md`. A second call checks the report against the log for unsupported claims. That check is model-assisted, so treat it as a pointer, not proof.
+
+The model's context keeps the system prompt, the first observation, and the last 60 exchanges (older observations are shortened to one line). Everything sent is saved in `transcript.jsonl`.
+
+### What the agent can receive
+
+| Mode | What it reveals |
+|---|---|
+| `text` (default) | Only what the island's perception rules allow from the agent's position. It never sees an image. |
+| `aerial` | The full reference picture once, at the start, then text. The picture shows the whole island from above, **including things a person on the beach could not see** (for example the items on the tower platform). It is not a ground-level view. |
+| Position-specific views | **Not built.** The observer canvas draws hidden things (underwater key, cabin interior, platform items), so a crop of it would leak information. Doing this properly needs a separate renderer that draws only what the agent perceives. |
+
+### Starting island
+
+- **Original island:** a fresh island.
+- **Saved island:** choose `runs/<earlier run>/island-save-at-end.json`. Physical changes are kept: moved, opened, broken or burned things, writing, door state, and fire. Defined behaviour:
+  - Items the previous agent was carrying or wearing are left where it ended: on the ground there, on the platform, or at the ladder base if it was on the ladder.
+  - Its journal stays on the island as a "used journal" whose writing can be read if found. The panel lets you choose to remove it instead.
+  - The new agent gets a fresh blank journal and pencil, starts beside the boat, and remembers nothing.
+  - The previous log is copied to `prior-run-log.json` for you only. It is never sent to the agent.
+  - A fire that was burning continues; no time passes between runs.
+
+### Run folder (`runs/<time>_<model>[_TEST…]/`)
+
+| File | Contents |
+|---|---|
+| `config.json` | Model, provider, observation mode, introduction, full system prompt, response schema, starting island (with a SHA-256 hash for saved files), limits, prices used |
+| `transcript.jsonl` | Every model call: exactly what was sent, the reply, latency, tokens, cost, errors and retries |
+| `island-events.jsonl` | Island log streamed live (survives a crash) |
+| `island-log.json`, `replay.json`, `journal.txt`, `reflections.json` | Full log, replay file, journal, reflections |
+| `initial-state.json`, `state-at-end.json` | World state at the start and at the deadline (observer only) |
+| `island-save-at-end.json` | Use this to start a "saved island" run |
+| `report.md` | The agent's report (model-written, labelled as such) |
+| `summary.md` | Experimenter summary built from the records: status, timing, costs, actions, changes, rejections, technical notes, and the model-assisted report check |
+| `status.json` | `completed`, `stopped` (experimenter or spending limit) or `interrupted` (crash, closed window, Ctrl+C, model unavailable) |
+| `autosave.json` | Full save every minute, kept if anything crashes |
+| `prior-run-log.json` | Saved-island runs only, observer-only |
+| video file | If recording was chosen |
+
+### Models, cost and limits
+
+- Provider: OpenAI (`providers.js`). Other providers can be added by implementing `decide()` and `text()`. A **MOCK** policy (no AI, free) exists only for testing, and its runs are labelled MOCK everywhere.
+- Default model: `gpt-5-mini` (reasoning effort `low`). Any chat model on your account can be chosen in the panel or with `--model`.
+- Costs are **estimates** from a built-in price table (verify on OpenAI's pricing page). For models not in the table, pass `--price-in` and `--price-out` (USD per 1M tokens). Otherwise only the call cap (`--max-calls`, default 600) protects you.
+- **Measured:** the real 3-minute test (`gpt-5-mini`) made 13 calls and cost about **$0.017** including the report. Expect roughly 120 to 200 calls in 30 minutes (one per action, plus check-ins), with each call growing as history builds up (capped at 60 exchanges, and repeated prefixes are cached).
+- **Estimates for a 30-minute run** (from the built-in price table, not guaranteed): `gpt-5-mini` about $0.15 to $0.40; `gpt-4.1-mini` similar; `gpt-5` about $0.75 to $2. Aerial mode adds about 1,800 tokens per call, because the picture stays in the conversation. Newer models (`gpt-5.x`, `gpt-6.x`) have no price in the table: pass `--price-in` and `--price-out` from OpenAI's pricing page.
+- The spending limit stops the run when the estimate reaches it, leaving a small reserve for the report. For a hard cap, also set a budget on your OpenAI project.
+
+### Reliability
+
+- The browser window must stay open. It doesn't need to be visible for the simulation (background throttling is disabled), but video is smoothest when visible.
+- Closing the window, pressing Ctrl+C, or 5 failed model decisions in a row ends the run cleanly. Everything is saved and `status.json` says `interrupted`. Runs are never silently restarted.
+- If the controller process itself is killed, `island-events.jsonl`, `transcript.jsonl` and the last `autosave.json` remain.
+- The agent has no tools other than island actions. It cannot reach your files, accounts or the internet.
+
+### Test flags (results labelled TEST)
+
+`--provider mock`, `--minutes N`, `--speed N`, `--headless`, `--auto-start` (use flags instead of the panel: `--start saved --saved <file> --obs aerial --video --max-cost 1`). Don't use any of these for the real 30-minute experiment.
 
 ## Saving, logs, replay and video
 
@@ -182,17 +254,26 @@ Other options, **not built**: a small local server that relays between the page 
 
 ## Tests
 
-`tests/test_island.js` runs 39 automated checks in headless Chromium (`node tests/test_island.js`). Screenshots and downloaded files go to `tests/output/`. Last run (after re-laying the island to match the reference image): **39/39 passed**, covering:
+- `tests/test_island.js`: 39 island checks (movement rates, climbing, objects, journal, perception, save/restore, exports, replay, video, offline). Last run: **39/39 passed**.
+- `tests/test_controller.js`: 12 controller-feature checks (Start panel, hidden-name probing, safe action replacement, deadline behaviour, saved-island inheritance, CTRL notes, Stop button). Pass a run folder to also audit that run: hidden state never sent, ladder-top items and key never revealed early, neutral instructions, no substituted actions, replay matches the log, reflections timed correctly, no credentials in any file.
+- `test-runs/real-gpt-5-mini-3min/`: records (without video) of the **real model test**: `gpt-5-mini`, 1× real time, 3-minute TEST run. It completed and passed the 20-check audit.
 
-1. The interface loads (clock, log, journal, reflections) with no errors.
-2. Real-time walking measured at **3.97 ft/s** on level grass (44 ft in 11.1 s of wall time). Interrupting leaves the agent where it stopped. A 300 ft walk east from there is estimated at 86 s (it crosses rougher, gently sloping ground; on clear level grass 300 ft takes 75 s).
-3. The route from the cabin to the tower crosses the footbridge rather than wading. The climb takes 4:00 and runs at 0.42 ft/s in real time. Mid-climb height and the gauge are captured in a screenshot. The agent reaches the platform at 100 ft.
-4. Objects keep their state: the sword left on the platform, the lighter put in the boat, the snorkel worn. The key is hidden until the agent looks underwater. The locked chest fails to open, then opens with the key. The dropped lantern breaks and stays broken. The wheelbarrow carries the map across the island; the blanket folds; the blocks topple. The east cliffs refuse entry. Unsupported actions get clear messages.
-5. Journal entries persist and appear in the panel. An interrupted entry keeps its partial text. Reflections appear in their own panel.
-6. The beach observation does not mention the lighter, sword or snorkel. The platform observation does.
-7. Reset, save, restore (by API and from a downloaded file through the UI), and journal/log/CSV/replay exports all work. The log contains every required event kind.
-8. Replay, after a full page reload, from the exported file, matches the live positions within 0.2 ft and the live heights within 0.08 ft. The end state matches. Play, pause and speed work. Video recording produced a playable 1280×720 WebM.
-9. It opens and runs with the network blocked and makes no network requests. There are no remote URLs in the file.
+What was verified end to end with the real model (TEST durations, not the experiment):
+
+| Check | Result |
+|---|---|
+| Agent receives an observation, chooses through the real OpenAI API, controller validates and submits | Yes. 13 calls, median decision 3.1 s, no errors |
+| Figure performs actions over island-enforced time | Yes: walks at about 3 to 4 ft/s, wading slower |
+| Rejected action returned unchanged ("Your hands are full…"), agent adapted | Yes |
+| Check-in during a long walk (agent chose to continue) | Yes. Replacing an action at a check-in was verified with the MOCK policy and the island test (C3) |
+| Reflections recorded when they occurred; journal entries | 13 reflections logged live. That agent wrote no journal entries; journal timing is verified by the island tests and the MOCK run |
+| Log and replay match | Max replay error 0.04 ft |
+| No hidden world state sent | Audit passed |
+| 3-minute deadline with an action under way | Walk interrupted at (523, 667), 148 ft along; no further actions accepted |
+| Saved island from that run (MOCK agent) | Oar, rope, old journal and pencil left where the real agent stopped; new agent got a blank journal; prior log observer-only |
+| Aerial mode with the real model | Image attached at the start; agent referred to places only visible in the picture |
+| Video with the controller | 1280×720 WebM, 3:00 long, about 26 MB (a 30-minute run ≈ 260 MB) |
+| Report and model-assisted check | Report written; the check found no unsupported claims |
 
 ## Limits and simplifications
 
