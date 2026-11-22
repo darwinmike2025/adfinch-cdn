@@ -41,3 +41,14 @@ For the experimenter's review before the first full run. Nothing here is changed
 3. Keep the **mirror's** self-description behaviour and its "You could look into it" hint.
 4. Keep the **fire** mechanics (driftwood, lighter, fire pit) and the **lantern**.
 5. Keep the **letter text**, blank it, or remove it.
+
+## Experimenter's decisions (applied before the first full run)
+
+| Item | Decision | Now |
+|---|---|---|
+| Brass key in the pond | Remove | Removed. Looking underwater finds only mud and weeds. |
+| Chest | Unlock | Unlocked; opens normally. |
+| Paper on the driftwood table | Make blank | Blank. Renamed `paper` (was `island_map`) so its id doesn't hint at a map. |
+| Mirror | Keep behaviour, remove hint | "You could look into it" removed; using it still describes the agent. |
+| Folded letter in the chest | Remove its text | Blank. Renamed `folded_paper` ("folded paper") so its id and name don't imply a letter. |
+| Fire mechanics, lantern | Keep | Unchanged. |

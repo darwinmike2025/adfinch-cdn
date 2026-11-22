@@ -291,7 +291,6 @@ const LAYOUT = {
   ball:{x:582, y:610}, blanket:{x:645, y:615}, blocks:{x:735, y:612},
   stoneCircle:{x:800, y:420, r:7, n:11},             // low ring of stones near the eastern cliffs
   bell:{x:845, y:310},                               // bell on a wooden frame on the north-east headland
-  key:{x:528, y:425},                                // brass key, underwater near the pond's west bank
   driftwood:[[190,660],[330,745]],
   stones:[[215,700],[590,752]],
   boulders:[[515,150],[532,158],[505,162],[548,146],[770,560],[788,548],[806,560],[824,546],[842,562],[812,522],[858,540],[175,690],[560,770],[640,760]],
@@ -460,9 +459,9 @@ function initialObjects(){
   add({id:'rope',name:'coil of rope',size:'medium',weight:4,burnable:true,desc:'About 30 feet of hemp rope, coiled on the sand.',loc:G(L.rope.x,L.rope.y)});
   add({id:'crate',name:'wooden crate',kind:'fixture',desc:'A sturdy wooden crate with a hinged lid, sitting on the beach.',container:{open:false,openable:true,locked:false,capacity:4},loc:G(L.crate.x,L.crate.y),reach:6.5,viewRange:250});
   add({id:'wheelbarrow',name:'wheelbarrow',size:'large',weight:25,awkward:true,desc:'A rusty metal wheelbarrow with a wooden handle. Pick it up to push it; things inside come along.',container:{open:true,openable:false,capacity:4},loc:G(L.wheelbarrow.x,L.wheelbarrow.y),reach:6});
-  add({id:'mirror',name:'standing mirror',kind:'fixture',desc:'A round mirror in a wooden frame, standing against a tree.',closeDesc:'The glass is clean. You could look into it.',loc:G(L.mirror.x,L.mirror.y),reach:6,viewRange:120});
+  add({id:'mirror',name:'standing mirror',kind:'fixture',desc:'A round mirror in a wooden frame, standing against a tree.',closeDesc:'The glass is clean.',loc:G(L.mirror.x,L.mirror.y),reach:6,viewRange:120});
   add({id:'picnic_table',name:'driftwood table',kind:'fixture',surface:true,desc:'A rough table built from driftwood.',loc:G(L.picnicTable.x,L.picnicTable.y),reach:6.5,viewRange:200});
-  add({id:'island_map',name:'sheet of paper',burnable:true,desc:'A weathered sheet of paper weighted down on the table.',readable:'A hand-drawn map of the island. It shows: a sandy beach and a rowboat on the south shore; a cabin among trees to the west with a fire pit in front; a stream running from steps on the hill down to the beach, crossed by a footbridge; a pond in the middle; a tall tower east of the pond; a bell on the north-east headland; rocky cliffs along the east side.',loc:{t:'on',id:'picnic_table'}});
+  add({id:'paper',name:'sheet of paper',burnable:true,desc:'A weathered sheet of paper on the table.',readable:null,loc:{t:'on',id:'picnic_table'}});
   add({id:'stepladder',name:'stepladder',size:'large',weight:14,awkward:true,desc:'A small wooden A-frame stepladder, about 6 ft tall.',loc:G(L.stepladder.x,L.stepladder.y)});
   add({id:'ball',name:'red ball',size:'medium',weight:.4,desc:'A bright red rubber ball.',loc:G(L.ball.x,L.ball.y)});
   add({id:'blanket',name:'blue blanket',size:'medium',weight:2,burnable:true,desc:'A blue cotton blanket.',loc:G(L.blanket.x,L.blanket.y),state:{spread:true}});
@@ -476,8 +475,8 @@ function initialObjects(){
   add({id:'cabin_table',name:'cabin table',kind:'fixture',surface:true,desc:'A rough wooden table.',loc:G(TABLE_POS.x,TABLE_POS.y),reach:6.5,viewRange:60});
   add({id:'lantern',name:'oil lantern',size:'medium',weight:3,fragile:true,desc:'A glass oil lantern, half full of oil.',loc:{t:'on',id:'cabin_table'},state:{lit:false,broken:false}});
   add({id:'tin_cup',name:'tin cup',weight:.4,desc:'A dented tin cup.',loc:{t:'in',id:'crate'},state:{full:false}});
-  add({id:'chest',name:'wooden chest',kind:'fixture',desc:'A heavy wooden chest with a brass lock, sitting outside beside the cabin door.',container:{open:false,openable:true,locked:true,key:'brass_key',capacity:4},loc:G(CHEST_POS.x,CHEST_POS.y),reach:6.5,viewRange:150});
-  add({id:'old_letter',name:'folded letter',burnable:true,desc:'A folded sheet of paper.',readable:'Supply list, spring: lamp oil, rope, matches (ran out). The tower platform was inspected and the anchors are sound. Do not leave the lantern lit unattended.',loc:{t:'in',id:'chest'}});
+  add({id:'chest',name:'wooden chest',kind:'fixture',desc:'A heavy wooden chest with a lid, sitting outside beside the cabin door.',container:{open:false,openable:true,locked:false,capacity:4},loc:G(CHEST_POS.x,CHEST_POS.y),reach:6.5,viewRange:150});
+  add({id:'folded_paper',name:'folded paper',burnable:true,desc:'A folded sheet of paper.',readable:null,loc:{t:'in',id:'chest'}});
   add({id:'fire_pit',name:'fire pit',kind:'fixture',desc:'A ring of blackened stones around old ashes.',container:{open:true,openable:false,capacity:3,fuelOnly:false},loc:G(L.firePit.x,L.firePit.y),reach:6,viewRange:90,state:{lit:false,burnLeft:0}});
   add({id:'bell',name:'bronze bell',kind:'fixture',desc:'A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.',closeDesc:'A rope hangs from the clapper. It looks like it would be loud.',loc:G(L.bell.x,L.bell.y),reach:7,viewRange:250});
   add({id:'stone_circle',name:'stone circle',kind:'fixture',desc:'A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.',loc:G(L.stoneCircle.x,L.stoneCircle.y+0.01),reach:0,viewRange:450});
@@ -488,7 +487,7 @@ function initialObjects(){
   add({id:'lighter',name:'lighter',weight:.1,desc:'A metal flip-top lighter.',loc:{t:'on',id:'platform_table'}});
   add({id:'sword',name:'sword',size:'medium',weight:5,awkward:true,wearable:true,desc:'A steel sword in a leather scabbard with a shoulder strap.',loc:{t:'on',id:'platform_table'}});
   add({id:'snorkel',name:'snorkel',weight:.3,wearable:true,desc:'A snorkel with an attached dive mask.',loc:{t:'on',id:'platform_table'}});
-  add({id:'brass_key',name:'brass key',weight:.1,desc:'A small brass key, slightly green.',loc:{t:'underwater',x:L.key.x,y:L.key.y},reach:12});
+    // (no underwater key: removed at the experimenter's request)
   return O}
 
 function freshState(){
@@ -760,7 +759,7 @@ const ACTIONS={
       if((o.door&&!o.state.open)||(o.container&&!o.container.open))return{error:'It is already closed.'};if(o.door&&S.agent.level==='ground'&&cellAt(S.agent.x,S.agent.y)===DOOR_CELL)return{error:'You are standing in the doorway.'};
       return{label:'Closing the '+o.name,duration:o.door?2:3,data:{id:o.id}}},
     complete(a){const o=O(a.data.id);if(o.door)o.state.open=false;else o.container.open=false;markChanged();a.result={message:'You close the '+o.name+'.'};logEvent('object','Closed '+o.id+'.',{id:o.id})}},
-  use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter with fire_pit or lantern; brass_key with chest; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
+  use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter with fire_pit or lantern; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot use the '+r.id+' by itself. Try using an object with it.'};const o=r.o;
       let w=null;if(p.with){w=resolveTarget(p.with);if(!w||(w.kind==='object'&&!knows(w.o))||(w.kind==='feature'&&!featureKnown(w.id)))return{error:NOT_HERE(p.with)}}
       const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(x.loc.t!=='carried'&&x.loc.t!=='worn')return'You need to be holding the '+x.name+'.';return null};
@@ -814,7 +813,7 @@ const ACTIONS={
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='worn')return{error:'You are not wearing that.'};if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};
       if(o.size!=='small'&&handsUsed()>=2)return{error:'Your hands are full.'};return{label:'Taking off the '+o.name,duration:5,data:{id:o.id}}},
     complete(a){const o=O(a.data.id);o.loc={t:'carried'};if(o.id==='snorkel')S.agent.underwaterView=null;markChanged();a.result={message:'You take off the '+o.name+' and carry it.'};logEvent('object','Took off '+o.id+'.',{id:o.id})}},
-  read:{desc:'Read something with writing on it (the folded letter, or the journal).',params:{target:'old_letter | journal'},
+  read:{desc:'Read something with writing on it (or the journal).',params:{target:'object id | journal'},
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o)return{error:'Nothing to read there.'};if(o.id==='journal')return ACTIONS.read_journal.validate({});
       if(!o.readable)return{error:'There is nothing written on the '+o.name+'.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Reading the '+o.name,duration:Math.max(5,o.readable.split(/\s+/).length*.3),data:{id:o.id}}},
     complete(a){if(a.data.journal)return ACTIONS.read_journal.complete(a);const o=O(a.data.id);a.result={message:'It reads: "'+o.readable+'"',text:o.readable};logEvent('object','Read '+o.id+'.',{id:o.id})}},
@@ -1062,7 +1061,7 @@ function drawItemIcon(c,o,x,y,sz,isTop){const id=o.id.replace(/_\d+$/,'');c.save
     case'rope':c.strokeStyle='#c8a15a';c.lineWidth=s*.16;for(let i=1;i<=3;i++){c.beginPath();c.arc(0,0,s*.18*i,0,7);c.stroke()}break;
     case'lantern':if(o.state.broken){c.fillStyle='#6b6b6b';c.fillRect(-s*.4,-s*.2,s*.8,s*.4);c.fillStyle='#bde';for(let i=0;i<4;i++)c.fillRect(-s*.6+i*s*.35,s*.3,s*.12,s*.12)}else{if(o.state.lit){const g=c.createRadialGradient(0,0,1,0,0,s*3);g.addColorStop(0,'rgba(255,210,100,.7)');g.addColorStop(1,'rgba(255,210,100,0)');c.fillStyle=g;c.beginPath();c.arc(0,0,s*3,0,7);c.fill()}c.fillStyle='#444';c.fillRect(-s*.35,-s*.55,s*.7,s*1.1);c.fillStyle=o.state.lit?'#ffd35c':'#cfe3ea';c.fillRect(-s*.22,-s*.35,s*.44,s*.7)}break;
     case'tin_cup':c.fillStyle='#b8c0c8';c.fillRect(-s*.3,-s*.35,s*.6,s*.7);if(o.state.full){c.fillStyle='#5fa8cf';c.fillRect(-s*.22,-s*.3,s*.44,s*.2)}break;
-    case'old_letter':c.fillStyle='#f4f1e8';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#999';c.lineWidth=.6;c.strokeRect(-s*.45,-s*.32,s*.9,s*.64);break;
+    case'folded_paper':c.fillStyle='#f4f1e8';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#999';c.lineWidth=.6;c.strokeRect(-s*.45,-s*.32,s*.9,s*.64);break;
     case'lighter':c.fillStyle='#d64541';c.fillRect(-s*.22,-s*.35,s*.44,s*.7);c.fillStyle='#ddd';c.fillRect(-s*.22,-s*.35,s*.44,s*.18);break;
     case'sword':c.strokeStyle='#d9dee3';c.lineWidth=s*.16;c.beginPath();c.moveTo(-s*.9,s*.5);c.lineTo(s*.7,-s*.4);c.stroke();c.strokeStyle='#8a6a3a';c.lineWidth=s*.22;c.beginPath();c.moveTo(-s*.7,s*.1);c.lineTo(-s*.45,s*.6);c.stroke();break;
     case'snorkel':c.strokeStyle='#ff8c1a';c.lineWidth=s*.18;c.beginPath();c.moveTo(s*.4,-s*.7);c.lineTo(s*.4,s*.3);c.stroke();c.fillStyle='#2f9bd8';c.beginPath();c.ellipse(-s*.1,s*.25,s*.45,s*.28,0,0,7);c.fill();break;
@@ -1072,7 +1071,7 @@ function drawItemIcon(c,o,x,y,sz,isTop){const id=o.id.replace(/_\d+$/,'');c.save
     case'ball':c.fillStyle='#d92d2d';c.beginPath();c.arc(0,0,s*.32,0,7);c.fill();c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.arc(-s*.1,-s*.1,s*.1,0,7);c.fill();break;
     case'blanket':c.fillStyle='#2f5fd0';if(o.state.spread){c.save();c.rotate(-.2);c.fillRect(-s*.9,-s*.55,s*1.8,s*1.1);c.fillStyle='rgba(255,255,255,.15)';c.fillRect(-s*.9,-s*.55,s*1.8,s*.2);c.restore()}else{c.fillRect(-s*.4,-s*.3,s*.8,s*.6)}break;
     case'blocks':c.fillStyle='#d9a96a';c.strokeStyle='#8a6438';c.lineWidth=s*.05;if(o.state.stacked){for(const[bx,by]of[[-.3,.15],[.05,.15],[-.12,-.2],[.4,.15]]){c.fillRect(bx*s,by*s,s*.3,s*.3);c.strokeRect(bx*s,by*s,s*.3,s*.3)}}else{for(const[bx,by]of[[-.6,0],[.1,.3],[.4,-.4],[-.2,-.5]]){c.fillRect(bx*s,by*s,s*.3,s*.3);c.strokeRect(bx*s,by*s,s*.3,s*.3)}}break;
-    case'island_map':c.fillStyle='#efe6cf';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#8a7a5a';c.lineWidth=s*.05;c.beginPath();c.ellipse(0,0,s*.3,s*.18,0,0,7);c.stroke();break;
+    case'paper':c.fillStyle='#efe6cf';c.fillRect(-s*.45,-s*.32,s*.9,s*.64);c.strokeStyle='#8a7a5a';c.lineWidth=s*.05;c.beginPath();c.ellipse(0,0,s*.3,s*.18,0,0,7);c.stroke();break;
     default:c.fillStyle='#fff';c.beginPath();c.arc(0,0,s*.3,0,7);c.fill()}
   c.restore()}
 
@@ -1346,7 +1345,7 @@ function bindUI(){
   window.addEventListener('mouseup',e=>{if(drag&&!drag.moved&&$('tClickWalk').checked&&!UI.replay){const r=mapC.getBoundingClientRect();const[wx,wy]=s2w(e.clientX-r.left,e.clientY-r.top);$('tX').value=Math.round(wx);$('tY').value=Math.round(wy);
     if(S.action&&(S.action.type==='walk_to'||S.action.type==='walk'))interrupt('new walk target from test controls');const res=submitAction({type:'walk_to',x:Math.round(wx),y:Math.round(wy)});apiMsg(res.ok?'Walking to ('+Math.round(wx)+', '+Math.round(wy)+') ~'+fmtDur(res.estimatedDurationSec):'Rejected: '+res.error,!res.ok)}drag=null});
 }
-async function runDemo(){const steps=[{type:'write_journal',text:'Arrived on the beach beside the boat.'},{type:'walk_to',target:'ladder'},{type:'climb'},{type:'look'},{type:'pick_up',target:'snorkel'},{type:'wear',target:'snorkel'},{type:'pick_up',target:'lighter'},{type:'descend'},{type:'walk_to',x:532,y:403},{type:'use',target:'snorkel'},{type:'pick_up',target:'brass_key'},{type:'walk_to',target:'bell'},{type:'use',target:'bell'},{type:'sit'},{type:'write_journal',text:'Rang the bell on the hill.'}];
+async function runDemo(){const steps=[{type:'write_journal',text:'Arrived on the beach beside the boat.'},{type:'walk_to',target:'ladder'},{type:'climb'},{type:'look'},{type:'pick_up',target:'snorkel'},{type:'wear',target:'snorkel'},{type:'pick_up',target:'lighter'},{type:'descend'},{type:'walk_to',x:532,y:403},{type:'use',target:'snorkel'},{type:'walk_to',target:'bell'},{type:'use',target:'bell'},{type:'sit'},{type:'write_journal',text:'Rang the bell on the hill.'}];
   apiMsg('Demo running through the same API a controller would use. Tip: set TEST speed to watch quickly.');
   for(const st of steps){while(S.action)await new Promise(r=>setTimeout(r,200));const r=submitAction(st);if(!r.ok){apiMsg('Demo stopped: '+r.error,true);return}await new Promise(r=>setTimeout(r,300))}}
 

@@ -116,13 +116,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await ev(() => Island.advanceTime(300));
   const st = await ev(() => { const s = Island.exportState(); return { sword: s.objects.sword.loc, lighter: s.objects.lighter.loc, snorkel: s.objects.snorkel.loc }; });
   check('4b. Objects stay where placed (sword on platform, lighter in boat, snorkel worn)', st.sword.t === 'on' && st.sword.id === 'platform' && st.lighter.t === 'in' && st.lighter.id === 'boat' && st.snorkel.t === 'worn', JSON.stringify(st));
-  // underwater key with snorkel
+  // the pond holds nothing to find (key removed); looking underwater still works
   await doFast({ type: 'walk_to', x: 516, y: 425 });
-  const k0 = await ev(() => Island.getObservation().visibleObjects.some(o => o.id === 'brass_key'));
   r = await doFast({ type: 'use', target: 'snorkel' });
-  const k1 = await ev(() => Island.getObservation().visibleObjects.some(o => o.id === 'brass_key'));
-  r = await doFast({ type: 'pick_up', target: 'brass_key' });
-  check('4c. Key in pond only visible after looking underwater, then can be picked up', !k0 && k1 && r.result.status === 'completed', `before ${k0}, after ${k1}, pickup ${r.result.status}`);
+  check('4c. Looking underwater works and finds nothing (key removed at experimenter request)', r.result.status === 'completed' && /Only mud and weeds/.test(r.result.result.message), r.result.result.message);
   // cabin: door, locked chest, key, fragile lantern
   const shut = await ev(() => Island.submitAction({ type: 'walk_to', target: 'cabin_table' }));
   check('4d. Cannot walk into the cabin while the door is closed', !shut.ok, shut.error);
@@ -131,10 +128,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await doFast({ type: 'walk_to', target: 'cabin_door' });
   await doFast({ type: 'open', target: 'cabin_door' });
   await doFast({ type: 'walk_to', target: 'chest' });
-  const lockd = await doFast({ type: 'open', target: 'chest' });
-  await doFast({ type: 'use', target: 'brass_key', with: 'chest' });
   const opened = await doFast({ type: 'open', target: 'chest' });
-  check('4e. Locked chest fails to open; opens after unlocking with key', lockd.result.status === 'failed' && opened.result.status === 'completed', opened.result.result.message);
+  const rdl = await doFast({ type: 'read', target: 'folded_paper' });
+  check('4e. Chest is unlocked; the folded paper inside is blank', opened.result.status === 'completed' && /folded paper/.test(opened.result.result.message) && (!rdl.ok || /nothing written/.test(rdl.error || '')), opened.result.result.message + ' | ' + (rdl.error || ''));
   await doFast({ type: 'walk_to', target: 'cabin_door' });
   await doFast({ type: 'walk_to', target: 'cabin_table' });
   await doFast({ type: 'pick_up', target: 'lantern' });
@@ -152,21 +148,21 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const wb1 = await doFast({ type: 'pick_up', target: 'wheelbarrow' });
   await doFast({ type: 'walk_to', target: 'picnic_table' });
   await doFast({ type: 'put_down', target: 'wheelbarrow' });
-  const rd = await doFast({ type: 'read', target: 'island_map' });
-  await doFast({ type: 'pick_up', target: 'island_map' });
-  await doFast({ type: 'put_down', target: 'island_map', onto: 'wheelbarrow' });
+  const rd = await ev(() => Island.submitAction({ type: 'read', target: 'paper' }));
+  await doFast({ type: 'pick_up', target: 'paper' });
+  await doFast({ type: 'put_down', target: 'paper', onto: 'wheelbarrow' });
   await doFast({ type: 'pick_up', target: 'wheelbarrow' });
   const slow = await ev(() => Island.submitAction({ type: 'walk_to', x: 600, y: 600 }));
   for (let i = 0; i < 400; i++) { const s = await ev(() => { Island.advanceTime(2); return Island.getStatus(); }); if (!s.action) break; }
   await doFast({ type: 'put_down', target: 'wheelbarrow' });
-  const wbs = await ev(() => { const s = Island.exportState(); return { wb: s.objects.wheelbarrow.loc, map: s.objects.island_map.loc }; });
+  const wbs = await ev(() => { const s = Island.exportState(); return { wb: s.objects.wheelbarrow.loc, map: s.objects.paper.loc }; });
   await doFast({ type: 'walk_to', target: 'blanket' });
   const bl = await doFast({ type: 'use', target: 'blanket' });
   await doFast({ type: 'walk_to', x: 700, y: 600 });
   await doFast({ type: 'walk_to', target: 'blocks' });
   const bk = await doFast({ type: 'use', target: 'blocks' });
   const st2 = await ev(() => { const s = Island.exportState().objects; return { blanket: s.blanket.state.spread, blocks: s.blocks.state.stacked }; });
-  check('4h. Image objects work: wheelbarrow carries contents, map is readable, blanket folds, blocks topple', wb1.result.status === 'completed' && /hand-drawn map/.test(rd.result.result.text || '') && wbs.wb.t === 'ground' && wbs.wb.x > 560 && wbs.map.t === 'in' && wbs.map.id === 'wheelbarrow' && st2.blanket === false && st2.blocks === false,
+  check('4h. Image objects work: wheelbarrow carries contents, the paper is blank, blanket folds, blocks topple', wb1.result.status === 'completed' && !rd.ok && /nothing written/.test(rd.error) && wbs.wb.t === 'ground' && wbs.wb.x > 560 && wbs.map.t === 'in' && wbs.map.id === 'wheelbarrow' && st2.blanket === false && st2.blocks === false,
     `wheelbarrow now at (${Math.round(wbs.wb.x)}, ${Math.round(wbs.wb.y)}) with map inside; pushing estimate ${slow.estimatedDurationSec}s; ${bl.result.result.message} ${bk.result.result.message}`);
   await doFast({ type: 'walk_to', x: 600, y: 700 });
   const cliffWalk = await ev(() => Island.submitAction({ type: 'walk_to', x: 930, y: 560 }));
