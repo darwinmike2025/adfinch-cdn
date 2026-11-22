@@ -1412,7 +1412,7 @@ async function initLiveViewer(){
   $('tests').style.display='none';$('rpExit').style.display='none';$('rpVideo').style.display='none';$('legend').style.display='none';
   const bar=$('replayBar');bar.classList.add('on');
   const live=document.createElement('button');live.id='rpLive';live.textContent='Go live';bar.insertBefore(live,$('rpTime'));
-  const rptBtn=document.createElement('button');rptBtn.id='rpReport';rptBtn.textContent='Report';rptBtn.style.display='none';bar.appendChild(rptBtn);
+  const rptBtn=document.createElement('button');rptBtn.id='rpReport';rptBtn.textContent='Report & transcript';rptBtn.style.display='none';bar.appendChild(rptBtn);
   const status=document.createElement('div');status.id='liveStatus';status.title='Tap to hide';status.onclick=()=>{status.style.display='none'};status.style.cssText='cursor:pointer;position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(10,18,26,.88);border:1px solid var(--line);color:var(--text);padding:6px 12px;border-radius:999px;font-size:12px;max-width:92%;text-align:center';$('viewWrap').appendChild(status);
   const setStatus=t=>{status.textContent=t;status.style.display=t?'block':'none'};
   $('hdrNote').textContent='Watching a cloud run · read-only';
@@ -1428,7 +1428,7 @@ async function initLiveViewer(){
   live.onclick=()=>{R.follow=true;R.playing=true;R.speed=1;$('rpSpeed').value='1';R.t=Math.max(0,R.end-2);UI.liveUI()};
   rptBtn.onclick=()=>{const box=document.createElement('div');box.style.cssText='position:fixed;inset:0;background:rgba(5,10,15,.85);z-index:60;overflow:auto;padding:16px';
     box.innerHTML='<div style="max-width:760px;width:100%;box-sizing:border-box;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="display:flex;justify-content:flex-end;position:sticky;top:0;padding-bottom:8px;background:var(--panel)"><button id="rptClose">Close</button></div><div class="rptText" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5;min-width:0"></div></div>';
-    box.querySelector('.rptText').textContent=(report&&report.summary?report.summary+'\n\n────────\n\n':'')+(report&&report.report||'');document.body.appendChild(box);box.querySelector('#rptClose').onclick=()=>box.remove()};
+    box.querySelector('.rptText').textContent=[report&&report.summary,report&&report.report,report&&report.transcript].filter(Boolean).join('\n\n────────\n\n');document.body.appendChild(box);box.querySelector('#rptClose').onclick=()=>box.remove()};
   setStatus('Connecting…');
   const db=await claude?.use?.('db');
   if(!db){setStatus('Open this page in claude.ai while signed in to watch the experiment.');return}

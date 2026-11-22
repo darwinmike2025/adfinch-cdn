@@ -335,9 +335,10 @@ async function listOpenAIModels() {
     W('summary.md', lines.join('\n'));
   } catch (e) { console.error('summary failed', e.message); }
   status.estimatedCostUsd = +spent.toFixed(4); W('status.json', status);
+  try { require('./make_transcript').makeTranscript(dir); } catch (e) { console.error('transcript failed', e.message); }
   if (live) {
     const rd = f => { try { return fs.readFileSync(path.join(dir, f), 'utf8'); } catch (_) { return ''; } };
-    live.wj('final.json', { report: rd('report.md').slice(0, 120000), summary: rd('summary.md').slice(0, 60000), wall: new Date().toISOString() });
+    live.wj('final.json', { report: rd('report.md').slice(0, 60000), summary: rd('summary.md').slice(0, 30000), transcript: rd('transcript.md').slice(0, 150000), wall: new Date().toISOString() });
     live.wj('current.json', Object.assign({}, live.meta, { status: 'ended', result: status.status, reportReady: true, spend: +spent.toFixed(4) }));
   }
   await isl(t => Island.setExperimentBanner(t), `Run ${status.status}. Files saved in runs/${runId}`).catch(() => {});
