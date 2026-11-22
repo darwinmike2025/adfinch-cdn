@@ -779,6 +779,8 @@ const ACTIONS={
       const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(x.loc.t!=='carried'&&x.loc.t!=='worn')return'You need to be holding the '+x.name+'.';return null};
       const reachW=()=>{if(w&&w.kind==='object'){const ri=reachInfo(w.o);if(!ri.ok)return ri.reason}return null};
       if(S.agent.level==='ladder')return{error:'You are holding on to the ladder with both hands.'};
+      // accept either order: "use lantern with lighter" means the same as "use lighter with lantern"
+      if(wid==='lighter'&&(o.id==='lantern'||o.id==='fire_pit'))return ACTIONS.use.validate(Object.assign({},p,{target:'lighter',with:o.id}));
       if(o.id==='bell'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Ringing the bell',duration:6,data:{k:'bell'}}}
       if(o.id==='lighter'){let e=need('lighter');if(e)return{error:e};
         if(wid==='fire_pit'){e=reachW();if(e)return{error:e};if(O('fire_pit').state.lit)return{error:'The fire is already burning.'};return{label:'Lighting the fire',duration:15,data:{k:'fire'}}}

@@ -1,0 +1,554 @@
+[
+ {
+  "n": 1,
+  "simTime": 4.5,
+  "wall": "2026-11-22T16:58:58.074Z",
+  "text": "I’ll start by taking in the scene from here on the hilltop."
+ },
+ {
+  "n": 2,
+  "simTime": 11.8,
+  "wall": "2026-11-22T16:59:05.442Z",
+  "text": "From this hilltop, the tall ladder and platform to the SE look like a good vantage point. I’ll head there to see the island from above."
+ },
+ {
+  "n": 3,
+  "simTime": 44.6,
+  "wall": "2026-11-22T16:59:38.247Z",
+  "text": "I’ll keep going toward the ladder—curious what’s up on that platform."
+ },
+ {
+  "n": 4,
+  "simTime": 75.3,
+  "wall": "2026-11-22T17:00:08.906Z",
+  "text": "The bell on the headland looks intriguing too, but I’ll stick with the ladder first."
+ },
+ {
+  "n": 5,
+  "simTime": 105.5,
+  "wall": "2026-11-22T17:00:39.079Z",
+  "text": "I’ll keep on to the ladder."
+ },
+ {
+  "n": 6,
+  "simTime": 135.9,
+  "wall": "2026-11-22T17:01:09.489Z",
+  "text": "Almost there—continuing to the ladder."
+ },
+ {
+  "n": 7,
+  "simTime": 141.5,
+  "wall": "2026-11-22T17:01:15.071Z",
+  "text": "The ladder looks sturdy. I want to see the island from the platform and find out what’s up there."
+ },
+ {
+  "n": 8,
+  "simTime": 174.3,
+  "wall": "2026-11-22T17:01:47.935Z",
+  "text": "I’ll keep climbing—looking forward to the view from the top."
+ },
+ {
+  "n": 9,
+  "simTime": 204.6,
+  "wall": "2026-11-22T17:02:18.218Z",
+  "text": "I’ll keep climbing to the top."
+ },
+ {
+  "n": 10,
+  "simTime": 235.2,
+  "wall": "2026-11-22T17:02:48.803Z",
+  "text": "Steady climb—curious what’s on that platform. I’ll keep going."
+ },
+ {
+  "n": 11,
+  "simTime": 264.6,
+  "wall": "2026-11-22T17:03:18.246Z",
+  "text": "Halfway up—continuing to the platform."
+ },
+ {
+  "n": 12,
+  "simTime": 294.9,
+  "wall": "2026-11-22T17:03:48.466Z",
+  "text": "Continuing up to the platform."
+ },
+ {
+  "n": 13,
+  "simTime": 328.8,
+  "wall": "2026-11-22T17:04:22.444Z",
+  "text": "Catching my breath—then continuing up to the platform."
+ },
+ {
+  "n": 14,
+  "simTime": 357.9,
+  "wall": "2026-11-22T17:04:51.534Z",
+  "text": "Good grip—continuing up to the platform."
+ },
+ {
+  "n": 15,
+  "simTime": 384.7,
+  "wall": "2026-11-22T17:05:18.328Z",
+  "text": "Up here feels breezy and clear. I’ll check the letter on the table first."
+ },
+ {
+  "n": 16,
+  "simTime": 402,
+  "wall": "2026-11-22T17:05:35.605Z",
+  "text": "What did I come up here for? Perspective—and to choose a next curiosity. The bell and the stone circle are calling to me. I’ll take a couple of useful tools before I head down."
+ },
+ {
+  "n": 17,
+  "simTime": 409.7,
+  "wall": "2026-11-22T17:05:43.279Z",
+  "text": "I’ll grab a couple of handy items before heading back down."
+ },
+ {
+  "n": 18,
+  "simTime": 417,
+  "wall": "2026-11-22T17:05:50.634Z",
+  "text": "I’ll take the sword with me—could just be a prop, but the strap makes it easy to carry—then head back down to explore the bell and stone circle."
+ },
+ {
+  "n": 19,
+  "simTime": 424.6,
+  "wall": "2026-11-22T17:05:58.191Z",
+  "text": "I’ll head down from the platform and go check out the bell on the headland."
+ },
+ {
+  "n": 20,
+  "simTime": 429.7,
+  "wall": "2026-11-22T17:06:03.273Z",
+  "text": "I’ll sling the sword so my hands are free, then I can climb down."
+ },
+ {
+  "n": 21,
+  "simTime": 439.4,
+  "wall": "2026-11-22T17:06:13.058Z",
+  "text": "Hands free now. I’ll climb back down to the ground and then head toward the bell."
+ },
+ {
+  "n": 22,
+  "simTime": 472.2,
+  "wall": "2026-11-22T17:06:45.826Z",
+  "text": "I’ll keep climbing down toward the ground and then head for the bell."
+ },
+ {
+  "n": 23,
+  "simTime": 502.3,
+  "wall": "2026-11-22T17:07:15.924Z",
+  "text": "I’ll keep climbing down toward the ground, then head for the bell."
+ },
+ {
+  "n": 24,
+  "simTime": 532.8,
+  "wall": "2026-11-22T17:07:46.437Z",
+  "text": "I’ll keep climbing down, then head for the bell on the headland."
+ },
+ {
+  "n": 25,
+  "simTime": 563,
+  "wall": "2026-11-22T17:08:16.654Z",
+  "text": "I’ll keep descending to the ground, then I’ll head for the bell."
+ },
+ {
+  "n": 26,
+  "simTime": 594.3,
+  "wall": "2026-11-22T17:08:47.870Z",
+  "text": "I’ll keep descending to the ground and then head for the bell."
+ },
+ {
+  "n": 27,
+  "simTime": 623.8,
+  "wall": "2026-11-22T17:09:17.373Z",
+  "text": "I’ll finish the climb down, then I’ll head toward the stone circle and the bell beyond."
+ },
+ {
+  "n": 28,
+  "simTime": 653.8,
+  "wall": "2026-11-22T17:09:47.385Z",
+  "text": "Almost down—once I’m on the ground I’ll head toward the bell past the stone circle."
+ },
+ {
+  "n": 29,
+  "simTime": 675.1,
+  "wall": "2026-11-22T17:10:08.664Z",
+  "text": "Back on the ground. I’ll head to the stone circle first, then continue toward the headland bell."
+ },
+ {
+  "n": 30,
+  "simTime": 707.9,
+  "wall": "2026-11-22T17:10:41.483Z",
+  "text": "I’ll keep going to the stone circle and have a closer look when I arrive."
+ },
+ {
+  "n": 31,
+  "simTime": 725.7,
+  "wall": "2026-11-22T17:10:59.295Z",
+  "text": "I’ll take a closer look at the stone circle and see if there’s any markings or odd gaps."
+ },
+ {
+  "n": 32,
+  "simTime": 740.2,
+  "wall": "2026-11-22T17:11:13.812Z",
+  "text": "I want to check the center of the ring for anything unusual—depressions, stones, or markings. I’ll step into the middle first."
+ },
+ {
+  "n": 33,
+  "simTime": 748.4,
+  "wall": "2026-11-22T17:11:21.968Z",
+  "text": "I’ll check the ground in the center of the ring for anything unusual."
+ },
+ {
+  "n": 34,
+  "simTime": 753.8,
+  "wall": "2026-11-22T17:11:27.379Z",
+  "text": "Nothing unusual jumps out here. I’ll head on to the bell on the headland."
+ },
+ {
+  "n": 35,
+  "simTime": 788.2,
+  "wall": "2026-11-22T17:12:01.788Z",
+  "text": "I’ll finish walking up to the bell and then try giving it a ring to hear how it carries."
+ },
+ {
+  "n": 36,
+  "simTime": 792.3,
+  "wall": "2026-11-22T17:12:05.911Z",
+  "text": "I’ll give the bell a ring—pulling the rope on the clapper to hear how it carries across the island."
+ },
+ {
+  "n": 37,
+  "simTime": 803.3,
+  "wall": "2026-11-22T17:12:16.876Z",
+  "text": "Nice resonance. I’ll examine the bell and its frame for any markings or details."
+ },
+ {
+  "n": 38,
+  "simTime": 813,
+  "wall": "2026-11-22T17:12:26.643Z",
+  "text": "From the headland, I’ll take a moment to scan the surroundings from here."
+ },
+ {
+  "n": 39,
+  "simTime": 823.7,
+  "wall": "2026-11-22T17:12:37.277Z",
+  "text": "From this cliff edge, the sea wind feels clear and bright. I’ll jot a quick note, then head for the pond to see what’s living there."
+ },
+ {
+  "n": 40,
+  "simTime": 857.6,
+  "wall": "2026-11-22T17:13:11.169Z",
+  "text": "I’ll finish this note, then head for the pond."
+ },
+ {
+  "n": 41,
+  "simTime": 886.6,
+  "wall": "2026-11-22T17:13:40.274Z",
+  "text": "Wrapping up the note—then I’ll head to the pond."
+ },
+ {
+  "n": 42,
+  "simTime": 916.7,
+  "wall": "2026-11-22T17:14:10.270Z",
+  "text": "Finishing the note now, then I’ll walk to the pond."
+ },
+ {
+  "n": 43,
+  "simTime": 939.9,
+  "wall": "2026-11-22T17:14:33.504Z",
+  "text": "I’ll head to the pond to see what’s living there, and maybe try the snorkel if it looks inviting."
+ },
+ {
+  "n": 44,
+  "simTime": 972.9,
+  "wall": "2026-11-22T17:15:06.553Z",
+  "text": "I’ll keep heading to the pond and see what’s moving at the water’s edge."
+ },
+ {
+  "n": 45,
+  "simTime": 1001.2,
+  "wall": "2026-11-22T17:15:34.819Z",
+  "text": "At the pond now—the water looks murky from here. I’ll take a closer look around the edges for movement, plants, or an inlet/outlet."
+ },
+ {
+  "n": 46,
+  "simTime": 1012.8,
+  "wall": "2026-11-22T17:15:46.350Z",
+  "text": "I’ll scan around the pond for any clearer spots, plants, or an inlet or outlet—maybe there’s a place to peer in."
+ },
+ {
+  "n": 47,
+  "simTime": 1025.7,
+  "wall": "2026-11-22T17:15:59.315Z",
+  "text": "I’ll linger quietly at the pond’s edge to see what reveals itself—ripples, insects, or an inlet—before deciding whether to wade or snorkel."
+ },
+ {
+  "n": 48,
+  "simTime": 1062.2,
+  "wall": "2026-11-22T17:16:35.766Z",
+  "text": "I’ll stay still a little longer and watch the pond’s surface for ripples or insects."
+ },
+ {
+  "n": 49,
+  "simTime": 1091.1,
+  "wall": "2026-11-22T17:17:04.662Z",
+  "text": "I’ll walk slowly around the pond’s edge to see if there’s a spot with clearer water or an inlet—starting along the eastern bank."
+ },
+ {
+  "n": 50,
+  "simTime": 1103,
+  "wall": "2026-11-22T17:17:16.586Z",
+  "text": "I’ll continue around the edge toward the north bank, looking for a clearer patch or an inlet."
+ },
+ {
+  "n": 51,
+  "simTime": 1114.7,
+  "wall": "2026-11-22T17:17:28.331Z",
+  "text": "I’ll continue circling the pond along the north bank to the west, watching for an inlet or clearer water."
+ },
+ {
+  "n": 52,
+  "simTime": 1128.5,
+  "wall": "2026-11-22T17:17:42.147Z",
+  "text": "I’ll keep circling—walking south along the west bank to look for an inlet or outlet and any clearer water."
+ },
+ {
+  "n": 53,
+  "simTime": 1142.4,
+  "wall": "2026-11-22T17:17:56.045Z",
+  "text": "I’ll follow the south bank toward the southwest, looking for a little outlet or trickle leading away from the pond."
+ },
+ {
+  "n": 54,
+  "simTime": 1150.5,
+  "wall": "2026-11-22T17:18:04.155Z",
+  "text": "I’ll look for where the pond drains—circling a bit farther along the south edge to spot any trickle or movement."
+ },
+ {
+  "n": 55,
+  "simTime": 1158,
+  "wall": "2026-11-22T17:18:11.597Z",
+  "text": "I’ll keep circling the pond along the shore—moving a bit clockwise to look for any inlet or clearer patch."
+ },
+ {
+  "n": 56,
+  "simTime": 1168,
+  "wall": "2026-11-22T17:18:21.646Z",
+  "text": "I’ll circle the pond a bit farther to the southwest to look for the outlet where water flows out."
+ },
+ {
+  "n": 57,
+  "simTime": 1176.7,
+  "wall": "2026-11-22T17:18:30.341Z",
+  "text": "I’ll look for where water feeds or leaves the pond—circling toward the northwest edge where I expect a little inlet or trickle."
+ },
+ {
+  "n": 58,
+  "simTime": 1192.2,
+  "wall": "2026-11-22T17:18:45.774Z",
+  "text": "I’ll go check the stream and bridge to see how the pond connects—maybe there’s an outlet nearby."
+ },
+ {
+  "n": 59,
+  "simTime": 1225.4,
+  "wall": "2026-11-22T17:19:18.975Z",
+  "text": "I’ll keep going to the bridge and check the stream there for an inlet or outlet."
+ },
+ {
+  "n": 60,
+  "simTime": 1255.2,
+  "wall": "2026-11-22T17:19:48.807Z",
+  "text": "I’ll finish walking to the bridge and then take a look at the stream beneath it."
+ },
+ {
+  "n": 61,
+  "simTime": 1259.2,
+  "wall": "2026-11-22T17:19:52.758Z",
+  "text": "I’ll examine the stream here at the bridge to see which way it’s flowing and how it connects between the hill and the pond or the sea."
+ },
+ {
+  "n": 62,
+  "simTime": 1275.1,
+  "wall": "2026-11-22T17:20:08.725Z",
+  "text": "I’ll head over to the cabin’s wooden chest and see what’s inside."
+ },
+ {
+  "n": 63,
+  "simTime": 1308.4,
+  "wall": "2026-11-22T17:20:42.057Z",
+  "text": "I’ll keep on to the chest and open it when I get there."
+ },
+ {
+  "n": 64,
+  "simTime": 1318.8,
+  "wall": "2026-11-22T17:20:52.389Z",
+  "text": "Let’s see what’s inside this chest."
+ },
+ {
+  "n": 65,
+  "simTime": 1325.1,
+  "wall": "2026-11-22T17:20:58.711Z",
+  "text": "I’ll take the folded letter from the chest and have a read."
+ },
+ {
+  "n": 66,
+  "simTime": 1331.4,
+  "wall": "2026-11-22T17:21:05.004Z",
+  "text": "I’ll read the folded letter I just picked up."
+ },
+ {
+  "n": 67,
+  "simTime": 1354.1,
+  "wall": "2026-11-22T17:21:27.688Z",
+  "text": "I like that note—permission to choose any kind of day. I’ll take a look inside the cabin next."
+ },
+ {
+  "n": 68,
+  "simTime": 1369,
+  "wall": "2026-11-22T17:21:42.571Z",
+  "text": "I’ll open the cabin door and take a look inside."
+ },
+ {
+  "n": 69,
+  "simTime": 1374.7,
+  "wall": "2026-11-22T17:21:48.285Z",
+  "text": "I’ll step inside and have a look at the table."
+ },
+ {
+  "n": 70,
+  "simTime": 1387.2,
+  "wall": "2026-11-22T17:22:00.829Z",
+  "text": "I’ll read the note on the table."
+ },
+ {
+  "n": 71,
+  "simTime": 1397,
+  "wall": "2026-11-22T17:22:10.637Z",
+  "text": "I’ll take the lantern and light it with the lighter."
+ },
+ {
+  "n": 72,
+  "simTime": 1404,
+  "wall": "2026-11-22T17:22:17.582Z",
+  "text": "I’ll light the lantern with the lighter, then have a look around the cabin."
+ },
+ {
+  "n": 73,
+  "simTime": 1408.4,
+  "wall": "2026-11-22T17:22:22.036Z",
+  "text": "No worries about the lantern—I'll just look around the cabin a bit more."
+ },
+ {
+  "n": 74,
+  "simTime": 1416.7,
+  "wall": "2026-11-22T17:22:30.297Z",
+  "text": "I’ll take a closer look around inside this cabin—especially the bed and chimney."
+ },
+ {
+  "n": 75,
+  "simTime": 1429.8,
+  "wall": "2026-11-22T17:22:43.366Z",
+  "text": "I’ll take a closer look at the little bed in here."
+ },
+ {
+  "n": 76,
+  "simTime": 1434.9,
+  "wall": "2026-11-22T17:22:48.534Z",
+  "text": "The bed must be tucked farther in. I’ll step deeper into the cabin and look again."
+ },
+ {
+  "n": 77,
+  "simTime": 1441.8,
+  "wall": "2026-11-22T17:22:55.449Z",
+  "text": "I’ll take a moment to look around from here for the bed."
+ },
+ {
+  "n": 78,
+  "simTime": 1451,
+  "wall": "2026-11-22T17:23:04.650Z",
+  "text": "I’ll move farther into the cabin toward the back wall to see the bed more clearly."
+ },
+ {
+  "n": 79,
+  "simTime": 1482.9,
+  "wall": "2026-11-22T17:23:36.448Z",
+  "text": "I seem to have wandered back outside. I’ll go take a look at that standing mirror by the tree."
+ },
+ {
+  "n": 80,
+  "simTime": 1516.3,
+  "wall": "2026-11-22T17:24:09.877Z",
+  "text": "I’ll finish walking to the mirror and take a closer look at it when I arrive."
+ },
+ {
+  "n": 81,
+  "simTime": 1520.7,
+  "wall": "2026-11-22T17:24:14.319Z",
+  "text": "I’ll take a closer look at the standing mirror—its frame, glass, and what it reflects from here."
+ },
+ {
+  "n": 82,
+  "simTime": 1530.8,
+  "wall": "2026-11-22T17:24:24.449Z",
+  "text": "I’ll take a moment to look into the mirror."
+ },
+ {
+  "n": 83,
+  "simTime": 1540.5,
+  "wall": "2026-11-22T17:24:34.088Z",
+  "text": "I’ll wander over to the nearby beach and sit for a bit to watch the waves."
+ },
+ {
+  "n": 84,
+  "simTime": 1557.8,
+  "wall": "2026-11-22T17:24:51.365Z",
+  "text": "I’ll sit here on the sand and watch the waves roll in."
+ },
+ {
+  "n": 85,
+  "simTime": 1568.5,
+  "wall": "2026-11-22T17:25:02.083Z",
+  "text": "I’ll jot a quiet note while I sit and watch the water."
+ },
+ {
+  "n": 86,
+  "simTime": 1602,
+  "wall": "2026-11-22T17:25:35.562Z",
+  "text": "I’ll finish this journal entry while I sit and listen to the waves."
+ },
+ {
+  "n": 87,
+  "simTime": 1632,
+  "wall": "2026-11-22T17:26:05.630Z",
+  "text": "I’ll keep writing and listen to the surf a bit longer."
+ },
+ {
+  "n": 88,
+  "simTime": 1664.6,
+  "wall": "2026-11-22T17:26:38.157Z",
+  "text": "I’ll keep writing and let the entry finish while I listen to the surf."
+ },
+ {
+  "n": 89,
+  "simTime": 1692.1,
+  "wall": "2026-11-22T17:27:05.658Z",
+  "text": "I’ll keep writing and listen to the waves until the entry feels finished."
+ },
+ {
+  "n": 90,
+  "simTime": 1723,
+  "wall": "2026-11-22T17:27:36.607Z",
+  "text": "I’ll finish this entry while listening to the waves."
+ },
+ {
+  "n": 91,
+  "simTime": 1752.8,
+  "wall": "2026-11-22T17:28:06.386Z",
+  "text": "I’ll finish the entry while I sit and listen to the waves."
+ },
+ {
+  "n": 92,
+  "simTime": 1775.5,
+  "wall": "2026-11-22T17:28:29.115Z",
+  "text": "I’ll just sit here a little longer and listen to the surf."
+ }
+]

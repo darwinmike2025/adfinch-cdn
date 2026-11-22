@@ -34,8 +34,8 @@ class OpenAIProvider {
     this.isReasoning = /^(gpt-5|o\d)/.test(model);
   }
   hasKey() { return !!process.env.OPENAI_API_KEY; }
-  async _call(body) {
-    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), this.timeoutMs);
+  async _call(body, timeoutMs) {
+    const lim = timeoutMs || this.timeoutMs; const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), lim);
     try {
       const r = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST', signal: ctl.signal,
@@ -45,7 +45,7 @@ class OpenAIProvider {
       const j = await r.json().catch(() => ({}));
       if (!r.ok) { const e = new Error('OpenAI HTTP ' + r.status + ': ' + ((j.error && j.error.message) || 'no detail')); e.status = r.status; throw e; }
       return j;
-    } catch (e) { if (e.name === 'AbortError') { const x = new Error('model call timed out after ' + this.timeoutMs / 1000 + ' s'); x.timeout = true; throw x; } throw e; }
+    } catch (e) { if (e.name === 'AbortError') { const x = new Error('model call timed out after ' + lim / 1000 + ' s'); x.timeout = true; throw x; } throw e; }
     finally { clearTimeout(t); }
   }
   _base(messages, maxTokens) {
@@ -59,8 +59,8 @@ class OpenAIProvider {
     if (c.message.refusal) throw new Error('model refused: ' + c.message.refusal);
     return { raw: c.message.content, parsed: JSON.parse(c.message.content), usage: j.usage, finish: c.finish_reason, servedModel: j.model };
   }
-  async text(messages, maxTokens) {
-    const j = await this._call(this._base(messages, maxTokens || 6000));
+  async text(messages, maxTokens, timeoutMs) {
+    const j = await this._call(this._base(messages, maxTokens || 6000), timeoutMs || 300000);
     return { text: j.choices[0].message.content, usage: j.usage, servedModel: j.model };
   }
 }

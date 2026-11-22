@@ -1,0 +1,10 @@
+{
+ "runId": "2026-11-22T16-58-53_gpt-5",
+ "status": "completed",
+ "startedWall": "2026-11-22T16:58:53.640Z",
+ "test": false,
+ "reason": "the run reached its time limit",
+ "endedWall": "2026-11-22T17:32:10.259Z",
+ "modelCalls": 92,
+ "estimatedCostUsd": 0.5512
+}

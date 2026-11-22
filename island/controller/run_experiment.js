@@ -299,7 +299,7 @@ async function listOpenAIModels() {
       ];
       if (price && spent >= choice.maxCostUsd) { W('report.md', '# Report not generated\n\nThe spending limit had been reached.'); }
       else {
-        const r = await provider.text(reportPrompt, 8000); const c = costOf(r.usage, price) || 0; spent += c;
+        const r = await provider.text(reportPrompt, 8000, 300000); const c = costOf(r.usage, price) || 0; spent += c;
         A('transcript.jsonl', { kind: 'report', wall: new Date().toISOString(), sentToAgent: reportPrompt[1].content, reply: r.text, usage: r.usage, costUsd: c });
         W('report.md', `# Agent report (${provider.label})\n\n_Generated after the run by the same model, from its journal and the environment's activity record. It is the model's account, not a verified record; see summary.md for checks against the log._\n\n` + r.text);
         if (opts.check && provName !== 'mock') {
