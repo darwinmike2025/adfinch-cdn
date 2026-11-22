@@ -82,6 +82,7 @@ aside{border-left:1px solid var(--line);display:flex;flex-direction:column;min-h
 .fe .fl span:last-child{color:var(--muted);font-weight:400;letter-spacing:0}
 .fe.says{background:#221a33;border-color:#45346a;color:#e6dcff}.fe.says .fl{color:var(--refl)}.fe.says .tx{font-size:14px;line-height:1.45}
 .fe.does .fl{color:var(--accent)}.fe.resp .fl{color:var(--env)}.fe.bad{border-color:#7a3b3b}.fe.bad .fl{color:var(--err)}
+.fe.speech{background:#13283a;border-color:#2f5f86;color:#e3f2ff}.fe.speech .fl{color:#7cc4ff}.fe.speech .tx{font-size:15px;line-height:1.45;font-weight:600}
 .fe.obs{background:transparent;border-style:dashed}.fe.obs .fl{color:var(--muted)}.fe.obs .tx{color:var(--muted);font-size:12px}
 .fe.jr{background:#2a2518;border-color:#4a4128}.fe.jr .fl{color:var(--journal)}.fe.jr .tx{font-family:Georgia,serif;color:var(--journal);font-size:14px}
 .fe.note .fl{color:#ffa657}.fe.note .tx{color:var(--muted);font-size:12px}
@@ -519,21 +520,52 @@ function freshState(startAt){const st=(startAt&&L.starts[startAt])||L.start;
     rng:20261122,animals:[],startAt:startAt||'beach',agent:{health:100,dead:false,x:st.x,y:st.y,level:'ground',ladderFt:0,pose:'standing',facing:0,stepDist:0,underwaterView:null,trail:[]},
     objects:initialObjects(),seen:{},journal:{entries:[]},reflections:[],sounds:[],
     action:null,history:[],nextActionId:1,nextSeq:1,dirty:true}}
+/* ---- several people on one island (optional) ----
+   S.party holds one bundle per person. The per-person fields below are swapped in and out of S
+   (S.agent, S.action, S.journal ...) so all the single-person code works for whoever is "current".
+   Objects, fire, sounds and the clock are shared. */
+const PER=['agent','seen','journal','reflections','action','history'];
+const PARTY_DEFAULT=[{id:'a',label:'Woman',sex:'female',age:20,startAt:'beach',journalId:'journal',pencilId:'pencil'},{id:'b',label:'Man',sex:'male',age:20,startAt:'hilltop',journalId:'journal_2',pencilId:'pencil_2'}];
+let CTX=0;
+function useAgent(i){if(!S.party||i==null)return;if(typeof i==='string'){const s=i.toLowerCase();i=S.party.findIndex(b=>b.id===s||b.label.toLowerCase()===s)}if(i<0||i>=S.party.length||i===S.cur)return;
+  const c=S.party[S.cur];for(const k of PER)c[k]=S[k];S.cur=i;const n=S.party[i];for(const k of PER)S[k]=n[k]}
+function syncParty(){if(!S.party)return;const c=S.party[S.cur];for(const k of PER)c[k]=S[k]}
+function realias(){if(!S.party)return;if(S.cur==null)S.cur=0;const n=S.party[S.cur];for(const k of PER)S[k]=n[k]}
+function withAgent(who,fn){if(!S.party||who==null)return fn();const prev=S.cur;useAgent(who);CTX++;try{return fn()}finally{CTX--;useAgent(prev)}}
+function forEachAgent(fn){if(!S.party)return fn(0);S.party.forEach((b,i)=>withAgent(i,()=>fn(i)))}
+function curBundle(){return S.party?S.party[S.cur]:null}
+function agentName(cap){const b=curBundle();const n=b?'the '+b.label.toLowerCase():'the agent';return cap?n[0].toUpperCase()+n.slice(1):n}
+function pronoun(b,kind){const f=b.sex==='female';return kind==='subj'?(f?'She':'He'):kind==='obj'?(f?'her':'him'):(f?'her':'his')}
+function setupParty(defs){defs=defs||PARTY_DEFAULT;
+  S.party=defs.map(d=>{const st=L.starts[d.startAt]||L.start;return{id:d.id,label:d.label,sex:d.sex,age:d.age,startAt:d.startAt,journalId:d.journalId,pencilId:d.pencilId,notices:[],
+    agent:{id:d.id,health:100,dead:false,x:st.x,y:st.y,level:'ground',ladderFt:0,pose:'standing',facing:0,stepDist:0,underwaterView:null,trail:[]},seen:{},journal:{entries:[]},reflections:[],action:null,history:[]}});
+  for(const d of defs)for(const [k,base] of [['journalId','journal'],['pencilId','pencil']]){if(d[k]!==base)S.objects[d[k]]=Object.assign(clone(S.objects[base]),{id:d[k]});S.objects[d[k]].loc={t:'carried',by:d.id};S.objects[d[k]].ownedBy=d.id}
+  S.cur=0;realias();forEachAgent(()=>updateSeen())}
+const ownerId=o=>o.loc.by||(S.party?S.party[0].id:null);
+const isHeld=o=>o.loc.t==='carried'||o.loc.t==='worn';
+function isMine(o){return isHeld(o)&&(!S.party||ownerId(o)===S.agent.id)}
+function holderBundle(o){return S.party?S.party.find(b=>b.id===ownerId(o)):null}
+function holderOf(o){const b=holderBundle(o);return b?b.agent:S.agent}
+function hold(t){return S.party?{t,by:S.agent.id}:{t}}
+function myJournalId(){const b=curBundle();return b?b.journalId:'journal'}
+function myPencilId(){const b=curBundle();return b?b.pencilId:'pencil'}
 
 /* =====================================================================================
    5. LOGGING + RECORDING
    kinds: request | start | complete | fail | interrupt | rejected | move | object | journal | reflection | sound | system | error
    ===================================================================================== */
-const KIND_CLASS={animal:'err',body:'err',observe:'sys',controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
-const KIND_TAG={animal:'JAGUAR',body:'BODY',observe:'SEES',controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
+const KIND_CLASS={speech:'rf',animal:'err',body:'err',observe:'sys',controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
+const KIND_TAG={speech:'SPEECH',animal:'JAGUAR',body:'BODY',observe:'SEES',controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
 const listeners=[];
-function logEvent(kind,msg,data){const e={seq:S.nextSeq++,sim:+S.simTime.toFixed(3),wall:new Date().toISOString(),speed:S.speed,kind,msg,data:data||null};
+function logEvent(kind,msg,data){const e={seq:S.nextSeq++,sim:+S.simTime.toFixed(3),wall:new Date().toISOString(),speed:S.speed,kind,msg,data:data||null};if(S.party&&CTX>0)e.who=S.party[S.cur].id;
   LOG.push(e);recordFrame(true);for(const f of listeners){try{f(e)}catch(_){}}UI.onLog&&UI.onLog(e);return e}
 function newRecording(){REC={format:'watchable-island-replay',version:VERSION,createdWall:new Date().toISOString(),initial:clone(snapState()),snapshots:[{t:0,s:clone(snapState())}],frames:[],lastFrameT:-1}}
-function snapState(){const o=Object.assign({},S);delete o.dirty;return o}
+function snapState(){syncParty();const o=Object.assign({},S);delete o.dirty;if(S.party){for(const k of PER)delete o[k]}return o}
 function clone(o){return JSON.parse(JSON.stringify(o))}
-function frameOf(){const a=S.agent,ac=S.action;return{t:+S.simTime.toFixed(3),x:+a.x.toFixed(2),y:+a.y.toFixed(2),lv:a.level,lf:+a.ladderFt.toFixed(2),p:displayPose(),f:+a.facing.toFixed(3),sd:+a.stepDist.toFixed(1),
-  al:ac?ac.label:null,ap:ac?+(ac.progress||0).toFixed(4):0,at:ac?ac.type:null,an:(S.animals||[]).map(j=>[+j.x.toFixed(1),+j.y.toFixed(1),j.state,+j.facing.toFixed(2),+j.stepDist.toFixed(1)])}}
+function frameOf(){if(S.party&&S.cur!==0)return withAgent(0,frameOf);const a=S.agent,ac=S.action;const fr={t:+S.simTime.toFixed(3),x:+a.x.toFixed(2),y:+a.y.toFixed(2),lv:a.level,lf:+a.ladderFt.toFixed(2),p:displayPose(),f:+a.facing.toFixed(3),sd:+a.stepDist.toFixed(1),
+  al:ac?ac.label:null,ap:ac?+(ac.progress||0).toFixed(4):0,at:ac?ac.type:null,an:(S.animals||[]).map(j=>[+j.x.toFixed(1),+j.y.toFixed(1),j.state,+j.facing.toFixed(2),+j.stepDist.toFixed(1)])};
+  if(S.party){syncParty();fr.pp=S.party.map((b,i)=>{const a=b.agent,ac=b.action;return[+a.x.toFixed(2),+a.y.toFixed(2),a.level,+a.ladderFt.toFixed(2),withAgent(i,displayPose),+a.facing.toFixed(3),+a.stepDist.toFixed(1),ac?ac.label:null,ac?+(ac.progress||0).toFixed(4):0,ac?ac.type:null]})}
+  return fr}
 function recordFrame(force){if(!REC)return;if(!force&&S.simTime-REC.lastFrameT<.25)return;const fr=frameOf();const last=REC.frames[REC.frames.length-1];
   if(last&&last.t===fr.t){REC.frames[REC.frames.length-1]=fr}else REC.frames.push(fr);REC.lastFrameT=S.simTime}
 function markChanged(){S.dirty=true}
@@ -544,22 +576,22 @@ function recordSnapshotIfDirty(){if(!S.dirty||!REC)return;S.dirty=false;const s=
    6. OBJECT HELPERS: position, level, visibility, reach
    ===================================================================================== */
 const O=id=>S.objects[id];
-function carried(){return Object.values(S.objects).filter(o=>o.loc.t==='carried')}
-function worn(){return Object.values(S.objects).filter(o=>o.loc.t==='worn')}
-function isWearing(id){return O(id)&&O(id).loc.t==='worn'}
-function isCarrying(id){return O(id)&&O(id).loc.t==='carried'}
+function carried(){return Object.values(S.objects).filter(o=>o.loc.t==='carried'&&isMine(o))}
+function worn(){return Object.values(S.objects).filter(o=>o.loc.t==='worn'&&isMine(o))}
+function isWearing(id){return!!(O(id)&&O(id).loc.t==='worn'&&isMine(O(id)))}
+function isCarrying(id){return!!(O(id)&&O(id).loc.t==='carried'&&isMine(O(id)))}
 function handsUsed(){return carried().reduce((n,o)=>n+(o.size==='medium'?1:o.size==='large'?2:0),0)}
 function pocketsUsed(){return carried().filter(o=>o.size==='small').length}
-function objLevel(o){if(o.platformLevel)return'platform';if(o.loc.t==='carried'||o.loc.t==='worn')return S.agent.level;if(o.loc.t==='in'||o.loc.t==='on')return objLevel(O(o.loc.id));return'ground'}
+function objLevel(o){if(o.platformLevel)return'platform';if(o.loc.t==='carried'||o.loc.t==='worn')return holderOf(o).level;if(o.loc.t==='in'||o.loc.t==='on')return objLevel(O(o.loc.id));return'ground'}
 function objPos(o){if(o.loc.t==='platform'||o.platformLevel)return{x:L.foundation.x,y:L.foundation.y};
   if(o.loc.t==='ground'||o.loc.t==='underwater')return{x:o.loc.x,y:o.loc.y};
-  if(o.loc.t==='carried'||o.loc.t==='worn')return{x:S.agent.x,y:S.agent.y};
+  if(o.loc.t==='carried'||o.loc.t==='worn'){const h=holderOf(o);return{x:h.x,y:h.y}}
   if(o.loc.t==='in'||o.loc.t==='on')return objPos(O(o.loc.id));return{x:NaN,y:NaN}}
 function hiddenInContainer(o){let c=o;while(c.loc.t==='in'){const p=O(c.loc.id);if(p.container&&!p.container.open)return true;c=p}return false}
 function contentsOf(id){return Object.values(S.objects).filter(o=>(o.loc.t==='in'||o.loc.t==='on')&&o.loc.id===id)}
 function agentIndoors(){return S.agent.level==='ground'&&isIndoors(S.agent.x,S.agent.y)}
 function displayName(o){let n=o.name;if(o.state.broken)n='broken '+n;if(o.state.lit&&o.id!=='fire_pit')n='lit '+n;return n}
-function locText(o){const l=o.loc;if(o.kind==='fixture')return o.platformLevel?'at the top of the ladder':'fixed in place';if(l.t==='carried')return'carried by you';if(l.t==='worn')return'worn by you';if(l.t==='underwater')return'underwater in the pond';
+function locText(o){const l=o.loc;if(o.kind==='fixture')return o.platformLevel?'at the top of the ladder':'fixed in place';if(isHeld(o)&&!isMine(o)){const b=holderBundle(o);return(l.t==='worn'?'worn':'carried')+' by the '+(b?b.label.toLowerCase():'other person')}if(l.t==='carried')return'carried by you';if(l.t==='worn')return'worn by you';if(l.t==='underwater')return'underwater in the pond';
   if(l.t==='in')return'inside the '+O(l.id).name;if(l.t==='on')return'on the '+O(l.id).name;if(l.t==='platform')return'at the top of the ladder';
   const tt=terrainAt(l.x,l.y);return'on the ground ('+TNAME[tt]+')'}
 function stateText(o){const s=o.state,p=[];if(o.container&&o.container.openable)p.push(o.container.open?'open':'closed');if(o.container&&o.container.locked)p.push('locked');
@@ -585,7 +617,7 @@ function perceiveObjects(){
   return res}
 function reachInfo(o){
   const a=S.agent;if(!o)return{ok:false,reason:'No such object.'};const l=o.loc.t;
-  if(l==='carried'||l==='worn')return{ok:true};if(l==='destroyed')return{ok:false,reason:'That no longer exists.'};
+  if(l==='carried'||l==='worn')return isMine(o)?{ok:true}:{ok:false,reason:'Someone else is holding that.'};if(l==='destroyed')return{ok:false,reason:'That no longer exists.'};
   if(hiddenInContainer(o))return{ok:false,reason:'You cannot see that from here.'};
   if(a.level==='ladder')return{ok:false,reason:'You are on the ladder and need both hands to hold on.'};
   const lvl=objLevel(o);
@@ -611,10 +643,10 @@ function featurePoint(id){const a=S.agent;
 function resolveTarget(t){if(t==null||t==='')return null;if(typeof t==='object'&&t.id)t=t.id;const s=String(t).trim().toLowerCase().replace(/\s+/g,'_');
   if(S.objects[s])return{kind:'object',o:S.objects[s]};if(TERRAIN_FEATURES.includes(s))return{kind:'feature',id:s};
   const byName=Object.values(S.objects).filter(o=>o.name.toLowerCase().replace(/\s+/g,'_')===s&&o.loc.t!=='destroyed');
-  if(byName.length){const pv=perceiveObjects();const v=byName.filter(o=>pv[o.id]||o.loc.t==='carried'||o.loc.t==='worn');return{kind:'object',o:(v[0]||byName[0])}}
+  if(byName.length){const pv=perceiveObjects();const v=byName.filter(o=>pv[o.id]||isMine(o));return{kind:'object',o:(v[0]||byName[0])}}
   if(s==='door')return{kind:'object',o:O('cabin_door')};if(s==='table')return{kind:'object',o:agentIndoors()||S.agent.level!=='platform'?O('cabin_table'):O('platform_table')};
   return null}
-const knows=(o)=>{if(o.loc.t==='carried'||o.loc.t==='worn')return true;return!!perceiveObjects()[o.id]};
+const knows=(o)=>{if(isMine(o))return true;if(isHeld(o))return false;return!!perceiveObjects()[o.id]};
 // memory: fixed features the agent has seen before can be walked back to
 function visibleFeatures(){const a=S.agent,out=[];if(agentIndoors())return out;const high=a.level==='ground'?0:a.ladderFt;
   for(const f of TERRAIN_FEATURES){const p=featurePoint(f);if(!p)continue;const d=dist(p.x,p.y,a.x,a.y);const range={pond:400,stream:250,hill:2000,ocean:2000,beach:500,forest:350,cliffs:400}[f];if(d>range&&high<30)continue;
@@ -622,6 +654,37 @@ function visibleFeatures(){const a=S.agent,out=[];if(agentIndoors())return out;c
 function updateSeen(){if(!S.seen)S.seen={};const pv=perceiveObjects();for(const id in pv)S.seen[id]=+S.simTime.toFixed(1);for(const f of visibleFeatures())S.seen['feature:'+f.id]=+S.simTime.toFixed(1)}
 function featureKnown(id){return!!(S.seen&&S.seen['feature:'+id]!=null)||visibleFeatures().some(f=>f.id===id)}
 const remembers=(o)=>o.kind==='fixture'&&S.seen&&S.seen[o.id]!=null;
+
+/* ---- other people: what one person can see and hear of another ---- */
+function othersOf(){return S.party?S.party.filter((b,i)=>i!==S.cur):[]}
+function personVisible(b){const a=S.agent,o=b.agent,d=dist(o.x,o.y,a.x,a.y);const myHigh=a.level==='ground'?0:a.ladderFt,hisHigh=o.level==='ground'?0:o.ladderFt;
+  const ind=agentIndoors(),oind=o.level==='ground'&&isIndoors(o.x,o.y);
+  if(ind||oind){if(ind&&oind)return{d};return O('cabin_door').state.open&&d<=35&&a.level==='ground'&&o.level==='ground'?{d}:null}
+  if(myHigh>30)return{d,fromAbove:true};
+  if(hisHigh>20)return d<=900?{d}:null;
+  const forest=grid[cellAt(o.x,o.y)]===T.FOREST||grid[cellAt(a.x,a.y)]===T.FOREST;return d<=(forest?90:350)?{d}:null}
+function personActivity(){const a=S.agent,ac=S.action;if(a.dead)return'is lying still on the ground, not moving';if(a.level==='platform')return'is standing on the platform at the top of the ladder';
+  if(a.level==='ladder')return(ac&&ac.type==='descend'?'is climbing down':ac&&ac.type==='climb'?'is climbing':'is holding on to')+' the ladder, about '+Math.round(a.ladderFt)+' ft up';
+  if(a.pose==='down')return'is on the ground';const t=ac&&ac.type;
+  const m={walk_to:'is walking',walk:'is walking',write_journal:'is writing in a small notebook',read_journal:'is reading a small notebook',read:'is reading something',speak:'is talking',shout:'is shouting',pick_up:'is picking something up',put_down:'is setting something down',drop:'is dropping something',open:'is opening something',close:'is closing something',use:'is busy with something in '+(pronoun(curBundle(),'poss'))+' hands',inspect:'is looking closely at something',look:'is looking around',attack:'is striking at something',throw:'is throwing something',wear:'is putting something on',remove:'is taking something off',give:'is holding something out',sit:'is sitting down',stand:'is getting up',rest:'is resting',wait:'is standing still'};
+  if(t==='walk_to'||t==='walk')return ac.data.pace==='run'?'is running':'is walking';if(t&&m[t])return m[t];if(a.pose==='sitting')return'is sitting';return'is standing'}
+function personDesc(b,v){const o=b.agent,noun=b.sex==='female'?'woman':'man',P=pronoun(b,'subj');const act=withAgent(b.id,personActivity);
+  if(v.d>150||(v.fromAbove&&v.d>60))return'A person, too far away to make out clearly. They '+act.replace(/^is /,'are ').replace(/ (her|his) /,' their ')+'.';
+  let t='A young '+noun+', about '+b.age+'. '+P+' '+act+'.';
+  if(v.d<=40&&!o.dead){const hold=withAgent(b.id,()=>({c:carried().map(displayName),w:worn().map(x=>x.name)}));if(hold.c.length)t+=' '+P+' is holding: '+hold.c.join(', ')+'.';if(hold.w.length)t+=' '+P+' is wearing: '+hold.w.join(', ')+'.';
+    const h=o.health==null?100:o.health;if(h<70)t+=' '+P+' looks hurt ('+conditionText(h)+').'}
+  return t}
+function perceivePeople(){const out=[];if(!S.party||S.agent.dead)return out;for(const b of othersOf()){const v=personVisible(b);if(v)out.push({b,v})}return out}
+function targetPerson(t){if(t==null||!S.party)return null;const s=String(t).trim().toLowerCase().replace(/\s+/g,'_');const others=othersOf();
+  const b=others.find(x=>s===x.id||s===x.label.toLowerCase()||s==='person'||s==='stranger'||s==='other_person'||s==='someone'||s==='the_person'||(x.sex==='female'?['woman','girl','her','she','young_woman']:['man','guy','him','he','young_man']).includes(s));
+  if(!b)return null;return perceivePeople().some(p=>p.b===b)?b:'unseen'}
+function addNotice(b,msg){if(!b)return;b.notices.push({t:+S.simTime.toFixed(1),msg});if(b.notices.length>30)b.notices.shift();markChanged()}
+function soundHeard(s){const a=S.agent,d=dist(s.x,s.y,a.x,a.y);if(s.by&&s.by===(a.id||'self'))return null;if(s.range==null)return{d,clear:true};
+  let r=s.range;const sIn=s.indoors,mIn=agentIndoors();if(sIn!==mIn)r*=O('cabin_door').state.open?.7:.35;if(a.level!=='ground')r*=1.2;
+  if(d<=r)return{d,clear:true};if(d<=r*2.2)return{d,clear:false};return null}
+function speechSound(text,loud){const b=curBundle(),noun=b?(b.sex==='female'?'woman':'man'):'person';
+  return{t:S.simTime,x:S.agent.x,y:S.agent.y,by:S.agent.id,speech:text,loud:!!loud,range:loud?700:70,indoors:agentIndoors(),voice:noun,
+    msg:loud?'A '+noun+' shouts: "'+text+'"':'A '+noun+'\'s voice says: "'+text+'"',faint:loud?'A distant shout. You cannot make out the words.':'A faint voice nearby. You cannot make out the words.'}}
 
 /* =====================================================================================
    7. OBSERVATION (what a controller/agent receives - never the full world state)
@@ -634,10 +697,11 @@ function getObservation(){
     else e.description=o.id==='platform'?'A platform at the top of the ladder. From here you cannot make out what is on it.':(o.kind==='fixture'?o.desc:'An object, too far away to make out details.');
     if(id==='platform'&&!v.detail){e.distanceFt=Math.round(Math.hypot(v.d,L.ladderHeight-high))}
     e.reachable=reachInfo(o).ok;objs.push(e)}
+  for(const {b,v} of perceivePeople()){const o=b.agent;objs.push({id:'person',name:(v.d>150||(v.fromAbove&&v.d>60))?'person':(b.sex==='female'?'young woman':'young man'),type:'person',distanceFt:Math.round(v.d),bearing:v.d<1.5?'here':compass(bearingDeg(a.x,a.y,o.x,o.y)),bearingDeg:bearingDeg(a.x,a.y,o.x,o.y),description:personDesc(b,v),reachable:v.d<=6&&o.level===a.level})}
   {const pa=perceiveAnimals();for(const id in pa){const j=jaguar();objs.push({id,name:'jaguar',type:'animal',distanceFt:Math.round(pa[id].d),bearing:compass(bearingDeg(a.x,a.y,j.x,j.y)),bearingDeg:bearingDeg(a.x,a.y,j.x,j.y),description:jaguarDesc(j,pa[id].d),reachable:pa[id].d<=8})}}
   objs.sort((p,q)=>p.distanceFt-q.distanceFt);
   const feats=visibleFeatures();
-  const sounds=S.sounds.filter(s=>S.simTime-s.t<=30).map(s=>({secondsAgo:Math.round(S.simTime-s.t),description:s.msg,bearing:dist(s.x,s.y,a.x,a.y)<5?'here':compass(bearingDeg(a.x,a.y,s.x,s.y)),distanceFt:Math.round(dist(s.x,s.y,a.x,a.y))}));
+  const sounds=S.sounds.filter(s=>S.simTime-s.t<=30).map(s=>({s,h:soundHeard(s)})).filter(x=>x.h).map(({s,h})=>({secondsAgo:Math.round(S.simTime-s.t),description:h.clear?s.msg:s.faint,bearing:dist(s.x,s.y,a.x,a.y)<5?'here':compass(bearingDeg(a.x,a.y,s.x,s.y)),distanceFt:Math.round(dist(s.x,s.y,a.x,a.y))}));
   const notes=[];
   if(pv.platform&&!pv.platform.detail)notes.push('There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.');
   if(a.level==='platform')notes.push('You are on the platform at the top of the ladder, about 100 ft up. You can see the whole island, but small objects on the ground are too far away to make out.');
@@ -655,7 +719,8 @@ function getObservation(){
       handsFree:Math.max(0,2-handsUsed())},
     currentAction:ac?{id:ac.id,type:ac.type,label:ac.label,progress:+(ac.progress||0).toFixed(3),elapsedSec:+ac.elapsed.toFixed(1),estimatedTotalSec:ac.duration!=null?+ac.duration.toFixed(1):null}:null,
     lastActionResult:last?{id:last.id,type:last.type,status:last.status,message:last.result&&last.result.message}:null,
-    visibleObjects:objs,terrainFeatures:feats,soundsHeard:sounds,notes}}
+    visibleObjects:objs,terrainFeatures:feats,soundsHeard:sounds,notes,
+    ...(S.party?{happenedToYou:curBundle().notices.filter(n=>S.simTime-n.t<=30).map(n=>({secondsAgo:Math.round(S.simTime-n.t),description:n.msg}))}:{})}}
 
 /* =====================================================================================
    8. ACTIONS. Each: validate(params)->{error}|{label,duration?,data}; optional tick/complete/interrupt.
@@ -697,7 +762,7 @@ const ACTIONS={
       const r=needTarget(p);if(r.error)return r;return{label:'Inspecting '+(r.o?r.o.name:r.id),duration:6,data:{r:r.o?r.o.id:r.id,feat:r.kind==='feature'}}},
     complete(a){if(a.data.animal){const j=jaguar();const pv=perceiveAnimals().jaguar;a.result={message:pv?jaguarDesc(j,pv.d)+' It is about '+Math.round(pv.d)+' ft away.':'You can no longer see the jaguar.'};return}
       if(a.data.feat){const fd={pond:'A still pond. The water is murky near the banks.',stream:'A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly.',cliffs:'Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down.',hill:'A grassy hill with wildflowers, rising to a top crowned with large boulders. Stone steps climb it beside the stream.',ocean:'The sea surrounds the island. It is too deep and too far to swim anywhere.',beach:'Soft sand along the south-west shore, slow to walk on.',forest:'Dense trees with rough ground underneath.'}[a.data.r];a.result={message:fd};return}
-      const o=O(a.data.r),pv=perceiveObjects()[o.id],car=o.loc.t==='carried'||o.loc.t==='worn';
+      const o=O(a.data.r),pv=perceiveObjects()[o.id],car=isMine(o);
       if(!pv&&!car){a.result={message:'You can no longer see the '+o.name+'.'};a.failed=true;return}
       const close=car||(pv&&pv.detail);let m=close?(o.desc+(o.closeDesc?' '+o.closeDesc:'')):('From here: '+o.desc+' You would need to be closer for details.');
       const st=stateText(o);if(close&&st)m+=' ('+st+')';if(close&&((o.container&&o.container.open)||o.surface)){const c=contentsOf(o.id).filter(x=>x.loc.t!=='destroyed');m+=c.length?' Contents: '+c.map(displayName).join(', ')+'.':' It is empty.'}
@@ -706,9 +771,11 @@ const ACTIONS={
     validate(p){const e=needGround();if(e)return{error:e};let path,desc;
       const an=targetAnimal(p.target);if(an==='unseen')return{error:NOT_HERE(p.target)};
       if(an){path=planPath(an.x,an.y,6,false);desc='the jaguar';if(!path)return{error:'No walkable route to the jaguar.'};return startWalk(path,'Walking toward the jaguar','the jaguar')}
+      const pr=targetPerson(p.target);if(pr==='unseen')return{error:NOT_HERE(p.target)};
+      if(pr){const o=pr.agent;const tx=o.level==='ground'?o.x:L.ladder.x,ty=o.level==='ground'?o.y:L.ladder.y+2;path=planPath(tx,ty,4,false);if(!path)return{error:'No walkable route to the person'+(O('cabin_door').state.open?'':' (the cabin door is closed)')+'.'};return startWalk(path,'Walking toward the person','the person')}
       if(p.target!=null&&p.target!==''){const r=needTarget(p,{memory:true});if(r.error)return r;
         if(r.kind==='feature'){const fp=featurePoint(r.id);if(!fp)return{error:'Cannot find '+r.id};path=planPath(fp.x,fp.y,r.id==='hill'?8:7,false);desc='the '+r.id}
-        else{const o=r.o;if(o.loc.t==='carried'||o.loc.t==='worn')return{error:'You are already carrying that.'};if(objLevel(o)==='platform')return{error:'That is at the top of the ladder. Walk to the ladder and climb.'};
+        else{const o=r.o;if(isMine(o))return{error:'You are already carrying that.'};if(objLevel(o)==='platform')return{error:'That is at the top of the ladder. Walk to the ladder and climb.'};
           const p2=objPos(o);const reach=o.id==='ladder'?3.6:Math.max(3.6,(o.reach||5.5)-.3);path=o.id==='cabin'?(agentIndoors()?[]:planPath(DOOR_POS.x,DOOR_POS.y+3,3,false)):planPath(p2.x,p2.y,reach,false);desc=o.id==='cabin'?'the cabin door (outside)':'the '+o.name}}
       else if(isFinite(+p.x)&&isFinite(+p.y)&&p.x!==''&&p.y!==''){const x=+p.x,y=+p.y;let i=cellAt(x,y);if(x<0||y<0||x>W||y>H)return{error:'That point is off the map.'};
         if(isBlocked(i)){const t=grid[i];if(t===T.OCEAN)return{error:'That point is in the sea. You cannot walk there.'};if(t===T.POND)return{error:'That point is in the pond. You cannot walk there.'};if(t===T.CLIFF)return{error:'That point is on the cliff edge. It is too dangerous to go there.'};
@@ -753,28 +820,28 @@ const ACTIONS={
     interrupt(a){ACTIONS.climb.interrupt(a)}},
   pick_up:{desc:'Pick up a reachable item (also takes items out of open containers or off surfaces). Small items go in pockets; medium items need a free hand.',params:{target:'item id'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot pick that up.'};const o=r.o;
-      if(o.kind==='fixture')return{error:'The '+o.name+' cannot be picked up.'};if(o.loc.t==='carried'||o.loc.t==='worn')return{error:'You already have the '+o.name+'.'};
+      if(o.kind==='fixture')return{error:'The '+o.name+' cannot be picked up.'};if(isMine(o))return{error:'You already have the '+o.name+'.'};
       const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};if((o.loc.t==='in'&&HEARTHS[o.loc.id]&&O(o.loc.id).state.lit)||(isBurning(o)&&!['wood','thinwood'].includes(materialOf(o))))return{error:'It is burning; it is too hot to pick up.'};
       if(o.size==='small'&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
       return{label:'Picking up the '+o.name,duration:o.loc.t==='underwater'?10:3,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc={t:'carried'};if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
+    complete(a){const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc=hold('carried');if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
       a.result={message:'You pick up the '+displayName(o)+(o.id==='blanket'?', folding it up':'')+'.'};logEvent('object','Picked up '+o.id+' (was '+from+').',{id:o.id,from})}},
   put_down:{desc:'Set a carried item down gently: on the ground at your feet, or onto/into a reachable surface or open container with "onto".',params:{target:'item id',onto:'surface/container id (optional)'},
-    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='carried')return{error:'You are not carrying that.'};
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.loc.t==='carried'&&isMine(o)))return{error:'You are not carrying that.'};
       if(S.agent.level==='ladder')return{error:'You are on the ladder; you cannot set things down here. You could drop it.'};
       const onto=p.onto||p.container||p.with;let tgt=null;if(onto){const t=resolveTarget(onto);if(!t||t.kind!=='object'||!knows(t.o))return{error:NOT_HERE(onto)};tgt=t.o;
         if(!tgt.surface&&!tgt.container)return{error:'You cannot put things in or on the '+tgt.name+'.'};const ri=reachInfo(tgt);if(!ri.ok)return{error:ri.reason};
         if(tgt.container&&!tgt.container.open)return{error:'The '+tgt.name+' is closed.'};if(tgt.container&&contentsOf(tgt.id).length>=tgt.container.capacity)return{error:'The '+tgt.name+' is full.'};
         if(tgt.container&&o.size!=='small'&&tgt.id==='chest')return{error:'The '+o.name+' does not fit in the chest.'};if(tgt.container&&o.size==='large')return{error:'The '+o.name+' is too big to go in the '+tgt.name+'.'};if(tgt.id===o.id)return{error:'You cannot put something inside itself.'}}
       return{label:'Putting down the '+o.name+(tgt?(tgt.surface?' on ':' in ')+'the '+tgt.name:''),duration:3,data:{id:o.id,onto:tgt?tgt.id:null}}},
-    complete(a){const o=O(a.data.id);if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}
+    complete(a){const o=O(a.data.id);if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}
       if(a.data.onto){const t=O(a.data.onto);o.loc={t:t.surface?'on':'in',id:t.id};
         }
       else if(S.agent.level==='platform')o.loc={t:'on',id:'platform'};else placeOnGroundNear(o);
       markChanged();a.result={message:'You put down the '+displayName(o)+' '+locText(o)+'.'};logEvent('object','Put down '+o.id+': now '+locText(o)+'.',{id:o.id,loc:o.loc})}},
   drop:{desc:'Let go of a carried item. It falls: fragile items break; from the ladder or platform it falls to the ground near the ladder base.',params:{target:'item id'},
-    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='carried')return{error:'You are not carrying that.'};return{label:'Dropping the '+o.name,duration:1,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id),ag=S.agent;if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}let fell=ag.level==='ground'?3:ag.ladderFt,msg;
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.loc.t==='carried'&&isMine(o)))return{error:'You are not carrying that.'};return{label:'Dropping the '+o.name,duration:1,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id),ag=S.agent;if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}let fell=ag.level==='ground'?3:ag.ladderFt,msg;
       if(ag.level==='ground'){placeOnGroundNear(o,0)}else{const k=S.nextSeq;o.loc={t:'ground',x:+(L.ladder.x+((k*37)%15)-7).toFixed(1),y:+(L.ladder.y+4+((k*13)%7)).toFixed(1)}}
       if(o.fragile&&!o.state.broken){const wasLit=o.state.lit;o.state.broken=true;o.state.lit=false;msg='The '+o.name+' falls '+Math.round(fell)+' ft and shatters.';if(wasLit){o.state.burningOil=true;o.state.burning=true;o.state.burnLeft=BURN_TIME.oil;msg+=' Burning oil spreads across the ground.'}}else msg='The '+o.name+' falls '+Math.round(fell)+' ft and lands '+(fell>10?'with a thud ':'')+'at '+fmtPos(o.loc.x,o.loc.y)+'.';
       if(fell>10)S.sounds.push({t:S.simTime,x:o.loc.x,y:o.loc.y,msg:'A thud from something hitting the ground'});
@@ -792,7 +859,7 @@ const ACTIONS={
   use:{desc:'Use an object, optionally with another. Implemented: ring bell; lighter (or a lit lantern or burning item) with anything flammable, a hearth, or the lantern; snorkel (worn, at the pond) to look underwater; tin_cup with pond/stream, or alone to drink; look into mirror; toss ball; spread/fold blanket; stack/knock over blocks. Anything else returns "not implemented".',params:{target:'object id',with:'object/feature id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot use the '+r.id+' by itself. Try using an object with it.'};const o=r.o;
       let w=null;if(p.with){w=resolveTarget(p.with);if(!w||(w.kind==='object'&&!knows(w.o))||(w.kind==='feature'&&!featureKnown(w.id)))return{error:NOT_HERE(p.with)}}
-      const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(x.loc.t!=='carried'&&x.loc.t!=='worn')return'You need to be holding the '+x.name+'.';return null};
+      const wid=w?(w.kind==='object'?w.o.id:w.id):null;const need=(id)=>{const x=O(id);if(!isMine(x))return'You need to be holding the '+x.name+'.';return null};
       const reachW=()=>{if(w&&w.kind==='object'){const ri=reachInfo(w.o);if(!ri.ok)return ri.reason}return null};
       if(S.agent.level==='ladder')return{error:'You are holding on to the ladder with both hands.'};
       // accept either order: "use lantern with lighter" means the same as "use lighter with lantern"
@@ -800,7 +867,7 @@ const ACTIONS={
       if(o.id==='bell'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Ringing the bell',duration:6,data:{k:'bell'}}}
       // anything that makes a flame: the lighter, a lit lantern, or something already burning
       const isSource=o.id==='lighter'||(o.id==='lantern'&&o.state.lit&&!o.state.broken)||isBurning(o);
-      if(isSource&&(o.id==='lighter'||wid)){let e=o.id==='lighter'?need('lighter'):(o.loc.t==='carried'?null:'You need to be holding the '+o.name+'.');if(e)return{error:e};
+      if(isSource&&(o.id==='lighter'||wid)){let e=o.id==='lighter'?need('lighter'):((o.loc.t==='carried'&&isMine(o))?null:'You need to be holding the '+o.name+'.');if(e)return{error:e};
         if(!wid)return{label:'Flicking the lighter',duration:3,data:{k:'flick'}};
         if(w.kind!=='object')return{error:'You cannot set the '+String(p.with).replace(/_/g,' ')+' alight.'};const t=w.o;e=reachW();if(e)return{error:e};
         const src=(o.id==='lighter'||o.id==='lantern')?'flame':'fire';
@@ -817,8 +884,8 @@ const ACTIONS={
         if(!wid){if(!O('tin_cup').state.full)return{error:'The cup is empty.'};return{label:'Drinking from the cup',duration:6,data:{k:'drink'}}}return{error:'Using the cup with that is not implemented.'}}
       if(o.id==='mirror'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Looking into the mirror',duration:5,data:{k:'mirror'}}}
       if(o.id==='ball'){let e=need('ball');if(e)return{error:e};return{label:'Tossing the ball',duration:4,data:{k:'ball'}}}
-      if(o.id==='blanket'){if(o.loc.t==='carried')return{error:'Put the blanket down first, then use it to spread or fold it.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.spread?'Folding':'Spreading out')+' the blanket',duration:6,data:{k:'blanket'}}}
-      if(o.id==='blocks'){if(o.loc.t==='carried')return{error:'Put the blocks down first.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.stacked?'Knocking down':'Stacking')+' the blocks',duration:o.state.stacked?2:15,data:{k:'blocks'}}}
+      if(o.id==='blanket'){if((o.loc.t==='carried'&&isMine(o)))return{error:'Put the blanket down first, then use it to spread or fold it.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.spread?'Folding':'Spreading out')+' the blanket',duration:6,data:{k:'blanket'}}}
+      if(o.id==='blocks'){if((o.loc.t==='carried'&&isMine(o)))return{error:'Put the blocks down first.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:(o.state.stacked?'Knocking down':'Stacking')+' the blocks',duration:o.state.stacked?2:15,data:{k:'blocks'}}}
       if(o.id==='stepladder')return{error:'Standing on the stepladder is not implemented in this simulation.'};
       if(o.id==='wheelbarrow')return{error:'To move the wheelbarrow, pick it up (you push it) and walk. Put things in it with put_down and "onto": "wheelbarrow".'};
       if(o.id==='crate')return{error:'Use the actions "open" and "close".'};
@@ -847,24 +914,25 @@ const ACTIONS={
       if(k==='fill'){O('tin_cup').state.full=true;markChanged();a.result={message:'You fill the cup with cool water.'};logEvent('object','Filled tin_cup with water.',{});return}
       if(k==='drink'){O('tin_cup').state.full=false;markChanged();a.result={message:'You drink the water.'};logEvent('object','Drank from tin_cup (now empty).',{});return}}},
   wear:{desc:'Put on a wearable item (snorkel; sword via its shoulder strap). Worn items do not use your hands.',params:{target:'snorkel | sword'},
-    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!o.wearable)return{error:'You cannot wear that.'};if(o.loc.t==='worn')return{error:'You are already wearing it.'};
-      if(o.loc.t!=='carried'){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason}}if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};return{label:'Putting on the '+o.name,duration:6,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id);const from=locText(o);o.loc={t:'worn'};markChanged();a.result={message:'You put on the '+o.name+'.'};logEvent('object','Now wearing '+o.id+' (was '+from+').',{id:o.id})}},
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!o.wearable)return{error:'You cannot wear that.'};if((o.loc.t==='worn'&&isMine(o)))return{error:'You are already wearing it.'};
+      if(!(o.loc.t==='carried'&&isMine(o))){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason}}if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};return{label:'Putting on the '+o.name,duration:6,data:{id:o.id}}},
+    complete(a){const o=O(a.data.id);const from=locText(o);o.loc=hold('worn');markChanged();a.result={message:'You put on the '+o.name+'.'};logEvent('object','Now wearing '+o.id+' (was '+from+').',{id:o.id})}},
   remove:{desc:'Take off a worn item (it goes into your hands/pocket).',params:{target:'worn item id'},
-    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||o.loc.t!=='worn')return{error:'You are not wearing that.'};if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.loc.t==='worn'&&isMine(o)))return{error:'You are not wearing that.'};if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};
       if(o.size!=='small'&&handsUsed()>=2)return{error:'Your hands are full.'};return{label:'Taking off the '+o.name,duration:5,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id);o.loc={t:'carried'};if(o.id==='snorkel')S.agent.underwaterView=null;markChanged();a.result={message:'You take off the '+o.name+' and carry it.'};logEvent('object','Took off '+o.id+'.',{id:o.id})}},
+    complete(a){const o=O(a.data.id);o.loc=hold('carried');if(o.id==='snorkel')S.agent.underwaterView=null;markChanged();a.result={message:'You take off the '+o.name+' and carry it.'};logEvent('object','Took off '+o.id+'.',{id:o.id})}},
   read:{desc:'Read something with writing on it (or the journal).',params:{target:'object id | journal'},
-    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o)return{error:'Nothing to read there.'};if(o.id==='journal')return ACTIONS.read_journal.validate({});
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o)return{error:'Nothing to read there.'};if(o.id===myJournalId())return ACTIONS.read_journal.validate({});
+      if(S.party&&o.ownedBy&&o.id===(S.party.find(b=>b.id===o.ownedBy)||{}).journalId){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};const ents=S.party.find(b=>b.id===o.ownedBy).journal.entries;return{label:'Reading the '+o.name,duration:Math.max(5,ents.reduce((n,e)=>n+e.text.split(/\s+/).length,0)*.3),data:{journalOf:o.ownedBy,id:o.id}}}
       if(!o.readable)return{error:'There is nothing written on the '+o.name+'.'};const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};return{label:'Reading the '+o.name,duration:Math.max(5,o.readable.split(/\s+/).length*.3),data:{id:o.id}}},
-    complete(a){if(a.data.journal)return ACTIONS.read_journal.complete(a);const o=O(a.data.id);a.result={message:'It reads: "'+o.readable+'"',text:o.readable};logEvent('object','Read '+o.id+'.',{id:o.id})}},
+    complete(a){if(a.data.journal)return ACTIONS.read_journal.complete(a);if(a.data.journalOf){syncParty();const ents=S.party.find(b=>b.id===a.data.journalOf).journal.entries;a.result={message:ents.length?'The pages read: '+ents.map(e=>'"'+e.text+'"').join(' '):'The pages are blank.'};logEvent('object','Read '+a.data.id+' (someone else\'s journal, '+ents.length+' entries).',{id:a.data.id});return}const o=O(a.data.id);a.result={message:'It reads: "'+o.readable+'"',text:o.readable};logEvent('object','Read '+o.id+'.',{id:o.id})}},
   read_journal:{desc:'Read your journal (must be carried or within reach).',params:{},
-    validate(){const j=O('journal');if(j.loc.t==='destroyed')return{error:'The journal no longer exists.'};const ri=reachInfo(j);if(!ri.ok)return{error:'Your journal is not with you: '+ri.reason};
+    validate(){const j=O(myJournalId());if(j.loc.t==='destroyed')return{error:'The journal no longer exists.'};const ri=reachInfo(j);if(!ri.ok)return{error:'Your journal is not with you: '+ri.reason};
       const n=S.journal.entries.reduce((s,e)=>s+e.text.split(/\s+/).length,0);return{label:'Reading the journal',duration:Math.max(5,n*.3),data:{journal:true}}},
     complete(a){const e=S.journal.entries;a.result={message:e.length?'You read '+e.length+' journal entr'+(e.length>1?'ies':'y')+'.':'The journal is blank.',entries:clone(e)};logEvent('journal','Read the journal ('+e.length+' entries).',{})}},
   write_journal:{desc:'Write text in the journal. Needs journal and pencil carried. About 2.5 s per word (handwriting). If interrupted, the words written so far remain.',params:{text:'what to write'},
     validate(p){const t=(p.text||'').trim();if(!t)return{error:'Give the "text" to write.'};if(S.agent.level==='ladder')return{error:'You cannot write while holding on to the ladder.'};
-      const j=O('journal');if(j.loc.t==='destroyed')return{error:'The journal no longer exists.'};if(!isCarrying('journal'))return{error:'You are not carrying the journal.'};if(!isCarrying('pencil'))return{error:'You need the pencil to write.'};
+      const j=O(myJournalId());if(j.loc.t==='destroyed')return{error:'The journal no longer exists.'};if(!isCarrying(myJournalId()))return{error:'You are not carrying the journal.'};if(!isCarrying(myPencilId())&&!carried().some(o=>/^pencil/.test(o.id)))return{error:'You need the pencil to write.'};
       const words=t.split(/\s+/);return{label:'Writing in the journal',duration:Math.max(8,words.length*2.5),data:{text:t,words:words.length,written:''}}},
     tick(a,dt){a.elapsed+=dt;a.progress=clamp(a.elapsed/a.duration,0,1);const w=a.data.text.split(/\s+/);a.data.written=w.slice(0,Math.floor(a.progress*w.length+1e-9)).join(' ');if(a.elapsed>=a.duration)return a.elapsed-a.duration;return-1},
     complete(a){commitJournal(a.data.text,false);a.result={message:'You finish writing the entry.'}},
@@ -885,9 +953,23 @@ ACTIONS.run_to=Object.assign({},ACTIONS.walk_to,{desc:'Run to something or to a 
   validate(p){const v=ACTIONS.walk_to.validate(p);if(v.error)return v;v.label=v.label.replace(/^Walking/,'Running');v.duration=v.duration/2.6;v.data.pace='run';return v}});
 ACTIONS.run=Object.assign({},ACTIONS.walk,{desc:'Run a distance in a compass direction.',
   validate(p){const v=ACTIONS.walk.validate(p);if(v.error)return v;v.label=v.label.replace(/^Walking/,'Running');v.duration=v.duration/2.6;v.data.pace='run';return v}});
-ACTIONS.shout={desc:'Shout or make a loud noise.',params:{},
-  validate(){if(S.agent.dead)return{error:'You cannot.'};return{label:'Shouting',duration:3}},
-  complete(a){S.sounds.push({t:S.simTime,x:S.agent.x,y:S.agent.y,msg:'A loud human shout'});a.result={message:'You shout as loudly as you can.'};logEvent('sound','The agent shouts loudly.',{})}};
+ACTIONS.shout={desc:'Shout or make a loud noise (optional text: the words you shout).',params:{text:'words (optional)'},
+  validate(p){if(S.agent.dead)return{error:'You cannot.'};const t=(p.text||'').trim();return{label:t?'Shouting':'Shouting',duration:t?Math.max(2,t.split(/\s+/).length*.5):3,data:{text:t}}},
+  complete(a){const t=a.data&&a.data.text;if(t&&S.party){S.sounds.push(speechSound(t,true));a.result={message:'You shout: "'+t+'"'};logEvent('speech',agentName(true)+' shouts: "'+t+'"',{text:t,loud:true});return}
+    S.sounds.push(Object.assign({t:S.simTime,x:S.agent.x,y:S.agent.y,msg:t?'A loud human shout: "'+t+'"':'A loud human shout'},S.party?{by:S.agent.id,range:900,indoors:agentIndoors(),faint:'A distant shout.'}:{}));a.result={message:t?'You shout: "'+t+'"':'You shout as loudly as you can.'};logEvent('sound',agentName(true)+' shouts loudly'+(t?': "'+t+'"':'')+'.',{text:t||null})}};
+ACTIONS.speak={desc:'Say something out loud, in your own voice. Anyone close enough may hear it.',params:{text:'what you say'},
+  validate(p){if(S.agent.dead)return{error:'You cannot.'};const t=(p.text||'').trim();if(!t)return{error:'Give the "text" you say out loud.'};return{label:'Speaking',duration:Math.max(1.5,t.split(/\s+/).length*.4),data:{text:t}}},
+  complete(a){const t=a.data.text;S.sounds.push(S.party?speechSound(t,false):{t:S.simTime,x:S.agent.x,y:S.agent.y,msg:'A voice says: "'+t+'"',range:70,by:S.agent.id||'self'});a.result={message:'You say out loud: "'+t+'"'};logEvent('speech',agentName(true)+' says out loud: "'+t+'"',{text:t})}};
+ACTIONS.give={desc:'Hand something you carry to someone within reach.',params:{target:'carried object',at:'who'},
+  validate(p){const r=resolveTarget(p.target);if(!r||r.kind!=='object'||!isCarrying(r.o.id))return{error:'You are not holding that.'};if(S.agent.level==='ladder')return{error:'You need both hands for the ladder.'};
+    const pr=targetPerson(p.at||p.with||'person');if(!pr||pr==='unseen')return{error:'There is no one here to give it to.'};const o=pr.agent;const d=dist(o.x,o.y,S.agent.x,S.agent.y);
+    if(o.level!==S.agent.level||d>6)return{error:'The person is '+Math.round(d)+' ft away. Get within arm\'s reach first.'};if(o.dead)return{error:'They cannot take it.'};
+    return{label:'Holding out the '+r.o.name,duration:2,data:{id:r.o.id,to:pr.id}}},
+  complete(a){const o=O(a.data.id);const b=S.party.find(x=>x.id===a.data.to);const ob=b.agent;if(!isCarrying(o.id)){a.failed=true;a.result={message:'You no longer have it.'};return}
+    if(dist(ob.x,ob.y,S.agent.x,S.agent.y)>7||ob.level!==S.agent.level){a.failed=true;a.result={message:'They are no longer within reach.'};return}
+    const need=o.size==='medium'?1:o.size==='large'?2:0;const free=withAgent(b.id,()=>2-handsUsed());if(need>free){a.failed=true;a.result={message:pronoun(b,'subj')+' has no free hands to take it.'};addNotice(b,agentName(true)+' holds out the '+o.name+' to you, but your hands are full.');return}
+    o.loc={t:'carried',by:b.id};markChanged();a.result={message:'You hand the '+o.name+' to '+pronoun(b,'obj')+'. '+pronoun(b,'subj')+' takes it.'};
+    addNotice(b,agentName(true)+' hands you the '+o.name+'. You are now holding it.');logEvent('object',agentName(true)+' hands '+o.id+' to the '+b.label.toLowerCase()+'.',{id:o.id,to:b.id})}};
 function weaponStats(w){if(!w)return{name:'bare hands',hit:.25,dmg:[2,6]};
   if(w.id==='sword')return{name:'sword',hit:.55,dmg:[25,55]};if(isBurning(w)&&['wood','thinwood'].includes(materialOf(w)))return{name:'burning '+w.name,hit:.5,dmg:[8,16],fire:true};
   if(w.id==='lantern'&&w.state.lit&&!w.state.broken)return{name:'lit lantern',hit:.45,dmg:[5,10],fire:true,breaks:true};
@@ -896,13 +978,18 @@ function weaponStats(w){if(!w)return{name:'bare hands',hit:.25,dmg:[2,6]};
 function targetAnimal(t){if(t==null)return null;const s=String(t).trim().toLowerCase().replace(/\s+/g,'_');const j=jaguar();if(j&&(s==='jaguar'||s==='cat'||s==='big_cat')){return perceiveAnimals().jaguar?j:'unseen'}return null}
 ACTIONS.attack={desc:'Strike something, optionally using an object you carry.',params:{target:'id',with:'carried object (optional)'},
   validate(p){const ag=S.agent;if(ag.level==='ladder')return{error:'You need both hands to hold on to the ladder.'};
-    let w=null,draw=0;if(p.with){const r=resolveTarget(p.with);if(!r||r.kind!=='object')return{error:NOT_HERE(p.with)};w=r.o;if(w.loc.t==='worn'&&w.id==='sword')draw=2;else if(w.loc.t!=='carried')return{error:'You are not holding the '+w.name+'.'}}
+    let w=null,draw=0;if(p.with){const r=resolveTarget(p.with);if(!r||r.kind!=='object')return{error:NOT_HERE(p.with)};w=r.o;if((w.loc.t==='worn'&&isMine(w))&&w.id==='sword')draw=2;else if(!(w.loc.t==='carried'&&isMine(w)))return{error:'You are not holding the '+w.name+'.'}}
+    const pr=targetPerson(p.target);if(pr==='unseen')return{error:NOT_HERE(p.target)};
+    if(pr){const o=pr.agent,d=dist(o.x,o.y,ag.x,ag.y);if(o.level!==ag.level||d>7)return{error:'The person is '+Math.round(d)+' ft away, out of reach.'};return{label:(draw?'Drawing the sword and striking':'Striking')+' at the person'+(w&&!draw?' with the '+w.name:draw?'':' with bare hands'),duration:2+draw,data:{person:pr.id,w:w?w.id:null}}}
     const an=targetAnimal(p.target);if(an==='unseen')return{error:NOT_HERE(p.target)};
     if(an){if(an.state==='dead')return{error:'The jaguar is already dead.'};const d=dist(an.x,an.y,ag.x,ag.y);if(d>8)return{error:'The jaguar is '+Math.round(d)+' ft away, out of reach.'};
       return{label:(draw?'Drawing the sword and striking':'Striking')+' at the jaguar'+(w&&!draw?' with the '+w.name:draw?'':' with bare hands'),duration:2+draw,data:{animal:an.id,w:w?w.id:null}}}
     const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'There is nothing there to strike.'};const ri=reachInfo(r.o);if(!ri.ok)return{error:ri.reason};
     return{label:'Striking the '+r.o.name+(w?' with the '+w.name:''),duration:2+draw,data:{obj:r.o.id,w:w?w.id:null}}},
   complete(a){const w=a.data.w?O(a.data.w):null;const ws=weaponStats(w);
+    if(a.data.person){const b=S.party.find(x=>x.id===a.data.person),o=b.agent;const me=agentName(true);if(dist(o.x,o.y,S.agent.x,S.agent.y)>8||o.level!==S.agent.level){a.failed=true;a.result={message:'The person is no longer within reach.'};return}
+      const pHit=ws.hit*(o.pose==='down'?1.3:1)*(healthFactor()<.6?.7:1);if(rnd()<pHit){const dmg=rint(ws.dmg[0],ws.dmg[1]);a.result={message:'You hit '+pronoun(b,'obj')+' with the '+ws.name+'.'};logEvent('object',me+' hits the '+b.label.toLowerCase()+' with the '+ws.name+'.',{to:b.id,dmg});addNotice(b,me+' strikes you with the '+ws.name+'.');withAgent(b.id,()=>hurt(dmg,me+' strikes you with the '+ws.name+'.'))}
+      else{a.result={message:'You swing at '+pronoun(b,'obj')+' and miss.'};logEvent('object',me+' swings at the '+b.label.toLowerCase()+' and misses.',{to:b.id});addNotice(b,me+' swings at you with the '+ws.name+' and misses.')}return}
     if(a.data.animal){const j=jaguar();if(!j||j.state==='dead'){a.result={message:'There is nothing left to strike.'};return}
       if(dist(j.x,j.y,S.agent.x,S.agent.y)>9){a.failed=true;a.result={message:'The jaguar is no longer within reach.'};logEvent('animal','The agent swings at the jaguar, but it is out of reach.',{});return}
       const pHit=ws.hit*(S.agent.pose==='down'?.6:1)*(healthFactor()<.6?.7:1);const roll=rnd();
@@ -914,13 +1001,13 @@ ACTIONS.attack={desc:'Strike something, optionally using an object you carry.',p
     const o=O(a.data.obj);if(o.fragile&&!o.state.broken){o.state.broken=true;o.state.lit=false;markChanged();a.result={message:'The '+o.name+' shatters.'};logEvent('object','The agent smashes the '+o.name+'.',{id:o.id});return}
     a.result={message:'You strike the '+o.name+(w?' with the '+w.name:'')+'. It is not noticeably damaged.'}}};
 ACTIONS.throw={desc:'Throw something you carry at something you can see.',params:{target:'carried object',at:'id'},
-  validate(p){const r=resolveTarget(p.target);if(!r||r.kind!=='object'||r.o.loc.t!=='carried')return{error:'You are not holding that.'};const o=r.o;if(S.agent.level==='ladder')return{error:'You need your hands to hold on to the ladder.'};
+  validate(p){const r=resolveTarget(p.target);if(!r||r.kind!=='object'||!(r.o.loc.t==='carried'&&isMine(r.o)))return{error:'You are not holding that.'};const o=r.o;if(S.agent.level==='ladder')return{error:'You need your hands to hold on to the ladder.'};
     const range=o.weight<=2?80:o.weight<=6?40:15;const at=p.at||p.with;if(!at)return{error:'Say what to throw it at ("at").'};
     const an=targetAnimal(at);if(an==='unseen')return{error:NOT_HERE(at)};let tp;
     if(an)tp={x:an.x,y:an.y,animal:an.id};else{const t=resolveTarget(at);if(!t||(t.kind==='object'&&!knows(t.o))||(t.kind==='feature'&&!featureKnown(t.id)))return{error:NOT_HERE(at)};const q=t.kind==='object'?objPos(t.o):featurePoint(t.id);tp={x:q.x,y:q.y}}
     const d=dist(tp.x,tp.y,S.agent.x,S.agent.y);if(d>range)return{error:'That is '+Math.round(d)+' ft away; you can throw the '+o.name+' about '+range+' ft.'};
     return{label:'Throwing the '+o.name,duration:2,data:{id:o.id,tp,d}}},
-  complete(a){const o=O(a.data.id);if(o.loc.t!=='carried'){a.failed=true;a.result={message:'You no longer have it.'};return}const tp=a.data.tp;const sc=Math.max(2,a.data.d*.12);
+  complete(a){const o=O(a.data.id);if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}const tp=a.data.tp;const sc=Math.max(2,a.data.d*.12);
     let x=tp.x+(rnd()-.5)*sc,y=tp.y+(rnd()-.5)*sc;if(a.data.tp.animal){const j=jaguar();if(j){x=j.x+(rnd()-.5)*sc;y=j.y+(rnd()-.5)*sc}}
     const g=grid[cellAt(x,y)];let msg='You throw the '+o.name+'.';
     if(g===T.OCEAN||g===T.CLIFF){o.loc={t:'destroyed'};msg+=' It falls into the sea and is gone.'}
@@ -984,11 +1071,11 @@ function worldTick(dt){fireTick(dt);jaguarTick(dt);
 function runElapsed(){if(!S.run.startSim&&S.run.startSim!==0)return 0;const end=S.run.ended?S.run.endSim:S.simTime;return+Math.max(0,end-S.run.startSim).toFixed(1)}
 function runRemaining(){return+Math.max(0,S.run.durationSec-runElapsed()).toFixed(1)}
 function simStep(total){while(total>1e-9){const d=Math.min(.25,total);total-=d;const t0=S.simTime;
-    tickAction(d);
-    S.simTime=t0+d;worldTick(d);if(Math.floor(S.simTime)!==Math.floor(t0))updateSeen();
+    if(S.party){for(let i=0;i<S.party.length;i++){withAgent(i,()=>{if(!S.agent.dead)tickAction(d)});S.simTime=t0}}else tickAction(d);
+    S.simTime=t0+d;worldTick(d);if(Math.floor(S.simTime)!==Math.floor(t0))forEachAgent(()=>updateSeen());
     if(S.run.active&&!S.run.ended&&S.simTime-S.run.startSim>=S.run.durationSec){endRun('time limit reached')}
     recordFrame(false);recordSnapshotIfDirty()}}
-function endRun(why){if(!S.run.active||S.run.ended)return{ok:false,error:'No run is active.'};if(S.action)interrupt('run ended');S.run.ended=true;S.run.active=false;S.run.endSim=+Math.min(S.simTime,S.run.startSim+S.run.durationSec).toFixed(3);markChanged();
+function endRun(why){if(!S.run.active||S.run.ended)return{ok:false,error:'No run is active.'};forEachAgent(()=>{if(S.action)interrupt('run ended')});S.run.ended=true;S.run.active=false;S.run.endSim=+Math.min(S.simTime,S.run.startSim+S.run.durationSec).toFixed(3);markChanged();
   logEvent('system','Run ended ('+why+') at run time '+fmtDur(runElapsed())+'.',{why});recordSnapshotIfDirty();if(UI.onRunEnd)UI.onRunEnd();return{ok:true}}
 function startRun(opts){opts=opts||{};if(S.run.active)return{ok:false,error:'A run is already active.'};if(S.run.ended)return{ok:false,error:'This island already had a run. Reset first.'};
   S.run={active:true,ended:false,startSim:+S.simTime.toFixed(3),endSim:null,durationSec:opts.durationSec||RUN_SECONDS};markChanged();
@@ -1003,7 +1090,7 @@ function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).'
 /* =====================================================================================
    11. RESET / SAVE / RESTORE / EXPORT
    ===================================================================================== */
-function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
   logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
   if(UI.onReset)UI.onReset();return{ok:true}}
 function exportState(){return clone(snapState())}
@@ -1013,7 +1100,7 @@ function exportReplay(){recordSnapshotIfDirty();recordFrame(true);return{format:
 function saveRun(){recordSnapshotIfDirty();return{format:'watchable-island-save',version:VERSION,savedWall:new Date().toISOString(),state:snapState(),log:LOG,recording:REC}}
 function restoreRun(data){if(typeof data==='string')data=JSON.parse(data);if(!data||data.format!=='watchable-island-save')return{ok:false,error:'Not a Watchable Island save file.'};
 
-  if(UI.replay&&UI.exitReplay)UI.exitReplay();S=clone(data.state);S.dirty=false;LOG=clone(data.log||[]);REC=clone(data.recording);S.nextSeq=Math.max(S.nextSeq,(LOG.length?LOG[LOG.length-1].seq+1:1));
+  if(UI.replay&&UI.exitReplay)UI.exitReplay();S=clone(data.state);realias();S.dirty=false;LOG=clone(data.log||[]);REC=clone(data.recording);S.nextSeq=Math.max(S.nextSeq,(LOG.length?LOG[LOG.length-1].seq+1:1));
   if(UI.onReset)UI.onReset();logEvent('system','Restored saved state from '+data.savedWall+' (sim time '+fmtDur(S.simTime)+').',{savedWall:data.savedWall});return{ok:true,simTimeSec:S.simTime}}
 /* Start a NEW run on the physical island left by an earlier run ("saved island").
    Kept: object positions/states (moved, opened, broken, burned, lit), fire, door, chest, writing.
@@ -1043,13 +1130,16 @@ function inheritWorld(data,opts){opts=opts||{};if(typeof data==='string')data=JS
   if(UI.onReset)UI.onReset();return{ok:true,carriedItemsLeft:moved,previousJournal:oldJ}}
 // Live chunks carry snapshots as DELTAS (changed objects, new journal entries, new reflections) to stay small.
 let LIVE_SENT=null;
-function exportLiveChunk(c){if(!c){c={f:0,s:0,l:0};LIVE_SENT={objs:{},j:0,r:0}}recordSnapshotIfDirty();recordFrame(true);
+function exportLiveChunk(c){if(!c){c={f:0,s:0,l:0};LIVE_SENT={objs:{},j:0,r:0,pj:{},pr:{}}}recordSnapshotIfDirty();recordFrame(true);
   const delta=x=>{const objs={};for(const id in x.objects){const js=JSON.stringify(x.objects[id]);if(LIVE_SENT.objs[id]!==js){objs[id]=x.objects[id];LIVE_SENT.objs[id]=js}}
+    if(x.party){const d={animals:x.animals||[],objects:objs,run:x.run,speed:x.speed,party:x.party.map(b=>{const pj=LIVE_SENT.pj[b.id]||0,pr=LIVE_SENT.pr[b.id]||0;LIVE_SENT.pj[b.id]=b.journal.entries.length;LIVE_SENT.pr[b.id]=b.reflections.length;
+      return{id:b.id,label:b.label,sex:b.sex,age:b.age,agent:Object.assign({},b.agent,{trail:[]}),journalAdd:b.journal.entries.slice(pj),reflAdd:b.reflections.slice(pr),notices:[],action:b.action&&b.action.type==='write_journal'?{type:'write_journal',data:{text:b.action.data.text}}:null}})};return d}
     const je=x.journal.entries,re=x.reflections;const d={animals:x.animals||[],objects:objs,agent:Object.assign({},x.agent,{trail:[]}),journalAdd:je.slice(LIVE_SENT.j),reflAdd:re.slice(LIVE_SENT.r),run:x.run,speed:x.speed,
       action:x.action&&x.action.type==='write_journal'?{type:'write_journal',data:{text:x.action.data.text}}:null};LIVE_SENT.j=je.length;LIVE_SENT.r=re.length;return d};
   return clone({frames:REC.frames.slice(c.f),snapshots:REC.snapshots.slice(c.s).map(x=>({t:x.t,d:delta(x.s)})),log:LOG.slice(c.l),endSim:+S.simTime.toFixed(3),
     cursor:{f:REC.frames.length,s:REC.snapshots.length,l:LOG.length}})}
-function journalText(){const e=S.journal.entries;let s='Watchable Island - Journal\nExported '+new Date().toISOString()+'\n\n';if(!e.length)s+='(The journal is blank.)\n';
+function journalText(){if(S.party){syncParty();return S.party.map((b,i)=>withAgent(i,()=>'===== '+b.label.toUpperCase()+' =====\n'+journalText1())).join('\n\n')}return journalText1()}
+function journalText1(){const e=S.journal.entries;let s='Watchable Island - Journal\nExported '+new Date().toISOString()+'\n\n';if(!e.length)s+='(The journal is blank.)\n';
   for(const x of e)s+='#'+x.n+'  [sim '+fmtDur(x.simTime)+' | '+x.wall+' | '+x.where+']'+(x.interrupted?' (interrupted)':'')+'\n'+x.text+'\n\n';
   if(S.reflections.length){s+='\n--- Agent-reported reflections (not part of the in-world journal) ---\n\n';for(const r of S.reflections)s+='['+fmtDur(r.simTime)+'] '+r.text+'\n\n'}return s}
 function logCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return'seq,sim_seconds,wall_time,speed,kind,message,data\n'+LOG.map(e=>[e.seq,e.sim,e.wall,e.speed,e.kind,q(e.msg),q(e.data?JSON.stringify(e.data):'')].join(',')).join('\n')}
@@ -1057,7 +1147,7 @@ function addReflection(text){text=String(text||'').trim();if(!text)return{ok:fal
   S.reflections.push(r);markChanged();logEvent('reflection','Agent-reported reflection #'+r.n+': "'+text+'"',{reflection:r});return{ok:true,n:r.n}}
 function getStatus(){const a=S.action;return{simTimeSec:+S.simTime.toFixed(2),speed:S.speed,paused:S.paused,run:{active:S.run.active,ended:S.run.ended,elapsedSec:runElapsed(),remainingSec:runRemaining(),durationSec:S.run.durationSec},
   action:a?{id:a.id,type:a.type,label:a.label,status:a.status,progress:+(a.progress||0).toFixed(4),elapsedSec:+a.elapsed.toFixed(2),estimatedTotalSec:a.duration!=null?+a.duration.toFixed(2):null}:null,
-  lastResult:S.history.length?clone(S.history[S.history.length-1]):null,mode:UI.replay?'replay':'live'}}
+  lastResult:S.history.length?clone(S.history[S.history.length-1]):null,mode:UI.replay?'replay':'live',dead:!!S.agent.dead,who:S.party?S.party[S.cur].id:null,party:S.party?S.party.map(b=>({id:b.id,label:b.label,dead:!!b.agent.dead})):null}}
 function getActionResult(id){const h=S.history.find(x=>x.id===id);if(h)return clone(h);if(S.action&&S.action.id===id)return{id,status:'running',progress:S.action.progress};return null}
 function getActionSchema(){const o={};for(const k in ACTIONS)o[k]={description:ACTIONS[k].desc,params:ACTIONS[k].params};o.stop={description:'Interrupt the current action. Walking stops in place; climbing holds on at the current height; writing keeps words already written; other actions have no effect if stopped early.',params:{}};return o}
 
@@ -1135,7 +1225,9 @@ let dpr=1,CW=800,CH=600;
 function resize(){dpr=window.devicePixelRatio||1;const r=mapC.getBoundingClientRect();CW=Math.max(100,r.width);CH=Math.max(100,r.height);mapC.width=Math.round(CW*dpr);mapC.height=Math.round(CH*dpr)}
 window.addEventListener('resize',resize);
 function fitScale(){return Math.min(CW/950,CH/715)}
-function updateCam(view){const fs=fitScale();const a=view.agent;const ay=a.y-(a.level==='ground'?0:a.ladderFt*K_OBLIQUE);
+function updateCam(view){const fs=fitScale();let a=view.agent;let ay=a.y-(a.level==='ground'?0:a.ladderFt*K_OBLIQUE);
+  if(view.people&&view.people.length>1){const ps=view.people.map(p=>[p.agent.x,p.agent.y-(p.agent.level==='ground'?0:p.agent.ladderFt*K_OBLIQUE)]);const xs=ps.map(p=>p[0]),ys=ps.map(p=>p[1]);a={x:(Math.min(...xs)+Math.max(...xs))/2};ay=(Math.min(...ys)+Math.max(...ys))/2;
+    if(cam.mode==='follow'){const span=Math.max(Math.max(...xs)-Math.min(...xs),(Math.max(...ys)-Math.min(...ys))*CW/CH)+120;const need=CW/span;cam.tScale=Math.min(fs*cam.zoomMul,Math.max(fs,need));cam.tx=a.x;cam.ty=ay;const k=.15;cam.scale+=(cam.tScale-cam.scale)*k;cam.cx+=(cam.tx-cam.cx)*k;cam.cy+=(cam.ty-cam.cy)*k;cam.ox=CW/2-cam.cx*cam.scale;cam.oy=CH/2-cam.cy*cam.scale;return}}
   if(cam.mode==='fit'){cam.tScale=fs;cam.tx=497;cam.ty=432}else if(cam.mode==='follow'){cam.tScale=fs*cam.zoomMul;cam.tx=a.x;cam.ty=ay}
   const k=.15;cam.scale+=(cam.tScale-cam.scale)*k;cam.cx+=(cam.tx-cam.cx)*k;cam.cy+=(cam.ty-cam.cy)*k;if(Math.abs(cam.scale-cam.tScale)<1e-4)cam.scale=cam.tScale;
   cam.ox=CW/2-cam.cx*cam.scale;cam.oy=CH/2-cam.cy*cam.scale}
@@ -1167,12 +1259,13 @@ function drawItemIcon(c,o,x,y,sz,isTop){const id=o.id.replace(/_\d+$/,'');c.save
     default:c.fillStyle='#fff';c.beginPath();c.arc(0,0,s*.3,0,7);c.fill()}
   c.restore()}
 
-function drawFigure(c,sx,sy,sz,pose,facing,phase,t,carry,wornIds,onLadder){
+function drawFigure(c,sx,sy,sz,pose,facing,phase,t,carry,wornIds,onLadder,style){style=style||{};
   c.save();c.translate(sx,sy);const k=sz/16;c.scale(k,k);
   // highlight ring
   const pulse=.5+.5*Math.sin(t*4);c.strokeStyle=pose==='dead'?'rgba(160,160,160,.6)':'rgba(255,215,64,'+(.55+.35*pulse)+')';c.lineWidth=2;c.beginPath();c.ellipse(0,1,9+pulse*2,4.5+pulse,0,0,7);c.stroke();
   c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(0,1,5,2,0,0,7);c.fill();
-  const body='#ff5a36',skin='#f1c9a0',leg='#24476b';const sw=Math.sin(phase);
+  const body=style.body||'#ff5a36',skin='#f1c9a0',leg=style.leg||'#24476b';const sw=Math.sin(phase);
+  if(style.longHair&&pose!=='dead'&&pose!=='down'){const hy=(pose==='sitting'||pose==='writing'||pose==='reading')?-13:-17;c.fillStyle='#4a2a16';c.beginPath();c.ellipse(0,hy+2.2,4.1,5.4,0,0,7);c.fill()}
   if(pose==='dead'||pose==='down'){c.rotate(Math.PI/2);c.globalAlpha=pose==='dead'?.6:1;c.strokeStyle=leg;c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(-1.6,-6);c.lineTo(-1.6,0);c.moveTo(1.6,-6);c.lineTo(1.6,0);c.stroke();c.fillStyle=body;c.fillRect(-3.5,-14,7,8.5);c.fillStyle=skin;c.beginPath();c.arc(0,-17,3.3,0,7);c.fill();c.globalAlpha=1}
   else if(pose==='climbing'||pose==='holding on'){// back view on ladder
     const a1=pose==='climbing'?sw*3:0;c.strokeStyle=leg;c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(-2,-6);c.lineTo(-3,-1+a1);c.moveTo(2,-6);c.lineTo(3,-1-a1);c.stroke();
@@ -1191,7 +1284,7 @@ function drawFigure(c,sx,sy,sz,pose,facing,phase,t,carry,wornIds,onLadder){
   if(wornIds.includes('snorkel')){c.fillStyle='#2f9bd8';c.fillRect(-3,-18.5,6,2);c.strokeStyle='#ff8c1a';c.lineWidth=1.3;c.beginPath();c.moveTo(3.5,-17);c.lineTo(4,-22);c.stroke()}
   if(wornIds.includes('sword')){c.strokeStyle='#cfd6dc';c.lineWidth=1.3;c.beginPath();c.moveTo(-5,-4);c.lineTo(5,-16);c.stroke()}
   // carried items (small icons beside the figure)
-  let ix=7;for(const o of carry){if(o.id==='journal'&&(pose==='writing'||pose==='reading'))continue;drawItemIcon(c,o,ix,-9,5,false);ix+=5}
+  let ix=7;for(const o of carry){if(/^journal/.test(o.id)&&(pose==='writing'||pose==='reading'))continue;drawItemIcon(c,o,ix,-9,5,false);ix+=5}
   c.restore()}
 
 function drawWaves(c,t){c.save();c.strokeStyle='rgba(255,255,255,.14)';c.lineWidth=1/cam.scale*1.2;for(let i=0;i<70;i++){const a=i/70*6.283,r=1.02+((t*.01+i*.137)%0.12);const cr=coastRadius(a*180/Math.PI)*r;
@@ -1254,20 +1347,20 @@ function drawWorld(c,view,t){
   for(const o of Object.values(objs)){if(o.kind==='fixture')continue;const lt=o.loc.t;if(lt!=='ground'&&lt!=='underwater')continue;const inside=isIndoors(o.loc.x,o.loc.y);drawItemIcon(c,o,o.loc.x,o.loc.y,Math.max(2.5,(o.size==='large'?9:o.size==='medium'?7:5)/s),false)}
   // flames on anything burning (ground level)
   for(const o of Object.values(objs)){if(!(o.state&&o.state.burning)||o.loc.t==='destroyed')continue;let p;try{p=o.loc.t==='ground'||o.loc.t==='underwater'?{x:o.loc.x,y:o.loc.y}:(o.kind==='fixture'&&o.loc.t==='ground')?o.loc:null}catch(_){p=null}
-    if(!p&&(o.loc.t==='in'||o.loc.t==='on')){const par=objs[o.loc.id];if(par&&par.loc&&par.loc.t==='ground')p={x:par.loc.x,y:par.loc.y}}if(!p&&o.loc.t==='carried')p={x:a.x,y:a.y-1.5};if(!p)continue;
+    if(!p&&(o.loc.t==='in'||o.loc.t==='on')){const par=objs[o.loc.id];if(par&&par.loc&&par.loc.t==='ground')p={x:par.loc.x,y:par.loc.y}}if(!p&&o.loc.t==='carried'){const h=viewHolder(view,o);p={x:h.x,y:h.y-1.5}}if(!p)continue;
     const big=o.id==='cabin'?14:o.kind==='fixture'?5:1.6;const g=c.createRadialGradient(p.x,p.y,.5,p.x,p.y,big*4);g.addColorStop(0,'rgba(255,150,40,.5)');g.addColorStop(1,'rgba(255,120,20,0)');c.fillStyle=g;c.beginPath();c.arc(p.x,p.y,big*4,0,7);c.fill();
     for(let i=0;i<(o.id==='cabin'?14:5);i++){const ph=t*6+i*1.7;c.fillStyle=i%2?'#ffd35c':'#ff7b1c';c.beginPath();c.ellipse(p.x+Math.sin(ph+i)*big*.6,p.y-big*.4-Math.abs(Math.sin(ph*.7))*big*.6,big*.35,big*.8,0,0,7);c.fill()}
     for(let i=0;i<4;i++){const q=((t*.15+i*.25)%1);c.fillStyle='rgba(190,190,190,'+(.3*(1-q))+')';c.beginPath();c.arc(p.x+q*big*6,p.y-q*big*9,big*(1+q*3),0,7);c.fill()}}
   // cabin roof / door
-  const ind=a.level==='ground'&&isIndoors(a.x,a.y);const dOpen=objs.cabin_door.state.open;
+  const ind=viewPeople(view).some(p=>p.agent.level==='ground'&&isIndoors(p.agent.x,p.agent.y));const dOpen=objs.cabin_door.state.open;
   c.fillStyle='#4a2f1a';c.fillRect(DOOR_POS.x-2.5,CAB.y+CAB.h-5,5,5);
   c.strokeStyle='#c49a6c';c.lineWidth=1.2;c.beginPath();if(dOpen){c.moveTo(DOOR_POS.x-2.5,CAB.y+CAB.h);c.lineTo(DOOR_POS.x-2.5,CAB.y+CAB.h+4.5)}else{c.moveTo(DOOR_POS.x-2.5,CAB.y+CAB.h-.5);c.lineTo(DOOR_POS.x+2.5,CAB.y+CAB.h-.5)}c.stroke();
   c.globalAlpha=ind?.18:(dOpen?.82:.95);if(objs.cabin.state&&objs.cabin.state.burnt)c.globalAlpha=.15;c.fillStyle='#7a3b2e';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,CAB.h+3);c.fillStyle='#8f4a3a';c.fillRect(CAB.x-1.5,CAB.y-1.5,CAB.w+3,(CAB.h+3)/2);
   c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=.5;for(let x=CAB.x;x<CAB.x+CAB.w;x+=3){c.beginPath();c.moveTo(x,CAB.y-1.5);c.lineTo(x,CAB.y+CAB.h+1.5);c.stroke()}
   c.fillStyle='#6a6a6a';c.fillRect(CAB.x+CAB.w-9,CAB.y+3,4,4);c.globalAlpha=1;
   if(!ind){c.fillStyle='#c49a6c';c.fillRect(DOOR_POS.x-2.5,CAB.y+CAB.h-.3,5,.6)}
-  // trail
-  if(a.trail&&a.trail.length>1){c.fillStyle='rgba(255,230,150,.55)';for(let i=0;i<a.trail.length;i++){const p=a.trail[i];c.globalAlpha=.15+.6*i/a.trail.length;c.beginPath();c.arc(p[0],p[1],Math.max(.6,1.4/s),0,7);c.fill()}c.globalAlpha=1}
+  // trail(s)
+  for(const pp of viewPeople(view)){const tr=pp.agent.trail;if(tr&&tr.length>1){c.fillStyle=pp.style.trail||'rgba(255,230,150,.55)';for(let i=0;i<tr.length;i++){const p=tr[i];c.globalAlpha=.15+.6*i/tr.length;c.beginPath();c.arc(p[0],p[1],Math.max(.6,1.4/s),0,7);c.fill()}c.globalAlpha=1}}
   // wildlife
   for(const j of(view.animals||[])){c.save();c.translate(j.x,j.y);c.rotate(j.facing||0);const dead=j.state==='dead';const sz=Math.max(1,2.2/Math.max(.6,s*.7));c.scale(sz,sz);
     c.fillStyle='rgba(0,0,0,.25)';c.beginPath();c.ellipse(.8,.8,2.2,4.2,0,0,7);c.fill();
@@ -1276,21 +1369,30 @@ function drawWorld(c,view,t){
     const sw=Math.sin((j.stepDist||0)*.6)*.6;c.strokeStyle=dead?'#9c7a4a':'#d89a3a';c.lineWidth=.6;c.beginPath();c.moveTo(0,3.6);c.quadraticCurveTo(sw*2,5.5,sw*2.5,7);c.stroke();c.restore();
     if(s>1.2&&!dead){c.fillStyle='rgba(255,200,120,.9)';c.font=(8/s*1.1)+'px system-ui';c.textAlign='center';c.fillText('jaguar · '+j.state,j.x,j.y-9/Math.max(.6,s*.7)*1.2)}}
   drawLadder(c,view,t);
-  // the figure
-  const ay=a.level==='ground'?a.y:(a.level==='platform'?L.foundation.y-L.ladderHeight*K_OBLIQUE+6:ladderScreenY(a.ladderFt)+4);const[sx,sy]=w2s(a.x,ay);
-  c.setTransform(dpr,0,0,dpr,0,0);const sz=clamp(15*Math.sqrt(cam.scale/fitScale()),15,44);
-  const pose=view.pose,carry=Object.values(objs).filter(o=>o.loc.t==='carried'),wornIds=Object.values(objs).filter(o=>o.loc.t==='worn').map(o=>o.id);
-  drawFigure(c,sx,sy,sz,pose,a.facing,a.stepDist*.55,t,carry,wornIds,a.level!=='ground');
-  // action bubble
-  if(view.actLabel){const txt=view.actLabel+(view.actProg!=null?'  '+Math.round(view.actProg*100)+'%':'');c.font='600 12px system-ui';const tw=c.measureText(txt).width+14;const bx=clamp(sx-tw/2,4,CW-tw-4),by=sy-sz*1.6-24;
-    c.fillStyle='rgba(12,20,28,.88)';c.strokeStyle='rgba(242,193,78,.8)';c.lineWidth=1;roundRect(c,bx,by,tw,20,6);c.fill();c.stroke();c.fillStyle='#fff';c.textAlign='left';c.fillText(txt,bx+7,by+14);
-    if(view.actProg!=null){c.fillStyle='#f2c14e';c.fillRect(bx+4,by+17,(tw-8)*view.actProg,2)}}
+  // the figure(s)
+  const ppl=viewPeople(view);const bubbles=[];
+  for(const pp of ppl){const a=pp.agent;const ay=a.level==='ground'?a.y:(a.level==='platform'?L.foundation.y-L.ladderHeight*K_OBLIQUE+6:ladderScreenY(a.ladderFt)+4);let[sx,sy]=w2s(a.x,ay);
+    if(ppl.length>1&&a.level==='platform'&&ppl.filter(q=>q.agent.level==='platform').length>1)sx+=(pp.idx?9:-9);
+    c.setTransform(dpr,0,0,dpr,0,0);const sz=clamp(15*Math.sqrt(cam.scale/fitScale()),15,44);
+    const mineV=o=>!view.people||(o.loc.by||view.people[0].id)===pp.id;
+    const carry=Object.values(objs).filter(o=>o.loc.t==='carried'&&mineV(o)),wornIds=Object.values(objs).filter(o=>o.loc.t==='worn'&&mineV(o)).map(o=>o.id);
+    drawFigure(c,sx,sy,sz,pp.pose,a.facing,a.stepDist*.55,t,carry,wornIds,a.level!=='ground',pp.style);
+    if(pp.label){c.font='700 11px system-ui';c.textAlign='center';const lw=c.measureText(pp.label).width+10;c.fillStyle='rgba(10,18,26,.78)';roundRect(c,sx-lw/2,sy+sz*.35,lw,15,5);c.fill();c.fillStyle=pp.style.tag||'#fff';c.fillText(pp.label,sx,sy+sz*.35+11.5)}
+    bubbles.push({pp,sx,sy,sz})}
+  // action bubble(s)
+  for(const {pp,sx,sy,sz} of bubbles){if(!pp.actLabel)continue;const txt=(ppl.length>1?pp.label+': ':'')+pp.actLabel+(pp.actProg!=null?'  '+Math.round(pp.actProg*100)+'%':'');c.font='600 12px system-ui';const tw=c.measureText(txt).width+14;const bx=clamp(sx-tw/2,4,CW-tw-4);let by=sy-sz*1.6-24;
+    for(const q of bubbles)if(q.pp!==pp&&q.pp.idx<pp.idx&&q.pp.actLabel&&Math.abs(q.sx-sx)<240&&Math.abs(q.sy-sy)<30)by-=24;
+    c.fillStyle='rgba(12,20,28,.88)';c.strokeStyle=pp.style.ring||'rgba(242,193,78,.8)';c.lineWidth=1;roundRect(c,bx,by,tw,20,6);c.fill();c.stroke();c.fillStyle='#fff';c.textAlign='left';c.fillText(txt,bx+7,by+14);
+    if(pp.actProg!=null){c.fillStyle='#f2c14e';c.fillRect(bx+4,by+17,(tw-8)*pp.actProg,2)}}
   // compass + scale bar
   c.fillStyle='rgba(10,18,26,.7)';roundRect(c,10,10,46,46,8);c.fill();c.fillStyle='#fff';c.font='700 12px system-ui';c.textAlign='center';c.fillText('N',33,26);c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.moveTo(33,30);c.lineTo(33,50);c.stroke();c.beginPath();c.moveTo(28,36);c.lineTo(33,30);c.lineTo(38,36);c.stroke();
   const sbFt=cam.scale>3?50:100,sbPx=sbFt*cam.scale;c.fillStyle='rgba(10,18,26,.7)';roundRect(c,64,10,sbPx+20,26,8);c.fill();c.fillStyle='#fff';c.fillRect(74,26,sbPx,3);c.font='11px system-ui';c.textAlign='left';c.fillText(sbFt+' ft',74,22)}
+const PSTYLE={female:{body:'#ff5a36',longHair:true,trail:'rgba(255,170,140,.6)',tag:'#ffb199',ring:'rgba(255,140,110,.85)'},male:{body:'#2fb3a6',leg:'#2b3a55',trail:'rgba(140,235,220,.6)',tag:'#8ff0e4',ring:'rgba(110,220,205,.85)'}};
+function viewPeople(view){if(view.people)return view.people.map((p,i)=>Object.assign({idx:i,style:PSTYLE[p.sex]||{}},p));return[{idx:0,agent:view.agent,pose:view.pose,actLabel:view.actLabel,actProg:view.actProg,actType:view.actType,label:null,style:{}}]}
+function viewHolder(view,o){if(!view.people)return view.agent;const id=o.loc.by||view.people[0].id;return(view.people.find(p=>p.id===id)||view.people[0]).agent}
 function roundRect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 
-function drawElevation(view,t){const c=ectx,w=elevC.width,h=elevC.height,a=view.agent;c.clearRect(0,0,w,h);c.fillStyle='rgba(10,18,26,.92)';roundRect(c,0,0,w,h,8);c.fill();
+function drawElevation(view,t){const ppl=viewPeople(view);const a=(ppl.find(p=>p.agent.level!=='ground')||ppl.slice().sort((p,q)=>dist(p.agent.x,p.agent.y,L.ladder.x,L.ladder.y)-dist(q.agent.x,q.agent.y,L.ladder.x,L.ladder.y))[0]).agent;const c=ectx,w=elevC.width,h=elevC.height;c.clearRect(0,0,w,h);c.fillStyle='rgba(10,18,26,.92)';roundRect(c,0,0,w,h,8);c.fill();
   c.fillStyle='#cfd8e3';c.font='700 11px system-ui';c.textAlign='left';c.fillText('LADDER · SIDE VIEW',8,15);
   const gy=h-30,top=34,sc=(gy-top)/100,lx=52;c.fillStyle='#5b7f45';c.fillRect(0,gy,w,30);c.fillStyle='#b8b8b2';c.fillRect(lx-12,gy-4,30,8);
   c.strokeStyle='#8a96a2';c.lineWidth=1;for(let hh=0;hh<=100;hh+=25){const y=gy-hh*sc;c.beginPath();c.moveTo(lx-20,y);c.lineTo(lx-14,y);c.stroke();c.fillStyle='#8ea2b4';c.font='10px system-ui';c.textAlign='right';c.fillText(hh+'',lx-22,y+3)}
@@ -1301,7 +1403,8 @@ function drawElevation(view,t){const c=ectx,w=elevC.width,h=elevC.height,a=view.
   const hgt=a.level==='ground'?0:a.ladderFt;const near=a.level!=='ground'||dist(a.x,a.y,L.ladder.x,L.ladder.y)<30;
   elevC.style.display=(window.innerWidth<900&&!near&&a.level==='ground'&&dist(a.x,a.y,L.ladder.x,L.ladder.y)>80)?'none':'block';
   const fy=gy-hgt*sc-(a.level==='platform'?3:0),fx=a.level==='platform'?lx+6:(a.level==='ladder'?lx:lx+24);
-  if(near||a.level!=='ground'){c.fillStyle='#ff5a36';c.fillRect(fx-2.5,fy-12,5,7);c.fillStyle='#f1c9a0';c.beginPath();c.arc(fx,fy-15,2.6,0,7);c.fill();c.strokeStyle='#24476b';c.lineWidth=2;const sw=view.pose==='climbing'?Math.sin(a.stepDist*.55)*2:0;c.beginPath();c.moveTo(fx-1.5,fy-5);c.lineTo(fx-1.5,fy+sw);c.moveTo(fx+1.5,fy-5);c.lineTo(fx+1.5,fy-sw);c.stroke();
+  for(const pp of ppl){const b=pp.agent;if(b===a||!(b.level!=='ground'||dist(b.x,b.y,L.ladder.x,L.ladder.y)<30))continue;const bh=b.level==='ground'?0:b.ladderFt;const by2=gy-bh*sc-(b.level==='platform'?3:0),bx2=b.level==='platform'?lx+16:(b.level==='ladder'?lx:lx+32);c.fillStyle=pp.style.body||'#ff5a36';c.fillRect(bx2-2.5,by2-12,5,7);c.fillStyle='#f1c9a0';c.beginPath();c.arc(bx2,by2-15,2.6,0,7);c.fill()}
+  if(near||a.level!=='ground'){c.fillStyle=(ppl.find(p=>p.agent===a)||{style:{}}).style.body||'#ff5a36';c.fillRect(fx-2.5,fy-12,5,7);c.fillStyle='#f1c9a0';c.beginPath();c.arc(fx,fy-15,2.6,0,7);c.fill();c.strokeStyle='#24476b';c.lineWidth=2;const sw=view.pose==='climbing'?Math.sin(a.stepDist*.55)*2:0;c.beginPath();c.moveTo(fx-1.5,fy-5);c.lineTo(fx-1.5,fy+sw);c.moveTo(fx+1.5,fy-5);c.lineTo(fx+1.5,fy-sw);c.stroke();
     c.strokeStyle='rgba(255,215,64,.9)';c.setLineDash([2,3]);c.beginPath();c.moveTo(lx+36,fy-8);c.lineTo(w-6,fy-8);c.stroke();c.setLineDash([])}
   c.fillStyle='#fff';c.font='600 12px system-ui';c.textAlign='left';c.fillText(Math.round(hgt)+' ft',lx+40,Math.min(gy-6,Math.max(top+10,fy-4)));
   c.font='10px system-ui';c.fillStyle='#8ea2b4';c.fillText(a.level==='ground'?(near?'at ladder base':'agent on ground'):a.level==='platform'?'on platform':(view.pose==='climbing'?(view.actType==='descend'?'descending':'climbing'):'holding on'),8,h-12);
@@ -1323,7 +1426,9 @@ function renderLogUpTo(log,n){const el=$('logList');const atBottom=el.scrollHeig
 function plainMsg(t){return String(t||'').replace(/ ?\(\d+, \d+\)/g,'').replace(/ after [\d.]+ ft in \d\d:\d\d( \(avg [\d.]+ ft\/s\))?/g,'').replace(/ after \d\d:\d\d\./g,'.').replace(/ ?\(estimated \d\d:\d\d\)/g,'').replace(/\s+\./g,'.').trim()}
 function plainReq(r){if(!r)return'an action';const t=(r.type||'').replace(/_/g,' ');const tg=r.target?' '+String(r.target).replace(/_/g,' '):'';const w=r.with?' with '+String(r.with).replace(/_/g,' '):'';const o=r.onto?' onto '+String(r.onto).replace(/_/g,' '):'';
   const d=r.direction?' '+r.direction+(r.distance?' '+r.distance+' ft':''):'';const sec=r.seconds?' '+r.seconds+' s':'';return(t+tg+w+o+d+sec+(r.type==='walk_to'&&!r.target&&r.x!=null?' to a spot':'')).trim()}
-function feedItem(e){const d=e.data||{};switch(e.kind){
+const WHO_LABEL={a:'Woman',b:'Man'};
+function feedItem(e){const it=feedItem0(e);if(it&&e.who&&WHO_LABEL[e.who]){const w=WHO_LABEL[e.who];it.who=e.who;it.l=it.l.replace(/^Agent /,w+' ').replace(/^Island responds$/,'Island responds to the '+w.toLowerCase()).replace(/^Journal/,w+'\'s journal')}return it}
+function feedItem0(e){const d=e.data||{};switch(e.kind){
   case'observe':return{c:'obs',l:'Agent observes',t:e.msg};
   case'reflection':return d.reflection?{c:'says',l:'Agent says',t:'“'+d.reflection.text+'”'}:null;
   case'start':return{c:'does',l:'Agent does',t:plainMsg(e.msg.replace(/^Started: /,''))};
@@ -1331,8 +1436,9 @@ function feedItem(e){const d=e.data||{};switch(e.kind){
   case'complete':return{c:'resp',l:'Island responds',t:plainMsg(d.result&&d.result.message||e.msg)};
   case'fail':return{c:'resp bad',l:'Island responds',t:'It didn’t work: '+plainMsg(d.result&&d.result.message||e.msg)};
   case'interrupt':return{c:'resp bad',l:'Island responds',t:(d.result&&d.result.reason==='run ended'?'Time ran out. ':'Stopped before finishing. ')+plainMsg(d.result&&d.result.message||'')};
+  case'speech':return{c:'speech',l:'Agent speaks out loud',t:'“'+(d.text||'')+'”'+(d.loud?' (shouted)':'')};
   case'journal':return d.entry?{c:'jr',l:'Journal'+(d.entry.interrupted?' (writing interrupted)':''),t:d.entry.text}:null;
-  case'sound':return{c:'resp',l:'Island responds',t:e.msg};
+  case'sound':return{c:'resp',l:e.who?'Agent makes a sound':'Island responds',t:e.msg};
   case'animal':return{c:'resp bad',l:'Jaguar (observer view)',t:e.msg};
   case'body':return{c:'resp bad',l:'Island responds',t:e.msg};
   case'system':if(/^Run started/.test(e.msg))return{c:'note',l:'Island',t:'The experiment began.'};if(/^Run ended/.test(e.msg))return{c:'note',l:'Island',t:'The experiment ended.'};return null;
@@ -1340,24 +1446,30 @@ function feedItem(e){const d=e.data||{};switch(e.kind){
   default:return null}}
 let feedRendered=0;
 function renderFeedUpTo(log,n){const el=$('feedList');if(!el)return;const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<60;if(n<feedRendered){el.innerHTML='';feedRendered=0}
-  const frag=document.createDocumentFragment();for(let i=feedRendered;i<n;i++){const it=feedItem(log[i]);if(!it)continue;const d=document.createElement('div');d.className='fe '+it.c;d.innerHTML='<div class="fl"><span>'+esc(it.l)+'</span><span>'+fmtDur(log[i].sim)+'</span></div><div class="tx"></div>';d.querySelector('.tx').textContent=it.t;frag.appendChild(d)}
+  const frag=document.createDocumentFragment();for(let i=feedRendered;i<n;i++){const it=feedItem(log[i]);if(!it)continue;const d=document.createElement('div');d.className='fe '+it.c;d.innerHTML='<div class="fl"><span'+(it.who?' style="color:'+((PSTYLE[it.who==='a'?'female':'male']||{}).tag)+'"':'')+'>'+esc(it.l)+'</span><span>'+fmtDur(log[i].sim)+'</span></div><div class="tx"></div>';d.querySelector('.tx').textContent=it.t;frag.appendChild(d)}
   el.appendChild(frag);feedRendered=n;while(el.childNodes.length>800)el.removeChild(el.firstChild);if(atBottom)el.scrollTop=el.scrollHeight}
 let jrKey='',rfKey='';
-function renderJournal(entries,writing){const key=entries.length+'|'+(writing||'');if(key===jrKey)return;jrKey=key;const el=$('journalList');
-  let h=entries.length?'':'<div class="empty">The journal is blank.</div>';for(const e of entries)h+='<div class="jent"><div class="m">#'+e.n+' · sim '+fmtDur(e.simTime)+' · '+esc(e.where)+(e.interrupted?' · interrupted':'')+'</div>'+esc(e.text)+'</div>';
+function renderJournal(entries,writing){const key=entries.length+'|'+(entries.length?entries[entries.length-1].simTime:'')+'|'+(writing||'');if(key===jrKey)return;jrKey=key;const el=$('journalList');
+  let h=entries.length?'':'<div class="empty">The journal is blank.</div>';for(const e of entries)h+='<div class="jent"><div class="m">'+(e.who?esc(e.who)+' · ':'')+'#'+e.n+' · sim '+fmtDur(e.simTime)+' · '+esc(e.where)+(e.interrupted?' · interrupted':'')+'</div>'+esc(e.text)+'</div>';
   if(writing!=null)h+='<div class="jent writing"><div class="m">✎ writing now…</div>'+esc(writing||'')+'▍</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
-function renderRefl(list){const key=list.length+'';if(key===rfKey)return;rfKey=key;const el=$('reflList');let h=list.length?'':'<div class="empty">Nothing said yet. These are the words the agent chooses to say. They are not a complete record of its reasoning.</div>';
-  for(const r of list)h+='<div class="rent"><div class="m">#'+r.n+' · sim '+fmtDur(r.simTime)+' · agent-reported</div>'+esc(r.text)+'</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
-function liveView(){const a=S.action;return{animals:S.animals||[],objects:S.objects,agent:S.agent,simTime:S.simTime,pose:displayPose(),actLabel:a?a.label:null,actProg:a?(a.progress||0):null,actType:a?a.type:null,journal:S.journal,reflections:S.reflections,run:S.run,speed:S.speed,writing:a&&a.type==='write_journal'?a.data.written:null,log:LOG,logN:LOG.length,action:a,paused:S.paused}}
+function renderRefl(list){const key=list.length+'|'+(list.length?list[list.length-1].simTime:'');if(key===rfKey)return;rfKey=key;const el=$('reflList');let h=list.length?'':'<div class="empty">Nothing said yet. These are the words the agent chooses to say. They are not a complete record of its reasoning.</div>';
+  for(const r of list)h+='<div class="rent"><div class="m">'+(r.who?esc(r.who)+' · ':'')+'#'+r.n+' · sim '+fmtDur(r.simTime)+' · agent-reported</div>'+esc(r.text)+'</div>';el.innerHTML=h;el.scrollTop=el.scrollHeight}
+function liveView(){syncParty();const a=S.action;return{people:S.party?S.party.map((b,i)=>withAgent(i,()=>{const ac=S.action;return{id:b.id,label:b.label,sex:b.sex,agent:S.agent,pose:displayPose(),actLabel:ac?ac.label:null,actProg:ac?(ac.progress||0):null,actType:ac?ac.type:null,journal:S.journal,reflections:S.reflections,writing:ac&&ac.type==='write_journal'?ac.data.written:null,action:ac,history:S.history}})):null,animals:S.animals||[],objects:S.objects,agent:S.agent,simTime:S.simTime,pose:displayPose(),actLabel:a?a.label:null,actProg:a?(a.progress||0):null,actType:a?a.type:null,journal:S.journal,reflections:S.reflections,run:S.run,speed:S.speed,writing:a&&a.type==='write_journal'?a.data.written:null,log:LOG,logN:LOG.length,action:a,paused:S.paused}}
 function currentView(){return UI.replay&&UI.replay.view?UI.replay.view:liveView()}
 function renderPanels(v){const run=v.run;const el=run.startSim==null?0:Math.max(0,(run.ended?run.endSim:v.simTime)-run.startSim);const rem=Math.max(0,run.durationSec-el);
   $('elapsed').textContent=fmtDur(el);$('remain').textContent=fmtDur(rem);$('remain').classList.toggle('low',run.active&&rem<300);
   $('runState').textContent=(run.ended?'Run complete':run.active?'Run in progress':'Run not started')+' · simulation clock '+fmtDur(v.simTime)+' · '+(v.speed===1?'real time':'TEST '+v.speed+'×');
-  if(v.actLabel){$('actLabel').textContent=v.actLabel;$('actStatus').textContent='In progress · '+Math.round((v.actProg||0)*100)+'%'+(v.action&&v.action.duration!=null?' · elapsed '+fmtDur(v.action.elapsed)+' of ~'+fmtDur(v.action.duration):'');$('actBar').style.width=(100*(v.actProg||0))+'%'}
+  if(v.people&&v.people.length>1){$('actLabel').innerHTML=v.people.map(p=>'<span style="color:'+(PSTYLE[p.sex]||{}).tag+'">'+esc(p.label)+':</span> '+esc(p.actLabel?p.actLabel+' · '+Math.round((p.actProg||0)*100)+'%':(p.agent.dead?'not moving':'idle ('+p.agent.pose+')'))).join('<br>');$('actStatus').textContent='';$('actBar').style.width='0%';
+    $('carry').innerHTML=v.people.map(p=>{const mine=o=>(o.loc.by||v.people[0].id)===p.id;const car=Object.values(v.objects).filter(o=>o.loc.t==='carried'&&mine(o)).map(displayName),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn'&&mine(o)).map(o=>o.name);const a=p.agent;
+      return'<span style="color:'+(PSTYLE[p.sex]||{}).tag+'">'+esc(p.label)+'</span> '+fmtPos(a.x,a.y)+' ft · '+(a.level==='ground'?'ground':a.level+' '+Math.round(a.ladderFt)+' ft')+(a.health!=null&&a.health<95?' · <b>'+conditionText(a.health)+'</b>':'')+'<br>Carrying: <b>'+(car.join(', ')||'nothing')+'</b>'+(wo.length?' · Wearing: <b>'+wo.join(', ')+'</b>':'')}).join('<br>');
+    renderLogUpTo(v.log,v.logN);renderFeedUpTo(v.log,v.logN);
+    const je=[].concat(...v.people.map(p=>p.journal.entries.map(e=>Object.assign({who:p.label},e)))).sort((x,y)=>x.simTime-y.simTime);const wr=v.people.filter(p=>p.writing!=null).map(p=>p.label+': '+(p.writing||''));renderJournal(je,wr.length?wr.join(' | '):null);
+    renderRefl([].concat(...v.people.map(p=>p.reflections.map(r=>Object.assign({who:p.label},r)))).sort((x,y)=>x.simTime-y.simTime))}
+  else if(v.actLabel){$('actLabel').textContent=v.actLabel;$('actStatus').textContent='In progress · '+Math.round((v.actProg||0)*100)+'%'+(v.action&&v.action.duration!=null?' · elapsed '+fmtDur(v.action.elapsed)+' of ~'+fmtDur(v.action.duration):'');$('actBar').style.width=(100*(v.actProg||0))+'%'}
   else{$('actLabel').textContent='Idle ('+v.agent.pose+')';const last=UI.replay?null:S.history[S.history.length-1];$('actStatus').textContent=last?('Last: '+last.label+' → '+last.status):'Waiting for an action';$('actBar').style.width='0%'}
-  const car=Object.values(v.objects).filter(o=>o.loc.t==='carried').map(displayName),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn').map(o=>o.name);
+  if(!(v.people&&v.people.length>1)){const car=Object.values(v.objects).filter(o=>o.loc.t==='carried').map(displayName),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn').map(o=>o.name);
   const a=v.agent;$('carry').innerHTML='Position <b>'+fmtPos(a.x,a.y)+'</b> ft · '+(a.level==='ground'?'ground':a.level)+' · height <b>'+Math.round(a.level==='ground'?0:a.ladderFt)+' ft</b><br>Carrying: <b>'+(car.join(', ')||'nothing')+'</b>'+(wo.length?' · Wearing: <b>'+wo.join(', ')+'</b>':'');
-  renderLogUpTo(v.log,v.logN);renderFeedUpTo(v.log,v.logN);renderJournal(v.journal.entries,v.writing);renderRefl(v.reflections);
+  renderLogUpTo(v.log,v.logN);renderFeedUpTo(v.log,v.logN);renderJournal(v.journal.entries,v.writing);renderRefl(v.reflections)}
   const sc=$('speedChip');sc.textContent=v.speed===1?'1× REAL TIME':'TEST SPEED '+v.speed+'×';sc.className='chip '+(v.speed===1?'speed1':'speedtest');
   $('pauseChip').style.display=(!UI.replay&&S.paused)?'inline-block':'none';$('modeChip').textContent=UI.replay?(UI.replay.live?'WATCHING':'REPLAY'):'LIVE';$('modeChip').className='chip '+(UI.replay?'replay':'live')}
 let lastPanel=0,lastFrameT=performance.now();
@@ -1373,7 +1485,7 @@ UI.onRunEnd=()=>{if(VID.rec&&VID.autoStop)stopVideo()};
    14. REPLAY (reconstructs from recorded snapshots, frames and log; never re-simulates)
    ===================================================================================== */
 function bsearch(arr,t,key){let lo=0,hi=arr.length-1,ans=-1;while(lo<=hi){const m=(lo+hi)>>1;if(arr[m][key]<=t){ans=m;lo=m+1}else hi=m-1}return ans}
-function replayStateAt(rep,t){const si=Math.max(0,bsearch(rep.snapshots,t,'t'));const snap=rep.snapshots[si].s;const fi=bsearch(rep.frames,t,'t');let ag=Object.assign({},snap.agent),fr=null;
+function replayStateAt(rep,t){const si=Math.max(0,bsearch(rep.snapshots,t,'t'));const snap=rep.snapshots[si].s;const fi=bsearch(rep.frames,t,'t');let ag=Object.assign({},snap.agent||(snap.party&&snap.party[0].agent)),fr=null;
   if(fi>=0){fr=rep.frames[fi];const nx=rep.frames[fi+1];let x=fr.x,y=fr.y,lf=fr.lf,sd=fr.sd;
     if(nx&&nx.t>fr.t&&nx.lv===fr.lv){const k=clamp((t-fr.t)/(nx.t-fr.t),0,1);x+=(nx.x-fr.x)*k;y+=(nx.y-fr.y)*k;lf+=(nx.lf-fr.lf)*k;sd+=(nx.sd-fr.sd)*k}
     Object.assign(ag,{x,y,level:fr.lv,ladderFt:lf,facing:fr.f,stepDist:sd})}
@@ -1382,8 +1494,15 @@ function replayStateAt(rep,t){const si=Math.max(0,bsearch(rep.snapshots,t,'t'));
   // trail from frames
   const trail=[];for(let i=Math.max(0,fi-600);i<=fi;i+=2){const f=rep.frames[i];if(f&&f.lv==='ground'){const lp=trail[trail.length-1];if(!lp||dist(lp[0],lp[1],f.x,f.y)>6)trail.push([f.x,f.y])}}ag.trail=trail.slice(-160);
   let prog=fr?fr.ap:null;if(fr&&rep.frames[fi+1]&&rep.frames[fi+1].al===fr.al){const nx=rep.frames[fi+1];prog=fr.ap+(nx.ap-fr.ap)*clamp((t-fr.t)/((nx.t-fr.t)||1),0,1)}
-  let writing=null;if(fr&&fr.at==='write_journal'&&snap.action&&snap.action.type==='write_journal'){const w=snap.action.data.text.split(/\s+/);writing=w.slice(0,Math.floor((prog||0)*w.length)).join(' ')}
+  let writing=null;if(!snap.party&&fr&&fr.at==='write_journal'&&snap.action&&snap.action.type==='write_journal'){const w=snap.action.data.text.split(/\s+/);writing=w.slice(0,Math.floor((prog||0)*w.length)).join(' ')}
   const speed=n>0?rep.log[n-1].speed:snap.speed;
+  if(snap.party){const people=snap.party.map((b,k)=>{const g=Object.assign({},b.agent);const f=fr&&fr.pp&&fr.pp[k];let pose=g.pose,al=null,ap=null,at=null;
+      if(f){const nx=rep.frames[fi+1],nf=nx&&nx.pp&&nx.pp[k];let x=f[0],y=f[1],lf=f[3],sd=f[6];if(nf&&nx.t>fr.t&&nf[2]===f[2]){const q=clamp((t-fr.t)/(nx.t-fr.t),0,1);x+=(nf[0]-f[0])*q;y+=(nf[1]-f[1])*q;lf+=(nf[3]-f[3])*q;sd+=(nf[6]-f[6])*q}
+        Object.assign(g,{x,y,level:f[2],ladderFt:lf,facing:f[5],stepDist:sd});pose=f[4];al=f[7];ap=f[8];at=f[9];if(nf&&nf[7]===al&&al)ap=f[8]+(nf[8]-f[8])*clamp((t-fr.t)/((nx.t-fr.t)||1),0,1)}
+      const tr=[];for(let i=Math.max(0,fi-600);i<=fi;i+=2){const q=rep.frames[i],p=q&&q.pp&&q.pp[k];if(p&&p[2]==='ground'){const lp=tr[tr.length-1];if(!lp||dist(lp[0],lp[1],p[0],p[1])>6)tr.push([p[0],p[1]])}}g.trail=tr.slice(-160);
+      let wr=null;if(at==='write_journal'&&b.action&&b.action.type==='write_journal'){const w=b.action.data.text.split(/\s+/);wr=w.slice(0,Math.floor((ap||0)*w.length)).join(' ')}
+      return{id:b.id,label:b.label,sex:b.sex,agent:g,pose,actLabel:al,actProg:al?ap:null,actType:at,journal:b.journal,reflections:b.reflections,writing:wr,action:null}});
+    const p0=people[0];return{people,animals,objects:snap.objects,agent:p0.agent,simTime:t,pose:p0.pose,actLabel:p0.actLabel,actProg:p0.actProg,actType:p0.actType,journal:p0.journal,reflections:p0.reflections,run:snap.run,speed,writing:p0.writing,log:rep.log,logN:n,action:null}}
   return{animals,objects:snap.objects,agent:ag,simTime:t,pose:fr?fr.p:snap.agent.pose,actLabel:fr?fr.al:null,actProg:fr&&fr.al?prog:null,actType:fr?fr.at:null,journal:snap.journal,reflections:snap.reflections,run:snap.run,speed,writing,log:rep.log,logN:n,action:null}}
 function enterReplay(rep){if(typeof rep==='string')rep=JSON.parse(rep);if(!rep||rep.format!=='watchable-island-replay'||!rep.snapshots||!rep.frames)return{ok:false,error:'Not a Watchable Island replay file.'};
   const end=Math.max(rep.endSim||0,rep.frames.length?rep.frames[rep.frames.length-1].t:0,rep.log.length?rep.log[rep.log.length-1].sim:0);
@@ -1419,6 +1538,7 @@ function drawVideoFrame(v){const c=VID.ctx;if(!c)return;const Wv=1280,Hv=720,mw=
   const run=v.run,el=run.startSim==null?0:Math.max(0,(run.ended?run.endSim:v.simTime)-run.startSim);c.font='600 13px system-ui';c.fillStyle=v.speed===1?'#7ee787':'#ffa657';c.fillText(v.speed===1?'1× real time':'TEST SPEED '+v.speed+'×',x0,50);
   c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('RUN ELAPSED',x0,76);c.fillText('REMAINING',x0+190,76);c.fillStyle='#fff';c.font='600 30px ui-monospace,monospace';c.fillText(fmtDur(el),x0,108);c.fillText(fmtDur(run.durationSec-el),x0+190,108);
   c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText((run.ended?'Run complete':run.active?'Run in progress':'Run not started')+' · sim clock '+fmtDur(v.simTime),x0,126);
+  if(v.people&&v.people.length>1)return drawVideoPeople(c,v,x0,pw);
   c.fillStyle='#8ea2b4';c.fillText('CURRENT ACTION',x0,152);c.fillStyle='#fff';c.font='600 15px system-ui';c.fillText(v.actLabel||('Idle ('+v.pose+')'),x0,172);if(v.actLabel){c.fillStyle='#0a1118';c.fillRect(x0,180,pw,7);c.fillStyle='#f2c14e';c.fillRect(x0,180,pw*(v.actProg||0),7)}
   const car=Object.values(v.objects).filter(o=>o.loc.t==='carried').map(o=>o.name),wo=Object.values(v.objects).filter(o=>o.loc.t==='worn').map(o=>o.name);c.font='12px system-ui';c.fillStyle='#cfd8e3';
   wrapText(c,'Carrying: '+(car.join(', ')||'nothing')+(wo.length?' · Wearing: '+wo.join(', '):'')+' · height '+Math.round(v.agent.level==='ground'?0:v.agent.ladderFt)+' ft',x0,206,pw,15,2);
@@ -1427,6 +1547,16 @@ function drawVideoFrame(v){const c=VID.ctx;if(!c)return;const Wv=1280,Hv=720,mw=
   y=Math.max(y+6,520);c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('JOURNAL (latest)',x0,y);y+=16;c.font='13px Georgia,serif';c.fillStyle='#e9d8a6';const je=v.journal.entries;
   if(v.writing!=null)y=wrapText(c,'✎ '+v.writing+'▍',x0,y,pw,16,3);else if(je.length)y=wrapText(c,'#'+je[je.length-1].n+' '+je[je.length-1].text,x0,y,pw,16,3);else{c.fillText('(blank)',x0,y);y+=16}
   y+=6;c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('AGENT SAYS (latest, its own words)',x0,y);y+=16;c.font='italic 12px system-ui';c.fillStyle='#c9a7ff';const rf=v.reflections;wrapText(c,rf.length?rf[rf.length-1].text:'(none)',x0,y,pw,15,3)}
+
+function drawVideoPeople(c,v,x0,pw){let y=150;
+  for(const p of v.people){const st=PSTYLE[p.sex]||{};const mine=o=>(o.loc.by||v.people[0].id)===p.id;const car=Object.values(v.objects).filter(o=>o.loc.t==='carried'&&mine(o)).map(o=>o.name);
+    c.fillStyle=st.tag||'#fff';c.font='700 13px system-ui';c.fillText(p.label.toUpperCase()+(p.agent.dead?' · not moving':p.agent.health<95?' · '+conditionText(p.agent.health):''),x0,y);y+=17;
+    c.fillStyle='#fff';c.font='600 13px system-ui';y=wrapText(c,p.actLabel?p.actLabel+'  '+Math.round((p.actProg||0)*100)+'%':'Idle ('+p.pose+')',x0,y,pw,15,1);
+    c.font='11px system-ui';c.fillStyle='#cfd8e3';y=wrapText(c,'Carrying: '+(car.join(', ')||'nothing'),x0,y,pw,13,1);
+    const rf=p.reflections;c.font='italic 12px system-ui';c.fillStyle='#c9a7ff';y=wrapText(c,rf.length?'“'+rf[rf.length-1].text+'”':'(nothing said yet)',x0,y,pw,15,3);
+    const je=p.journal.entries;c.font='12px Georgia,serif';c.fillStyle='#e9d8a6';if(p.writing!=null)y=wrapText(c,'✎ '+p.writing+'▍',x0,y,pw,15,2);else if(je.length)y=wrapText(c,'Journal #'+je[je.length-1].n+': '+je[je.length-1].text,x0,y,pw,15,2);y+=10}
+  c.fillStyle='#8ea2b4';c.font='11px system-ui';c.fillText('SPOKEN OUT LOUD AND HEARD',x0,y+4);y+=20;c.font='12px system-ui';const items=[];for(let i=v.logN-1;i>=0&&items.length<5;i--){const e=v.log[i];if(e.kind==='speech'||(e.kind==='sound'&&e.who))items.unshift(e)}
+  for(const e of items){const st=PSTYLE[(v.people.find(p=>p.id===e.who)||{}).sex]||{};c.fillStyle=st.tag||'#fff';y=wrapText(c,(WHO_LABEL[e.who]||'')+': “'+((e.data&&e.data.text)||e.msg)+'”',x0,y,pw,15,2);if(y>700)break}}
 
 /* =====================================================================================
    16. FILE HELPERS + MANUAL TEST CONTROLS
@@ -1530,9 +1660,8 @@ function fireTick(dt){
     for(const q of touch){if(!q||isBurning(q))continue;const ck=igniteCheck(q,'fire');if(!ck.ok)continue;q.state.heat=(q.state.heat||0)+dt;
       if(q.state.heat>=(IGNITE_HEAT[materialOf(q)]||30))ignite(q,'from the burning '+o.name)}
     // the agent
-    const ag=S.agent;
-    if(o.loc.t==='carried'&&['paper','cloth','rope','rubber','oil'].includes(materialOf(o))){if(!o.state.burnedHand||S.simTime-o.state.burnedHand>3){o.state.burnedHand=S.simTime;hurt(materialOf(o)==='paper'?3:6,'The flames from the '+o.name+' burn your hands.')}}
-    if(o.id==='cabin'&&agentIndoors()&&(!ag.lastSmoke||S.simTime-ag.lastSmoke>=2)){ag.lastSmoke=S.simTime;hurt(10,'Smoke and heat fill the burning cabin.')}
+    if(o.loc.t==='carried'&&['paper','cloth','rope','rubber','oil'].includes(materialOf(o))){if(!o.state.burnedHand||S.simTime-o.state.burnedHand>3){o.state.burnedHand=S.simTime;withAgent(S.party?ownerId(o):null,()=>hurt(materialOf(o)==='paper'?3:6,'The flames from the '+o.name+' burn your hands.'))}}
+    if(o.id==='cabin')forEachAgent(()=>{const ag=S.agent;if(!ag.dead&&agentIndoors()&&(!ag.lastSmoke||S.simTime-ag.lastSmoke>=2)){ag.lastSmoke=S.simTime;hurt(10,'Smoke and heat fill the burning cabin.')}});
     if(o.state.burnLeft<=0)burnOut(o)}
   for(const h of['fire_pit','fireplace']){const f=O(h);if(!f)continue;const lit=contentsOf(h).some(isBurning);if(!!f.state.lit!==lit){f.state.lit=lit;markChanged();if(!lit)logEvent('object','The fire in the '+f.name+' has gone out.',{id:h})}}
   // things lying in the stream or pond get wet
@@ -1541,7 +1670,8 @@ function fireTick(dt){
 function conditionText(h){return h>=95?'unhurt':h>=70?'lightly injured':h>=40?'injured and bleeding':h>=15?'badly injured':'critically injured'}
 function hurt(n,why){const ag=S.agent;if(ag.dead)return;ag.health=Math.max(0,Math.round((ag.health-n)*10)/10);markChanged();
   logEvent('body',why+' (condition: '+conditionText(ag.health)+')',{damage:n,health:ag.health});
-  if(ag.health<=0){ag.dead=true;ag.pose='dead';if(S.action)interrupt('the agent died');logEvent('body','The agent has died.',{dead:true});if(S.run.active&&!S.run.ended)endRun('the agent died')}}
+  if(ag.health<=0){ag.dead=true;ag.pose='dead';if(S.action)interrupt('the agent died');logEvent('body',agentName(true)+' has died.',{dead:true});
+    if(S.run.active&&!S.run.ended&&(!S.party||S.party.every(b=>b.agent.dead)))endRun(S.party?'everyone on the island has died':'the agent died')}}
 function healthFactor(){const h=S.agent.health==null?100:S.agent.health;return h>=70?1:h>=40?.8:h>=15?.55:.35}
 // ---- wildlife ----
 const JAG={roam:2.5,stalk:4,charge:36,chase:20,flee:22,swim:3,detectOpen:260,detectForest:130,reach:5};
@@ -1632,13 +1762,13 @@ function showExperimentSetup(o){o=o||{};return new Promise(res=>{const box=$('ex
 window.Island={
   version:VERSION,
   reset:(o)=>reset(o),                          // fresh island
-  getObservation:()=>clone(getObservation()),   // what the agent can perceive
-  submitAction:(a)=>submitAction(a),            // {type, ...params}
-  interrupt:()=>interrupt('requested by controller'),
-  getStatus:()=>getStatus(),                    // clock, run timer, action progress
+  getObservation:(w)=>withAgent(w,()=>clone(getObservation())),   // what the agent can perceive (w: which person, when there are several)
+  submitAction:(a,w)=>withAgent(w!=null?w:(a&&a.who),()=>submitAction(a)),            // {type, ...params}
+  interrupt:(w)=>withAgent(w,()=>interrupt('requested by controller')),
+  getStatus:(w)=>withAgent(w,()=>getStatus()),                    // clock, run timer, action progress
   getActionResult:(id)=>getActionResult(id),
   getActionSchema:()=>getActionSchema(),
-  addReflection:(t)=>addReflection(t),          // agent-reported, not an in-world action
+  addReflection:(t,w)=>withAgent(w,()=>addReflection(t)),          // agent-reported, not an in-world action
   startRun:(o)=>startRun(o),endRun:()=>endRun('ended by controller'),
   setSpeed:(n)=>setSpeed(n),setPaused:(p)=>setPaused(p),
   advanceTime:(sec)=>{if(UI.replay)return{ok:false,error:'replay mode'};simStep(Math.max(0,+sec||0));return{ok:true,simTimeSec:S.simTime}}, // TEST ONLY: jump the clock
@@ -1648,7 +1778,8 @@ window.Island={
   enterReplay:(r)=>enterReplay(r),exitReplay:()=>exitReplay(),replaySeek:(t)=>replaySeek(t),replayPlay:(p)=>{if(UI.replay){UI.replay.playing=p!==false;updateReplayUI()}},replayView:()=>UI.replay?clone({t:UI.replay.t,agent:UI.replay.view.agent,objects:UI.replay.view.objects,journal:UI.replay.view.journal,logN:UI.replay.view.logN}):null,
   startVideo:(o)=>startVideo(o),stopVideo:()=>stopVideo(),videoSupported:()=>videoSupport(),lastVideo:()=>VID.lastBlob?{bytes:VID.lastBlob.size,type:VID.lastBlob.type,url:VID.lastUrl}:null,
   controllerNote:(msg,data)=>logEvent('controller',String(msg),data||null),
-  noteObservation:(text)=>logEvent('observe',String(text),null), // plain summary of what the agent was shown (generated mechanically) // controller-side events (model waits, errors); observer-only
+  noteObservation:(text,w)=>withAgent(w,()=>logEvent('observe',String(text),null)),
+  party:()=>S.party?S.party.map(b=>({id:b.id,label:b.label,sex:b.sex,age:b.age,startAt:b.startAt,phrase:(L.starts[b.startAt]||{}).phrase})):null, // plain summary of what the agent was shown (generated mechanically) // controller-side events (model waits, errors); observer-only
   inheritWorld:(d,o)=>inheritWorld(d,o),
   exportLiveChunk:(c)=>exportLiveChunk(c),   // incremental replay data for the cloud live viewer
   showExperimentSetup:(o)=>showExperimentSetup(o),
@@ -1656,7 +1787,7 @@ window.Island={
   experimentStopRequested:()=>!!UI.stopRequested,
   on:(fn)=>{listeners.push(fn);return()=>{const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1)}},
   layout:LAYOUT,
-  _debug:{spawnJaguar:(x,y)=>{spawnJaguar();if(x!=null){S.animals[0].x=x;S.animals[0].y=y}markChanged();return true},heightAt,terrainAt:(x,y)=>TNAME[terrainAt(x,y)],islandS,TREES}
+  _debug:{place:(w,x,y)=>withAgent(w,()=>{S.agent.x=x;S.agent.y=y;markChanged();updateSeen();return true}),spawnJaguar:(x,y)=>{spawnJaguar();if(x!=null){S.animals[0].x=x;S.animals[0].y=y}markChanged();return true},heightAt,terrainAt:(x,y)=>TNAME[terrainAt(x,y)],islandS,TREES}
 };
 
 /* boot */
@@ -1714,7 +1845,7 @@ async function initLiveViewer(){
         while(pending[next]){const c=pending[next];delete pending[next];next++;
           for(const f of c.frames||[]){const l=rep.frames[rep.frames.length-1];if(l&&l.t===f.t)rep.frames[rep.frames.length-1]=f;else if(!l||f.t>l.t)rep.frames.push(f)}
           for(const x of c.snapshots||[]){const prev=rep.snapshots[rep.snapshots.length-1];const ps=prev?prev.s:{objects:{},journal:{entries:[]},reflections:[]};
-            const full=x.s||{animals:x.d.animals||ps.animals||[],objects:Object.assign({},ps.objects,x.d.objects),agent:x.d.agent,journal:{entries:ps.journal.entries.concat(x.d.journalAdd||[])},reflections:ps.reflections.concat(x.d.reflAdd||[]),run:x.d.run,speed:x.d.speed,action:x.d.action};
+            const full=x.s||(x.d.party?{animals:x.d.animals||ps.animals||[],objects:Object.assign({},ps.objects,x.d.objects),run:x.d.run,speed:x.d.speed,party:x.d.party.map((pb,k)=>{const old=(ps.party||[])[k]||{journal:{entries:[]},reflections:[]};return Object.assign({},pb,{journal:{entries:old.journal.entries.concat(pb.journalAdd||[])},reflections:old.reflections.concat(pb.reflAdd||[]),journalAdd:undefined,reflAdd:undefined})})}:null)||{animals:x.d.animals||ps.animals||[],objects:Object.assign({},ps.objects,x.d.objects),agent:x.d.agent,journal:{entries:ps.journal.entries.concat(x.d.journalAdd||[])},reflections:ps.reflections.concat(x.d.reflAdd||[]),run:x.d.run,speed:x.d.speed,action:x.d.action};
             if(prev&&prev.t===x.t)prev.s=full;else rep.snapshots.push({t:x.t,s:full})}
           for(const e of c.log||[])rep.log.push(e);
           R.end=Math.max(R.end,c.endSim||0);rep.endSim=R.end;lastChunkWall=Date.parse(c.wall)||Date.now();if(c.meta)runMeta=Object.assign({},runMeta||{},c.meta);

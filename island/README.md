@@ -297,3 +297,18 @@ What was verified end to end with the real model (TEST durations, not the experi
 - Underwater items within 12 ft of the bank can be picked up while wearing the snorkel. There's no real diving.
 - One agent, one action at a time.
 - Quick save uses browser storage, which can be unavailable in private windows. Save to file always works.
+
+## Two people on one island (`--pair`)
+
+`node controller/run_experiment.js --pair ...` puts two people on the island: a 20-year-old woman
+(starting beside the boat) and a 20-year-old man (starting on the hilltop). Each has a separate
+conversation with the model, their own body, journal and pencil. Neither is told the other exists.
+Their instructions are the standard introduction with one added sentence after the first paragraph:
+"Your body is that of a 20-year-old woman." (or man).
+
+- They see each other only when in view (about 350 ft in the open, 90 ft in the forest, anywhere from the platform; up close they see age, sex, activity and what the other holds).
+- `speak` (out loud) is heard clearly within about 70 ft, faintly to about 150 ft; `shout` with words carries about 700 ft. Walls muffle sound.
+- `give` hands an object to someone within reach; people can also strike each other. One death does not end the run.
+- Things held by one person cannot be taken by the other with `pick_up`. A journal left within reach can be read by anyone.
+- The watch page, replay, video, transcript and reports label each person. Each writes their own report, from only their own record.
+- Island API: per-person calls take an optional last argument `who` (`'a'`/`'b'` or `'woman'`/`'man'`), e.g. `Island.getObservation('b')`. Tests: `node tests/test_pair.js`.

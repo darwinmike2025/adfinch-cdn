@@ -91,6 +91,7 @@ class MockProvider {
     if (r < 0.6) return this._out(A({ type: 'walk', direction: ['N', 'E', 'S', 'W', 'NE', 'SW'][Math.floor(this.rng() * 6)], distance: 40 + Math.round(this.rng() * 120) }), null);
     if (r < 0.7) return this._out(A({ type: 'write_journal', text: 'MOCK note at ' + (obs ? obs.simTimeSec : '?') + ' s.' }), 'MOCK reflection.');
     if (r < 0.8) return this._out(A({ type: 'inspect', target: vis.length ? vis[0].id : 'hill' }), null);
+    if (r < 0.84) return this._out(A({ type: 'speak', text: 'MOCK: hello?' }), null);
     if (r < 0.88) return this._out(null, 'MOCK: doing nothing for now.');
     return this._out(A({ type: 'wait', seconds: 10 }), null);
   }

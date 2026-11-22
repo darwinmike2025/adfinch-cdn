@@ -79,7 +79,9 @@ const ACTIONS = [
   ['use', 'target, optional with', 'Use something, optionally together with something else. The environment reports what happens, including when nothing happens.'],
   ['attack', 'target, optional with', 'Strike something, optionally using an object you carry.'],
   ['throw', 'target, at', 'Throw something you carry at something you can see.'],
-  ['shout', '', 'Shout or make a loud noise.'],
+  ['speak', 'text', 'Say something out loud. Anyone close enough may hear it.'],
+  ['shout', 'optional text', 'Shout or make a loud noise, optionally shouting words.'],
+  ['give', 'target, at', 'Hand something you carry to someone within reach.'],
   ['wear', 'target', 'Put something on.'],
   ['remove', 'target', 'Take off something you are wearing.'],
   ['read', 'target', 'Read something.'],
@@ -93,17 +95,23 @@ const ACTIONS = [
 ];
 const ACTION_TYPES = ACTIONS.map(a => a[0]);
 
-function introFor(phrase) { return INTRODUCTION.replace('{START}', phrase || 'beside a boat'); }
-function systemPrompt(phrase) {
-  const lines = ACTIONS.map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
-  return `${introFor(phrase)}
+// Optional body description, added as its own short paragraph after the first one (the experimenter's text is unchanged).
+function bodyLine(identity) { if (!identity) return ''; return `Your body is that of a ${identity.age}-year-old ${identity.sex === 'female' ? 'woman' : 'man'}.`; }
+function introFor(phrase, identity) {
+  const t = INTRODUCTION.replace('{START}', phrase || 'beside a boat');
+  if (!identity) return t;
+  const i = t.indexOf('\n\n'); return t.slice(0, i) + '\n\n' + bodyLine(identity) + t.slice(i);
+}
+function systemPrompt(phrase, identity) {
+  const lines = ACTIONS.filter(([t]) => identity || t !== 'give').map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
+  return `${introFor(phrase, identity)}
 
 ---
 Technical reference (how to operate the environment)
 
 - Each turn you receive an observation of what you can currently perceive, and the result of your last action.
 - Reply with JSON containing "say" and "action".
-- "say": optional words you choose to speak, in the first person. Use null to stay quiet.
+- "say": optional words you choose to speak, in the first person. Use null to stay quiet.${identity ? '\n- "say" is your commentary for the experiment; it is not a sound in the island world. To speak out loud within the island, use the "speak" action.' : ''}
 - "action": one action from the list below, with only the fields it needs (set the others to null), or null to do nothing for now.
 - During a longer action you are offered a check-in about every 30 seconds. You can let it continue (action null) or choose a different action, which replaces it.
 - The clock keeps running while you decide.
@@ -175,9 +183,11 @@ function observationSummary(o) {
   if (far.length) parts.push('Farther off: ' + far.join(', ') + '.');
   if (s.condition && s.condition !== 'unhurt') parts.push('Condition: ' + s.condition + '.');
   if (s.carrying.length) parts.push('Carrying ' + s.carrying.map(c => c.name).join(', ') + (s.wearing.length ? '; wearing ' + s.wearing.map(w => w.name).join(', ') : '') + '.');
-  for (const snd of o.soundsHeard || []) parts.push('Heard: ' + snd.description.toLowerCase() + '.');
+  for (const p of o.visibleObjects.filter(v => v.type === 'person')) parts.push(`Sees: ${p.description} (${p.distanceFt} ft ${p.bearing || ''})`.replace(' )', ')'));
+  for (const snd of o.soundsHeard || []) parts.push('Heard: ' + snd.description + (/[.!?"]$/.test(snd.description) ? '' : '.'));
+  for (const n of o.happenedToYou || []) parts.push(n.description);
   for (const n of o.notes || []) parts.push(n);
   return parts.join(' ');
 }
 
-module.exports = { introFor, observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };
+module.exports = { bodyLine, introFor, observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };
