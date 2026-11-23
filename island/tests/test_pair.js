@@ -88,6 +88,15 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.
     return { letters, k, nb, w, nb2, t, hug }; });
   check('P16. Open action: anything described in their own words reaches the other person as they would perceive it; no letters in protocol worlds', !r.letters.length && /You do it/.test(r.k) && r.nb.some(n => /right next to you, does this to you. In her words: "I lean in and kiss him on the cheek."/.test(n)) && r.nb2.some(n => /about 80 ft away, do this. In her words: "I dance a little in the sand."/.test(n)) && /crate does not change/.test(r.t),
     `${r.k} | he perceives: ${r.nb[0]} | at 80 ft: ${r.nb2[r.nb2.length - 1]} | object: ${r.t} | his hug from 80 ft away: ${r.hug}`);
+  r = await ev(() => { Island.reset({ pair: true, noLetters: true, seed: 4, forceRules: true }); Island.startRun({ durationSec: 1800 }); Island._debug.place('a', 300, 600); Island._debug.place('b', 303, 601);
+    const out = {}; out.hug = f('b', { type: 'do', text: 'I hug her tightly.', target: 'person' }); out.hugH = st().party[0].agent.health;
+    out.fake = f('b', { type: 'do', text: 'I pretend to punch her arm.', target: 'person' }); out.fakeH = st().party[0].agent.health;
+    let k = 0, pushed = null; while (k++ < 10) { const m = f('b', { type: 'do', text: 'I shove her hard.' }); if (/falls/.test(m)) { pushed = m; break; } }
+    out.pushed = pushed; out.pose = st().party[0].agent.pose; out.felt = (obs('a').happenedToYou || []).map(n => n.description).pop(); out.stand = f('a', { type: 'stand' });
+    k = 0; let hit = null; while (k++ < 10) { const m = f('a', { type: 'do', text: 'I punch him in the face.', target: 'person' }); if (/You hit/.test(m)) { hit = m; break; } } out.hit = hit; out.bH = st().party[1].agent.health; out.bFelt = (obs('b').happenedToYou || []).map(n => n.description).pop();
+    return out; });
+  check('P17. Force in the open action has real effects (falls, injury); gentle or pretend contact does not', r.hugH === 100 && r.fakeH === 100 && r.pushed && r.pose === 'down' && /knocked to the ground/.test(r.felt) && r.hit && r.bH < 100 && /It hurts/.test(r.bFelt),
+    `hug: ${r.hug} | pretend: health ${r.fakeH} | shove: ${r.pushed} → her pose ${r.pose}; she perceives: ${r.felt} | ${r.stand} | punch: ${r.hit}; he perceives: ${r.bFelt}`);
   r = await ev(() => { Island.reset(); return { party: Island.party(), has: 'agent' in st() }; });
   check('P15. A normal reset is still a one-person island', r.party === null && r.has, '');
   check('Z. No page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
