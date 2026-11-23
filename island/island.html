@@ -583,6 +583,8 @@ function isCarrying(id){return!!(O(id)&&O(id).loc.t==='carried'&&isMine(O(id)))}
 const COIN_LB=.02,HANDFUL=150;
 function addCoins(where){S.objects.gold_coins={id:'gold_coins',name:'gold coins',kind:'item',coinPile:true,weight:0,size:'large',desc:'Thousands of heavy gold coins, heaped in the chest almost to the brim. You could scoop out a double handful at a time.',state:{count:4000},loc:where||{t:'in',id:'chest'},reach:5.5};if(O('chest'))O('chest').container.capacity=Math.max(O('chest').container.capacity,5)}
 function sizeCoins(o){const n=o.state.count;o.size=n>1500?'large':n>300?'medium':'small';o.weight=+(n*COIN_LB).toFixed(2);o.desc=n+' gold coins'+(n>300?', a heavy, clinking armful.':', heavy for their size.')}
+// with coinCounts on, coins can be taken, given, dropped or put back in any amount
+function coinPart(o,n){if(!S.coinCounts||!o||!o.coinStack||!n)return o;n=Math.floor(+n);if(!(n>0)||n>=o.state.count)return o;o.state.count-=n;sizeCoins(o);return newCoinStack(n,Object.assign({},o.loc))}
 function newCoinStack(n,loc){let k=1;while(S.objects['coins_'+k])k++;const o={id:'coins_'+k,name:'gold coins',kind:'item',coinStack:true,state:{count:n},loc,reach:5.5};sizeCoins(o);S.objects[o.id]=o;return o}
 // stacks held by the same person, or lying in the same container as the pile, merge back together
 function normalizeCoins(){const all=Object.values(S.objects);const pile=S.objects.gold_coins;let ch=false;
@@ -835,13 +837,13 @@ const ACTIONS={
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot pick that up.'};const o=r.o;
       if(o.kind==='fixture')return{error:'The '+o.name+' cannot be picked up.'};if(isMine(o))return{error:'You already have the '+o.name+'.'};
       const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};
-      if(o.coinPile||o.coinStack){if(o.state.count<=0)return{error:'There are no coins left there.'};const mine=carried().find(c=>c.coinStack);const take=o.coinPile||o.state.count>300?Math.min(HANDFUL,o.state.count):o.state.count;const after=(mine?mine.state.count:0)+take;
+      if(o.coinPile||o.coinStack){if(o.state.count<=0)return{error:'There are no coins left there.'};const mine=carried().find(c=>c.coinStack);const want=S.coinCounts&&p.count!=null&&+p.count>0?Math.floor(+p.count):null;const take=want?Math.min(want,o.state.count):(o.coinPile||o.state.count>300?Math.min(HANDFUL,o.state.count):o.state.count);const after=(mine?mine.state.count:0)+take;
         const need=after>1500?2:after>300?1:0,used=handsUsed()-(mine?(mine.size==='medium'?1:mine.size==='large'?2:0):0);if(used+need>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small'&&!c.coinStack).map(c=>c.name).join(', ')+').'};
-        return{label:'Scooping up gold coins',duration:3,data:{coins:o.id}}}if((o.loc.t==='in'&&HEARTHS[o.loc.id]&&O(o.loc.id).state.lit)||(isBurning(o)&&!['wood','thinwood'].includes(materialOf(o))))return{error:'It is burning; it is too hot to pick up.'};
+        return{label:want?'Taking '+take+' gold coin'+(take>1?'s':''):'Scooping up gold coins',duration:want?clamp(2+take/150*1.5,2,25):3,data:{coins:o.id,take:want?take:null}}}if((o.loc.t==='in'&&HEARTHS[o.loc.id]&&O(o.loc.id).state.lit)||(isBurning(o)&&!['wood','thinwood'].includes(materialOf(o))))return{error:'It is burning; it is too hot to pick up.'};
       if(o.size==='small'&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
       return{label:'Picking up the '+o.name,duration:o.loc.t==='underwater'?10:3,data:{id:o.id}}},
-    complete(a){if(a.data.coins){const src=O(a.data.coins),ri=reachInfo(src);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const take=src.coinPile||src.state.count>300?Math.min(HANDFUL,src.state.count):src.state.count;src.state.count-=take;if(src.coinStack)sizeCoins(src);
-        newCoinStack(take,hold('carried'));normalizeCoins();const mine=carried().find(c=>c.coinStack);markChanged();a.result={message:'You scoop up '+take+' gold coins. You now carry '+(mine?mine.state.count:take)+' gold coins ('+(mine?mine.weight:take*COIN_LB).toFixed(1)+' lb).'+(src.coinPile?' About '+Math.round(src.state.count/100)*100+' are left in the '+(O(src.loc.id)||{name:'pile'}).name+'.':'')};logEvent('object','Took '+take+' gold coins (now carrying '+(mine?mine.state.count:take)+').',{take});return}
+    complete(a){if(a.data.coins){const src=O(a.data.coins),ri=reachInfo(src);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const take=a.data.take?Math.min(a.data.take,src.state.count):(src.coinPile||src.state.count>300?Math.min(HANDFUL,src.state.count):src.state.count);if(take<=0){a.failed=true;a.result={message:'There are no coins left there.'};return}src.state.count-=take;if(src.coinStack)sizeCoins(src);
+        newCoinStack(take,hold('carried'));normalizeCoins();const mine=carried().find(c=>c.coinStack);markChanged();a.result={message:'You '+(a.data.take?'take ':'scoop up ')+take+' gold coin'+(take>1?'s':'')+'. You now carry '+(mine?mine.state.count:take)+' gold coins ('+((w=>w<1?w.toFixed(2):w.toFixed(1))(mine?mine.weight:take*COIN_LB))+' lb).'+(src.coinPile?' About '+Math.round(src.state.count/100)*100+' are left in the '+(O(src.loc.id)||{name:'pile'}).name+'.':'')};logEvent('object','Took '+take+' gold coins (now carrying '+(mine?mine.state.count:take)+').',{take});return}
       const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc=hold('carried');if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
       a.result={message:'You pick up the '+displayName(o)+(o.id==='blanket'?', folding it up':'')+'.'};logEvent('object','Picked up '+o.id+' (was '+from+').',{id:o.id,from})}},
   put_down:{desc:'Set a carried item down gently: on the ground at your feet, or onto/into a reachable surface or open container with "onto".',params:{target:'item id',onto:'surface/container id (optional)'},
@@ -851,15 +853,15 @@ const ACTIONS={
         if(!tgt.surface&&!tgt.container)return{error:'You cannot put things in or on the '+tgt.name+'.'};const ri=reachInfo(tgt);if(!ri.ok)return{error:ri.reason};
         if(tgt.container&&!tgt.container.open)return{error:'The '+tgt.name+' is closed.'};if(tgt.container&&contentsOf(tgt.id).length>=tgt.container.capacity&&!(o.coinStack&&contentsOf(tgt.id).some(c=>c.coinPile)))return{error:'The '+tgt.name+' is full.'};
         if(tgt.container&&o.size!=='small'&&tgt.id==='chest'&&!o.coinStack)return{error:'The '+o.name+' does not fit in the chest.'};if(tgt.container&&o.size==='large')return{error:'The '+o.name+' is too big to go in the '+tgt.name+'.'};if(tgt.id===o.id)return{error:'You cannot put something inside itself.'}}
-      return{label:'Putting down the '+o.name+(tgt?(tgt.surface?' on ':' in ')+'the '+tgt.name:''),duration:3,data:{id:o.id,onto:tgt?tgt.id:null}}},
-    complete(a){const o=O(a.data.id);if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}
+      return{label:'Putting down the '+(o.coinStack&&S.coinCounts&&p.count?Math.min(Math.floor(+p.count),o.state.count)+' gold coins':o.name)+(tgt?(tgt.surface?' on ':' in ')+'the '+tgt.name:''),duration:3,data:{id:o.id,onto:tgt?tgt.id:null,count:p.count||null}}},
+    complete(a){const o=coinPart(O(a.data.id),a.data.count);if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}
       if(a.data.onto){const t=O(a.data.onto);o.loc={t:t.surface?'on':'in',id:t.id};
         }
       else if(S.agent.level==='platform')o.loc={t:'on',id:'platform'};else placeOnGroundNear(o);
       markChanged();a.result={message:'You put down the '+displayName(o)+' '+locText(o)+'.'};logEvent('object','Put down '+o.id+': now '+locText(o)+'.',{id:o.id,loc:o.loc})}},
   drop:{desc:'Let go of a carried item. It falls: fragile items break; from the ladder or platform it falls to the ground near the ladder base.',params:{target:'item id'},
-    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.loc.t==='carried'&&isMine(o)))return{error:'You are not carrying that.'};return{label:'Dropping the '+o.name,duration:1,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id),ag=S.agent;if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}let fell=ag.level==='ground'?3:ag.ladderFt,msg;
+    validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.loc.t==='carried'&&isMine(o)))return{error:'You are not carrying that.'};return{label:'Dropping the '+o.name,duration:1,data:{id:o.id,count:p.count||null}}},
+    complete(a){const o=coinPart(O(a.data.id),a.data.count),ag=S.agent;if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}let fell=ag.level==='ground'?3:ag.ladderFt,msg;
       if(ag.level==='ground'){placeOnGroundNear(o,0)}else{const k=S.nextSeq;o.loc={t:'ground',x:+(L.ladder.x+((k*37)%15)-7).toFixed(1),y:+(L.ladder.y+4+((k*13)%7)).toFixed(1)}}
       if(o.fragile&&!o.state.broken){const wasLit=o.state.lit;o.state.broken=true;o.state.lit=false;msg='The '+o.name+' falls '+Math.round(fell)+' ft and shatters.';if(wasLit){o.state.burningOil=true;o.state.burning=true;o.state.burnLeft=BURN_TIME.oil;msg+=' Burning oil spreads across the ground.'}}else msg='The '+o.name+' falls '+Math.round(fell)+' ft and lands '+(fell>10?'with a thud ':'')+'at '+fmtPos(o.loc.x,o.loc.y)+'.';
       if(fell>10)S.sounds.push({t:S.simTime,x:o.loc.x,y:o.loc.y,msg:'A thud from something hitting the ground'});
@@ -1018,12 +1020,12 @@ ACTIONS.give={desc:'Hand something you carry to someone within reach.',params:{t
   validate(p){const r=resolveTarget(p.target);if(!r||r.kind!=='object'||!isCarrying(r.o.id))return{error:'You are not holding that.'};if(S.agent.level==='ladder')return{error:'You need both hands for the ladder.'};
     const pr=targetPerson(p.at||p.with||'person');if(!pr||pr==='unseen')return{error:'There is no one here to give it to.'};const o=pr.agent;const d=dist(o.x,o.y,S.agent.x,S.agent.y);
     if(o.level!==S.agent.level||d>6)return{error:'The person is '+Math.round(d)+' ft away. Get within arm\'s reach first.'};if(o.dead)return{error:'They cannot take it.'};
-    return{label:'Holding out the '+r.o.name,duration:2,data:{id:r.o.id,to:pr.id}}},
-  complete(a){const o=O(a.data.id);const b=S.party.find(x=>x.id===a.data.to);const ob=b.agent;if(!isCarrying(o.id)){a.failed=true;a.result={message:'You no longer have it.'};return}
+    return{label:'Holding out the '+(r.o.coinStack&&S.coinCounts&&p.count?Math.min(Math.floor(+p.count),r.o.state.count)+' gold coins':r.o.name),duration:2,data:{id:r.o.id,to:pr.id,count:p.count||null}}},
+  complete(a){const o=coinPart(O(a.data.id),a.data.count);const b=S.party.find(x=>x.id===a.data.to);const ob=b.agent;if(!isCarrying(o.id)){a.failed=true;a.result={message:'You no longer have it.'};return}
     if(dist(ob.x,ob.y,S.agent.x,S.agent.y)>7||ob.level!==S.agent.level){a.failed=true;a.result={message:'They are no longer within reach.'};return}
     const need=o.size==='medium'?1:o.size==='large'?2:0;const free=withAgent(b.id,()=>2-handsUsed());if(need>free){a.failed=true;a.result={message:pronoun(b,'subj')+' has no free hands to take it.'};addNotice(b,agentName(true)+' holds out the '+o.name+' to you, but your hands are full.');return}
-    o.loc={t:'carried',by:b.id};markChanged();a.result={message:'You hand the '+o.name+' to '+pronoun(b,'obj')+'. '+pronoun(b,'subj')+' takes it.'};
-    addNotice(b,agentName(true)+' hands you the '+o.name+'. You are now holding it.');logEvent('object',agentName(true)+' hands '+o.id+' to the '+b.label.toLowerCase()+'.',{id:o.id,to:b.id})}};
+    o.loc={t:'carried',by:b.id};markChanged();a.result={message:'You hand the '+displayName(o)+' to '+pronoun(b,'obj')+'. '+pronoun(b,'subj')+' takes it.'};
+    addNotice(b,agentName(true)+' hands you the '+displayName(o)+'. You are now holding it.');logEvent('object',agentName(true)+' hands '+o.id+' to the '+b.label.toLowerCase()+'.',{id:o.id,to:b.id})}};
 function weaponStats(w){if(!w)return{name:'bare hands',hit:.25,dmg:[2,6]};
   if(w.id==='sword')return{name:'sword',hit:.55,dmg:[25,55]};if(isBurning(w)&&['wood','thinwood'].includes(materialOf(w)))return{name:'burning '+w.name,hit:.5,dmg:[8,16],fire:true};
   if(w.id==='lantern'&&w.state.lit&&!w.state.broken)return{name:'lit lantern',hit:.45,dmg:[5,10],fire:true,breaks:true};
@@ -1144,7 +1146,7 @@ function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).'
 /* =====================================================================================
    11. RESET / SAVE / RESTORE / EXPORT
    ===================================================================================== */
-function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.noLetters)for(const id of['folded_paper','letter_cabin','letter_tower'])delete S.objects[id];if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();if(opts.protocol)S.protocol=String(opts.protocol);if(opts.forceRules)S.forceRules=true;if(opts.gold){addCoins();forEachAgent(()=>updateSeen())}LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.noLetters)for(const id of['folded_paper','letter_cabin','letter_tower'])delete S.objects[id];if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();if(opts.protocol)S.protocol=String(opts.protocol);if(opts.forceRules)S.forceRules=true;if(opts.gold){addCoins();forEachAgent(()=>updateSeen())}if(opts.coinCounts)S.coinCounts=true;LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
   logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
   if(UI.onReset)UI.onReset();return{ok:true}}
 function exportState(){return clone(snapState())}

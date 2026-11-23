@@ -104,8 +104,10 @@ function introFor(phrase, identity, minutes) {
   if (!identity) return t;
   const i = t.indexOf('\n\n'); return t.slice(0, i) + '\n\n' + bodyLine(identity) + t.slice(i);
 }
-function systemPrompt(phrase, identity, minutes, menu) {
-  const lines = ACTIONS.filter(([t]) => menu ? menu.includes(t) : (identity || t !== 'give') && t !== 'do').map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
+const COUNT_ACTIONS = ['pick_up', 'put_down', 'drop', 'give'];
+function systemPrompt(phrase, identity, minutes, menu, extra) {
+  const withCount = !!(extra && extra.count);
+  const lines = ACTIONS.filter(([t]) => menu ? menu.includes(t) : (identity || t !== 'give') && t !== 'do').map(([t, p, d]) => [t, withCount && COUNT_ACTIONS.includes(t) ? p + ', optional count' : p, withCount && COUNT_ACTIONS.includes(t) ? d + ' Use count for how many, when there are many of something.' : d]).map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
   return `${introFor(phrase, identity, minutes)}
 
 ---
@@ -143,13 +145,13 @@ const RESPONSE_SCHEMA = {
   },
 };
 
-function schemaFor(menu) { if (!menu) return RESPONSE_SCHEMA; const s = JSON.parse(JSON.stringify(RESPONSE_SCHEMA)); s.properties.action.properties.type.enum = ACTION_TYPES.filter(t => menu.includes(t)); return s; }
+function schemaFor(menu, extra) { if (!menu) return RESPONSE_SCHEMA; const s = JSON.parse(JSON.stringify(RESPONSE_SCHEMA)); s.properties.action.properties.type.enum = ACTION_TYPES.filter(t => menu.includes(t)); if (extra && extra.count) { s.properties.action.properties.count = { type: ['number', 'null'] }; s.properties.action.required.push('count'); } return s; }
 
 // Turn the model's action object into an island request (drop null fields). No substitution.
 function toIslandAction(a) {
   if (!a) return null;
   const out = { type: a.type };
-  for (const k of ['target', 'with', 'onto', 'at', 'x', 'y', 'direction', 'distance', 'seconds', 'text']) if (a[k] !== null && a[k] !== undefined && a[k] !== '') out[k] = a[k];
+  for (const k of ['target', 'with', 'onto', 'at', 'x', 'y', 'direction', 'distance', 'seconds', 'text', 'count']) if (a[k] !== null && a[k] !== undefined && a[k] !== '') out[k] = a[k];
   return out;
 }
 

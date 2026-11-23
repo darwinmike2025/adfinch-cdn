@@ -37,7 +37,7 @@ const opts = {
 };
 // A frozen protocol (controller/protocols/<v>.json) fixes every setting for comparable runs.
 const PROTO = arg('protocol', null) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'protocols', arg('protocol') + '.json'), 'utf8')) : null;
-if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, models: PROTO.models || null, gold: !!PROTO.gold, speed: 1 });
+if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, models: PROTO.models || null, gold: !!PROTO.gold, coinCounts: !!PROTO.coinCounts, speed: 1 });
 if (PROTO && PROTO.models && flag('swap-models')) opts.models = PROTO.models.slice().reverse(); // alternate which person each model plays
 if (PROTO && arg('test-minutes', null)) opts.minutes = +arg('test-minutes'); // TEST ONLY: shorter run under a protocol (labelled TEST)
 if (PROTO && arg('test-speed', null)) opts.speed = +arg('test-speed');
@@ -107,7 +107,7 @@ async function listOpenAIModels() {
 
   // ---------------- starting island ----------------
   if (opts.pair && opts.predator) throw new Error('--pair and --predator together are not supported.');
-  await isl(([s, at, pr, sd, pair, nl, pv, fr, gd]) => Island.reset({ speed: s, startAt: at, predator: pr, seed: sd, pair, noLetters: nl, protocol: pv, forceRules: fr, gold: gd }), [opts.speed, opts.startAt, opts.predator, opts.seed, !!opts.pair, !!opts.noLetters, PROTO ? PROTO.version : null, !!opts.forceRules, !!opts.gold]);
+  await isl(([s, at, pr, sd, pair, nl, pv, fr, gd, cc]) => Island.reset({ speed: s, startAt: at, predator: pr, seed: sd, pair, noLetters: nl, protocol: pv, forceRules: fr, gold: gd, coinCounts: cc }), [opts.speed, opts.startAt, opts.predator, opts.seed, !!opts.pair, !!opts.noLetters, PROTO ? PROTO.version : null, !!opts.forceRules, !!opts.gold, !!opts.coinCounts]);
   let startInfo = { type: 'fresh' };
   if (choice.start === 'saved') {
     if (opts.pair) throw new Error('A saved island with two people is not supported yet.');
@@ -125,7 +125,7 @@ async function listOpenAIModels() {
   const agents = party ? party.map(p => ({ who: p.id, label: p.label, identity: { sex: p.sex, age: p.age }, phrase: p.phrase, startAt: p.startAt }))
     : [{ who: null, label: 'Agent', identity: null, phrase: startPhrase, startAt: opts.startAt }];
   for (const [i, ag] of agents.entries()) {
-    ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes, opts.menu || null); ag.history = []; ag.slug = ag.label.toLowerCase();
+    ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes, opts.menu || null, { count: !!opts.coinCounts }); ag.history = []; ag.slug = ag.label.toLowerCase();
     // each person can run on a different model (the other person is never told which)
     ag.model = provName !== 'mock' && opts.models && opts.models[i] ? opts.models[i] : choice.model;
     ag.provider = ag.model === choice.model ? provider : makeProvider({ provider: provName, model: ag.model, reasoning: opts.reasoning, timeoutMs: opts.timeoutSec * 1000 });
@@ -134,7 +134,7 @@ async function listOpenAIModels() {
   }
   const mixed = new Set(agents.map(a => a.model)).size > 1;
   const sys = agents[0].sys;
-  const SCHEMA = P.schemaFor(opts.menu || null);
+  const SCHEMA = P.schemaFor(opts.menu || null, { count: !!opts.coinCounts });
   const config = {
     runId, test: isTest, testLabel: testLabel || null, islandVersion: await isl(() => Island.version),
     provider: provName, model: choice.model, reasoningEffort: provider.isReasoning ? opts.reasoning : null, priceUsdPer1M: price,

@@ -105,6 +105,14 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.
     out.back = f('b', { type: 'put_down', target: obs('b').self.carrying.find(c => /gold/.test(c.name)).id, onto: 'chest' }); out.pile = st().objects.gold_coins.state.count; return out; });
   check('P18. Gold: a heap of coins in the chest; scoop by the handful, carry (heavy), give, put back', /gold_coins/.test(JSON.stringify(r.seen)) && /scoop up 150/.test(r.t1) && /450 gold coins/.test(r.t3) && r.carry.some(c => /gold coins \(450\):hand/.test(c)) && r.bCarry.some(c => /gold coins \(450\)/.test(c)) && r.pile === 4000,
     `${r.t1} | ${r.t3} | carrying ${r.carry} | ${r.give} | he now carries ${r.bCarry} | ${r.back} | pile ${r.pile}`);
+  r = await ev(() => { Island.reset({ pair: true, noLetters: true, gold: true, coinCounts: true }); Island.startRun({ durationSec: 1800 }); Island._debug.place('a', 300, 445); const out = {};
+    f('a', { type: 'walk_to', target: 'chest' }); f('a', { type: 'open', target: 'chest' }); out.two = f('a', { type: 'pick_up', target: 'gold_coins', count: 2 }); out.where = obs('a').self.carrying.find(c => /gold/.test(c.name));
+    out.lot = f('a', { type: 'pick_up', target: 'gold_coins', count: 1000 }); out.where2 = obs('a').self.carrying.find(c => /gold/.test(c.name));
+    const sa = st().party[0].agent; Island._debug.place('b', sa.x + 2, sa.y); out.give = f('a', { type: 'give', target: out.where2.id, at: 'person', count: 5 });
+    out.aC = obs('a').self.carrying.filter(c => /gold/.test(c.name)).map(c => c.name); out.bC = obs('b').self.carrying.filter(c => /gold/.test(c.name)).map(c => c.name);
+    out.back = f('a', { type: 'put_down', target: obs('a').self.carrying.find(c => /gold/.test(c.name)).id, onto: 'chest', count: 997 }); out.pile = st().objects.gold_coins.state.count; return out; });
+  check('P19. Coins in any amount: 2 go in a pocket, 1000 need a hand, 5 handed over, the rest put back', /take 2 gold coins/.test(r.two) && r.where.in === 'pocket' && /1002 gold coins/.test(r.lot) && r.where2.in === 'hand' && r.bC.join() === 'gold coins (5)' && r.aC.join() === 'gold coins (997)' && r.pile === 3995,
+    `${r.two} (${r.where.in}) | ${r.lot} (${r.where2.in}) | ${r.give} | she has ${r.aC}, he has ${r.bC} | ${r.back} | chest now ${r.pile}`);
   r = await ev(() => { Island.reset(); return { party: Island.party(), has: 'agent' in st() }; });
   check('P15. A normal reset is still a one-person island', r.party === null && r.has, '');
   check('Z. No page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
