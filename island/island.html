@@ -554,8 +554,8 @@ function myPencilId(){const b=curBundle();return b?b.pencilId:'pencil'}
    5. LOGGING + RECORDING
    kinds: request | start | complete | fail | interrupt | rejected | move | object | journal | reflection | sound | system | error
    ===================================================================================== */
-const KIND_CLASS={speech:'rf',animal:'err',body:'err',observe:'sys',controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
-const KIND_TAG={speech:'SPEECH',animal:'JAGUAR',body:'BODY',observe:'SEES',controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
+const KIND_CLASS={do:'jr',speech:'rf',animal:'err',body:'err',observe:'sys',controller:'ctl',request:'req',rejected:'err',error:'err',fail:'err',journal:'jr',reflection:'rf',system:'sys'};
+const KIND_TAG={do:'DOES',speech:'SPEECH',animal:'JAGUAR',body:'BODY',observe:'SEES',controller:'CTRL',request:'REQ',rejected:'REJECT',error:'ERROR',fail:'FAIL',journal:'JOURNAL',reflection:'REFLECT',system:'SYS',start:'ENV',complete:'ENV',interrupt:'ENV',move:'ENV',object:'ENV',sound:'ENV'};
 const listeners=[];
 function logEvent(kind,msg,data){const e={seq:S.nextSeq++,sim:+S.simTime.toFixed(3),wall:new Date().toISOString(),speed:S.speed,kind,msg,data:data||null};if(S.party&&CTX>0)e.who=S.party[S.cur].id;
   LOG.push(e);recordFrame(true);for(const f of listeners){try{f(e)}catch(_){}}UI.onLog&&UI.onLog(e);return e}
@@ -666,7 +666,7 @@ function personVisible(b){const a=S.agent,o=b.agent,d=dist(o.x,o.y,a.x,a.y);cons
 function personActivity(){const a=S.agent,ac=S.action;if(a.dead)return'is lying still on the ground, not moving';if(a.level==='platform')return'is standing on the platform at the top of the ladder';
   if(a.level==='ladder')return(ac&&ac.type==='descend'?'is climbing down':ac&&ac.type==='climb'?'is climbing':'is holding on to')+' the ladder, about '+Math.round(a.ladderFt)+' ft up';
   if(a.pose==='down')return'is on the ground';const t=ac&&ac.type;
-  const m={walk_to:'is walking',walk:'is walking',write_journal:'is writing in a small notebook',read_journal:'is reading a small notebook',read:'is reading something',speak:'is talking',shout:'is shouting',pick_up:'is picking something up',put_down:'is setting something down',drop:'is dropping something',open:'is opening something',close:'is closing something',use:'is busy with something in '+(pronoun(curBundle(),'poss'))+' hands',inspect:'is looking closely at something',look:'is looking around',attack:'is striking at something',throw:'is throwing something',wear:'is putting something on',remove:'is taking something off',give:'is holding something out',sit:'is sitting down',stand:'is getting up',rest:'is resting',wait:'is standing still'};
+  const m={walk_to:'is walking',walk:'is walking',write_journal:'is writing in a small notebook',read_journal:'is reading a small notebook',read:'is reading something',speak:'is talking',do:'is doing something',shout:'is shouting',pick_up:'is picking something up',put_down:'is setting something down',drop:'is dropping something',open:'is opening something',close:'is closing something',use:'is busy with something in '+(pronoun(curBundle(),'poss'))+' hands',inspect:'is looking closely at something',look:'is looking around',attack:'is striking at something',throw:'is throwing something',wear:'is putting something on',remove:'is taking something off',give:'is holding something out',sit:'is sitting down',stand:'is getting up',rest:'is resting',wait:'is standing still'};
   if(t==='walk_to'||t==='walk')return ac.data.pace==='run'?'is running':'is walking';if(t&&m[t])return m[t];if(a.pose==='sitting')return'is sitting';return'is standing'}
 function personDesc(b,v,close){const o=b.agent,noun=b.sex==='female'?'woman':'man',P=pronoun(b,'subj');const act=withAgent(b.id,personActivity);
   if(v.d>150||(v.fromAbove&&v.d>60))return'A person, too far away to make out clearly. They '+act.replace(/^is /,'are ').replace(/ (her|his) /,' their ')+'.';
@@ -962,6 +962,21 @@ ACTIONS.shout={desc:'Shout or make a loud noise (optional text: the words you sh
 ACTIONS.speak={desc:'Say something out loud, in your own voice. Anyone close enough may hear it.',params:{text:'what you say'},
   validate(p){if(S.agent.dead)return{error:'You cannot.'};const t=(p.text||'').trim();if(!t)return{error:'Give the "text" you say out loud.'};return{label:'Speaking',duration:Math.max(1.5,t.split(/\s+/).length*.4),data:{text:t}}},
   complete(a){const t=a.data.text;S.sounds.push(S.party?speechSound(t,false):{t:S.simTime,x:S.agent.x,y:S.agent.y,msg:'A voice says: "'+t+'"',range:70,by:S.agent.id||'self'});a.result={message:'You say out loud: "'+t+'"'};logEvent('speech',agentName(true)+' says out loud: "'+t+'"',{text:t})}};
+ACTIONS.do={desc:'Do anything else, described in your own words. Others who can see you perceive what you describe. The world changes only where it has a rule for it.',params:{text:'what you do, in your own words',target:'person or thing it is directed at (optional)'},
+  validate(p){if(S.agent.dead)return{error:'You cannot.'};const t=(p.text||'').trim();if(!t)return{error:'Describe what you do in "text".'};let tgt=null;
+    if(p.target!=null&&p.target!==''){const pr=targetPerson(p.target);if(pr==='unseen')return{error:NOT_HERE(p.target)};if(pr)tgt={person:pr.id};
+      else{const r=needTarget(p);if(r.error)return r;tgt=r.kind==='object'?{obj:r.o.id}:{feat:r.id}}}
+    const n=t.split(/\s+/).length;return{label:'Doing: '+(t.length>60?t.slice(0,57)+'…':t),duration:clamp(n*.35,3,20),data:{text:t,tgt}}},
+  complete(a){const t=a.data.text,tg=a.data.tgt||{},me=curBundle();let msg='You do it: "'+t+'"';
+    if(tg.obj){const o=O(tg.obj);msg+=' The island has no rule for this, so the '+o.name+' does not change.'}
+    if(tg.feat)msg+=' The island has no rule for this, so the '+tg.feat+' does not change.';
+    if(tg.person){const b=S.party.find(x=>x.id===tg.person),d=dist(b.agent.x,b.agent.y,S.agent.x,S.agent.y);if(d>6||b.agent.level!==S.agent.level)msg='You try: "'+t+'" '+pronoun(b,'subj')+' is about '+Math.round(d)+' ft away, out of arm\'s reach.'}
+    if(S.party){for(const b of othersOf()){if(b.agent.dead)continue;const v=withAgent(b.id,()=>personVisible(me));if(!v)continue;const noun=me.sex==='female'?'young woman':'young man',P=pronoun(me,'poss');
+      const near=v.d<=6&&b.agent.level===S.agent.level;
+      if(tg.person===b.id&&near)addNotice(b,'The '+noun+', right next to you, does this to you. In '+P+' words: "'+t+'"');
+      else if(v.d<=150&&!(v.fromAbove&&v.d>60))addNotice(b,'You see the '+noun+', about '+Math.round(v.d)+' ft away, '+(tg.person===b.id?'do this toward you':'do this')+'. In '+P+' words: "'+t+'"');
+      else addNotice(b,'You see a person in the distance doing something. They are too far away to make out what.')}}
+    a.result={message:msg};logEvent('do',agentName(true)+' does: "'+t+'"',{text:t,target:tg})}};
 ACTIONS.give={desc:'Hand something you carry to someone within reach.',params:{target:'carried object',at:'who'},
   validate(p){const r=resolveTarget(p.target);if(!r||r.kind!=='object'||!isCarrying(r.o.id))return{error:'You are not holding that.'};if(S.agent.level==='ladder')return{error:'You need both hands for the ladder.'};
     const pr=targetPerson(p.at||p.with||'person');if(!pr||pr==='unseen')return{error:'There is no one here to give it to.'};const o=pr.agent;const d=dist(o.x,o.y,S.agent.x,S.agent.y);
@@ -1092,7 +1107,7 @@ function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).'
 /* =====================================================================================
    11. RESET / SAVE / RESTORE / EXPORT
    ===================================================================================== */
-function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.noLetters)for(const id of['folded_paper','letter_cabin','letter_tower'])delete S.objects[id];if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();if(opts.protocol)S.protocol=String(opts.protocol);LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
   logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
   if(UI.onReset)UI.onReset();return{ok:true}}
 function exportState(){return clone(snapState())}
@@ -1438,6 +1453,7 @@ function feedItem0(e){const d=e.data||{};switch(e.kind){
   case'complete':return{c:'resp',l:'Island responds',t:plainMsg(d.result&&d.result.message||e.msg)};
   case'fail':return{c:'resp bad',l:'Island responds',t:'It didn’t work: '+plainMsg(d.result&&d.result.message||e.msg)};
   case'interrupt':return{c:'resp bad',l:'Island responds',t:(d.result&&d.result.reason==='run ended'?'Time ran out. ':'Stopped before finishing. ')+plainMsg(d.result&&d.result.message||'')};
+  case'do':return{c:'does',l:'Agent does (own words)',t:'“'+(d.text||'')+'”'};
   case'speech':return{c:'speech',l:'Agent speaks out loud',t:'“'+(d.text||'')+'”'+(d.loud?' (shouted)':'')};
   case'journal':return d.entry?{c:'jr',l:'Journal'+(d.entry.interrupted?' (writing interrupted)':''),t:d.entry.text}:null;
   case'sound':return{c:'resp',l:e.who?'Agent makes a sound':'Island responds',t:e.msg};

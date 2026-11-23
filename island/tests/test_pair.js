@@ -80,6 +80,14 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.
   const feed = await ev(() => [...document.querySelectorAll('#feedList .fe .fl span:first-child')].map(x => x.textContent).slice(-8));
   check('P14. The Experience feed labels who did what', feed.some(l => /^Woman/.test(l)) && feed.some(l => /^Man/.test(l)), feed.join(' | '));
 
+  r = await ev(() => { Island.reset({ pair: true, noLetters: true }); Island.startRun({ durationSec: 1800 }); const letters = ['folded_paper', 'letter_cabin', 'letter_tower'].filter(id => st().objects[id]);
+    Island._debug.place('a', 300, 600); Island._debug.place('b', 303, 601);
+    const k = f('a', { type: 'do', text: 'I lean in and kiss him on the cheek.', target: 'person' }); const nb = (obs('b').happenedToYou || []).map(n => n.description);
+    Island._debug.place('b', 300, 680); const w = f('a', { type: 'do', text: 'I dance a little in the sand.' }); const nb2 = (obs('b').happenedToYou || []).map(n => n.description);
+    const t = f('a', { type: 'do', text: 'I carve my initials into it.', target: 'crate' }); const hug = f('b', { type: 'do', text: 'I hug her.', target: 'person' });
+    return { letters, k, nb, w, nb2, t, hug }; });
+  check('P16. Open action: anything described in their own words reaches the other person as they would perceive it; no letters in protocol worlds', !r.letters.length && /You do it/.test(r.k) && r.nb.some(n => /right next to you, does this to you. In her words: "I lean in and kiss him on the cheek."/.test(n)) && r.nb2.some(n => /about 80 ft away, do this. In her words: "I dance a little in the sand."/.test(n)) && /crate does not change/.test(r.t),
+    `${r.k} | he perceives: ${r.nb[0]} | at 80 ft: ${r.nb2[r.nb2.length - 1]} | object: ${r.t} | his hug from 80 ft away: ${r.hug}`);
   r = await ev(() => { Island.reset(); return { party: Island.party(), has: 'agent' in st() }; });
   check('P15. A normal reset is still a one-person island', r.party === null && r.has, '');
   check('Z. No page errors', errs.length === 0, errs.slice(0, 3).join(' | '));

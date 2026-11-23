@@ -82,6 +82,7 @@ const ACTIONS = [
   ['speak', 'text', 'Say something out loud. Anyone close enough may hear it.'],
   ['shout', 'optional text', 'Shout or make a loud noise, optionally shouting words.'],
   ['give', 'target, at', 'Hand something you carry to someone within reach.'],
+  ['do', 'text, optional target', 'Do anything else, described in your own words, optionally directed at a person or thing. Others who can see you perceive what you describe. The world changes only where it has a rule for it.'],
   ['wear', 'target', 'Put something on.'],
   ['remove', 'target', 'Take off something you are wearing.'],
   ['read', 'target', 'Read something.'],
@@ -103,8 +104,8 @@ function introFor(phrase, identity, minutes) {
   if (!identity) return t;
   const i = t.indexOf('\n\n'); return t.slice(0, i) + '\n\n' + bodyLine(identity) + t.slice(i);
 }
-function systemPrompt(phrase, identity, minutes) {
-  const lines = ACTIONS.filter(([t]) => identity || t !== 'give').map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
+function systemPrompt(phrase, identity, minutes, menu) {
+  const lines = ACTIONS.filter(([t]) => menu ? menu.includes(t) : (identity || t !== 'give') && t !== 'do').map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
   return `${introFor(phrase, identity, minutes)}
 
 ---
@@ -141,6 +142,8 @@ const RESPONSE_SCHEMA = {
     say: { type: ['string', 'null'] },
   },
 };
+
+function schemaFor(menu) { if (!menu) return RESPONSE_SCHEMA; const s = JSON.parse(JSON.stringify(RESPONSE_SCHEMA)); s.properties.action.properties.type.enum = ACTION_TYPES.filter(t => menu.includes(t)); return s; }
 
 // Turn the model's action object into an island request (drop null fields). No substitution.
 function toIslandAction(a) {
@@ -199,4 +202,4 @@ function observationSummary(o) {
   return parts.join(' ');
 }
 
-module.exports = { memoryNote, bodyLine, introFor, observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };
+module.exports = { schemaFor, memoryNote, bodyLine, introFor, observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };

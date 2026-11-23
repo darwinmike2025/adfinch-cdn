@@ -35,6 +35,12 @@ const opts = {
   liveDir: arg('live-dir', null), liveInterval: +arg('live-interval', 20),
   priceIn: arg('price-in', null), priceOut: arg('price-out', null), mockSeed: +arg('seed', 7),
 };
+// A frozen protocol (controller/protocols/<v>.json) fixes every setting for comparable runs.
+const PROTO = arg('protocol', null) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'protocols', arg('protocol') + '.json'), 'utf8')) : null;
+if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, speed: 1 });
+if (PROTO && arg('test-minutes', null)) opts.minutes = +arg('test-minutes'); // TEST ONLY: shorter run under a protocol (labelled TEST)
+if (PROTO && arg('test-speed', null)) opts.speed = +arg('test-speed');
+if (PROTO && arg('test-history', null)) opts.historyTurns = +arg('test-history');
 const ISLAND = 'file://' + path.resolve(__dirname, '..', 'island.html');
 const AERIAL = path.resolve(__dirname, '..', 'screenshots', 'reference-image.png');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -90,7 +96,7 @@ async function listOpenAIModels() {
   const obsMode = choice.obsMode === 'aerial' && provider.supportsImages ? 'aerial' : 'text';
   const isTest = opts.minutes < 30 || opts.speed !== 1 || provName === 'mock';
   const testLabel = [provName === 'mock' ? 'MOCK' : null, opts.minutes < 30 ? opts.minutes + 'min' : null, opts.speed !== 1 ? opts.speed + 'x' : null].filter(Boolean).join('-');
-  const runId = stamp() + '_' + (provName === 'mock' ? 'MOCK' : choice.model) + (isTest ? '_TEST' + (testLabel ? '-' + testLabel : '') : '');
+  const runId = stamp() + '_' + (provName === 'mock' ? 'MOCK' : choice.model) + (PROTO ? '_' + PROTO.version : '') + (isTest ? '_TEST' + (testLabel ? '-' + testLabel : '') : '');
   const dir = path.join(opts.out, runId); fs.mkdirSync(dir, { recursive: true });
   const W = (f, d) => fs.writeFileSync(path.join(dir, f), typeof d === 'string' ? d : JSON.stringify(d, null, 1));
   const A = (f, obj) => fs.appendFileSync(path.join(dir, f), JSON.stringify(obj) + '\n');
@@ -100,7 +106,7 @@ async function listOpenAIModels() {
 
   // ---------------- starting island ----------------
   if (opts.pair && opts.predator) throw new Error('--pair and --predator together are not supported.');
-  await isl(([s, at, pr, sd, pair]) => Island.reset({ speed: s, startAt: at, predator: pr, seed: sd, pair }), [opts.speed, opts.startAt, opts.predator, opts.seed, !!opts.pair]);
+  await isl(([s, at, pr, sd, pair, nl, pv]) => Island.reset({ speed: s, startAt: at, predator: pr, seed: sd, pair, noLetters: nl, protocol: pv }), [opts.speed, opts.startAt, opts.predator, opts.seed, !!opts.pair, !!opts.noLetters, PROTO ? PROTO.version : null]);
   let startInfo = { type: 'fresh' };
   if (choice.start === 'saved') {
     if (opts.pair) throw new Error('A saved island with two people is not supported yet.');
@@ -117,15 +123,16 @@ async function listOpenAIModels() {
   const startPhrase = await isl(at => (Island.layout.starts[at] || {}).phrase || 'beside a boat', opts.startAt);
   const agents = party ? party.map(p => ({ who: p.id, label: p.label, identity: { sex: p.sex, age: p.age }, phrase: p.phrase, startAt: p.startAt }))
     : [{ who: null, label: 'Agent', identity: null, phrase: startPhrase, startAt: opts.startAt }];
-  for (const ag of agents) { ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes); ag.history = []; ag.slug = ag.label.toLowerCase(); }
+  for (const ag of agents) { ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes, opts.menu || null); ag.history = []; ag.slug = ag.label.toLowerCase(); }
   const sys = agents[0].sys;
+  const SCHEMA = P.schemaFor(opts.menu || null);
   const config = {
     runId, test: isTest, testLabel: testLabel || null, islandVersion: await isl(() => Island.version),
     provider: provName, model: choice.model, reasoningEffort: provider.isReasoning ? opts.reasoning : null, priceUsdPer1M: price,
     observationMode: obsMode, aerialImage: obsMode === 'aerial' ? path.basename(AERIAL) : null,
     durationMinutes: opts.minutes, timeSpeed: opts.speed, checkinSeconds: opts.checkin, modelTimeoutSeconds: opts.timeoutSec,
     spendingLimitUsd: choice.maxCostUsd, maxModelCalls: opts.maxCalls, historyTurnsKept: opts.historyTurns,
-    startingIsland: startInfo, introduction: P.introFor(agents[0].phrase, agents[0].identity, opts.minutes), startingPlace: agents[0].startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: P.RESPONSE_SCHEMA, video: !!choice.video,
+    startingIsland: startInfo, introduction: P.introFor(agents[0].phrase, agents[0].identity, opts.minutes), startingPlace: agents[0].startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: SCHEMA, protocol: PROTO || null, lettersRemoved: !!opts.noLetters, video: !!choice.video,
     people: party ? agents.map(a => ({ id: a.who, label: a.label, sex: a.identity.sex, age: a.identity.age, startingPlace: a.startAt, introduction: P.introFor(a.phrase, a.identity, opts.minutes), systemPrompt: a.sys, toldAboutOthers: false })) : null,
     credentials: provName === 'mock' ? 'none' : 'OPENAI_API_KEY environment variable (value never recorded)', startedWall: status.startedWall,
   };
@@ -164,7 +171,17 @@ async function listOpenAIModels() {
     const lastUser = history.map(h => h.role).lastIndexOf('user');
     let items = history.map((h, i) => ({ h, i }));
     const pinned = items.length ? [items[0]] : [];
-    if (items.length > opts.historyTurns * 2 + 1) items = pinned.concat([{ h: { role: 'user', brief: '(Earlier turns are not shown here.)', full: '(Earlier turns are not shown here.)' }, i: -1 }]).concat(items.slice(-opts.historyTurns * 2));
+    if (items.length > opts.historyTurns * 2 + 1) {
+      const kept = items.slice(-opts.historyTurns * 2), dropped = items.slice(1, items.length - kept.length);
+      // what this person heard, felt and said out loud is never lost when older turns are trimmed
+      const mem = [];
+      for (const { h } of dropped) {
+        if (h.role === 'user') { for (const line of String(h.brief || '').split('\n')) if (/^(Heard|Happened) \(/.test(line)) mem.push(line); }
+        else { try { const a = JSON.parse(h.content).action; if (a && (a.type === 'speak' || a.type === 'shout') && a.text) mem.push(`You said out loud${a.type === 'shout' ? ' (shouting)' : ''}: "${a.text}"`); else if (a && a.type === 'do' && a.text) mem.push(`You did: "${a.text}"`); } catch (_) {} }
+      }
+      const note = '(Earlier turns are not shown here.' + (mem.length ? ' What you heard, felt, said out loud and did toward others in them:\n' + mem.join('\n') : '') + ')';
+      items = pinned.concat([{ h: { role: 'user', brief: note, full: note }, i: -1 }]).concat(kept);
+    }
     for (const { h, i } of items) {
       if (h.role === 'assistant') { msgs.push({ role: 'assistant', content: h.content }); continue; }
       const text = i === lastUser ? h.full : h.brief;
@@ -182,12 +199,13 @@ async function listOpenAIModels() {
   async function callModel(ag, kind, m, image) {
     ag.history.push({ role: 'user', full: m.full, brief: m.brief, image: image || null });
     const messages = buildMessages(ag);
+    if (process.env.ISLAND_DUMP_MESSAGES) fs.writeFileSync(path.join(dir, 'last-messages-' + (ag.who || 'agent') + '.json'), JSON.stringify(messages.map(m => ({ role: m.role, content: typeof m.content === 'string' ? m.content.slice(0, 3000) : '[parts]' })), null, 1)); // TEST ONLY
     const st0 = await isl(w => Island.getStatus(w), W1(ag));
     await banner((party ? ag.label + ' ' : '') + (kind === 'checkin' ? 'check-in…' : 'deciding…'));
     for (let attempt = 1; attempt <= 3; attempt++) {
       const t0 = Date.now();
       try {
-        const r = await provider.decide(messages, P.RESPONSE_SCHEMA);
+        const r = await provider.decide(messages, SCHEMA);
         const ms = Date.now() - t0; calls++; ag.consecutiveErrors = 0;
         const c = costOf(r.usage, price); if (c != null) spent += c; else if (!priceUnknownWarned) { priceUnknownWarned = true; await note('Model price unknown: spending limit is enforced by call count (' + opts.maxCalls + ') only.'); }
         ag.history.push({ role: 'assistant', content: r.raw });
