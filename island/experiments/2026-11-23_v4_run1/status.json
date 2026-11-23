@@ -1,0 +1,12 @@
+{
+ "runId": "2026-11-23T03-26-54_gpt-5_v4",
+ "status": "completed",
+ "startedWall": "2026-11-23T03:26:54.571Z",
+ "test": false,
+ "deaths": [],
+ "reason": "the run reached its time limit",
+ "endedWall": "2026-11-23T04:00:40.840Z",
+ "modelCalls": 247,
+ "estimatedCostUsd": 3.8803,
+ "reportCheck": "**Woman:** not checked\n\n**Man:** Only one unsupported statement found.\n\nReport statement:\n- \"Young woman: Last clearly observed near the forest/NE area earlier; later seen at distance (152 ft E of the west-side treeline check).\"\n\nWhy unsupported:\n- The record at that time does not identify the distant figure as the young woman.\n\nContradicting/insufficient record line:\n- [29:27] OBSERVE: \"Sees: A person, too far away to make out clearly. They are standing still. (152 ft E)\""
+}
