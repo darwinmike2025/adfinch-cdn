@@ -574,6 +574,17 @@ function carried(){return Object.values(S.objects).filter(o=>o.loc.t==='carried'
 function worn(){return Object.values(S.objects).filter(o=>o.loc.t==='worn'&&isMine(o))}
 function isWearing(id){return!!(O(id)&&O(id).loc.t==='worn'&&isMine(O(id)))}
 function isCarrying(id){return!!(O(id)&&O(id).loc.t==='carried'&&isMine(O(id)))}
+const COIN_LB=.02,HANDFUL=150;
+function addCoins(where){S.objects.gold_coins={id:'gold_coins',name:'gold coins',kind:'item',coinPile:true,weight:0,size:'large',desc:'Thousands of heavy gold coins, heaped in the chest almost to the brim. You could scoop out a double handful at a time.',state:{count:4000},loc:where||{t:'in',id:'chest'},reach:5.5};if(O('chest'))O('chest').container.capacity=Math.max(O('chest').container.capacity,5)}
+function sizeCoins(o){const n=o.state.count;o.size=n>1500?'large':n>300?'medium':'small';o.weight=+(n*COIN_LB).toFixed(2);o.desc=n+' gold coins'+(n>300?', a heavy, clinking armful.':', heavy for their size.')}
+function newCoinStack(n,loc){let k=1;while(S.objects['coins_'+k])k++;const o={id:'coins_'+k,name:'gold coins',kind:'item',coinStack:true,state:{count:n},loc,reach:5.5};sizeCoins(o);S.objects[o.id]=o;return o}
+// stacks held by the same person, or lying in the same container as the pile, merge back together
+function normalizeCoins(){const all=Object.values(S.objects);const pile=S.objects.gold_coins;let ch=false;
+  for(const o of all){if(!o.coinStack||o.loc.t==='destroyed')continue;if(o.state.count<=0){o.loc={t:'destroyed'};ch=true;continue}
+    if(pile&&o.loc.t==='in'&&pile.loc.t==='in'&&o.loc.id===pile.loc.id){pile.state.count+=o.state.count;o.state.count=0;o.loc={t:'destroyed'};ch=true;continue}
+    if(isHeld(o)){const by=o.loc.by||null;const tw=all.find(q=>q!==o&&q.coinStack&&q.loc.t!=='destroyed'&&isHeld(q)&&(q.loc.by||null)===by);if(tw){tw.state.count+=o.state.count;o.state.count=0;o.loc={t:'destroyed'};sizeCoins(tw);ch=true;continue}}
+    sizeCoins(o)}
+  if(ch)markChanged()}
 function handsUsed(){return carried().reduce((n,o)=>n+(o.size==='medium'?1:o.size==='large'?2:0),0)}
 function pocketsUsed(){return carried().filter(o=>o.size==='small').length}
 function objLevel(o){if(o.platformLevel)return'platform';if(o.loc.t==='carried'||o.loc.t==='worn')return holderOf(o).level;if(o.loc.t==='in'||o.loc.t==='on')return objLevel(O(o.loc.id));return'ground'}
@@ -584,7 +595,7 @@ function objPos(o){if(o.loc.t==='platform'||o.platformLevel)return{x:L.foundatio
 function hiddenInContainer(o){let c=o;while(c.loc.t==='in'){const p=O(c.loc.id);if(p.container&&!p.container.open)return true;c=p}return false}
 function contentsOf(id){return Object.values(S.objects).filter(o=>(o.loc.t==='in'||o.loc.t==='on')&&o.loc.id===id)}
 function agentIndoors(){return S.agent.level==='ground'&&isIndoors(S.agent.x,S.agent.y)}
-function displayName(o){let n=o.name;if(o.state.broken)n='broken '+n;if(o.state.lit&&o.id!=='fire_pit')n='lit '+n;return n}
+function displayName(o){let n=o.name;if(o.coinPile||o.coinStack)return'gold coins ('+(o.coinPile?'about '+Math.round(o.state.count/100)*100:o.state.count)+')';if(o.state.broken)n='broken '+n;if(o.state.lit&&o.id!=='fire_pit')n='lit '+n;return n}
 function locText(o){const l=o.loc;if(o.kind==='fixture')return o.platformLevel?'at the top of the ladder':'fixed in place';if(isHeld(o)&&!isMine(o)){const b=holderBundle(o);return(l.t==='worn'?'worn':'carried')+' by the '+(b?b.label.toLowerCase():'other person')}if(l.t==='carried')return'carried by you';if(l.t==='worn')return'worn by you';if(l.t==='underwater')return'underwater in the pond';
   if(l.t==='in')return'inside the '+O(l.id).name;if(l.t==='on')return'on the '+O(l.id).name;if(l.t==='platform')return'at the top of the ladder';
   const tt=terrainAt(l.x,l.y);return'on the ground ('+TNAME[tt]+')'}
@@ -817,18 +828,23 @@ const ACTIONS={
   pick_up:{desc:'Pick up a reachable item (also takes items out of open containers or off surfaces). Small items go in pockets; medium items need a free hand.',params:{target:'item id'},
     validate(p){const r=needTarget(p);if(r.error)return r;if(r.kind!=='object')return{error:'You cannot pick that up.'};const o=r.o;
       if(o.kind==='fixture')return{error:'The '+o.name+' cannot be picked up.'};if(isMine(o))return{error:'You already have the '+o.name+'.'};
-      const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};if((o.loc.t==='in'&&HEARTHS[o.loc.id]&&O(o.loc.id).state.lit)||(isBurning(o)&&!['wood','thinwood'].includes(materialOf(o))))return{error:'It is burning; it is too hot to pick up.'};
+      const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason};
+      if(o.coinPile||o.coinStack){if(o.state.count<=0)return{error:'There are no coins left there.'};const mine=carried().find(c=>c.coinStack);const take=o.coinPile||o.state.count>300?Math.min(HANDFUL,o.state.count):o.state.count;const after=(mine?mine.state.count:0)+take;
+        const need=after>1500?2:after>300?1:0,used=handsUsed()-(mine?(mine.size==='medium'?1:mine.size==='large'?2:0):0);if(used+need>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small'&&!c.coinStack).map(c=>c.name).join(', ')+').'};
+        return{label:'Scooping up gold coins',duration:3,data:{coins:o.id}}}if((o.loc.t==='in'&&HEARTHS[o.loc.id]&&O(o.loc.id).state.lit)||(isBurning(o)&&!['wood','thinwood'].includes(materialOf(o))))return{error:'It is burning; it is too hot to pick up.'};
       if(o.size==='small'&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
       return{label:'Picking up the '+o.name,duration:o.loc.t==='underwater'?10:3,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc=hold('carried');if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
+    complete(a){if(a.data.coins){const src=O(a.data.coins),ri=reachInfo(src);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const take=src.coinPile||src.state.count>300?Math.min(HANDFUL,src.state.count):src.state.count;src.state.count-=take;if(src.coinStack)sizeCoins(src);
+        newCoinStack(take,hold('carried'));normalizeCoins();const mine=carried().find(c=>c.coinStack);markChanged();a.result={message:'You scoop up '+take+' gold coins. You now carry '+(mine?mine.state.count:take)+' gold coins ('+(mine?mine.weight:take*COIN_LB).toFixed(1)+' lb).'+(src.coinPile?' About '+Math.round(src.state.count/100)*100+' are left in the '+(O(src.loc.id)||{name:'pile'}).name+'.':'')};logEvent('object','Took '+take+' gold coins (now carrying '+(mine?mine.state.count:take)+').',{take});return}
+      const o=O(a.data.id),ri=reachInfo(o);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const from=locText(o);o.loc=hold('carried');if(o.id==='blanket')o.state.spread=false;if(o.id==='blocks')o.state.stacked=false;markChanged();
       a.result={message:'You pick up the '+displayName(o)+(o.id==='blanket'?', folding it up':'')+'.'};logEvent('object','Picked up '+o.id+' (was '+from+').',{id:o.id,from})}},
   put_down:{desc:'Set a carried item down gently: on the ground at your feet, or onto/into a reachable surface or open container with "onto".',params:{target:'item id',onto:'surface/container id (optional)'},
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.loc.t==='carried'&&isMine(o)))return{error:'You are not carrying that.'};
       if(S.agent.level==='ladder')return{error:'You are on the ladder; you cannot set things down here. You could drop it.'};
       const onto=p.onto||p.container||p.with;let tgt=null;if(onto){const t=resolveTarget(onto);if(!t||t.kind!=='object'||!knows(t.o))return{error:NOT_HERE(onto)};tgt=t.o;
         if(!tgt.surface&&!tgt.container)return{error:'You cannot put things in or on the '+tgt.name+'.'};const ri=reachInfo(tgt);if(!ri.ok)return{error:ri.reason};
-        if(tgt.container&&!tgt.container.open)return{error:'The '+tgt.name+' is closed.'};if(tgt.container&&contentsOf(tgt.id).length>=tgt.container.capacity)return{error:'The '+tgt.name+' is full.'};
-        if(tgt.container&&o.size!=='small'&&tgt.id==='chest')return{error:'The '+o.name+' does not fit in the chest.'};if(tgt.container&&o.size==='large')return{error:'The '+o.name+' is too big to go in the '+tgt.name+'.'};if(tgt.id===o.id)return{error:'You cannot put something inside itself.'}}
+        if(tgt.container&&!tgt.container.open)return{error:'The '+tgt.name+' is closed.'};if(tgt.container&&contentsOf(tgt.id).length>=tgt.container.capacity&&!(o.coinStack&&contentsOf(tgt.id).some(c=>c.coinPile)))return{error:'The '+tgt.name+' is full.'};
+        if(tgt.container&&o.size!=='small'&&tgt.id==='chest'&&!o.coinStack)return{error:'The '+o.name+' does not fit in the chest.'};if(tgt.container&&o.size==='large')return{error:'The '+o.name+' is too big to go in the '+tgt.name+'.'};if(tgt.id===o.id)return{error:'You cannot put something inside itself.'}}
       return{label:'Putting down the '+o.name+(tgt?(tgt.surface?' on ':' in ')+'the '+tgt.name:''),duration:3,data:{id:o.id,onto:tgt?tgt.id:null}}},
     complete(a){const o=O(a.data.id);if(!(o.loc.t==='carried'&&isMine(o))){a.failed=true;a.result={message:'You no longer have it.'};return}
       if(a.data.onto){const t=O(a.data.onto);o.loc={t:t.surface?'on':'in',id:t.id};
@@ -1082,7 +1098,7 @@ function submitAction(reqIn){
   logEvent('start','Started: '+a.label+(a.duration!=null?' (estimated '+fmtDur(a.duration)+')':''),{actionId:a.id,type:a.type,estSec:a.duration});
   if(def.start)def.start(a);
   return{ok:true,actionId:a.id,label:a.label,estimatedDurationSec:a.duration!=null?+a.duration.toFixed(1):null}}
-function finishAction(a,status){const def=ACTIONS[a.type];a.status=status;a.endSim=+S.simTime.toFixed(3);
+function finishAction(a,status){const def=ACTIONS[a.type];if(S.objects.gold_coins||Object.keys(S.objects).some(k=>/^coins_/.test(k)))normalizeCoins();a.status=status;a.endSim=+S.simTime.toFixed(3);
   const rec={id:a.id,type:a.type,params:a.params,label:a.label,status,startSim:a.startSim,endSim:a.endSim,durationSec:+(a.endSim-a.startSim).toFixed(2),result:a.result||null};
   S.history.push(rec);if(S.history.length>200)S.history.shift();S.action=null;markChanged();
   logEvent(status==='completed'?'complete':status==='failed'?'fail':'interrupt',(status==='completed'?'Completed: ':status==='failed'?'Failed: ':'Interrupted: ')+a.label+' after '+fmtDur(rec.durationSec)+'. '+(a.result&&a.result.message?a.result.message:''),{actionId:a.id,status,result:a.result?{message:a.result.message,progressAtStop:a.result.progressAtStop}:null});return rec}
@@ -1122,7 +1138,7 @@ function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).'
 /* =====================================================================================
    11. RESET / SAVE / RESTORE / EXPORT
    ===================================================================================== */
-function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.noLetters)for(const id of['folded_paper','letter_cabin','letter_tower'])delete S.objects[id];if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();if(opts.protocol)S.protocol=String(opts.protocol);if(opts.forceRules)S.forceRules=true;LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.noLetters)for(const id of['folded_paper','letter_cabin','letter_tower'])delete S.objects[id];if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();if(opts.protocol)S.protocol=String(opts.protocol);if(opts.forceRules)S.forceRules=true;if(opts.gold){addCoins();forEachAgent(()=>updateSeen())}LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
   logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
   if(UI.onReset)UI.onReset();return{ok:true}}
 function exportState(){return clone(snapState())}

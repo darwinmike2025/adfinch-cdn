@@ -97,6 +97,14 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.
     return out; });
   check('P17. Force in the open action has real effects (falls, injury); gentle or pretend contact does not', r.hugH === 100 && r.fakeH === 100 && r.pushed && r.pose === 'down' && /knocked to the ground/.test(r.felt) && r.hit && r.bH < 100 && /It hurts/.test(r.bFelt),
     `hug: ${r.hug} | pretend: health ${r.fakeH} | shove: ${r.pushed} → her pose ${r.pose}; she perceives: ${r.felt} | ${r.stand} | punch: ${r.hit}; he perceives: ${r.bFelt}`);
+  r = await ev(() => { Island.reset({ pair: true, noLetters: true, gold: true }); Island.startRun({ durationSec: 1800 }); Island._debug.place('a', 300, 445); const out = {};
+    f('a', { type: 'walk_to', target: 'chest' }); out.open = f('a', { type: 'open', target: 'chest' }); out.seen = (obs('a').visibleObjects.find(v => v.id === 'chest') || {}).contains;
+    out.t1 = f('a', { type: 'pick_up', target: 'gold_coins' }); out.t2 = f('a', { type: 'pick_up', target: 'gold_coins' }); out.t3 = f('a', { type: 'pick_up', target: 'gold_coins' });
+    out.carry = obs('a').self.carrying.map(c => c.name + ':' + c.in); const sa = st().party[0].agent; Island._debug.place('b', sa.x + 2, sa.y);
+    out.give = f('a', { type: 'give', target: obs('a').self.carrying.find(c => /gold/.test(c.name)).id, at: 'person' }); out.bCarry = obs('b').self.carrying.map(c => c.name);
+    out.back = f('b', { type: 'put_down', target: obs('b').self.carrying.find(c => /gold/.test(c.name)).id, onto: 'chest' }); out.pile = st().objects.gold_coins.state.count; return out; });
+  check('P18. Gold: a heap of coins in the chest; scoop by the handful, carry (heavy), give, put back', /gold_coins/.test(JSON.stringify(r.seen)) && /scoop up 150/.test(r.t1) && /450 gold coins/.test(r.t3) && r.carry.some(c => /gold coins \(450\):hand/.test(c)) && r.bCarry.some(c => /gold coins \(450\)/.test(c)) && r.pile === 4000,
+    `${r.t1} | ${r.t3} | carrying ${r.carry} | ${r.give} | he now carries ${r.bCarry} | ${r.back} | pile ${r.pile}`);
   r = await ev(() => { Island.reset(); return { party: Island.party(), has: 'agent' in st() }; });
   check('P15. A normal reset is still a one-person island', r.party === null && r.has, '');
   check('Z. No page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
