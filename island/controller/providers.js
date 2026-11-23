@@ -21,29 +21,31 @@ function priceFor(model, override) {
   return PRICES[base] ? Object.assign({ source: 'built-in estimate (verify)' }, PRICES[base]) : null;
 }
 function costOf(usage, price) {
+  if (usage && usage.cost_in_usd_ticks != null) return usage.cost_in_usd_ticks / 1e10; // xAI reports the exact cost (1 tick = 1e-10 USD)
   if (!usage || !price) return null;
   const cached = (usage.prompt_tokens_details && usage.prompt_tokens_details.cached_tokens) || 0;
   return ((usage.prompt_tokens - cached) * price.in + cached * price.cached + usage.completion_tokens * price.out) / 1e6;
 }
 
 class OpenAIProvider {
-  constructor({ model, reasoning, timeoutMs }) {
-    this.id = 'openai'; this.model = model; this.reasoning = reasoning; this.timeoutMs = timeoutMs || 90000;
-    this.label = 'OpenAI ' + model;
+  constructor({ model, reasoning, timeoutMs, baseUrl, keyEnv, vendor }) {
+    this.id = vendor || 'openai'; this.model = model; this.reasoning = reasoning; this.timeoutMs = timeoutMs || 90000;
+    this.baseUrl = baseUrl || 'https://api.openai.com/v1'; this.keyEnv = keyEnv || 'OPENAI_API_KEY';
+    this.label = (vendor === 'xai' ? 'xAI ' : 'OpenAI ') + model;
     this.supportsImages = !/^(o3-mini|gpt-3)/.test(model);
-    this.isReasoning = /^(gpt-5|o\d)/.test(model);
+    this.isReasoning = /^(gpt-5|o\d)/.test(model) && this.id === 'openai';
   }
-  hasKey() { return !!process.env.OPENAI_API_KEY; }
+  hasKey() { return !!process.env[this.keyEnv]; }
   async _call(body, timeoutMs) {
     const lim = timeoutMs || this.timeoutMs; const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), lim);
     try {
-      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      const r = await fetch(this.baseUrl + '/chat/completions', {
         method: 'POST', signal: ctl.signal,
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env[this.keyEnv] },
         body: JSON.stringify(body),
       });
       const j = await r.json().catch(() => ({}));
-      if (!r.ok) { const e = new Error('OpenAI HTTP ' + r.status + ': ' + ((j.error && j.error.message) || 'no detail')); e.status = r.status; throw e; }
+      if (!r.ok) { const e = new Error((this.id === 'xai' ? 'xAI' : 'OpenAI') + ' HTTP ' + r.status + ': ' + ((j.error && j.error.message) || 'no detail')); e.status = r.status; throw e; }
       return j;
     } catch (e) { if (e.name === 'AbortError') { const x = new Error('model call timed out after ' + lim / 1000 + ' s'); x.timeout = true; throw x; } throw e; }
     finally { clearTimeout(t); }
@@ -101,7 +103,7 @@ class MockProvider {
 
 function makeProvider(opts) {
   if (opts.provider === 'mock') return new MockProvider(opts);
-  if (opts.provider === 'openai') return new OpenAIProvider(opts);
+  if (opts.provider === 'openai') return /^grok/.test(opts.model) ? new OpenAIProvider(Object.assign({}, opts, { vendor: 'xai', baseUrl: 'https://api.x.ai/v1', keyEnv: 'XAI_API_KEY' })) : new OpenAIProvider(opts);
   throw new Error('Unknown provider "' + opts.provider + '". Available: openai, mock.');
 }
 module.exports = { makeProvider, priceFor, costOf, PRICES };

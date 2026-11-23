@@ -37,7 +37,8 @@ const opts = {
 };
 // A frozen protocol (controller/protocols/<v>.json) fixes every setting for comparable runs.
 const PROTO = arg('protocol', null) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'protocols', arg('protocol') + '.json'), 'utf8')) : null;
-if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, speed: 1 });
+if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, models: PROTO.models || null, speed: 1 });
+if (PROTO && PROTO.models && flag('swap-models')) opts.models = PROTO.models.slice().reverse(); // alternate which person each model plays
 if (PROTO && arg('test-minutes', null)) opts.minutes = +arg('test-minutes'); // TEST ONLY: shorter run under a protocol (labelled TEST)
 if (PROTO && arg('test-speed', null)) opts.speed = +arg('test-speed');
 if (PROTO && arg('test-history', null)) opts.historyTurns = +arg('test-history');
@@ -123,7 +124,15 @@ async function listOpenAIModels() {
   const startPhrase = await isl(at => (Island.layout.starts[at] || {}).phrase || 'beside a boat', opts.startAt);
   const agents = party ? party.map(p => ({ who: p.id, label: p.label, identity: { sex: p.sex, age: p.age }, phrase: p.phrase, startAt: p.startAt }))
     : [{ who: null, label: 'Agent', identity: null, phrase: startPhrase, startAt: opts.startAt }];
-  for (const ag of agents) { ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes, opts.menu || null); ag.history = []; ag.slug = ag.label.toLowerCase(); }
+  for (const [i, ag] of agents.entries()) {
+    ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes, opts.menu || null); ag.history = []; ag.slug = ag.label.toLowerCase();
+    // each person can run on a different model (the other person is never told which)
+    ag.model = provName !== 'mock' && opts.models && opts.models[i] ? opts.models[i] : choice.model;
+    ag.provider = ag.model === choice.model ? provider : makeProvider({ provider: provName, model: ag.model, reasoning: opts.reasoning, timeoutMs: opts.timeoutSec * 1000 });
+    if (!ag.provider.hasKey()) throw new Error(ag.provider.keyEnv + ' is not set (use a placeholder; the network proxy supplies the real key).');
+    ag.price = ag.provider.id === 'xai' ? { in: 0, cached: 0, out: 0, source: 'exact cost reported by xAI per call' } : (ag.model === choice.model ? price : priceFor(ag.model));
+  }
+  const mixed = new Set(agents.map(a => a.model)).size > 1;
   const sys = agents[0].sys;
   const SCHEMA = P.schemaFor(opts.menu || null);
   const config = {
@@ -133,11 +142,11 @@ async function listOpenAIModels() {
     durationMinutes: opts.minutes, timeSpeed: opts.speed, checkinSeconds: opts.checkin, modelTimeoutSeconds: opts.timeoutSec,
     spendingLimitUsd: choice.maxCostUsd, maxModelCalls: opts.maxCalls, historyTurnsKept: opts.historyTurns,
     startingIsland: startInfo, introduction: P.introFor(agents[0].phrase, agents[0].identity, opts.minutes), startingPlace: agents[0].startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: SCHEMA, protocol: PROTO || null, lettersRemoved: !!opts.noLetters, video: !!choice.video,
-    people: party ? agents.map(a => ({ id: a.who, label: a.label, sex: a.identity.sex, age: a.identity.age, startingPlace: a.startAt, introduction: P.introFor(a.phrase, a.identity, opts.minutes), systemPrompt: a.sys, toldAboutOthers: false })) : null,
+    people: party ? agents.map(a => ({ id: a.who, label: a.label, sex: a.identity.sex, age: a.identity.age, startingPlace: a.startAt, introduction: P.introFor(a.phrase, a.identity, opts.minutes), systemPrompt: a.sys, toldAboutOthers: false, model: a.model, modelLabel: a.provider.label })) : null,
     credentials: provName === 'mock' ? 'none' : 'OPENAI_API_KEY environment variable (value never recorded)', startedWall: status.startedWall,
   };
   W('config.json', config);
-  console.log(`Run ${runId}\n  ${provider.label} · ${obsMode} observations · limit $${choice.maxCostUsd} · ${opts.minutes} min at ${opts.speed}×${isTest ? '  [TEST]' : ''}${party ? '\n  People: ' + agents.map(a => a.label + ' (' + a.phrase + ')').join(', ') : ''}\n  Files: ${dir}`);
+  console.log(`Run ${runId}\n  ${provider.label} · ${obsMode} observations · limit $${choice.maxCostUsd} · ${opts.minutes} min at ${opts.speed}×${isTest ? '  [TEST]' : ''}${party ? '\n  People: ' + agents.map(a => a.label + ' (' + a.phrase + ', ' + a.provider.label + ')').join(', ') : ''}\n  Files: ${dir}`);
 
   // ---- cloud live viewer feed: chunk files a relay copies to the private watch page ----
   let live = null;
@@ -145,7 +154,7 @@ async function listOpenAIModels() {
     const ld = path.resolve(opts.liveDir); fs.mkdirSync(ld, { recursive: true });
     for (const f of fs.readdirSync(ld)) if (/^(chunk-\d+|current|final)\.json$|^STOP$/.test(f)) fs.unlinkSync(path.join(ld, f));
     const wj = (f, o) => { const tmp = path.join(ld, f + '.tmp'); fs.writeFileSync(tmp, JSON.stringify(o)); fs.renameSync(tmp, path.join(ld, f)); };
-    live = { ld, wj, n: 0, cursor: null, meta: { runId, model: provider.label + (party ? ' · ' + agents.map(a => a.label).join(' + ') : ''), obsMode, test: isTest, testLabel: testLabel || null, startedWall: status.startedWall } };
+    live = { ld, wj, n: 0, cursor: null, meta: { runId, model: mixed ? agents.map(a => a.label + ': ' + a.provider.label).join(' · ') : provider.label + (party ? ' · ' + agents.map(a => a.label).join(' + ') : ''), obsMode, test: isTest, testLabel: testLabel || null, startedWall: status.startedWall } };
     live.flush = async (extra) => { const c = await isl(cur => Island.exportLiveChunk(cur), live.cursor); live.cursor = c.cursor; delete c.cursor; live.n++;
       // split so that no chunk document comes near the page database's 256 KiB limit
       const parts = []; const split = (x) => { const js = JSON.stringify(x); if (js.length < 180000 || (x.frames.length + x.snapshots.length + x.log.length) < 4) { parts.push(x); return; }
@@ -205,9 +214,9 @@ async function listOpenAIModels() {
     for (let attempt = 1; attempt <= 3; attempt++) {
       const t0 = Date.now();
       try {
-        const r = await provider.decide(messages, SCHEMA);
+        const r = await ag.provider.decide(messages, SCHEMA);
         const ms = Date.now() - t0; calls++; ag.consecutiveErrors = 0;
-        const c = costOf(r.usage, price); if (c != null) spent += c; else if (!priceUnknownWarned) { priceUnknownWarned = true; await note('Model price unknown: spending limit is enforced by call count (' + opts.maxCalls + ') only.'); }
+        const c = costOf(r.usage, ag.price); if (c != null) spent += c; else if (!priceUnknownWarned) { priceUnknownWarned = true; await note('Model price unknown: spending limit is enforced by call count (' + opts.maxCalls + ') only.'); }
         ag.history.push({ role: 'assistant', content: r.raw });
         const st1 = await isl(w => Island.getStatus(w), W1(ag));
         A('transcript.jsonl', { kind, who: ag.who, agent: party ? ag.label : undefined, wall: new Date().toISOString(), simAtRequest: st0.simTimeSec, simAtReply: st1.simTimeSec, latencyMs: ms, attempt, messagesInRequest: messages.length, sentToAgent: m.full, imageAttached: !!image, reply: r.parsed, servedModel: r.servedModel, finish: r.finish, usage: r.usage, costUsd: c, cumulativeCostUsd: +spent.toFixed(5) });
@@ -359,12 +368,12 @@ async function listOpenAIModels() {
           { role: 'user', content: `Your journal entries:\n${journal}\n\nThe environment's factual activity record (times are minutes:seconds since the start):\n${factual}\n\nPlease write a report covering:\n1. What you did, in chronological order.\n2. What you wrote in your journal.\n3. What attracted your attention and what you ignored.\n4. Any questions or plans you developed or changed.\n5. Where you ended up and what changed on the island.\n6. What you might choose to do with another 30 minutes.\n\nKeep what the record shows separate from your interpretation (label interpretation as such). Do not present feelings or experiences as established facts.` },
         ];
         if (price && spent >= choice.maxCostUsd) { reports.push({ ag, text: '# Report not generated\n\nThe spending limit had been reached.' }); continue; }
-        const r = await provider.text(reportPrompt, 8000, 300000); const c = costOf(r.usage, price) || 0; spent += c;
+        const r = await ag.provider.text(reportPrompt, 8000, 300000); const c = costOf(r.usage, ag.price) || 0; spent += c;
         A('transcript.jsonl', { kind: 'report', who: ag.who, agent: party ? ag.label : undefined, wall: new Date().toISOString(), sentToAgent: reportPrompt[1].content, reply: r.text, usage: r.usage, costUsd: c });
         let check = null;
         if (opts.check && provName !== 'mock') {
-          const chk = await provider.text([{ role: 'system', content: 'You check reports against logs. Be precise and brief.' }, { role: 'user', content: `Activity record:\n${factual}\n\nJournal:\n${journal}\n\nReport:\n${r.text}\n\nList every statement in the report that is not supported by, or contradicts, the activity record or journal. Quote the statement and give the record line. If there are none, say so.` }], 4000);
-          const c2 = costOf(chk.usage, price) || 0; spent += c2;
+          const chk = await ag.provider.text([{ role: 'system', content: 'You check reports against logs. Be precise and brief.' }, { role: 'user', content: `Activity record:\n${factual}\n\nJournal:\n${journal}\n\nReport:\n${r.text}\n\nList every statement in the report that is not supported by, or contradicts, the activity record or journal. Quote the statement and give the record line. If there are none, say so.` }], 4000);
+          const c2 = costOf(chk.usage, ag.price) || 0; spent += c2;
           A('transcript.jsonl', { kind: 'report-check', who: ag.who, wall: new Date().toISOString(), reply: chk.text, usage: chk.usage, costUsd: c2 });
           check = chk.text;
         }
@@ -373,8 +382,8 @@ async function listOpenAIModels() {
     }
     const head = `_Generated after the run by the same model, from ${party ? 'that person\'s own' : 'its'} journal and activity record. It is the model's account, not a verified record; see summary.md for checks against the log._\n\n`;
     if (party) {
-      for (const x of reports) W('report-' + x.ag.slug + '.md', `# ${x.ag.label}'s report (${provider.label})\n\n` + head + x.text);
-      W('report.md', reports.map(x => `# ${x.ag.label}'s report (${provider.label})\n\n` + head + x.text).join('\n\n---\n\n'));
+      for (const x of reports) W('report-' + x.ag.slug + '.md', `# ${x.ag.label}'s report (${x.ag.provider.label})\n\n` + head + x.text);
+      W('report.md', reports.map(x => `# ${x.ag.label}'s report (${x.ag.provider.label})\n\n` + head + x.text).join('\n\n---\n\n'));
       status.reportCheck = reports.map(x => `**${x.ag.label}:** ${x.check || 'not checked'}`).join('\n\n');
     } else if (reports[0]) { W('report.md', `# Agent report (${provider.label})\n\n` + head + reports[0].text); status.reportCheck = reports[0].check || undefined; }
   }
@@ -391,7 +400,7 @@ async function listOpenAIModels() {
     const lines = [
       `# Experimenter summary: ${runId}`, '', isTest ? '**TEST RUN** (' + (testLabel || 'test') + '). Not the actual experiment.' : '**Actual experiment run.**', '',
       `- Status: **${status.status}** (${status.reason})`,
-      `- Model: ${provider.label}; observation mode: ${obsMode}; starting island: ${startInfo.type}${startInfo.file ? ' (' + startInfo.file + ')' : ''}`,
+      `- Model: ${mixed ? agents.map(a => a.label + ': ' + a.provider.label).join(', ') : provider.label}; observation mode: ${obsMode}; starting island: ${startInfo.type}${startInfo.file ? ' (' + startInfo.file + ')' : ''}`,
       `- Run time on the island clock: ${finalState ? fmt((finalState.run.endSim || finalState.simTime) - finalState.run.startSim) : '?'} (speed ${opts.speed}×)`,
       `- Model calls: ${dec.length}${party ? ' (' + agents.map(ag => ag.label + ' ' + dec.filter(t => t.who === ag.who).length).join(', ') + ')' : ''} (${tr.filter(t => t.kind === 'decision' && !t.error).length} decisions, ${tr.filter(t => t.kind === 'checkin' && !t.error).length} check-ins); errors/timeouts: ${errs.length}`,
       `- Decision latency: median ${lat.length ? (lat[Math.floor(lat.length / 2)] / 1000).toFixed(1) : '-'} s, max ${lat.length ? (lat[lat.length - 1] / 1000).toFixed(1) : '-'} s`,
