@@ -88,8 +88,8 @@ async function listOpenAIModels() {
   if (!provider.hasKey()) throw new Error('OPENAI_API_KEY is not set. Set it in your shell (never in a file here), or choose the MOCK policy.');
   const price = provName === 'mock' ? { in: 0, cached: 0, out: 0, source: 'mock' } : priceFor(choice.model, opts.priceIn != null ? { in: +opts.priceIn, out: +opts.priceOut } : null);
   const obsMode = choice.obsMode === 'aerial' && provider.supportsImages ? 'aerial' : 'text';
-  const isTest = opts.minutes !== 30 || opts.speed !== 1 || provName === 'mock';
-  const testLabel = [provName === 'mock' ? 'MOCK' : null, opts.minutes !== 30 ? opts.minutes + 'min' : null, opts.speed !== 1 ? opts.speed + 'x' : null].filter(Boolean).join('-');
+  const isTest = opts.minutes < 30 || opts.speed !== 1 || provName === 'mock';
+  const testLabel = [provName === 'mock' ? 'MOCK' : null, opts.minutes < 30 ? opts.minutes + 'min' : null, opts.speed !== 1 ? opts.speed + 'x' : null].filter(Boolean).join('-');
   const runId = stamp() + '_' + (provName === 'mock' ? 'MOCK' : choice.model) + (isTest ? '_TEST' + (testLabel ? '-' + testLabel : '') : '');
   const dir = path.join(opts.out, runId); fs.mkdirSync(dir, { recursive: true });
   const W = (f, d) => fs.writeFileSync(path.join(dir, f), typeof d === 'string' ? d : JSON.stringify(d, null, 1));
@@ -117,7 +117,7 @@ async function listOpenAIModels() {
   const startPhrase = await isl(at => (Island.layout.starts[at] || {}).phrase || 'beside a boat', opts.startAt);
   const agents = party ? party.map(p => ({ who: p.id, label: p.label, identity: { sex: p.sex, age: p.age }, phrase: p.phrase, startAt: p.startAt }))
     : [{ who: null, label: 'Agent', identity: null, phrase: startPhrase, startAt: opts.startAt }];
-  for (const ag of agents) { ag.sys = P.systemPrompt(ag.phrase, ag.identity); ag.history = []; ag.slug = ag.label.toLowerCase(); }
+  for (const ag of agents) { ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes); ag.history = []; ag.slug = ag.label.toLowerCase(); }
   const sys = agents[0].sys;
   const config = {
     runId, test: isTest, testLabel: testLabel || null, islandVersion: await isl(() => Island.version),
@@ -125,8 +125,8 @@ async function listOpenAIModels() {
     observationMode: obsMode, aerialImage: obsMode === 'aerial' ? path.basename(AERIAL) : null,
     durationMinutes: opts.minutes, timeSpeed: opts.speed, checkinSeconds: opts.checkin, modelTimeoutSeconds: opts.timeoutSec,
     spendingLimitUsd: choice.maxCostUsd, maxModelCalls: opts.maxCalls, historyTurnsKept: opts.historyTurns,
-    startingIsland: startInfo, introduction: P.introFor(agents[0].phrase, agents[0].identity), startingPlace: agents[0].startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: P.RESPONSE_SCHEMA, video: !!choice.video,
-    people: party ? agents.map(a => ({ id: a.who, label: a.label, sex: a.identity.sex, age: a.identity.age, startingPlace: a.startAt, introduction: P.introFor(a.phrase, a.identity), systemPrompt: a.sys, toldAboutOthers: false })) : null,
+    startingIsland: startInfo, introduction: P.introFor(agents[0].phrase, agents[0].identity, opts.minutes), startingPlace: agents[0].startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: P.RESPONSE_SCHEMA, video: !!choice.video,
+    people: party ? agents.map(a => ({ id: a.who, label: a.label, sex: a.identity.sex, age: a.identity.age, startingPlace: a.startAt, introduction: P.introFor(a.phrase, a.identity, opts.minutes), systemPrompt: a.sys, toldAboutOthers: false })) : null,
     credentials: provName === 'mock' ? 'none' : 'OPENAI_API_KEY environment variable (value never recorded)', startedWall: status.startedWall,
   };
   W('config.json', config);
@@ -219,7 +219,7 @@ async function listOpenAIModels() {
   await isl(d => Island.startRun({ durationSec: d }), opts.minutes * 60);
   await note(`Controller attached: ${provider.label}, ${obsMode} observations, check-ins every ${opts.checkin} s, spending limit $${choice.maxCostUsd}.${party ? ' ' + agents.length + ' people, each with their own separate conversation; neither is told about the other.' : ''}${isTest ? ' TEST RUN.' : ''}`);
   let lastAutosave = Date.now(), stopReason = null, done = false;
-  for (const ag of agents) Object.assign(ag, { lastObsSummary: null, lastSalient: null, first: true, rejected: null, lastResultId: null, lastCheckinSim: 0, idleUntil: null, idleFrom: null, consecutiveErrors: 0, finished: false });
+  for (const ag of agents) Object.assign(ag, { lastObsSummary: null, lastSalient: null, first: true, rejected: null, lastResultId: null, lastCheckinSim: 0, idleUntil: null, idleFrom: null, consecutiveErrors: 0, finished: false, heard: new Set() });
 
   async function agentStep(ag) {
     const w = W1(ag);
@@ -237,7 +237,7 @@ async function listOpenAIModels() {
       const idleNote = ag.idleFrom != null ? `You did nothing for ${Math.round(st.simTimeSec - ag.idleFrom)} seconds.` : null;
       ag.idleUntil = null; ag.idleFrom = null;
       { const sum = P.observationSummary(obs); if (sum !== ag.lastObsSummary) { ag.lastObsSummary = sum; await isl(([t, w]) => Island.noteObservation(t, w), [sum, w]); } }
-      const msg = P.decisionMessage({ observation: obs, lastResult, rejected: ag.rejected, idleNote, first: ag.first, aerialNote: obsMode === 'aerial' ? 'Attached is an aerial picture of the whole island, taken from above. It is not your view from where you stand.' : null });
+      const msg = P.decisionMessage({ observation: obs, lastResult, rejected: ag.rejected, idleNote, first: ag.first, aerialNote: obsMode === 'aerial' ? 'Attached is an aerial picture of the whole island, taken from above. It is not your view from where you stand.' : null, memory: P.memoryNote(obs, ag.heard) });
       const out = await callModel(ag, 'decision', msg, ag.first && aerialDataUrl ? aerialDataUrl : null);
       ag.first = false; ag.rejected = null;
       if (out.__error) { ag.idleFrom = (await isl(w => Island.getStatus(w), w)).simTimeSec; ag.idleUntil = ag.idleFrom + 10; await note(`No decision received; ${party ? 'the ' + ag.slug : 'the agent'} stands still. Trying again in about 10 s.`, { who: ag.who }); return true; }
@@ -256,7 +256,7 @@ async function listOpenAIModels() {
     if (!due) return true;
     ag.lastCheckinSim = st.simTimeSec;
     const obs = await isl(w => Island.getObservation(w), w);
-    const out = await callModel(ag, 'checkin', P.checkinMessage({ observation: obs, action: st.action }));
+    const out = await callModel(ag, 'checkin', P.checkinMessage({ observation: obs, action: st.action, memory: P.memoryNote(obs, ag.heard) }));
     if (out.__error) return true;
     const now = await isl(w => Island.getStatus(w), w);
     if (now.run.ended) { await note('A reply arrived after time ran out; it is kept in transcript.jsonl but not applied.', { who: ag.who }); return false; }

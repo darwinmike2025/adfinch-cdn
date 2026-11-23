@@ -662,10 +662,10 @@ function personActivity(){const a=S.agent,ac=S.action;if(a.dead)return'is lying 
   if(a.pose==='down')return'is on the ground';const t=ac&&ac.type;
   const m={walk_to:'is walking',walk:'is walking',write_journal:'is writing in a small notebook',read_journal:'is reading a small notebook',read:'is reading something',speak:'is talking',shout:'is shouting',pick_up:'is picking something up',put_down:'is setting something down',drop:'is dropping something',open:'is opening something',close:'is closing something',use:'is busy with something in '+(pronoun(curBundle(),'poss'))+' hands',inspect:'is looking closely at something',look:'is looking around',attack:'is striking at something',throw:'is throwing something',wear:'is putting something on',remove:'is taking something off',give:'is holding something out',sit:'is sitting down',stand:'is getting up',rest:'is resting',wait:'is standing still'};
   if(t==='walk_to'||t==='walk')return ac.data.pace==='run'?'is running':'is walking';if(t&&m[t])return m[t];if(a.pose==='sitting')return'is sitting';return'is standing'}
-function personDesc(b,v){const o=b.agent,noun=b.sex==='female'?'woman':'man',P=pronoun(b,'subj');const act=withAgent(b.id,personActivity);
+function personDesc(b,v,close){const o=b.agent,noun=b.sex==='female'?'woman':'man',P=pronoun(b,'subj');const act=withAgent(b.id,personActivity);
   if(v.d>150||(v.fromAbove&&v.d>60))return'A person, too far away to make out clearly. They '+act.replace(/^is /,'are ').replace(/ (her|his) /,' their ')+'.';
   let t='A young '+noun+', about '+b.age+'. '+P+' '+act+'.';
-  if(v.d<=40&&!o.dead){const hold=withAgent(b.id,()=>({c:carried().map(displayName),w:worn().map(x=>x.name)}));if(hold.c.length)t+=' '+P+' is holding: '+hold.c.join(', ')+'.';if(hold.w.length)t+=' '+P+' is wearing: '+hold.w.join(', ')+'.';
+  if(v.d<=(close?70:40)&&!o.dead){const hold=withAgent(b.id,()=>({c:carried().map(displayName),w:worn().map(x=>x.name)}));if(hold.c.length)t+=' '+P+' is holding: '+hold.c.join(', ')+'.';if(hold.w.length)t+=' '+P+' is wearing: '+hold.w.join(', ')+'.';
     const h=o.health==null?100:o.health;if(h<70)t+=' '+P+' looks hurt ('+conditionText(h)+').'}
   return t}
 function perceivePeople(){const out=[];if(!S.party||S.agent.dead)return out;for(const b of othersOf()){const v=personVisible(b);if(v)out.push({b,v})}return out}
@@ -753,8 +753,10 @@ const ACTIONS={
     complete(a){const ob=getObservation();a.result={message:'You look around. You can see '+ob.visibleObjects.length+' things nearby.',observation:ob}}},
   inspect:{desc:'Examine a visible object or feature closely.',params:{target:'object id or feature'},
     validate(p){const an=targetAnimal(p.target);if(an==='unseen')return{error:NOT_HERE(p.target)};if(an)return{label:'Watching the jaguar',duration:3,data:{animal:true}};
+      const pr=targetPerson(p.target);if(pr==='unseen')return{error:NOT_HERE(p.target)};if(pr)return{label:'Looking at the person',duration:3,data:{person:pr.id}};
       const r=needTarget(p);if(r.error)return r;return{label:'Inspecting '+(r.o?r.o.name:r.id),duration:6,data:{r:r.o?r.o.id:r.id,feat:r.kind==='feature'}}},
-    complete(a){if(a.data.animal){const j=jaguar();const pv=perceiveAnimals().jaguar;a.result={message:pv?jaguarDesc(j,pv.d)+' It is about '+Math.round(pv.d)+' ft away.':'You can no longer see the jaguar.'};return}
+    complete(a){if(a.data.person){const b=S.party.find(x=>x.id===a.data.person);const v=personVisible(b);a.result={message:v?personDesc(b,v,true)+' '+(pronoun(b,'subj'))+' is about '+Math.round(v.d)+' ft away.':'You can no longer see them.'};return}
+      if(a.data.animal){const j=jaguar();const pv=perceiveAnimals().jaguar;a.result={message:pv?jaguarDesc(j,pv.d)+' It is about '+Math.round(pv.d)+' ft away.':'You can no longer see the jaguar.'};return}
       if(a.data.feat){const fd={pond:'A still pond. The water is murky near the banks.',stream:'A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly.',cliffs:'Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down.',hill:'A grassy hill with wildflowers, rising to a top crowned with large boulders. Stone steps climb it beside the stream.',ocean:'The sea surrounds the island. It is too deep and too far to swim anywhere.',beach:'Soft sand along the south-west shore, slow to walk on.',forest:'Dense trees with rough ground underneath.'}[a.data.r];a.result={message:fd};return}
       const o=O(a.data.r),pv=perceiveObjects()[o.id],car=isMine(o);
       if(!pv&&!car){a.result={message:'You can no longer see the '+o.name+'.'};a.failed=true;return}

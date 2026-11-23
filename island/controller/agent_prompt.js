@@ -97,14 +97,15 @@ const ACTION_TYPES = ACTIONS.map(a => a[0]);
 
 // Optional body description, added as its own short paragraph after the first one (the experimenter's text is unchanged).
 function bodyLine(identity) { if (!identity) return ''; return `Your body is that of a ${identity.age}-year-old ${identity.sex === 'female' ? 'woman' : 'man'}.`; }
-function introFor(phrase, identity) {
-  const t = INTRODUCTION.replace('{START}', phrase || 'beside a boat');
+function introFor(phrase, identity, minutes) {
+  let t = INTRODUCTION.replace('{START}', phrase || 'beside a boat');
+  if (minutes && minutes !== 30) t = t.replace('You have 30 minutes here.', `You have ${minutes} minutes here.`);
   if (!identity) return t;
   const i = t.indexOf('\n\n'); return t.slice(0, i) + '\n\n' + bodyLine(identity) + t.slice(i);
 }
-function systemPrompt(phrase, identity) {
+function systemPrompt(phrase, identity, minutes) {
   const lines = ACTIONS.filter(([t]) => identity || t !== 'give').map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
-  return `${introFor(phrase, identity)}
+  return `${introFor(phrase, identity, minutes)}
 
 ---
 Technical reference (how to operate the environment)
@@ -150,7 +151,7 @@ function toIslandAction(a) {
 }
 
 // Messages sent to the agent. `full` goes with the latest turn; `brief` replaces it in older history.
-function decisionMessage({ observation, lastResult, rejected, idleNote, first, aerialNote }) {
+function decisionMessage({ observation, lastResult, rejected, idleNote, first, aerialNote, memory }) {
   const parts = [];
   if (first) parts.push('The experiment has started.' + (aerialNote ? ' ' + aerialNote : ''));
   if (rejected) parts.push('The environment did not accept your last action: ' + rejected);
@@ -159,16 +160,24 @@ function decisionMessage({ observation, lastResult, rejected, idleNote, first, a
   parts.push('Observation:\n' + JSON.stringify(observation));
   parts.push('What do you do?');
   const brief = [rejected ? 'Rejected: ' + rejected : null, lastResult ? `Result (${lastResult.type}, ${lastResult.status}): ${lastResult.message}` : null, idleNote,
-    `[observation at ${observation.simTimeSec}s: at (${observation.self.position.x}, ${observation.self.position.y}), ${observation.self.level}, ${observation.self.underfoot}]`].filter(Boolean).join('\n');
+    `[observation at ${observation.simTimeSec}s: at (${observation.self.position.x}, ${observation.self.position.y}), ${observation.self.level}, ${observation.self.underfoot}]`, memory || null].filter(Boolean).join('\n');
   return { full: parts.join('\n\n'), brief };
 }
-function checkinMessage({ observation, action }) {
+function checkinMessage({ observation, action, memory }) {
   const pct = Math.round((action.progress || 0) * 100);
   const full = `Check-in: "${action.label}" is in progress (${pct}%, ${Math.round(action.elapsedSec)} s elapsed${action.estimatedTotalSec != null ? ' of about ' + Math.round(action.estimatedTotalSec) + ' s' : ''}). You may let it continue (action null) or choose a different action, which replaces it. You may say something, or nothing.\n\nObservation:\n${JSON.stringify(observation)}`;
-  const brief = `[check-in during "${action.label}" at ${pct}%, ${observation.simTimeSec}s]`;
+  const brief = `[check-in during "${action.label}" at ${pct}%, ${observation.simTimeSec}s]` + (memory ? '\n' + memory : '');
   return { full, brief };
 }
 
+// Kept in the shortened copy of older turns, so heard words are remembered (each heard thing once).
+function memoryNote(observation, seen) {
+  const out = [];
+  for (const s of observation.soundsHeard || []) { const k = Math.round(observation.simTimeSec - s.secondsAgo) + '|' + s.description; if (seen.has(k)) continue; seen.add(k); out.push(`Heard (${Math.round(observation.simTimeSec - s.secondsAgo)}s): ${s.description}`); }
+  for (const n of observation.happenedToYou || []) { const k = 'n' + Math.round(observation.simTimeSec - n.secondsAgo) + '|' + n.description; if (seen.has(k)) continue; seen.add(k); out.push(`Happened (${Math.round(observation.simTimeSec - n.secondsAgo)}s): ${n.description}`); }
+  for (const p of (observation.visibleObjects || []).filter(v => v.type === 'person')) out.push(`Saw: ${p.name}, ${p.distanceFt} ft ${p.bearing || ''}`.trim());
+  return out.join('\n');
+}
 // put "say" before "action" so the agent speaks before it commits to an action
 { const pr = RESPONSE_SCHEMA.properties; RESPONSE_SCHEMA.properties = { say: pr.say, action: pr.action }; }
 
@@ -190,4 +199,4 @@ function observationSummary(o) {
   return parts.join(' ');
 }
 
-module.exports = { bodyLine, introFor, observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };
+module.exports = { memoryNote, bodyLine, introFor, observationSummary, INTRODUCTION, ACTIONS, ACTION_TYPES, systemPrompt, RESPONSE_SCHEMA, toIslandAction, decisionMessage, checkinMessage };

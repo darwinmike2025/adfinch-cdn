@@ -31,6 +31,8 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.
     return { far: far && far.description, mid: mid && mid.description, near: near && near.description, nearName: near && near.name, id: near && near.id }; });
   check('P4. The woman sees the man as a young man nearby, with what he holds up close', /too far/.test(r.far || '') === false && /A young man, about 20/.test(r.near) && r.id === 'person', `120 ft: ${r.far} | 50 ft: ${r.mid} | 30 ft: ${r.near}`);
 
+  r = await ev(() => { Island._debug.place('a', 300, 600); Island._debug.place('b', 300, 650); return f('a', { type: 'inspect', target: 'person' }); });
+  check('P4b. Inspecting the other person describes them, including what they hold', /A young man, about 20.*holding: journal, pencil.*50 ft away/.test(r), r);
   r = await ev(() => { Island._debug.place('a', 300, 600); Island._debug.place('b', 300, 640);
     const said = f('b', { type: 'speak', text: 'Hello? Is someone there?' });
     const heardA = obs('a').soundsHeard.map(s => s.description), heardB = obs('b').soundsHeard.map(s => s.description);

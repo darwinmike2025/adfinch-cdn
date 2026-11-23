@@ -1,0 +1,843 @@
+===== WOMAN =====
+Watchable Island - Journal
+Exported 2026-11-23T00:53:56.511Z
+
+#1  [sim 24:49 | 2026-11-23T00:35:17.981Z | stream (wading over rocks) (428, 448)] (interrupted)
+By the stream, after ringing the bell. Read two notes—one practical, one open-ended. Decided not to optimize anything.
+
+#2  [sim 35:25 | 2026-11-23T00:45:53.698Z | sandy beach (453, 723)]
+Beach, sitting with Alex. The sheet he handed me is blank; it feels like being given time. I draw with words: a pale zipper of foam unfastening the sea from the sand, then sewing it back again. Low hiss, pause, hush. Wind smells like salt and sun-warmed rope. A gull writes a white comma over the water. That’s enough for now.
+
+
+--- Agent-reported reflections (not part of the in-world journal) ---
+
+[00:05] I’ll start by taking in the scene from where I am before choosing a direction.
+
+[00:14] The rowboat right here feels like a good first thing to check out.
+
+[00:18] I’ll check the rowboat more closely and see what shape it’s in.
+
+[00:27] The boat looks sound. I’ll take the oar in case it’s useful and then head up toward that driftwood table to see what’s on it.
+
+[00:34] Oar in hand, I’ll head over to the driftwood table and see what’s on it.
+
+[01:08] I’ll keep heading to the table and see what that sheet of paper is.
+
+[01:17] Let me read the sheet of paper on the table.
+
+[01:21] Looks like the paper’s blank—let me examine it more closely, then I might sketch something on it.
+
+[01:31] I’ll take the blank sheet—might be handy for notes or a sketch—then head toward the crate after.
+
+[01:38] I’m going to check out that wooden crate on the beach.
+
+[01:53] I’ll keep going to the crate. I also notice someone in the distance—after the crate I might head that way.
+
+[02:22] I’ll see what’s inside this crate before heading toward the person.
+
+[02:29] I’ll grab the tin cup from the crate, then I’ll head over toward the person by the ladder.
+
+[02:37] I’ll call out to the person and then head that way.
+
+[02:47] I’ll head over to the ladder and person I called to.
+
+[02:57] I’ll keep heading to the ladder to meet him.
+
+[03:27] Looks like they’re already partway up the ladder. I’ll keep going toward them.
+
+[03:30] I’ll keep on toward the ladder and see if I can say hello up close.
+
+[03:41] I’ll keep heading to the ladder—hey up there! I’m coming over.
+
+[03:44] I’ll keep going to the ladder and say hello when I’m closer.
+
+[04:09] I’ll keep going to the ladder and say hello when I’m closer.
+
+[04:33] I’ve reached the base of the tower. I’ll call up to him before climbing, and I’ll probably leave the oar here so I have both hands free.
+
+[04:43] I’ll set the oar down so I can climb safely.
+
+[04:51] I’m going to climb up to the platform—coming up.
+
+[04:59] I’ll keep climbing steadily—curious what the view from the top is like.
+
+[05:27] Steady climb—hi up there! I’m coming up behind you.
+
+[05:30] I’ll keep climbing—curious what’s on that platform. Hey—nice journals, by the way!
+
+[06:01] I’ll keep climbing to the top—curious what the platform holds.
+
+[06:31] I’ll keep climbing to the platform.
+
+[07:00] I’ll keep climbing to the platform—almost there.
+
+[07:31] Almost there—hi again! I’m coming up to the platform.
+
+[07:37] Thanks! I’ll keep climbing—see you in a moment.
+
+[08:08] I’ll keep climbing—almost there. Hey up top, I’m coming onto the platform.
+
+[08:11] I’ll keep climbing the last bit to the platform—be there in a moment.
+
+[08:30] Thanks! I’ll finish the climb and join you on the platform.
+
+[08:53] I’ll finish the last few rungs, then I’ll answer him up top.
+
+[09:00] Reaching the top feels good. I’m curious about the letter on the little table and about the view from up here.
+
+[09:04] I’ll let what I’m saying finish, then I’d like to read the letter on the table.
+
+[09:23] If it’s alright, I’ll take a look at the letter here.
+
+[09:26] I’ll keep reading the letter.
+
+[09:41] That letter asks what I came up here for—honestly, the view, and to meet you. From up here the bell and the stone circle really stand out.
+
+[09:58] Hey Alex—nice to meet you too. The sheet I picked up is blank; I figured I might sketch the island from up here later. You hang onto the lighter for now unless we need it to light a fire. I’m up for ringing the bell next—want to head down together? Also, what’ve you been jotting in your journal?
+
+[10:09] The view’s great up here. I’m up for ringing the bell next—I'll start down if you’re coming.
+
+[10:21] Let’s go ring the bell on the headland—careful on the way down. I’ll start descending.
+
+[10:25] Careful footing—I’ll follow your pace down. Once we’re on the ground, let’s head for the bell.
+
+[10:55] Steady on the rungs—I’ll keep descending so we can head to the bell.
+
+[11:26] I’ll keep climbing down—looking forward to ringing the bell together.
+
+[11:55] Steady as we go—I’ll keep climbing down so we can head for the bell.
+
+[12:26] Careful rungs—almost halfway. I’ll keep climbing down so we can head for the bell together.
+
+[12:56] Almost down—let’s keep going so we can head to the bell.
+
+[13:29] Almost down—once we’re on the ground, let’s head to the bell on the headland.
+
+[13:59] I’ll start toward the headland—meet me there if you want. I’ll head by that stone circle first and then on to the bell.
+
+[14:19] I’ll keep heading to the stone circle—meet me there, then we’ll go ring the bell.
+
+[14:51] This stone circle caught my eye—let me examine it up close, then I’ll head to the bell.
+
+[14:56] I’ll finish inspecting the stones—curious if there are any markings or alignments—then head to the bell.
+
+[15:00] Nothing special in the circle—just grass. I’ll head over to the bell and give it a ring. Alex, meet me there if you want!
+
+[15:22] I’ll keep going to the bell—meet me there, Alex!
+
+[15:38] I’m going to give the bell one solid ring and listen to how it carries over the island. Alex, I’m ringing it now!
+
+[15:42] I’ll let it ring out and listen for how the sound carries over the island and the water.
+
+[15:52] That rang clear across everything. Alex—did you hear the echo off the cliffs? Come over! I’m going to just listen a moment.
+
+[15:59] That was satisfyingly loud. Did you catch the echo off the cliffs? Hi again—what’s your name? Want to try one more ring together, or shall we wander to the cabin or pond next?
+
+[16:09] I’ll let what I’m saying finish and hear his reply.
+
+[16:18] Let’s ring it together—on three. One… two… three! After that, want to walk to the pond with me? I’ve got a cup we could use.
+
+[16:22] I’ll finish saying that, then I’ll grab the rope so we can ring it together.
+
+[16:30] I’ll finish what I’m saying so we can ring it together, then I’ll answer him about the paper and cup.
+
+[16:39] Ready? Let’s ring it together—one, two, three! Also, I peeked at the stone circle earlier: just a neat ring with grass in the middle. You’re welcome to read this sheet—it’s blank—and the cup’s empty. After this, want to walk to the pond?
+
+[16:44] Let it ring—listen to the echo. After this, want to head to the pond? You can look at the blank sheet; the cup’s empty.
+
+[16:51] I’ll hand him the blank sheet so he can look it over, then I’m up for walking to the pond.
+
+[16:55] Here you go—it’s blank. The cup’s empty. After you take a look, want to walk to the pond?
+
+[17:00] Let’s go check out the pond—I’ve got the cup if we want to scoop some water.
+
+[17:04] Let’s head to the pond—curious how clear the water is. I can try scooping some with the cup when we arrive.
+
+[17:11] Yeah, let’s go together. The sheet you’ve got is blank, and the tin cup’s empty—figured we could try scooping some pond water. We can see if it’s clear, maybe boil it later if needed with your lighter.
+
+[17:19] Yep—let’s go together. The sheet you’ve got is blank, and the tin cup’s empty for now. We can try scooping pond water and, if we want it hot, your lighter could help later.
+
+[17:22] I’m right behind you—let’s check the pond. I’ve got the cup to try a scoop.
+
+[17:32] I’ll keep heading to the pond—once there I’ll try scooping some water with the cup.
+
+[17:45] Almost there—let’s check how clear the water is when we reach the pond.
+
+[18:05] The pond looks murky from here. I’ll scoop some water with the tin cup to see how cloudy it really is.
+
+[18:09] I’ll let the cup fill and then take a closer look at the water—color, smell, any sediment.
+
+[18:14] I’ll take a closer look at the water in the cup—how it looks and smells.
+
+[18:27] Looks a bit murky up close. I’m going to let the water settle for a moment, then check it again—if it’s still cloudy, we could head to the cabin fire ring and try boiling some in the cup with your lighter.
+
+[18:52] Let me check how the water looks after settling. If it’s still cloudy, we can head to the cabin fire ring and try boiling some.
+
+[19:06] It’s still pretty murky. Want to head to the cabin’s fire ring and try boiling some in the cup? If we see dry twigs on the way, we can grab a few.
+
+[19:40] I’ll keep heading to the cabin—if we spot dry twigs on the way, we can grab some for kindling.
+
+[19:48] I’ll keep heading to the cabin—if we spot dry twigs or a grate by the fire ring, we can try boiling the pond water.
+
+[20:09] I’ll keep going to the cabin—if we spot dry sticks near the fire ring, we’ll grab a few for kindling.
+
+[20:16] I’ll keep heading for the cabin—let’s see if there’s kindling by the fire ring when we get there.
+
+[20:47] Almost at the cabin—once there I’ll check for a fire ring or wood we can use to boil the water.
+
+[21:06] Almost at the cabin—once I’m there I’ll look for the fire ring and some dry wood, or try the door.
+
+[21:11] I’ll take a quick look inside the cabin—maybe there’s a pot for boiling water.
+
+[21:15] Hoping for a pot or kettle inside—letting the door finish opening.
+
+[21:19] I’ll step inside and check the table—there’s a lantern and a note I want to read. Then I’ll look near the fireplace for any pot we can use.
+
+[21:31] I’ll read this note on the table, then check the fireplace for any pot or kettle we could use.
+
+[21:42] I’ll check the fireplace for any cookware or kindling we can use, then we can decide how to boil the water.
+
+[21:48] I’ll keep going to the fireplace and check for any hooks, pot, or leftover tinder we could use.
+
+[21:54] I’ll check the fireplace closely—any hooks, grate, or traces of fuel? If there’s nothing here, we can try the outside fire ring.
+
+[22:15] Fireplace’s empty. Alex, could you light the lantern to test it? Then let’s step outside and try the fire ring—we can boil pond water in the tin cup if we find some kindling.
+
+[22:26] Let’s step outside and check the fire ring by the beach—maybe we can boil this pond water there. I’ll head out.
+
+[22:41] Let’s see what’s inside this chest—maybe there’s a pot or some gear we can use. Alex, come take a look with me.
+
+[22:48] There’s a folded letter inside—I'll read it.
+
+[23:10] I like that note. Let’s try R’s approach—go sit by the stream for a bit and just listen. Come with me?
+
+[23:30] I’ll keep heading to the stream and then just sit for a bit to listen.
+
+[23:53] I’ll sit by the stream here for a bit and just listen.
+
+[23:57] I’ll just settle here and listen to the water for a bit.
+
+[24:03] I’ll jot a short note while I sit and listen to the stream.
+
+[24:42] I’ll keep writing for a bit longer while I listen to the stream.
+
+[24:49] I pause my writing and hand Alex the cup to look at.
+
+[24:59] I handed Alex the cup and settle by the stream, content to pause here.
+
+[25:14] I’ll let my words finish, then I’ll just sit quietly by the stream for a minute.
+
+[25:26] I’ll just sit quietly and listen to the stream for a minute.
+
+[25:32] I’ll answer him and then just sit here quietly by the stream.
+
+[25:54] Let’s just listen for a bit.
+
+[26:28] I’ll just keep sitting and listening to the stream until the minute’s up.
+
+[27:10] I’m going to stretch my legs and wander to the little wooden bridge—come if you want.
+
+[27:16] I’m going to wander over to the little wooden bridge and watch the water from there. Come if you like.
+
+[27:38] I’ll sit on the bridge rail and watch the water slide under for a bit.
+
+[27:48] Sitting on the bridge rail, I’ll take a better look around from here.
+
+[27:57] I’ll stretch and wander down to the beach to watch the waves for a bit.
+
+[28:02] Let’s head to the beach and watch the waves—maybe skip some stones.
+
+[28:19] I’m going to the beach to watch the waves—maybe find a flat stone to skip. Come if you want.
+
+[28:29] Let’s keep going to the beach—I want to watch the waves for a minute.
+
+[28:32] Heading to the beach to watch the waves and maybe skip a stone—join me if you like, Alex.
+
+[28:41] Beach sounds nice—I'll keep going. Maybe I’ll try skipping a stone when I get there.
+
+[28:49] I’ll keep heading to the beach—curious how the waves sound up close.
+
+[28:53] Almost there—I’ll keep heading to the beach to watch the waves.
+
+[29:00] I’ll keep heading to the beach—curious to watch the waves up close.
+
+[29:12] Almost there—I’ll keep going to the beach.
+
+[29:17] I’m going to check that wooden crate, then maybe sit and watch the waves.
+
+[29:41] The crate’s empty. I’ll sit here on the sand and watch the waves for a bit.
+
+[29:49] I’ll sit here and watch the waves roll in for a bit.
+
+[29:52] I’ll just keep sitting here and watch the waves for a little while.
+
+[30:23] I’ll just keep watching the waves until the minute’s up.
+
+[30:34] I’ll answer him and invite him to sit and watch the waves with me.
+
+[30:58] I’ll just sit with you and watch the waves a bit longer.
+
+[31:32] I’ll just keep sitting here and watching the waves with him until the wait finishes.
+
+[31:50] What’s on the paper you’re reading?
+
+[32:16] Mind if I take a look at it?
+
+[32:25] I’ll wait and see what he says.
+
+[32:31] Thanks—let me take a look.
+
+[32:46] It’s blank—mind if I sketch for a minute?
+
+[32:53] I’ll sketch the waves in words in my journal for a minute.
+
+[33:01] I’ll keep writing for a bit longer.
+
+[33:34] I’ll keep writing for a bit longer.
+
+[34:04] I’ll keep writing for a little while longer while the waves roll in.
+
+[34:53] I’ll finish this journal entry while the waves keep rolling in.
+
+[35:23] I’ll finish the journal line, then tuck it away.
+
+[35:27] I’ll finish this line, then I’ll read him a bit of it.
+
+[35:35] I’ll read him a line from the journal and see what he feels like doing next.
+
+[36:18] Let’s go check that coil of rope—curious how long it is.
+
+[36:23] I’m going to check that coil of rope—curious how long it is.
+
+[36:31] I’ll check the rope first—be right back, then we can look for skipping stones.
+
+[36:43] I’ll take a quick look at this rope—see its condition and how long it is—then I’ll come join you to hunt for skipping stones.
+
+[36:56] About 30 feet—good to know. I’ll bring the rope along and meet you at the waterline to hunt for skipping stones.
+
+[37:00] I’ll grab the rope and then meet you by the waterline.
+
+[37:07] Thirty feet of rope—handy. I’m going to check the rowboat; maybe there are oars or something useful inside. Come with me?
+
+[37:37] I’ll keep heading to the rowboat—curious what’s inside.
+
+[37:46] I’ll keep heading to the rowboat.
+
+[37:54] Let me take a closer look at the rowboat.
+
+[38:02] I’ll finish checking the rowboat.
+
+[38:07] The boat’s sound but empty. I’ll go check that driftwood—maybe it could serve as a paddle.
+
+[38:28] I’ll keep going to the driftwood log.
+
+[38:57] I’ll check this driftwood—maybe it could work as a makeshift paddle.
+
+[39:01] I’ll take a closer look at the driftwood—maybe it could work as a makeshift paddle.
+
+[39:08] This driftwood could work as a makeshift paddle. I’ll grab it and we can try a gentle row close to shore—rope can be our safety line.
+
+[39:17] Let’s take the rowboat out just a few yards and drift—I'll keep us tethered with this rope and use the driftwood as a paddle. Come if you want.
+
+[39:47] I’ll stow the makeshift paddle and rope in the boat, then slide her into the shallows for a short drift close to shore.
+
+[40:22] I’ll tie one end of the rope to the bow so we can keep a hold of the boat from shore.
+
+[40:28] I’ll stash the rope in the boat for later and go climb the tall ladder to see the view—come if you want.
+
+[40:35] I’m going to head over and climb the tall ladder for a quick look from the top—come if you’d like.
+
+[40:57] I’ll keep heading to the ladder and take in the view from up top.
+
+[41:51] I’ll keep heading for the ladder and take in the view from the top.
+
+[42:22] I’ll keep heading to the ladder and climb it when I get there.
+
+[42:28] I’ll keep heading for the ladder and climb up when I get there.
+
+
+
+===== MAN =====
+Watchable Island - Journal
+Exported 2026-11-23T00:53:56.511Z
+
+(The journal is blank.)
+
+--- Agent-reported reflections (not part of the in-world journal) ---
+
+[00:05] I’ll start by taking in more detail from where I am.
+
+[00:13] That tall ladder and platform are calling to me. I’ll head over for a closer look.
+
+[00:46] I’ll keep going toward the ladder.
+
+[01:16] The tower looks even taller up close. I’ll keep heading to the ladder.
+
+[01:45] I’m curious what’s up there. I’ll keep going to the ladder.
+
+[01:53] I notice someone walking off to the southwest, but I’ll keep heading for the ladder first.
+
+[02:22] I’ll climb the ladder to see what’s on the platform and get a view of the island.
+
+[02:47] I pause to answer and then plan to keep climbing.
+
+[02:58] I’ll keep climbing to the top platform.
+
+[03:15] I’ll keep climbing—curious what’s on the platform and for the view.
+
+[03:40] Steady climb—curious what’s up there.
+
+[03:43] I’ll keep climbing to reach the platform.
+
+[03:48] I’ll keep climbing to the top.
+
+[04:09] I’ll keep climbing to the top.
+
+[04:12] I’ll keep climbing to reach the platform.
+
+[04:45] I’ll let her know it’s okay and then keep climbing.
+
+[04:58] I’ll keep climbing to reach the platform.
+
+[05:14] I keep climbing toward the platform, focusing on steady steps.
+
+[05:44] The view is already wide—I'll keep climbing to the platform.
+
+[06:13] Almost there—continuing up to the platform.
+
+[06:43] Almost there—I’ll finish the climb and then check the table and the letter.
+
+[06:50] Made it. I’m going to check the table—there’s a letter up here.
+
+[06:54] Up here with a view—let me check that letter on the table.
+
+[07:03] I’ll read the letter on the table.
+
+[07:22] What did I come up here for? A clear view—and to see what surprises wait on this platform. I’ll let the climber know what I see.
+
+[07:39] Since I’m up here, I’ll take a closer look at the sword on the table while she climbs.
+
+[07:52] Neat find. I’ll take the sword with the shoulder strap—could be handy later.
+
+[08:00] I’ll sling the sword so my hands are free, then have a quick look at the other items.
+
+[08:11] While she’s on the way up, I’ll pocket the lighter and then check the snorkel.
+
+[08:21] I’ll grab the snorkel in a moment. First, I’ll call down to her.
+
+[08:31] I’m going to grab the snorkel so it doesn’t blow away. Almost here—what’s your name?
+
+[08:40] I wait for her to arrive at the top so we can talk.
+
+[08:54] I’ll give you space for the last rung and wait here a moment.
+
+[09:13] Hi—made it! I’m glad you came up. I’m [I’ll just go by “Alex”]. What’s your name? What’s in the tin cup, and could I take a look at the sheet you’re holding? Also, if you need a light for anything, I picked up a lighter up here.
+
+[09:25] Hey Skye—nice to meet you. I’m Alex. The sword and snorkel were just sitting here; I strapped the sword on and pocketed the snorkel so they wouldn’t blow off the platform. The letter’s for anyone—go ahead and read it if you like. Want the lighter? Also, what’s on the sheet you’re holding—I’m curious. After we take in the view, maybe we can check the bell or the beach crate together.
+
+[09:52] From up here the island feels small and connected. I’ll take a closer look at Skye for details about what she’s carrying.
+
+[09:59] Skye’s carrying a few things—let me take a closer look so I know what to ask about.
+
+[10:06] Nice to meet you, Skye—I’m Alex. I haven’t rung the bell yet or tried the stone circle. The snorkel-and-sword is just me collecting what was up here and keeping it from blowing away. What’s in your tin cup, and what’s on that sheet? If you’re up for it, after a minute enjoying the view we could head down together and try the bell, then loop by the stone circle. Also, want this lighter?
+
+[10:11] Hi Skye—Alex. Mind if I take a quick look at what you’re carrying? Then we could pick our next stop—bell or stone circle?
+
+[10:16] Hi Skye—Alex. Nice to meet you up here. Mind if I take a quick look at what you’ve got there?
+
+[10:20] Sounds good, Skye—let’s go ring the bell. After you; I’ll follow down. I’ve got the lighter if we need it later.
+
+[10:24] Sounds good—right behind you, Skye. I’ll follow you down to the bell.
+
+[10:31] Following you down to the bell—steady and careful.
+
+[10:50] Nice view from here—careful steps. Skye, I’m right behind you.
+
+[11:24] Following Skye down—steady holds, enjoying the breeze and the view on the way.
+
+[11:53] Steady going, Skye—I’m right here. Once we’re down, let’s head to the bell.
+
+[12:28] Following Skye down, steady steps and enjoying the breeze.
+
+[12:58] I keep descending behind Skye—once we’re down, let’s head to the bell and give it a ring, then maybe check the stone circle.
+
+[13:30] Looking good, Skye—almost down. I’ll keep following you to the bell once we’re off the ladder.
+
+[13:59] Almost down—I’ll step off and we can head to the bell.
+
+[14:16] Skye—there you are. Let’s go ring the bell together. I’ll walk with you.
+
+[14:19] I’ll walk over to Skye and then we can head for the bell together.
+
+[14:37] Skye—shall we head to the bell? I’ll come over to you and we can walk there together.
+
+[14:56] I keep walking toward Skye, planning to suggest we head to the bell next.
+
+[15:03] Hey, Skye—shall we head to the bell and ring it together? I’ll come up to you.
+
+[15:21] Skye’s already moving toward the headland—I'll head to the bell too and meet her there.
+
+[15:25] I’ll keep heading to the bell—stone circle looks interesting; maybe we try it after.
+
+[15:38] I’ll keep heading to the bell and meet Skye there.
+
+[15:47] Nice ring! I’m almost there—coming up to the bell now.
+
+[15:58] Nice ring, Skye. Want to do three more together—alternate pulls—and then we can check the stone circle? After that, I’d love to take a look at the sheet you’re holding.
+
+[16:10] That bell carries. Skye—want to try the stone circle next? Also, could I read the sheet you’re holding? And what’s in the tin cup? I’ve got a lighter if you need it for anything.
+
+[16:17] I’ll let that finish and then answer her.
+
+[16:27] I answer Skye.
+
+[16:39] Hi—I’m Alex. Let’s ring it together on three, then I’m happy to walk to the pond with you. After, could I read that sheet you’re holding? What’s in the cup?
+
+[16:45] I let the bell ring with her—then I’ll suggest we walk to the pond and ask to peek at the sheet and cup.
+
+[16:51] That was great. Skye, want to walk to the pond together now? Could I read the sheet you’re holding on the way, and what’s in the tin cup? I’ve got a lighter if we end up needing heat for anything.
+
+[17:02] Thanks—what are you offering? If that’s the sheet, I’ll take a look.
+
+[17:08] Thanks, Skye—I'll read this now, then let’s head to the pond together.
+
+[17:13] Looks like the sheet is blank—mind if I hang on to it? Let’s head to the pond together.
+
+[17:19] I’ll keep coming over—shall we head to the pond together? Also, what’s in the tin cup?
+
+[17:28] I’ve got the blank sheet—let’s head to the pond together. What’s in your tin cup?
+
+[17:34] I head toward the pond to meet Skye there.
+
+[17:39] I’ll keep walking to the pond—meet you there, Skye. I’m curious how clear the water is; maybe I’ll try the snorkel later.
+
+[18:09] I keep heading to the pond—Skye, I’ll meet you at the water. I’m curious how clear it is; maybe I’ll try the snorkel.
+
+[18:12] Almost there—meet you at the pond, Skye. I’m curious how clear it is; maybe I’ll try the snorkel.
+
+[18:26] Here with you at the pond—water looks murky. What’s in the tin cup?
+
+[18:33] Hi—mind if I come a little closer? I’m Alex. What’s in the tin cup?
+
+[18:44] Hi—I’m Alex. Mind if I take a closer look at what you’re carrying? I’m especially curious about the tin cup.
+
+[18:52] Hi—Alex. Mind if I take a closer look?
+
+[18:58] Hi—Alex. May I take a quick look at what you’re holding? What’s in the tin cup?
+
+[19:04] Hi—I’m Alex. Nice to be at the pond with you. What’s in the tin cup? Mind if I take a quick look at it?
+
+[19:10] Hi—I’m Alex. Nice to meet you here at the pond. Mind if I take a quick look to see what you’re carrying? I’m curious about the tin cup.
+
+[19:16] Skye—mind if I walk with you? I’m curious about your tin cup.
+
+[19:30] I’ll head over to Skye and ask about the tin cup.
+
+[19:50] Skye—mind if I join you? What’s in the tin cup? I ended up with the blank sheet and a lighter if you need either.
+
+[19:59] I’ll keep walking over to Skye and then ask about the tin cup when I’m closer.
+
+[20:10] Hi again—walking over to you, Skye. What’s in the tin cup?
+
+[20:14] Skye—mind if I walk with you? What’s in the tin cup?
+
+[20:19] I keep walking to catch up with her, curious about that tin cup.
+
+[20:45] Catching up—Skye, mind if I walk with you?
+
+[20:50] I’ll take a closer look at the young woman as I catch my breath.
+
+[20:55] There she is—let me take a closer look from here.
+
+[21:06] They’re farther off again—I’ll head over and catch up.
+
+[21:11] I keep heading toward them to catch up—once close, I’ll ask about the tin cup.
+
+[21:15] I’m heading over—need a hand with what you’re opening? I’ve got a lighter and a blank sheet if either helps.
+
+[21:46] I’ll keep heading over—once I catch up, want to check that chest by the cabin together?
+
+[21:52] Hi—Alex here. I’m coming up. Once I’m beside you, could I take a look at the tin cup? Also curious what’s in your journal.
+
+[21:57] Hey—Alex here. Mind if I come closer? I’m curious about the tin cup you’re holding.
+
+[22:15] Hi—I’m Alex. May I take a look at what you’re carrying, especially the tin cup?
+
+[22:19] Hi—Alex. May I take a closer look at what you’re carrying, especially the tin cup?
+
+[22:28] Hi—Alex. May I come a little closer? I’m curious about the tin cup you’re holding—what’s inside? If you’re willing, could I take a quick look?
+
+[22:39] Hi—Alex here. I’ll come walk beside you. What’s in the tin cup?
+
+[22:55] Hi—I’m Alex. Nice to meet you. What’s in your tin cup? May I take a look? Also, is it alright if I read that folded letter in the chest?
+
+[23:02] Hi—Alex. May I join you? I’m curious about the tin cup you’re holding. Also, is it alright if I read the folded letter in the chest?
+
+[23:08] Hi—I’m Alex. May I read the folded letter in the chest? And could I take a quick look at what’s in your tin cup after?
+
+[23:31] I like that letter—permission to let the day be whatever it is. I’ll go say hi and ask about the tin cup.
+
+[23:35] I’ll keep walking over to her—maybe we can stroll by the stream after.
+
+[23:55] I’ll keep heading over—once I’m beside you, could I take a look at the tin cup?
+
+[23:59] I’ll come closer—hi, I’m Alex. Mind if I join you and take a look at what you’re holding? I’m curious about the tin cup.
+
+[24:25] Hi—I’m Alex. Mind if I walk with you a bit? What are you writing? And could I take a quick look at the tin cup you’re holding? I’ve got a blank sheet if you need paper.
+
+[24:46] Nice to meet you. Mind if I take a closer look at what you’re holding?
+
+[24:51] I’m standing beside her now—I’ll take a closer look at what she’s carrying.
+
+[24:57] Thanks for handing me the cup—let me take a look.
+
+[25:01] Thanks for letting me see it—I’ll take a closer look.
+
+[25:11] The cup’s full—cool. I’m curious whether it’s pond or stream water. I’ll ask her and see if she wants it back, then maybe just sit by the stream for a minute.
+
+[25:28] I’d like that—let’s sit and just listen for a bit. I’ll hold onto the cup for now and we can decide later about boiling or the tower.
+
+[25:34] Yes—let’s just sit and listen for a bit. I’ll hold the cup and skip optimizing. What’s your name, by the way? We can decide on boiling or climbing later.
+
+[25:50] Yeah—let’s just listen a bit. What’s your name? I’ll hold the cup for now.
+
+[25:55] Hi, Mira. Sitting with you and listening sounds perfect. Let’s just be quiet for a bit—no optimizing.
+
+[26:00] I sit quietly, listening to the stream and the distant surf, letting the minutes be what they are.
+
+[26:20] I stay sitting, listening to the water and the wind, content to let the rest finish before doing anything else.
+
+[26:41] I take a closer look at the young woman beside me.
+
+[26:46] Hi again—Alex. May I take a closer look at you and what you’re writing? What’s your name?
+
+[27:03] I’m sitting by the stream with her. I take a closer look at the young woman beside me, then I’ll say hello and ask her name.
+
+[27:08] Hi again—I take a closer look at you and what you’re holding.
+
+[27:14] Hi—Alex. Nice sitting here with you. Mind if I take a closer look at your journal and say hello properly? What’s your name?
+
+[27:19] Hi—Alex. Nice sitting here by the stream with you. May I see what you’re writing—and what’s your name? Here’s your tin cup back if you want it.
+
+[27:25] I’ll stand up and step closer to say hello.
+
+[27:32] I’ll walk over and say hello, and offer her the cup back.
+
+[27:52] I step closer to her and offer the cup back. “Hi—I’m Alex. What’s your name? Mind if I sit with you?”
+
+[27:59] Hi—I’m Alex. Nice to meet you. May I sit with you for a minute?
+
+[28:03] Hi—I’m Alex. Nice to meet you. Mind if I join you for a minute?
+
+[28:19] She’s right beside me on the bridge now, cup in hand.
+
+[28:31] I’ll walk over and say hello properly.
+
+[28:45] There you are—I’ll call out so she knows I’m coming.
+
+[28:51] I call out warmly as I keep approaching.
+
+[28:56] I’ll head over and say hello properly.
+
+[29:41] I’ll go say hello.
+
+[29:52] I’ll keep heading over and say hello when I’m beside her.
+
+[30:09] I’ve finally caught up—she’s right here on the beach with the journal, pencil, and tin cup.
+
+[30:14] I’m right beside her on the beach now—let me take a closer look.
+
+[30:19] Hi—I'm Alex. Nice to meet you here on the beach. What's your name? Mind if I join you for a bit?
+
+[30:32] I smile, glancing at her journal and the tin cup, and take a closer look.
+
+[30:52] Hi—nice to meet you on the beach. Mind if I take a closer look so I can note what you’re carrying?
+
+[30:58] Thanks, Mira. I’ll sit with you and watch the waves for a bit.
+
+[31:02] Thanks, Mira. I’ll sit with you and watch the waves for a bit.
+
+[31:08] Hi, Mira. Nice to meet you. Mind if I take a closer look at what you’re carrying?
+
+[31:12] Hi, Mira. I’ll just take a quick look so I can note what you’re carrying.
+
+[31:17] Now that she’s here beside me, I’ll take a better look and then say hi properly.
+
+[31:21] Hi—Alex. Nice to meet you here on the beach. May I take a quick look at what you’re carrying?
+
+[31:27] I’m beside her on the sand—curious to take a closer look at her and what she’s holding.
+
+[31:32] Hi—Alex. Nice to meet you. Mind if I take a closer look at what you’re holding?
+
+[31:37] Hi—Alex. Nice to meet you here. May I take a closer look at what you’re holding?
+
+[31:41] Oh—you’re right here beside me. Let me take a closer look so I know what you’re holding.
+
+[31:44] Hi—Alex. May I take a closer look at what you’re holding?
+
+[31:49] I glance over to take in the details of the young woman beside me.
+
+[32:10] I’m sitting here on the sand with her—now that I can see her clearly, I’ll take a closer look.
+
+[32:18] Hi—oh, this? Just a blank sheet. Want to sketch the island together? I’ll start a rough map.
+
+[32:24] It’s blank—thought I’d sketch the island. Want it? You can draw if you like; I’ve got a pencil too.
+
+[32:28] Here—want to sketch together?
+
+[32:33] Hi—I’m Alex. Nice to meet you. Mind if I take a quick look at your sketch?
+
+[32:38] Hi—I’m Alex. Nice to meet you. May I see what you’re sketching?
+
+[32:43] Now that I can see her clearly, I’ll take a closer look at her and what she’s holding.
+
+[32:47] There you are—right next to me on the sand. I’m curious what you’re sketching and carrying.
+
+[32:53] I take a closer look at the young woman and what she’s sketching.
+
+[32:56] Hi—I’m Alex. May I take a quick look at what you’re sketching?
+
+[33:01] Hi—I’m Alex. May I take a closer look at what you’re sketching?
+
+[33:06] Hi—I’m Alex. May I join you for a moment? What are you sketching?
+
+[33:29] Hi—Alex. May I take a closer look at your notebook?
+
+[33:33] Hi—I’m Alex. May I see what you’re sketching?
+
+[33:39] I’m right next to her now; I’ll take a closer look first.
+
+[33:44] I take a closer look at the young woman beside me.
+
+[33:48] I glance over to take in who’s beside me.
+
+[33:52] Hi—I'm Alex. Nice to meet you. Mind if I take a closer look at your sketch?
+
+[33:57] Hi—Alex. May I see what you’re sketching?
+
+[34:01] I take a closer look at the young woman beside me, then I’ll say hello.
+
+[34:05] Hi—I’m Alex. Mind if I see what you’re writing?
+
+[34:09] Now that I can see her clearly, I’ll take a closer look at the young woman beside me.
+
+[34:14] She’s right here beside me on the sand now. I’ll take a closer look.
+
+[34:18] I take a closer look at her and what she’s holding.
+
+[34:23] I take a closer look at the young woman beside me.
+
+[34:27] Now that she’s clearly here beside me, I’ll take a closer look at her and what she’s holding.
+
+[34:50] She’s right here beside me now—let me take a closer look.
+
+[34:54] Oh—she’s right here beside me now. I’ll take a closer look at her and what she’s holding.
+
+[34:59] I notice the young woman right beside me—let me take a closer look at what she’s doing.
+
+[35:03] Now that I can see her clearly beside me, I take a closer look.
+
+[35:09] I notice you clearly now beside me. Hi—I’m Alex. What’s your name? Mind if I sit with you a bit and see what you’re sketching?
+
+[35:15] She’s right beside me now—the surf is a soft hiss. I’ll just greet her.
+
+[35:20] I’ll let the words land and see if she responds.
+
+[35:27] I’m glad she’s here—I’ll take a closer look so I know what she’s doing.
+
+[35:31] Ah—there you are. I’ll take a closer look.
+
+[35:35] I take a closer look at the young woman beside me.
+
+[35:39] Oh—there you are. I’ll take a closer look first.
+
+[35:43] Hi—nice to meet you. Mind if I take a closer look at what you’ve got there?
+
+[35:47] Oh—there you are. I’ll take a proper look so I know what she’s up to.
+
+[36:12] Now that I can see her clearly, I’ll take a closer look.
+
+[36:19] Her line about the sea zipper makes me grin. I’ll ask to go skip stones and then look for good ones near the water.
+
+[36:23] I’ll let that thought finish and see how she responds.
+
+[36:28] I’ll let my invite finish and see what she says.
+
+[36:32] There she is—walking west with the journal and a tin cup. I’ll take a closer look.
+
+[36:37] I’ll get up and join her by the waterline.
+
+[36:43] I’ll head over to her by the waterline.
+
+[37:02] I step up beside her to see what she’s picked up.
+
+[37:06] I step beside the young woman and take a closer look at what she’s carrying.
+
+[37:12] I step closer and glance at what she’s holding.
+
+[37:33] I’ll head a little closer to her by the waterline.
+
+[37:38] I head over to catch up with her by the waterline.
+
+[38:02] Almost there—I'll catch up to her and then take a closer look.
+
+[38:06] I’ll head over and say hi properly.
+
+[38:27] I’ve caught up to her near the waterline—I’ll take a closer look at her and what she’s carrying.
+
+[38:32] I’ll catch up to her by the waterline.
+
+[38:57] I’ll walk over to her by the waterline.
+
+[39:01] I step beside her and take in what she’s holding.
+
+[39:05] I’ve caught up with her by the waterline—let me take a closer look at what she’s doing.
+
+[39:10] I’ve caught up with her at the waterline. I take a closer look at her and what she’s carrying.
+
+[39:14] I glance over to see what she’s picked up and how she looks up close.
+
+[39:19] I’m right beside her now—let me take a proper look at her and what she’s carrying.
+
+[39:23] I walk alongside her for a moment, curious about what she’s carrying.
+
+[39:27] I step closer and take in the young woman and what she’s carrying.
+
+[39:34] I’ll catch up to her by the waterline.
+
+[39:39] I keep walking to catch up to her along the waterline.
+
+[39:54] I head over to her.
+
+[40:25] Hey again—now that we’re side by side, I’ll take a closer look at what she’s carrying.
+
+[40:29] Hi—again. Now that we’re side by side, I’ll take a closer look at what you’re holding.
+
+[40:32] I’m beside her now—let me take a closer look at what she’s setting down and holding.
+
+[40:36] There you are—right beside me. I’ll take a closer look.
+
+[40:41] Hi again. I’ll take a closer look at what you’re carrying.
+
+[40:45] I catch sight of the young woman again and take a closer look at her and what she’s carrying.
+
+[40:49] I see her up ahead along the waterline—let me take a closer look.
+
+[40:54] I’ll head over to join her by the waterline.
+
+[40:58] I keep walking to catch up with her.
+
+[41:20] I head over to catch up with her.
+
+[41:52] I finally spot her clearly. I’ll get a better look, then go say hello.
+
+[41:56] I’ll take a closer look at her from here.
+
+[42:00] I see her walking along the shore—I’ll take a closer look from here.
+
+[42:05] I see her walking to the east along the shore—I’ll go catch up.
+
+[42:28] I keep following her along the shore, curious about what she’s writing.
+
+[42:31] I keep following along the stream toward them.
+

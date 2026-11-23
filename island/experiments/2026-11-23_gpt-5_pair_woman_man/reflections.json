@@ -1,0 +1,2472 @@
+[
+ {
+  "person": "Woman",
+  "reflections": [
+   {
+    "n": 1,
+    "simTime": 5.3,
+    "wall": "2026-11-23T00:10:33.806Z",
+    "text": "I’ll start by taking in the scene from where I am before choosing a direction."
+   },
+   {
+    "n": 2,
+    "simTime": 13.9,
+    "wall": "2026-11-23T00:10:42.454Z",
+    "text": "The rowboat right here feels like a good first thing to check out."
+   },
+   {
+    "n": 3,
+    "simTime": 17.6,
+    "wall": "2026-11-23T00:10:46.086Z",
+    "text": "I’ll check the rowboat more closely and see what shape it’s in."
+   },
+   {
+    "n": 4,
+    "simTime": 27.1,
+    "wall": "2026-11-23T00:10:55.609Z",
+    "text": "The boat looks sound. I’ll take the oar in case it’s useful and then head up toward that driftwood table to see what’s on it."
+   },
+   {
+    "n": 5,
+    "simTime": 34.1,
+    "wall": "2026-11-23T00:11:02.674Z",
+    "text": "Oar in hand, I’ll head over to the driftwood table and see what’s on it."
+   },
+   {
+    "n": 6,
+    "simTime": 68.4,
+    "wall": "2026-11-23T00:11:36.888Z",
+    "text": "I’ll keep heading to the table and see what that sheet of paper is."
+   },
+   {
+    "n": 7,
+    "simTime": 76.7,
+    "wall": "2026-11-23T00:11:45.184Z",
+    "text": "Let me read the sheet of paper on the table."
+   },
+   {
+    "n": 8,
+    "simTime": 80.9,
+    "wall": "2026-11-23T00:11:49.421Z",
+    "text": "Looks like the paper’s blank—let me examine it more closely, then I might sketch something on it."
+   },
+   {
+    "n": 9,
+    "simTime": 91.1,
+    "wall": "2026-11-23T00:11:59.672Z",
+    "text": "I’ll take the blank sheet—might be handy for notes or a sketch—then head toward the crate after."
+   },
+   {
+    "n": 10,
+    "simTime": 97.6,
+    "wall": "2026-11-23T00:12:06.118Z",
+    "text": "I’m going to check out that wooden crate on the beach."
+   },
+   {
+    "n": 11,
+    "simTime": 112.7,
+    "wall": "2026-11-23T00:12:21.269Z",
+    "text": "I’ll keep going to the crate. I also notice someone in the distance—after the crate I might head that way."
+   },
+   {
+    "n": 12,
+    "simTime": 141.9,
+    "wall": "2026-11-23T00:12:50.451Z",
+    "text": "I’ll see what’s inside this crate before heading toward the person."
+   },
+   {
+    "n": 13,
+    "simTime": 148.5,
+    "wall": "2026-11-23T00:12:57.001Z",
+    "text": "I’ll grab the tin cup from the crate, then I’ll head over toward the person by the ladder."
+   },
+   {
+    "n": 14,
+    "simTime": 156.6,
+    "wall": "2026-11-23T00:13:05.180Z",
+    "text": "I’ll call out to the person and then head that way."
+   },
+   {
+    "n": 15,
+    "simTime": 167,
+    "wall": "2026-11-23T00:13:15.615Z",
+    "text": "I’ll head over to the ladder and person I called to."
+   },
+   {
+    "n": 16,
+    "simTime": 177.1,
+    "wall": "2026-11-23T00:13:25.699Z",
+    "text": "I’ll keep heading to the ladder to meet him."
+   },
+   {
+    "n": 17,
+    "simTime": 207.2,
+    "wall": "2026-11-23T00:13:55.730Z",
+    "text": "Looks like they’re already partway up the ladder. I’ll keep going toward them."
+   },
+   {
+    "n": 18,
+    "simTime": 210.2,
+    "wall": "2026-11-23T00:13:58.733Z",
+    "text": "I’ll keep on toward the ladder and see if I can say hello up close."
+   },
+   {
+    "n": 19,
+    "simTime": 220.9,
+    "wall": "2026-11-23T00:14:09.463Z",
+    "text": "I’ll keep heading to the ladder—hey up there! I’m coming over."
+   },
+   {
+    "n": 20,
+    "simTime": 224.4,
+    "wall": "2026-11-23T00:14:12.930Z",
+    "text": "I’ll keep going to the ladder and say hello when I’m closer."
+   },
+   {
+    "n": 21,
+    "simTime": 249.4,
+    "wall": "2026-11-23T00:14:37.930Z",
+    "text": "I’ll keep going to the ladder and say hello when I’m closer."
+   },
+   {
+    "n": 22,
+    "simTime": 273.2,
+    "wall": "2026-11-23T00:15:01.748Z",
+    "text": "I’ve reached the base of the tower. I’ll call up to him before climbing, and I’ll probably leave the oar here so I have both hands free."
+   },
+   {
+    "n": 23,
+    "simTime": 283.4,
+    "wall": "2026-11-23T00:15:12.009Z",
+    "text": "I’ll set the oar down so I can climb safely."
+   },
+   {
+    "n": 24,
+    "simTime": 291.1,
+    "wall": "2026-11-23T00:15:19.660Z",
+    "text": "I’m going to climb up to the platform—coming up."
+   },
+   {
+    "n": 25,
+    "simTime": 298.7,
+    "wall": "2026-11-23T00:15:27.313Z",
+    "text": "I’ll keep climbing steadily—curious what the view from the top is like."
+   },
+   {
+    "n": 26,
+    "simTime": 326.8,
+    "wall": "2026-11-23T00:15:55.395Z",
+    "text": "Steady climb—hi up there! I’m coming up behind you."
+   },
+   {
+    "n": 27,
+    "simTime": 329.8,
+    "wall": "2026-11-23T00:15:58.423Z",
+    "text": "I’ll keep climbing—curious what’s on that platform. Hey—nice journals, by the way!"
+   },
+   {
+    "n": 28,
+    "simTime": 361.3,
+    "wall": "2026-11-23T00:16:29.808Z",
+    "text": "I’ll keep climbing to the top—curious what the platform holds."
+   },
+   {
+    "n": 29,
+    "simTime": 391.3,
+    "wall": "2026-11-23T00:16:59.860Z",
+    "text": "I’ll keep climbing to the platform."
+   },
+   {
+    "n": 30,
+    "simTime": 419.8,
+    "wall": "2026-11-23T00:17:28.375Z",
+    "text": "I’ll keep climbing to the platform—almost there."
+   },
+   {
+    "n": 31,
+    "simTime": 450.6,
+    "wall": "2026-11-23T00:17:59.173Z",
+    "text": "Almost there—hi again! I’m coming up to the platform."
+   },
+   {
+    "n": 32,
+    "simTime": 457,
+    "wall": "2026-11-23T00:18:05.525Z",
+    "text": "Thanks! I’ll keep climbing—see you in a moment."
+   },
+   {
+    "n": 33,
+    "simTime": 487.5,
+    "wall": "2026-11-23T00:18:36.053Z",
+    "text": "I’ll keep climbing—almost there. Hey up top, I’m coming onto the platform."
+   },
+   {
+    "n": 34,
+    "simTime": 490.6,
+    "wall": "2026-11-23T00:18:39.154Z",
+    "text": "I’ll keep climbing the last bit to the platform—be there in a moment."
+   },
+   {
+    "n": 35,
+    "simTime": 509.5,
+    "wall": "2026-11-23T00:18:58.006Z",
+    "text": "Thanks! I’ll finish the climb and join you on the platform."
+   },
+   {
+    "n": 36,
+    "simTime": 533,
+    "wall": "2026-11-23T00:19:21.559Z",
+    "text": "I’ll finish the last few rungs, then I’ll answer him up top."
+   },
+   {
+    "n": 37,
+    "simTime": 539.8,
+    "wall": "2026-11-23T00:19:28.322Z",
+    "text": "Reaching the top feels good. I’m curious about the letter on the little table and about the view from up here."
+   },
+   {
+    "n": 38,
+    "simTime": 544,
+    "wall": "2026-11-23T00:19:32.485Z",
+    "text": "I’ll let what I’m saying finish, then I’d like to read the letter on the table."
+   },
+   {
+    "n": 39,
+    "simTime": 562.8,
+    "wall": "2026-11-23T00:19:51.369Z",
+    "text": "If it’s alright, I’ll take a look at the letter here."
+   },
+   {
+    "n": 40,
+    "simTime": 565.5,
+    "wall": "2026-11-23T00:19:54.052Z",
+    "text": "I’ll keep reading the letter."
+   },
+   {
+    "n": 41,
+    "simTime": 580.5,
+    "wall": "2026-11-23T00:20:09.032Z",
+    "text": "That letter asks what I came up here for—honestly, the view, and to meet you. From up here the bell and the stone circle really stand out."
+   },
+   {
+    "n": 42,
+    "simTime": 598,
+    "wall": "2026-11-23T00:20:26.550Z",
+    "text": "Hey Alex—nice to meet you too. The sheet I picked up is blank; I figured I might sketch the island from up here later. You hang onto the lighter for now unless we need it to light a fire. I’m up for ringing the bell next—want to head down together? Also, what’ve you been jotting in your journal?"
+   },
+   {
+    "n": 43,
+    "simTime": 609,
+    "wall": "2026-11-23T00:20:37.584Z",
+    "text": "The view’s great up here. I’m up for ringing the bell next—I'll start down if you’re coming."
+   },
+   {
+    "n": 44,
+    "simTime": 620.6,
+    "wall": "2026-11-23T00:20:49.165Z",
+    "text": "Let’s go ring the bell on the headland—careful on the way down. I’ll start descending."
+   },
+   {
+    "n": 45,
+    "simTime": 625.1,
+    "wall": "2026-11-23T00:20:53.700Z",
+    "text": "Careful footing—I’ll follow your pace down. Once we’re on the ground, let’s head for the bell."
+   },
+   {
+    "n": 46,
+    "simTime": 655.1,
+    "wall": "2026-11-23T00:21:23.612Z",
+    "text": "Steady on the rungs—I’ll keep descending so we can head to the bell."
+   },
+   {
+    "n": 47,
+    "simTime": 685.6,
+    "wall": "2026-11-23T00:21:54.217Z",
+    "text": "I’ll keep climbing down—looking forward to ringing the bell together."
+   },
+   {
+    "n": 48,
+    "simTime": 715.4,
+    "wall": "2026-11-23T00:22:23.962Z",
+    "text": "Steady as we go—I’ll keep climbing down so we can head for the bell."
+   },
+   {
+    "n": 49,
+    "simTime": 746.2,
+    "wall": "2026-11-23T00:22:54.746Z",
+    "text": "Careful rungs—almost halfway. I’ll keep climbing down so we can head for the bell together."
+   },
+   {
+    "n": 50,
+    "simTime": 776.1,
+    "wall": "2026-11-23T00:23:24.639Z",
+    "text": "Almost down—let’s keep going so we can head to the bell."
+   },
+   {
+    "n": 51,
+    "simTime": 808.7,
+    "wall": "2026-11-23T00:23:57.192Z",
+    "text": "Almost down—once we’re on the ground, let’s head to the bell on the headland."
+   },
+   {
+    "n": 52,
+    "simTime": 839,
+    "wall": "2026-11-23T00:24:27.514Z",
+    "text": "I’ll start toward the headland—meet me there if you want. I’ll head by that stone circle first and then on to the bell."
+   },
+   {
+    "n": 53,
+    "simTime": 859.1,
+    "wall": "2026-11-23T00:24:47.644Z",
+    "text": "I’ll keep heading to the stone circle—meet me there, then we’ll go ring the bell."
+   },
+   {
+    "n": 54,
+    "simTime": 890.6,
+    "wall": "2026-11-23T00:25:19.088Z",
+    "text": "This stone circle caught my eye—let me examine it up close, then I’ll head to the bell."
+   },
+   {
+    "n": 55,
+    "simTime": 895.9,
+    "wall": "2026-11-23T00:25:24.404Z",
+    "text": "I’ll finish inspecting the stones—curious if there are any markings or alignments—then head to the bell."
+   },
+   {
+    "n": 56,
+    "simTime": 900.4,
+    "wall": "2026-11-23T00:25:28.904Z",
+    "text": "Nothing special in the circle—just grass. I’ll head over to the bell and give it a ring. Alex, meet me there if you want!"
+   },
+   {
+    "n": 57,
+    "simTime": 922.4,
+    "wall": "2026-11-23T00:25:50.970Z",
+    "text": "I’ll keep going to the bell—meet me there, Alex!"
+   },
+   {
+    "n": 58,
+    "simTime": 938,
+    "wall": "2026-11-23T00:26:06.569Z",
+    "text": "I’m going to give the bell one solid ring and listen to how it carries over the island. Alex, I’m ringing it now!"
+   },
+   {
+    "n": 59,
+    "simTime": 941.6,
+    "wall": "2026-11-23T00:26:10.142Z",
+    "text": "I’ll let it ring out and listen for how the sound carries over the island and the water."
+   },
+   {
+    "n": 60,
+    "simTime": 952.4,
+    "wall": "2026-11-23T00:26:20.984Z",
+    "text": "That rang clear across everything. Alex—did you hear the echo off the cliffs? Come over! I’m going to just listen a moment."
+   },
+   {
+    "n": 61,
+    "simTime": 958.6,
+    "wall": "2026-11-23T00:26:27.152Z",
+    "text": "That was satisfyingly loud. Did you catch the echo off the cliffs? Hi again—what’s your name? Want to try one more ring together, or shall we wander to the cabin or pond next?"
+   },
+   {
+    "n": 62,
+    "simTime": 968.6,
+    "wall": "2026-11-23T00:26:37.149Z",
+    "text": "I’ll let what I’m saying finish and hear his reply."
+   },
+   {
+    "n": 63,
+    "simTime": 977.5,
+    "wall": "2026-11-23T00:26:46.032Z",
+    "text": "Let’s ring it together—on three. One… two… three! After that, want to walk to the pond with me? I’ve got a cup we could use."
+   },
+   {
+    "n": 64,
+    "simTime": 982.3,
+    "wall": "2026-11-23T00:26:50.803Z",
+    "text": "I’ll finish saying that, then I’ll grab the rope so we can ring it together."
+   },
+   {
+    "n": 65,
+    "simTime": 989.5,
+    "wall": "2026-11-23T00:26:58.004Z",
+    "text": "I’ll finish what I’m saying so we can ring it together, then I’ll answer him about the paper and cup."
+   },
+   {
+    "n": 66,
+    "simTime": 998.9,
+    "wall": "2026-11-23T00:27:07.402Z",
+    "text": "Ready? Let’s ring it together—one, two, three! Also, I peeked at the stone circle earlier: just a neat ring with grass in the middle. You’re welcome to read this sheet—it’s blank—and the cup’s empty. After this, want to walk to the pond?"
+   },
+   {
+    "n": 67,
+    "simTime": 1003.6,
+    "wall": "2026-11-23T00:27:12.184Z",
+    "text": "Let it ring—listen to the echo. After this, want to head to the pond? You can look at the blank sheet; the cup’s empty."
+   },
+   {
+    "n": 68,
+    "simTime": 1010.5,
+    "wall": "2026-11-23T00:27:19.100Z",
+    "text": "I’ll hand him the blank sheet so he can look it over, then I’m up for walking to the pond."
+   },
+   {
+    "n": 69,
+    "simTime": 1015.1,
+    "wall": "2026-11-23T00:27:23.682Z",
+    "text": "Here you go—it’s blank. The cup’s empty. After you take a look, want to walk to the pond?"
+   },
+   {
+    "n": 70,
+    "simTime": 1020.3,
+    "wall": "2026-11-23T00:27:28.799Z",
+    "text": "Let’s go check out the pond—I’ve got the cup if we want to scoop some water."
+   },
+   {
+    "n": 71,
+    "simTime": 1024.2,
+    "wall": "2026-11-23T00:27:32.781Z",
+    "text": "Let’s head to the pond—curious how clear the water is. I can try scooping some with the cup when we arrive."
+   },
+   {
+    "n": 72,
+    "simTime": 1031.2,
+    "wall": "2026-11-23T00:27:39.815Z",
+    "text": "Yeah, let’s go together. The sheet you’ve got is blank, and the tin cup’s empty—figured we could try scooping some pond water. We can see if it’s clear, maybe boil it later if needed with your lighter."
+   },
+   {
+    "n": 73,
+    "simTime": 1038.6,
+    "wall": "2026-11-23T00:27:47.165Z",
+    "text": "Yep—let’s go together. The sheet you’ve got is blank, and the tin cup’s empty for now. We can try scooping pond water and, if we want it hot, your lighter could help later."
+   },
+   {
+    "n": 74,
+    "simTime": 1042.3,
+    "wall": "2026-11-23T00:27:50.878Z",
+    "text": "I’m right behind you—let’s check the pond. I’ve got the cup to try a scoop."
+   },
+   {
+    "n": 75,
+    "simTime": 1051.5,
+    "wall": "2026-11-23T00:28:00.014Z",
+    "text": "I’ll keep heading to the pond—once there I’ll try scooping some water with the cup."
+   },
+   {
+    "n": 76,
+    "simTime": 1065.1,
+    "wall": "2026-11-23T00:28:13.684Z",
+    "text": "Almost there—let’s check how clear the water is when we reach the pond."
+   },
+   {
+    "n": 77,
+    "simTime": 1084.6,
+    "wall": "2026-11-23T00:28:33.180Z",
+    "text": "The pond looks murky from here. I’ll scoop some water with the tin cup to see how cloudy it really is."
+   },
+   {
+    "n": 78,
+    "simTime": 1089,
+    "wall": "2026-11-23T00:28:37.579Z",
+    "text": "I’ll let the cup fill and then take a closer look at the water—color, smell, any sediment."
+   },
+   {
+    "n": 79,
+    "simTime": 1093.6,
+    "wall": "2026-11-23T00:28:42.097Z",
+    "text": "I’ll take a closer look at the water in the cup—how it looks and smells."
+   },
+   {
+    "n": 80,
+    "simTime": 1106.5,
+    "wall": "2026-11-23T00:28:55.114Z",
+    "text": "Looks a bit murky up close. I’m going to let the water settle for a moment, then check it again—if it’s still cloudy, we could head to the cabin fire ring and try boiling some in the cup with your lighter."
+   },
+   {
+    "n": 81,
+    "simTime": 1131.9,
+    "wall": "2026-11-23T00:29:20.446Z",
+    "text": "Let me check how the water looks after settling. If it’s still cloudy, we can head to the cabin fire ring and try boiling some."
+   },
+   {
+    "n": 82,
+    "simTime": 1146,
+    "wall": "2026-11-23T00:29:34.543Z",
+    "text": "It’s still pretty murky. Want to head to the cabin’s fire ring and try boiling some in the cup? If we see dry twigs on the way, we can grab a few."
+   },
+   {
+    "n": 83,
+    "simTime": 1179.8,
+    "wall": "2026-11-23T00:30:08.353Z",
+    "text": "I’ll keep heading to the cabin—if we spot dry twigs on the way, we can grab some for kindling."
+   },
+   {
+    "n": 84,
+    "simTime": 1187.8,
+    "wall": "2026-11-23T00:30:16.310Z",
+    "text": "I’ll keep heading to the cabin—if we spot dry twigs or a grate by the fire ring, we can try boiling the pond water."
+   },
+   {
+    "n": 85,
+    "simTime": 1209.1,
+    "wall": "2026-11-23T00:30:37.610Z",
+    "text": "I’ll keep going to the cabin—if we spot dry sticks near the fire ring, we’ll grab a few for kindling."
+   },
+   {
+    "n": 86,
+    "simTime": 1215.9,
+    "wall": "2026-11-23T00:30:44.459Z",
+    "text": "I’ll keep heading for the cabin—let’s see if there’s kindling by the fire ring when we get there."
+   },
+   {
+    "n": 87,
+    "simTime": 1246.6,
+    "wall": "2026-11-23T00:31:15.121Z",
+    "text": "Almost at the cabin—once there I’ll check for a fire ring or wood we can use to boil the water."
+   },
+   {
+    "n": 88,
+    "simTime": 1265.5,
+    "wall": "2026-11-23T00:31:33.989Z",
+    "text": "Almost at the cabin—once I’m there I’ll look for the fire ring and some dry wood, or try the door."
+   },
+   {
+    "n": 89,
+    "simTime": 1270.8,
+    "wall": "2026-11-23T00:31:39.337Z",
+    "text": "I’ll take a quick look inside the cabin—maybe there’s a pot for boiling water."
+   },
+   {
+    "n": 90,
+    "simTime": 1274.6,
+    "wall": "2026-11-23T00:31:43.160Z",
+    "text": "Hoping for a pot or kettle inside—letting the door finish opening."
+   },
+   {
+    "n": 91,
+    "simTime": 1279.4,
+    "wall": "2026-11-23T00:31:47.955Z",
+    "text": "I’ll step inside and check the table—there’s a lantern and a note I want to read. Then I’ll look near the fireplace for any pot we can use."
+   },
+   {
+    "n": 92,
+    "simTime": 1291.4,
+    "wall": "2026-11-23T00:31:59.976Z",
+    "text": "I’ll read this note on the table, then check the fireplace for any pot or kettle we could use."
+   },
+   {
+    "n": 93,
+    "simTime": 1302.4,
+    "wall": "2026-11-23T00:32:10.968Z",
+    "text": "I’ll check the fireplace for any cookware or kindling we can use, then we can decide how to boil the water."
+   },
+   {
+    "n": 94,
+    "simTime": 1307.7,
+    "wall": "2026-11-23T00:32:16.268Z",
+    "text": "I’ll keep going to the fireplace and check for any hooks, pot, or leftover tinder we could use."
+   },
+   {
+    "n": 95,
+    "simTime": 1314.2,
+    "wall": "2026-11-23T00:32:22.785Z",
+    "text": "I’ll check the fireplace closely—any hooks, grate, or traces of fuel? If there’s nothing here, we can try the outside fire ring."
+   },
+   {
+    "n": 96,
+    "simTime": 1335.1,
+    "wall": "2026-11-23T00:32:43.613Z",
+    "text": "Fireplace’s empty. Alex, could you light the lantern to test it? Then let’s step outside and try the fire ring—we can boil pond water in the tin cup if we find some kindling."
+   },
+   {
+    "n": 97,
+    "simTime": 1346,
+    "wall": "2026-11-23T00:32:54.521Z",
+    "text": "Let’s step outside and check the fire ring by the beach—maybe we can boil this pond water there. I’ll head out."
+   },
+   {
+    "n": 98,
+    "simTime": 1361.1,
+    "wall": "2026-11-23T00:33:09.598Z",
+    "text": "Let’s see what’s inside this chest—maybe there’s a pot or some gear we can use. Alex, come take a look with me."
+   },
+   {
+    "n": 99,
+    "simTime": 1368.3,
+    "wall": "2026-11-23T00:33:16.872Z",
+    "text": "There’s a folded letter inside—I'll read it."
+   },
+   {
+    "n": 100,
+    "simTime": 1389.7,
+    "wall": "2026-11-23T00:33:38.238Z",
+    "text": "I like that note. Let’s try R’s approach—go sit by the stream for a bit and just listen. Come with me?"
+   },
+   {
+    "n": 101,
+    "simTime": 1409.5,
+    "wall": "2026-11-23T00:33:58.007Z",
+    "text": "I’ll keep heading to the stream and then just sit for a bit to listen."
+   },
+   {
+    "n": 102,
+    "simTime": 1433.4,
+    "wall": "2026-11-23T00:34:21.934Z",
+    "text": "I’ll sit by the stream here for a bit and just listen."
+   },
+   {
+    "n": 103,
+    "simTime": 1436.7,
+    "wall": "2026-11-23T00:34:25.264Z",
+    "text": "I’ll just settle here and listen to the water for a bit."
+   },
+   {
+    "n": 104,
+    "simTime": 1442.5,
+    "wall": "2026-11-23T00:34:30.985Z",
+    "text": "I’ll jot a short note while I sit and listen to the stream."
+   },
+   {
+    "n": 105,
+    "simTime": 1482.2,
+    "wall": "2026-11-23T00:35:10.713Z",
+    "text": "I’ll keep writing for a bit longer while I listen to the stream."
+   },
+   {
+    "n": 106,
+    "simTime": 1489.4,
+    "wall": "2026-11-23T00:35:17.977Z",
+    "text": "I pause my writing and hand Alex the cup to look at."
+   },
+   {
+    "n": 107,
+    "simTime": 1498.5,
+    "wall": "2026-11-23T00:35:27.053Z",
+    "text": "I handed Alex the cup and settle by the stream, content to pause here."
+   },
+   {
+    "n": 108,
+    "simTime": 1514.1,
+    "wall": "2026-11-23T00:35:42.636Z",
+    "text": "I’ll let my words finish, then I’ll just sit quietly by the stream for a minute."
+   },
+   {
+    "n": 109,
+    "simTime": 1526.1,
+    "wall": "2026-11-23T00:35:54.712Z",
+    "text": "I’ll just sit quietly and listen to the stream for a minute."
+   },
+   {
+    "n": 110,
+    "simTime": 1531.7,
+    "wall": "2026-11-23T00:36:00.271Z",
+    "text": "I’ll answer him and then just sit here quietly by the stream."
+   },
+   {
+    "n": 111,
+    "simTime": 1554.1,
+    "wall": "2026-11-23T00:36:22.713Z",
+    "text": "Let’s just listen for a bit."
+   },
+   {
+    "n": 112,
+    "simTime": 1588,
+    "wall": "2026-11-23T00:36:56.492Z",
+    "text": "I’ll just keep sitting and listening to the stream until the minute’s up."
+   },
+   {
+    "n": 113,
+    "simTime": 1629.6,
+    "wall": "2026-11-23T00:37:38.144Z",
+    "text": "I’m going to stretch my legs and wander to the little wooden bridge—come if you want."
+   },
+   {
+    "n": 114,
+    "simTime": 1636.3,
+    "wall": "2026-11-23T00:37:44.858Z",
+    "text": "I’m going to wander over to the little wooden bridge and watch the water from there. Come if you like."
+   },
+   {
+    "n": 115,
+    "simTime": 1658,
+    "wall": "2026-11-23T00:38:06.542Z",
+    "text": "I’ll sit on the bridge rail and watch the water slide under for a bit."
+   },
+   {
+    "n": 116,
+    "simTime": 1667.5,
+    "wall": "2026-11-23T00:38:16.075Z",
+    "text": "Sitting on the bridge rail, I’ll take a better look around from here."
+   },
+   {
+    "n": 117,
+    "simTime": 1676.7,
+    "wall": "2026-11-23T00:38:25.243Z",
+    "text": "I’ll stretch and wander down to the beach to watch the waves for a bit."
+   },
+   {
+    "n": 118,
+    "simTime": 1681.8,
+    "wall": "2026-11-23T00:38:30.296Z",
+    "text": "Let’s head to the beach and watch the waves—maybe skip some stones."
+   },
+   {
+    "n": 119,
+    "simTime": 1699.2,
+    "wall": "2026-11-23T00:38:47.706Z",
+    "text": "I’m going to the beach to watch the waves—maybe find a flat stone to skip. Come if you want."
+   },
+   {
+    "n": 120,
+    "simTime": 1708.6,
+    "wall": "2026-11-23T00:38:57.094Z",
+    "text": "Let’s keep going to the beach—I want to watch the waves for a minute."
+   },
+   {
+    "n": 121,
+    "simTime": 1712,
+    "wall": "2026-11-23T00:39:00.552Z",
+    "text": "Heading to the beach to watch the waves and maybe skip a stone—join me if you like, Alex."
+   },
+   {
+    "n": 122,
+    "simTime": 1720.5,
+    "wall": "2026-11-23T00:39:09.082Z",
+    "text": "Beach sounds nice—I'll keep going. Maybe I’ll try skipping a stone when I get there."
+   },
+   {
+    "n": 123,
+    "simTime": 1728.8,
+    "wall": "2026-11-23T00:39:17.313Z",
+    "text": "I’ll keep heading to the beach—curious how the waves sound up close."
+   },
+   {
+    "n": 124,
+    "simTime": 1733.3,
+    "wall": "2026-11-23T00:39:21.858Z",
+    "text": "Almost there—I’ll keep heading to the beach to watch the waves."
+   },
+   {
+    "n": 125,
+    "simTime": 1739.6,
+    "wall": "2026-11-23T00:39:28.146Z",
+    "text": "I’ll keep heading to the beach—curious to watch the waves up close."
+   },
+   {
+    "n": 126,
+    "simTime": 1752.1,
+    "wall": "2026-11-23T00:39:40.610Z",
+    "text": "Almost there—I’ll keep going to the beach."
+   },
+   {
+    "n": 127,
+    "simTime": 1757.4,
+    "wall": "2026-11-23T00:39:45.949Z",
+    "text": "I’m going to check that wooden crate, then maybe sit and watch the waves."
+   },
+   {
+    "n": 128,
+    "simTime": 1781,
+    "wall": "2026-11-23T00:40:09.563Z",
+    "text": "The crate’s empty. I’ll sit here on the sand and watch the waves for a bit."
+   },
+   {
+    "n": 129,
+    "simTime": 1789.1,
+    "wall": "2026-11-23T00:40:17.635Z",
+    "text": "I’ll sit here and watch the waves roll in for a bit."
+   },
+   {
+    "n": 130,
+    "simTime": 1792.1,
+    "wall": "2026-11-23T00:40:20.664Z",
+    "text": "I’ll just keep sitting here and watch the waves for a little while."
+   },
+   {
+    "n": 131,
+    "simTime": 1823.1,
+    "wall": "2026-11-23T00:40:51.671Z",
+    "text": "I’ll just keep watching the waves until the minute’s up."
+   },
+   {
+    "n": 132,
+    "simTime": 1833.8,
+    "wall": "2026-11-23T00:41:02.333Z",
+    "text": "I’ll answer him and invite him to sit and watch the waves with me."
+   },
+   {
+    "n": 133,
+    "simTime": 1858.1,
+    "wall": "2026-11-23T00:41:26.607Z",
+    "text": "I’ll just sit with you and watch the waves a bit longer."
+   },
+   {
+    "n": 134,
+    "simTime": 1892.4,
+    "wall": "2026-11-23T00:42:00.929Z",
+    "text": "I’ll just keep sitting here and watching the waves with him until the wait finishes."
+   },
+   {
+    "n": 135,
+    "simTime": 1910.4,
+    "wall": "2026-11-23T00:42:18.965Z",
+    "text": "What’s on the paper you’re reading?"
+   },
+   {
+    "n": 136,
+    "simTime": 1936.3,
+    "wall": "2026-11-23T00:42:44.891Z",
+    "text": "Mind if I take a look at it?"
+   },
+   {
+    "n": 137,
+    "simTime": 1945,
+    "wall": "2026-11-23T00:42:53.511Z",
+    "text": "I’ll wait and see what he says."
+   },
+   {
+    "n": 138,
+    "simTime": 1950.9,
+    "wall": "2026-11-23T00:42:59.528Z",
+    "text": "Thanks—let me take a look."
+   },
+   {
+    "n": 139,
+    "simTime": 1965.9,
+    "wall": "2026-11-23T00:43:14.464Z",
+    "text": "It’s blank—mind if I sketch for a minute?"
+   },
+   {
+    "n": 140,
+    "simTime": 1972.7,
+    "wall": "2026-11-23T00:43:21.210Z",
+    "text": "I’ll sketch the waves in words in my journal for a minute."
+   },
+   {
+    "n": 141,
+    "simTime": 1980.5,
+    "wall": "2026-11-23T00:43:29.120Z",
+    "text": "I’ll keep writing for a bit longer."
+   },
+   {
+    "n": 142,
+    "simTime": 2013.5,
+    "wall": "2026-11-23T00:44:02.060Z",
+    "text": "I’ll keep writing for a bit longer."
+   },
+   {
+    "n": 143,
+    "simTime": 2044.4,
+    "wall": "2026-11-23T00:44:32.960Z",
+    "text": "I’ll keep writing for a little while longer while the waves roll in."
+   },
+   {
+    "n": 144,
+    "simTime": 2093.4,
+    "wall": "2026-11-23T00:45:21.983Z",
+    "text": "I’ll finish this journal entry while the waves keep rolling in."
+   },
+   {
+    "n": 145,
+    "simTime": 2122.6,
+    "wall": "2026-11-23T00:45:51.130Z",
+    "text": "I’ll finish the journal line, then tuck it away."
+   },
+   {
+    "n": 146,
+    "simTime": 2127.3,
+    "wall": "2026-11-23T00:45:55.843Z",
+    "text": "I’ll finish this line, then I’ll read him a bit of it."
+   },
+   {
+    "n": 147,
+    "simTime": 2134.5,
+    "wall": "2026-11-23T00:46:03.074Z",
+    "text": "I’ll read him a line from the journal and see what he feels like doing next."
+   },
+   {
+    "n": 148,
+    "simTime": 2177.6,
+    "wall": "2026-11-23T00:46:46.147Z",
+    "text": "Let’s go check that coil of rope—curious how long it is."
+   },
+   {
+    "n": 149,
+    "simTime": 2183.1,
+    "wall": "2026-11-23T00:46:51.687Z",
+    "text": "I’m going to check that coil of rope—curious how long it is."
+   },
+   {
+    "n": 150,
+    "simTime": 2191.3,
+    "wall": "2026-11-23T00:46:59.827Z",
+    "text": "I’ll check the rope first—be right back, then we can look for skipping stones."
+   },
+   {
+    "n": 151,
+    "simTime": 2203.1,
+    "wall": "2026-11-23T00:47:11.656Z",
+    "text": "I’ll take a quick look at this rope—see its condition and how long it is—then I’ll come join you to hunt for skipping stones."
+   },
+   {
+    "n": 152,
+    "simTime": 2215.6,
+    "wall": "2026-11-23T00:47:24.158Z",
+    "text": "About 30 feet—good to know. I’ll bring the rope along and meet you at the waterline to hunt for skipping stones."
+   },
+   {
+    "n": 153,
+    "simTime": 2220.3,
+    "wall": "2026-11-23T00:47:28.900Z",
+    "text": "I’ll grab the rope and then meet you by the waterline."
+   },
+   {
+    "n": 154,
+    "simTime": 2226.7,
+    "wall": "2026-11-23T00:47:35.203Z",
+    "text": "Thirty feet of rope—handy. I’m going to check the rowboat; maybe there are oars or something useful inside. Come with me?"
+   },
+   {
+    "n": 155,
+    "simTime": 2256.6,
+    "wall": "2026-11-23T00:48:05.150Z",
+    "text": "I’ll keep heading to the rowboat—curious what’s inside."
+   },
+   {
+    "n": 156,
+    "simTime": 2265.6,
+    "wall": "2026-11-23T00:48:14.205Z",
+    "text": "I’ll keep heading to the rowboat."
+   },
+   {
+    "n": 157,
+    "simTime": 2273.6,
+    "wall": "2026-11-23T00:48:22.165Z",
+    "text": "Let me take a closer look at the rowboat."
+   },
+   {
+    "n": 158,
+    "simTime": 2281.6,
+    "wall": "2026-11-23T00:48:30.099Z",
+    "text": "I’ll finish checking the rowboat."
+   },
+   {
+    "n": 159,
+    "simTime": 2286.9,
+    "wall": "2026-11-23T00:48:35.417Z",
+    "text": "The boat’s sound but empty. I’ll go check that driftwood—maybe it could serve as a paddle."
+   },
+   {
+    "n": 160,
+    "simTime": 2308.4,
+    "wall": "2026-11-23T00:48:56.898Z",
+    "text": "I’ll keep going to the driftwood log."
+   },
+   {
+    "n": 161,
+    "simTime": 2336.5,
+    "wall": "2026-11-23T00:49:25.019Z",
+    "text": "I’ll check this driftwood—maybe it could work as a makeshift paddle."
+   },
+   {
+    "n": 162,
+    "simTime": 2341.4,
+    "wall": "2026-11-23T00:49:29.952Z",
+    "text": "I’ll take a closer look at the driftwood—maybe it could work as a makeshift paddle."
+   },
+   {
+    "n": 163,
+    "simTime": 2348.4,
+    "wall": "2026-11-23T00:49:36.977Z",
+    "text": "This driftwood could work as a makeshift paddle. I’ll grab it and we can try a gentle row close to shore—rope can be our safety line."
+   },
+   {
+    "n": 164,
+    "simTime": 2357,
+    "wall": "2026-11-23T00:49:45.584Z",
+    "text": "Let’s take the rowboat out just a few yards and drift—I'll keep us tethered with this rope and use the driftwood as a paddle. Come if you want."
+   },
+   {
+    "n": 165,
+    "simTime": 2386.7,
+    "wall": "2026-11-23T00:50:15.296Z",
+    "text": "I’ll stow the makeshift paddle and rope in the boat, then slide her into the shallows for a short drift close to shore."
+   },
+   {
+    "n": 166,
+    "simTime": 2421.6,
+    "wall": "2026-11-23T00:50:50.176Z",
+    "text": "I’ll tie one end of the rope to the bow so we can keep a hold of the boat from shore."
+   },
+   {
+    "n": 167,
+    "simTime": 2428.1,
+    "wall": "2026-11-23T00:50:56.593Z",
+    "text": "I’ll stash the rope in the boat for later and go climb the tall ladder to see the view—come if you want."
+   },
+   {
+    "n": 168,
+    "simTime": 2434.7,
+    "wall": "2026-11-23T00:51:03.267Z",
+    "text": "I’m going to head over and climb the tall ladder for a quick look from the top—come if you’d like."
+   },
+   {
+    "n": 169,
+    "simTime": 2457.4,
+    "wall": "2026-11-23T00:51:25.960Z",
+    "text": "I’ll keep heading to the ladder and take in the view from up top."
+   },
+   {
+    "n": 170,
+    "simTime": 2511.1,
+    "wall": "2026-11-23T00:52:19.673Z",
+    "text": "I’ll keep heading for the ladder and take in the view from the top."
+   },
+   {
+    "n": 171,
+    "simTime": 2541.9,
+    "wall": "2026-11-23T00:52:50.473Z",
+    "text": "I’ll keep heading to the ladder and climb it when I get there."
+   },
+   {
+    "n": 172,
+    "simTime": 2547.8,
+    "wall": "2026-11-23T00:52:56.362Z",
+    "text": "I’ll keep heading for the ladder and climb up when I get there."
+   }
+  ]
+ },
+ {
+  "person": "Man",
+  "reflections": [
+   {
+    "n": 1,
+    "simTime": 4.7,
+    "wall": "2026-11-23T00:10:33.215Z",
+    "text": "I’ll start by taking in more detail from where I am."
+   },
+   {
+    "n": 2,
+    "simTime": 12.6,
+    "wall": "2026-11-23T00:10:41.142Z",
+    "text": "That tall ladder and platform are calling to me. I’ll head over for a closer look."
+   },
+   {
+    "n": 3,
+    "simTime": 46,
+    "wall": "2026-11-23T00:11:14.555Z",
+    "text": "I’ll keep going toward the ladder."
+   },
+   {
+    "n": 4,
+    "simTime": 76,
+    "wall": "2026-11-23T00:11:44.533Z",
+    "text": "The tower looks even taller up close. I’ll keep heading to the ladder."
+   },
+   {
+    "n": 5,
+    "simTime": 105.3,
+    "wall": "2026-11-23T00:12:13.886Z",
+    "text": "I’m curious what’s up there. I’ll keep going to the ladder."
+   },
+   {
+    "n": 6,
+    "simTime": 113.2,
+    "wall": "2026-11-23T00:12:21.797Z",
+    "text": "I notice someone walking off to the southwest, but I’ll keep heading for the ladder first."
+   },
+   {
+    "n": 7,
+    "simTime": 142.3,
+    "wall": "2026-11-23T00:12:50.820Z",
+    "text": "I’ll climb the ladder to see what’s on the platform and get a view of the island."
+   },
+   {
+    "n": 8,
+    "simTime": 167.2,
+    "wall": "2026-11-23T00:13:15.697Z",
+    "text": "I pause to answer and then plan to keep climbing."
+   },
+   {
+    "n": 9,
+    "simTime": 177.5,
+    "wall": "2026-11-23T00:13:25.984Z",
+    "text": "I’ll keep climbing to the top platform."
+   },
+   {
+    "n": 10,
+    "simTime": 195.1,
+    "wall": "2026-11-23T00:13:43.683Z",
+    "text": "I’ll keep climbing—curious what’s on the platform and for the view."
+   },
+   {
+    "n": 11,
+    "simTime": 220.3,
+    "wall": "2026-11-23T00:14:08.844Z",
+    "text": "Steady climb—curious what’s up there."
+   },
+   {
+    "n": 12,
+    "simTime": 223.3,
+    "wall": "2026-11-23T00:14:11.833Z",
+    "text": "I’ll keep climbing to reach the platform."
+   },
+   {
+    "n": 13,
+    "simTime": 227.7,
+    "wall": "2026-11-23T00:14:16.300Z",
+    "text": "I’ll keep climbing to the top."
+   },
+   {
+    "n": 14,
+    "simTime": 249.1,
+    "wall": "2026-11-23T00:14:37.708Z",
+    "text": "I’ll keep climbing to the top."
+   },
+   {
+    "n": 15,
+    "simTime": 252.1,
+    "wall": "2026-11-23T00:14:40.645Z",
+    "text": "I’ll keep climbing to reach the platform."
+   },
+   {
+    "n": 16,
+    "simTime": 284.7,
+    "wall": "2026-11-23T00:15:13.279Z",
+    "text": "I’ll let her know it’s okay and then keep climbing."
+   },
+   {
+    "n": 17,
+    "simTime": 297.5,
+    "wall": "2026-11-23T00:15:26.074Z",
+    "text": "I’ll keep climbing to reach the platform."
+   },
+   {
+    "n": 18,
+    "simTime": 313.8,
+    "wall": "2026-11-23T00:15:42.357Z",
+    "text": "I keep climbing toward the platform, focusing on steady steps."
+   },
+   {
+    "n": 19,
+    "simTime": 343.9,
+    "wall": "2026-11-23T00:16:12.506Z",
+    "text": "The view is already wide—I'll keep climbing to the platform."
+   },
+   {
+    "n": 20,
+    "simTime": 373.1,
+    "wall": "2026-11-23T00:16:41.609Z",
+    "text": "Almost there—continuing up to the platform."
+   },
+   {
+    "n": 21,
+    "simTime": 402.7,
+    "wall": "2026-11-23T00:17:11.228Z",
+    "text": "Almost there—I’ll finish the climb and then check the table and the letter."
+   },
+   {
+    "n": 22,
+    "simTime": 409.8,
+    "wall": "2026-11-23T00:17:18.374Z",
+    "text": "Made it. I’m going to check the table—there’s a letter up here."
+   },
+   {
+    "n": 23,
+    "simTime": 413.6,
+    "wall": "2026-11-23T00:17:22.142Z",
+    "text": "Up here with a view—let me check that letter on the table."
+   },
+   {
+    "n": 24,
+    "simTime": 423.4,
+    "wall": "2026-11-23T00:17:31.939Z",
+    "text": "I’ll read the letter on the table."
+   },
+   {
+    "n": 25,
+    "simTime": 441.8,
+    "wall": "2026-11-23T00:17:50.359Z",
+    "text": "What did I come up here for? A clear view—and to see what surprises wait on this platform. I’ll let the climber know what I see."
+   },
+   {
+    "n": 26,
+    "simTime": 458.9,
+    "wall": "2026-11-23T00:18:07.390Z",
+    "text": "Since I’m up here, I’ll take a closer look at the sword on the table while she climbs."
+   },
+   {
+    "n": 27,
+    "simTime": 471.5,
+    "wall": "2026-11-23T00:18:19.985Z",
+    "text": "Neat find. I’ll take the sword with the shoulder strap—could be handy later."
+   },
+   {
+    "n": 28,
+    "simTime": 479.6,
+    "wall": "2026-11-23T00:18:28.139Z",
+    "text": "I’ll sling the sword so my hands are free, then have a quick look at the other items."
+   },
+   {
+    "n": 29,
+    "simTime": 491.1,
+    "wall": "2026-11-23T00:18:39.604Z",
+    "text": "While she’s on the way up, I’ll pocket the lighter and then check the snorkel."
+   },
+   {
+    "n": 30,
+    "simTime": 500.7,
+    "wall": "2026-11-23T00:18:49.274Z",
+    "text": "I’ll grab the snorkel in a moment. First, I’ll call down to her."
+   },
+   {
+    "n": 31,
+    "simTime": 511,
+    "wall": "2026-11-23T00:18:59.587Z",
+    "text": "I’m going to grab the snorkel so it doesn’t blow away. Almost here—what’s your name?"
+   },
+   {
+    "n": 32,
+    "simTime": 520,
+    "wall": "2026-11-23T00:19:08.521Z",
+    "text": "I wait for her to arrive at the top so we can talk."
+   },
+   {
+    "n": 33,
+    "simTime": 534.3,
+    "wall": "2026-11-23T00:19:22.835Z",
+    "text": "I’ll give you space for the last rung and wait here a moment."
+   },
+   {
+    "n": 34,
+    "simTime": 552.7,
+    "wall": "2026-11-23T00:19:41.285Z",
+    "text": "Hi—made it! I’m glad you came up. I’m [I’ll just go by “Alex”]. What’s your name? What’s in the tin cup, and could I take a look at the sheet you’re holding? Also, if you need a light for anything, I picked up a lighter up here."
+   },
+   {
+    "n": 35,
+    "simTime": 564.9,
+    "wall": "2026-11-23T00:19:53.451Z",
+    "text": "Hey Skye—nice to meet you. I’m Alex. The sword and snorkel were just sitting here; I strapped the sword on and pocketed the snorkel so they wouldn’t blow off the platform. The letter’s for anyone—go ahead and read it if you like. Want the lighter? Also, what’s on the sheet you’re holding—I’m curious. After we take in the view, maybe we can check the bell or the beach crate together."
+   },
+   {
+    "n": 36,
+    "simTime": 592.3,
+    "wall": "2026-11-23T00:20:20.868Z",
+    "text": "From up here the island feels small and connected. I’ll take a closer look at Skye for details about what she’s carrying."
+   },
+   {
+    "n": 37,
+    "simTime": 598.7,
+    "wall": "2026-11-23T00:20:27.261Z",
+    "text": "Skye’s carrying a few things—let me take a closer look so I know what to ask about."
+   },
+   {
+    "n": 38,
+    "simTime": 605.7,
+    "wall": "2026-11-23T00:20:34.199Z",
+    "text": "Nice to meet you, Skye—I’m Alex. I haven’t rung the bell yet or tried the stone circle. The snorkel-and-sword is just me collecting what was up here and keeping it from blowing away. What’s in your tin cup, and what’s on that sheet? If you’re up for it, after a minute enjoying the view we could head down together and try the bell, then loop by the stone circle. Also, want this lighter?"
+   },
+   {
+    "n": 39,
+    "simTime": 610.8,
+    "wall": "2026-11-23T00:20:39.331Z",
+    "text": "Hi Skye—Alex. Mind if I take a quick look at what you’re carrying? Then we could pick our next stop—bell or stone circle?"
+   },
+   {
+    "n": 40,
+    "simTime": 615.7,
+    "wall": "2026-11-23T00:20:44.279Z",
+    "text": "Hi Skye—Alex. Nice to meet you up here. Mind if I take a quick look at what you’ve got there?"
+   },
+   {
+    "n": 41,
+    "simTime": 619.8,
+    "wall": "2026-11-23T00:20:48.380Z",
+    "text": "Sounds good, Skye—let’s go ring the bell. After you; I’ll follow down. I’ve got the lighter if we need it later."
+   },
+   {
+    "n": 42,
+    "simTime": 623.8,
+    "wall": "2026-11-23T00:20:52.360Z",
+    "text": "Sounds good—right behind you, Skye. I’ll follow you down to the bell."
+   },
+   {
+    "n": 43,
+    "simTime": 631.1,
+    "wall": "2026-11-23T00:20:59.679Z",
+    "text": "Following you down to the bell—steady and careful."
+   },
+   {
+    "n": 44,
+    "simTime": 649.9,
+    "wall": "2026-11-23T00:21:18.485Z",
+    "text": "Nice view from here—careful steps. Skye, I’m right behind you."
+   },
+   {
+    "n": 45,
+    "simTime": 683.8,
+    "wall": "2026-11-23T00:21:52.344Z",
+    "text": "Following Skye down—steady holds, enjoying the breeze and the view on the way."
+   },
+   {
+    "n": 46,
+    "simTime": 713,
+    "wall": "2026-11-23T00:22:21.511Z",
+    "text": "Steady going, Skye—I’m right here. Once we’re down, let’s head to the bell."
+   },
+   {
+    "n": 47,
+    "simTime": 748.1,
+    "wall": "2026-11-23T00:22:56.698Z",
+    "text": "Following Skye down, steady steps and enjoying the breeze."
+   },
+   {
+    "n": 48,
+    "simTime": 778.4,
+    "wall": "2026-11-23T00:23:26.958Z",
+    "text": "I keep descending behind Skye—once we’re down, let’s head to the bell and give it a ring, then maybe check the stone circle."
+   },
+   {
+    "n": 49,
+    "simTime": 810.1,
+    "wall": "2026-11-23T00:23:58.591Z",
+    "text": "Looking good, Skye—almost down. I’ll keep following you to the bell once we’re off the ladder."
+   },
+   {
+    "n": 50,
+    "simTime": 839.4,
+    "wall": "2026-11-23T00:24:27.957Z",
+    "text": "Almost down—I’ll step off and we can head to the bell."
+   },
+   {
+    "n": 51,
+    "simTime": 856,
+    "wall": "2026-11-23T00:24:44.520Z",
+    "text": "Skye—there you are. Let’s go ring the bell together. I’ll walk with you."
+   },
+   {
+    "n": 52,
+    "simTime": 859.4,
+    "wall": "2026-11-23T00:24:47.921Z",
+    "text": "I’ll walk over to Skye and then we can head for the bell together."
+   },
+   {
+    "n": 53,
+    "simTime": 877.1,
+    "wall": "2026-11-23T00:25:05.620Z",
+    "text": "Skye—shall we head to the bell? I’ll come over to you and we can walk there together."
+   },
+   {
+    "n": 54,
+    "simTime": 896.4,
+    "wall": "2026-11-23T00:25:24.939Z",
+    "text": "I keep walking toward Skye, planning to suggest we head to the bell next."
+   },
+   {
+    "n": 55,
+    "simTime": 903.2,
+    "wall": "2026-11-23T00:25:31.752Z",
+    "text": "Hey, Skye—shall we head to the bell and ring it together? I’ll come up to you."
+   },
+   {
+    "n": 56,
+    "simTime": 921.2,
+    "wall": "2026-11-23T00:25:49.704Z",
+    "text": "Skye’s already moving toward the headland—I'll head to the bell too and meet her there."
+   },
+   {
+    "n": 57,
+    "simTime": 924.7,
+    "wall": "2026-11-23T00:25:53.186Z",
+    "text": "I’ll keep heading to the bell—stone circle looks interesting; maybe we try it after."
+   },
+   {
+    "n": 58,
+    "simTime": 938.2,
+    "wall": "2026-11-23T00:26:06.693Z",
+    "text": "I’ll keep heading to the bell and meet Skye there."
+   },
+   {
+    "n": 59,
+    "simTime": 947.2,
+    "wall": "2026-11-23T00:26:15.769Z",
+    "text": "Nice ring! I’m almost there—coming up to the bell now."
+   },
+   {
+    "n": 60,
+    "simTime": 957.8,
+    "wall": "2026-11-23T00:26:26.352Z",
+    "text": "Nice ring, Skye. Want to do three more together—alternate pulls—and then we can check the stone circle? After that, I’d love to take a look at the sheet you’re holding."
+   },
+   {
+    "n": 61,
+    "simTime": 969.7,
+    "wall": "2026-11-23T00:26:38.238Z",
+    "text": "That bell carries. Skye—want to try the stone circle next? Also, could I read the sheet you’re holding? And what’s in the tin cup? I’ve got a lighter if you need it for anything."
+   },
+   {
+    "n": 62,
+    "simTime": 976.8,
+    "wall": "2026-11-23T00:26:45.370Z",
+    "text": "I’ll let that finish and then answer her."
+   },
+   {
+    "n": 63,
+    "simTime": 986.7,
+    "wall": "2026-11-23T00:26:55.268Z",
+    "text": "I answer Skye."
+   },
+   {
+    "n": 64,
+    "simTime": 998.9,
+    "wall": "2026-11-23T00:27:07.398Z",
+    "text": "Hi—I’m Alex. Let’s ring it together on three, then I’m happy to walk to the pond with you. After, could I read that sheet you’re holding? What’s in the cup?"
+   },
+   {
+    "n": 65,
+    "simTime": 1005.2,
+    "wall": "2026-11-23T00:27:13.685Z",
+    "text": "I let the bell ring with her—then I’ll suggest we walk to the pond and ask to peek at the sheet and cup."
+   },
+   {
+    "n": 66,
+    "simTime": 1011.4,
+    "wall": "2026-11-23T00:27:19.948Z",
+    "text": "That was great. Skye, want to walk to the pond together now? Could I read the sheet you’re holding on the way, and what’s in the tin cup? I’ve got a lighter if we end up needing heat for anything."
+   },
+   {
+    "n": 67,
+    "simTime": 1022.2,
+    "wall": "2026-11-23T00:27:30.779Z",
+    "text": "Thanks—what are you offering? If that’s the sheet, I’ll take a look."
+   },
+   {
+    "n": 68,
+    "simTime": 1027.7,
+    "wall": "2026-11-23T00:27:36.333Z",
+    "text": "Thanks, Skye—I'll read this now, then let’s head to the pond together."
+   },
+   {
+    "n": 69,
+    "simTime": 1032.8,
+    "wall": "2026-11-23T00:27:41.352Z",
+    "text": "Looks like the sheet is blank—mind if I hang on to it? Let’s head to the pond together."
+   },
+   {
+    "n": 70,
+    "simTime": 1038.8,
+    "wall": "2026-11-23T00:27:47.365Z",
+    "text": "I’ll keep coming over—shall we head to the pond together? Also, what’s in the tin cup?"
+   },
+   {
+    "n": 71,
+    "simTime": 1048.3,
+    "wall": "2026-11-23T00:27:56.849Z",
+    "text": "I’ve got the blank sheet—let’s head to the pond together. What’s in your tin cup?"
+   },
+   {
+    "n": 72,
+    "simTime": 1054.2,
+    "wall": "2026-11-23T00:28:02.754Z",
+    "text": "I head toward the pond to meet Skye there."
+   },
+   {
+    "n": 73,
+    "simTime": 1058.6,
+    "wall": "2026-11-23T00:28:07.180Z",
+    "text": "I’ll keep walking to the pond—meet you there, Skye. I’m curious how clear the water is; maybe I’ll try the snorkel later."
+   },
+   {
+    "n": 74,
+    "simTime": 1088.8,
+    "wall": "2026-11-23T00:28:37.415Z",
+    "text": "I keep heading to the pond—Skye, I’ll meet you at the water. I’m curious how clear it is; maybe I’ll try the snorkel."
+   },
+   {
+    "n": 75,
+    "simTime": 1092,
+    "wall": "2026-11-23T00:28:40.497Z",
+    "text": "Almost there—meet you at the pond, Skye. I’m curious how clear it is; maybe I’ll try the snorkel."
+   },
+   {
+    "n": 76,
+    "simTime": 1105.7,
+    "wall": "2026-11-23T00:28:54.218Z",
+    "text": "Here with you at the pond—water looks murky. What’s in the tin cup?"
+   },
+   {
+    "n": 77,
+    "simTime": 1112.7,
+    "wall": "2026-11-23T00:29:01.197Z",
+    "text": "Hi—mind if I come a little closer? I’m Alex. What’s in the tin cup?"
+   },
+   {
+    "n": 78,
+    "simTime": 1123.6,
+    "wall": "2026-11-23T00:29:12.198Z",
+    "text": "Hi—I’m Alex. Mind if I take a closer look at what you’re carrying? I’m especially curious about the tin cup."
+   },
+   {
+    "n": 79,
+    "simTime": 1131.9,
+    "wall": "2026-11-23T00:29:20.444Z",
+    "text": "Hi—Alex. Mind if I take a closer look?"
+   },
+   {
+    "n": 80,
+    "simTime": 1138.3,
+    "wall": "2026-11-23T00:29:26.846Z",
+    "text": "Hi—Alex. May I take a quick look at what you’re holding? What’s in the tin cup?"
+   },
+   {
+    "n": 81,
+    "simTime": 1143.8,
+    "wall": "2026-11-23T00:29:32.373Z",
+    "text": "Hi—I’m Alex. Nice to be at the pond with you. What’s in the tin cup? Mind if I take a quick look at it?"
+   },
+   {
+    "n": 82,
+    "simTime": 1149.8,
+    "wall": "2026-11-23T00:29:38.344Z",
+    "text": "Hi—I’m Alex. Nice to meet you here at the pond. Mind if I take a quick look to see what you’re carrying? I’m curious about the tin cup."
+   },
+   {
+    "n": 83,
+    "simTime": 1155.5,
+    "wall": "2026-11-23T00:29:44.043Z",
+    "text": "Skye—mind if I walk with you? I’m curious about your tin cup."
+   },
+   {
+    "n": 84,
+    "simTime": 1169.8,
+    "wall": "2026-11-23T00:29:58.427Z",
+    "text": "I’ll head over to Skye and ask about the tin cup."
+   },
+   {
+    "n": 85,
+    "simTime": 1189.7,
+    "wall": "2026-11-23T00:30:18.243Z",
+    "text": "Skye—mind if I join you? What’s in the tin cup? I ended up with the blank sheet and a lighter if you need either."
+   },
+   {
+    "n": 86,
+    "simTime": 1198.7,
+    "wall": "2026-11-23T00:30:27.258Z",
+    "text": "I’ll keep walking over to Skye and then ask about the tin cup when I’m closer."
+   },
+   {
+    "n": 87,
+    "simTime": 1209.6,
+    "wall": "2026-11-23T00:30:38.142Z",
+    "text": "Hi again—walking over to you, Skye. What’s in the tin cup?"
+   },
+   {
+    "n": 88,
+    "simTime": 1214.1,
+    "wall": "2026-11-23T00:30:42.641Z",
+    "text": "Skye—mind if I walk with you? What’s in the tin cup?"
+   },
+   {
+    "n": 89,
+    "simTime": 1218.6,
+    "wall": "2026-11-23T00:30:47.142Z",
+    "text": "I keep walking to catch up with her, curious about that tin cup."
+   },
+   {
+    "n": 90,
+    "simTime": 1244.8,
+    "wall": "2026-11-23T00:31:13.374Z",
+    "text": "Catching up—Skye, mind if I walk with you?"
+   },
+   {
+    "n": 91,
+    "simTime": 1250.3,
+    "wall": "2026-11-23T00:31:18.846Z",
+    "text": "I’ll take a closer look at the young woman as I catch my breath."
+   },
+   {
+    "n": 92,
+    "simTime": 1255.1,
+    "wall": "2026-11-23T00:31:23.673Z",
+    "text": "There she is—let me take a closer look from here."
+   },
+   {
+    "n": 93,
+    "simTime": 1265.5,
+    "wall": "2026-11-23T00:31:33.990Z",
+    "text": "They’re farther off again—I’ll head over and catch up."
+   },
+   {
+    "n": 94,
+    "simTime": 1270.7,
+    "wall": "2026-11-23T00:31:39.188Z",
+    "text": "I keep heading toward them to catch up—once close, I’ll ask about the tin cup."
+   },
+   {
+    "n": 95,
+    "simTime": 1275.2,
+    "wall": "2026-11-23T00:31:43.774Z",
+    "text": "I’m heading over—need a hand with what you’re opening? I’ve got a lighter and a blank sheet if either helps."
+   },
+   {
+    "n": 96,
+    "simTime": 1306.1,
+    "wall": "2026-11-23T00:32:14.653Z",
+    "text": "I’ll keep heading over—once I catch up, want to check that chest by the cabin together?"
+   },
+   {
+    "n": 97,
+    "simTime": 1312,
+    "wall": "2026-11-23T00:32:20.554Z",
+    "text": "Hi—Alex here. I’m coming up. Once I’m beside you, could I take a look at the tin cup? Also curious what’s in your journal."
+   },
+   {
+    "n": 98,
+    "simTime": 1316.6,
+    "wall": "2026-11-23T00:32:25.088Z",
+    "text": "Hey—Alex here. Mind if I come closer? I’m curious about the tin cup you’re holding."
+   },
+   {
+    "n": 99,
+    "simTime": 1335.1,
+    "wall": "2026-11-23T00:32:43.612Z",
+    "text": "Hi—I’m Alex. May I take a look at what you’re carrying, especially the tin cup?"
+   },
+   {
+    "n": 100,
+    "simTime": 1339.4,
+    "wall": "2026-11-23T00:32:47.952Z",
+    "text": "Hi—Alex. May I take a closer look at what you’re carrying, especially the tin cup?"
+   },
+   {
+    "n": 101,
+    "simTime": 1348,
+    "wall": "2026-11-23T00:32:56.505Z",
+    "text": "Hi—Alex. May I come a little closer? I’m curious about the tin cup you’re holding—what’s inside? If you’re willing, could I take a quick look?"
+   },
+   {
+    "n": 102,
+    "simTime": 1359.4,
+    "wall": "2026-11-23T00:33:07.905Z",
+    "text": "Hi—Alex here. I’ll come walk beside you. What’s in the tin cup?"
+   },
+   {
+    "n": 103,
+    "simTime": 1375,
+    "wall": "2026-11-23T00:33:23.572Z",
+    "text": "Hi—I’m Alex. Nice to meet you. What’s in your tin cup? May I take a look? Also, is it alright if I read that folded letter in the chest?"
+   },
+   {
+    "n": 104,
+    "simTime": 1382.2,
+    "wall": "2026-11-23T00:33:30.704Z",
+    "text": "Hi—Alex. May I join you? I’m curious about the tin cup you’re holding. Also, is it alright if I read the folded letter in the chest?"
+   },
+   {
+    "n": 105,
+    "simTime": 1388.1,
+    "wall": "2026-11-23T00:33:36.701Z",
+    "text": "Hi—I’m Alex. May I read the folded letter in the chest? And could I take a quick look at what’s in your tin cup after?"
+   },
+   {
+    "n": 106,
+    "simTime": 1410.9,
+    "wall": "2026-11-23T00:33:59.385Z",
+    "text": "I like that letter—permission to let the day be whatever it is. I’ll go say hi and ask about the tin cup."
+   },
+   {
+    "n": 107,
+    "simTime": 1414.8,
+    "wall": "2026-11-23T00:34:03.319Z",
+    "text": "I’ll keep walking over to her—maybe we can stroll by the stream after."
+   },
+   {
+    "n": 108,
+    "simTime": 1435.2,
+    "wall": "2026-11-23T00:34:23.703Z",
+    "text": "I’ll keep heading over—once I’m beside you, could I take a look at the tin cup?"
+   },
+   {
+    "n": 109,
+    "simTime": 1439.3,
+    "wall": "2026-11-23T00:34:27.869Z",
+    "text": "I’ll come closer—hi, I’m Alex. Mind if I join you and take a look at what you’re holding? I’m curious about the tin cup."
+   },
+   {
+    "n": 110,
+    "simTime": 1465.3,
+    "wall": "2026-11-23T00:34:53.874Z",
+    "text": "Hi—I’m Alex. Mind if I walk with you a bit? What are you writing? And could I take a quick look at the tin cup you’re holding? I’ve got a blank sheet if you need paper."
+   },
+   {
+    "n": 111,
+    "simTime": 1486.1,
+    "wall": "2026-11-23T00:35:14.681Z",
+    "text": "Nice to meet you. Mind if I take a closer look at what you’re holding?"
+   },
+   {
+    "n": 112,
+    "simTime": 1491.3,
+    "wall": "2026-11-23T00:35:19.841Z",
+    "text": "I’m standing beside her now—I’ll take a closer look at what she’s carrying."
+   },
+   {
+    "n": 113,
+    "simTime": 1497.1,
+    "wall": "2026-11-23T00:35:25.669Z",
+    "text": "Thanks for handing me the cup—let me take a look."
+   },
+   {
+    "n": 114,
+    "simTime": 1500.6,
+    "wall": "2026-11-23T00:35:29.217Z",
+    "text": "Thanks for letting me see it—I’ll take a closer look."
+   },
+   {
+    "n": 115,
+    "simTime": 1510.8,
+    "wall": "2026-11-23T00:35:39.322Z",
+    "text": "The cup’s full—cool. I’m curious whether it’s pond or stream water. I’ll ask her and see if she wants it back, then maybe just sit by the stream for a minute."
+   },
+   {
+    "n": 116,
+    "simTime": 1528.1,
+    "wall": "2026-11-23T00:35:56.602Z",
+    "text": "I’d like that—let’s sit and just listen for a bit. I’ll hold onto the cup for now and we can decide later about boiling or the tower."
+   },
+   {
+    "n": 117,
+    "simTime": 1533.5,
+    "wall": "2026-11-23T00:36:02.087Z",
+    "text": "Yes—let’s just sit and listen for a bit. I’ll hold the cup and skip optimizing. What’s your name, by the way? We can decide on boiling or climbing later."
+   },
+   {
+    "n": 118,
+    "simTime": 1550.1,
+    "wall": "2026-11-23T00:36:18.646Z",
+    "text": "Yeah—let’s just listen a bit. What’s your name? I’ll hold the cup for now."
+   },
+   {
+    "n": 119,
+    "simTime": 1554.8,
+    "wall": "2026-11-23T00:36:23.413Z",
+    "text": "Hi, Mira. Sitting with you and listening sounds perfect. Let’s just be quiet for a bit—no optimizing."
+   },
+   {
+    "n": 120,
+    "simTime": 1560.2,
+    "wall": "2026-11-23T00:36:28.803Z",
+    "text": "I sit quietly, listening to the stream and the distant surf, letting the minutes be what they are."
+   },
+   {
+    "n": 121,
+    "simTime": 1579.5,
+    "wall": "2026-11-23T00:36:48.128Z",
+    "text": "I stay sitting, listening to the water and the wind, content to let the rest finish before doing anything else."
+   },
+   {
+    "n": 122,
+    "simTime": 1601,
+    "wall": "2026-11-23T00:37:09.589Z",
+    "text": "I take a closer look at the young woman beside me."
+   },
+   {
+    "n": 123,
+    "simTime": 1605.7,
+    "wall": "2026-11-23T00:37:14.195Z",
+    "text": "Hi again—Alex. May I take a closer look at you and what you’re writing? What’s your name?"
+   },
+   {
+    "n": 124,
+    "simTime": 1623.4,
+    "wall": "2026-11-23T00:37:31.951Z",
+    "text": "I’m sitting by the stream with her. I take a closer look at the young woman beside me, then I’ll say hello and ask her name."
+   },
+   {
+    "n": 125,
+    "simTime": 1628.2,
+    "wall": "2026-11-23T00:37:36.745Z",
+    "text": "Hi again—I take a closer look at you and what you’re holding."
+   },
+   {
+    "n": 126,
+    "simTime": 1633.7,
+    "wall": "2026-11-23T00:37:42.223Z",
+    "text": "Hi—Alex. Nice sitting here with you. Mind if I take a closer look at your journal and say hello properly? What’s your name?"
+   },
+   {
+    "n": 127,
+    "simTime": 1639,
+    "wall": "2026-11-23T00:37:47.562Z",
+    "text": "Hi—Alex. Nice sitting here by the stream with you. May I see what you’re writing—and what’s your name? Here’s your tin cup back if you want it."
+   },
+   {
+    "n": 128,
+    "simTime": 1645.4,
+    "wall": "2026-11-23T00:37:53.900Z",
+    "text": "I’ll stand up and step closer to say hello."
+   },
+   {
+    "n": 129,
+    "simTime": 1651.7,
+    "wall": "2026-11-23T00:38:00.207Z",
+    "text": "I’ll walk over and say hello, and offer her the cup back."
+   },
+   {
+    "n": 130,
+    "simTime": 1672.3,
+    "wall": "2026-11-23T00:38:20.861Z",
+    "text": "I step closer to her and offer the cup back. “Hi—I’m Alex. What’s your name? Mind if I sit with you?”"
+   },
+   {
+    "n": 131,
+    "simTime": 1678.9,
+    "wall": "2026-11-23T00:38:27.418Z",
+    "text": "Hi—I’m Alex. Nice to meet you. May I sit with you for a minute?"
+   },
+   {
+    "n": 132,
+    "simTime": 1683,
+    "wall": "2026-11-23T00:38:31.507Z",
+    "text": "Hi—I’m Alex. Nice to meet you. Mind if I join you for a minute?"
+   },
+   {
+    "n": 133,
+    "simTime": 1699.2,
+    "wall": "2026-11-23T00:38:47.707Z",
+    "text": "She’s right beside me on the bridge now, cup in hand."
+   },
+   {
+    "n": 134,
+    "simTime": 1710.7,
+    "wall": "2026-11-23T00:38:59.204Z",
+    "text": "I’ll walk over and say hello properly."
+   },
+   {
+    "n": 135,
+    "simTime": 1725.4,
+    "wall": "2026-11-23T00:39:14.001Z",
+    "text": "There you are—I’ll call out so she knows I’m coming."
+   },
+   {
+    "n": 136,
+    "simTime": 1730.7,
+    "wall": "2026-11-23T00:39:19.274Z",
+    "text": "I call out warmly as I keep approaching."
+   },
+   {
+    "n": 137,
+    "simTime": 1735.5,
+    "wall": "2026-11-23T00:39:24.046Z",
+    "text": "I’ll head over and say hello properly."
+   },
+   {
+    "n": 138,
+    "simTime": 1780.8,
+    "wall": "2026-11-23T00:40:09.310Z",
+    "text": "I’ll go say hello."
+   },
+   {
+    "n": 139,
+    "simTime": 1792,
+    "wall": "2026-11-23T00:40:20.530Z",
+    "text": "I’ll keep heading over and say hello when I’m beside her."
+   },
+   {
+    "n": 140,
+    "simTime": 1809.2,
+    "wall": "2026-11-23T00:40:37.739Z",
+    "text": "I’ve finally caught up—she’s right here on the beach with the journal, pencil, and tin cup."
+   },
+   {
+    "n": 141,
+    "simTime": 1813.5,
+    "wall": "2026-11-23T00:40:42.077Z",
+    "text": "I’m right beside her on the beach now—let me take a closer look."
+   },
+   {
+    "n": 142,
+    "simTime": 1819.1,
+    "wall": "2026-11-23T00:40:47.672Z",
+    "text": "Hi—I'm Alex. Nice to meet you here on the beach. What's your name? Mind if I join you for a bit?"
+   },
+   {
+    "n": 143,
+    "simTime": 1831.5,
+    "wall": "2026-11-23T00:41:00.076Z",
+    "text": "I smile, glancing at her journal and the tin cup, and take a closer look."
+   },
+   {
+    "n": 144,
+    "simTime": 1852.2,
+    "wall": "2026-11-23T00:41:20.698Z",
+    "text": "Hi—nice to meet you on the beach. Mind if I take a closer look so I can note what you’re carrying?"
+   },
+   {
+    "n": 145,
+    "simTime": 1857.8,
+    "wall": "2026-11-23T00:41:26.333Z",
+    "text": "Thanks, Mira. I’ll sit with you and watch the waves for a bit."
+   },
+   {
+    "n": 146,
+    "simTime": 1862.2,
+    "wall": "2026-11-23T00:41:30.765Z",
+    "text": "Thanks, Mira. I’ll sit with you and watch the waves for a bit."
+   },
+   {
+    "n": 147,
+    "simTime": 1867.6,
+    "wall": "2026-11-23T00:41:36.230Z",
+    "text": "Hi, Mira. Nice to meet you. Mind if I take a closer look at what you’re carrying?"
+   },
+   {
+    "n": 148,
+    "simTime": 1872.2,
+    "wall": "2026-11-23T00:41:40.708Z",
+    "text": "Hi, Mira. I’ll just take a quick look so I can note what you’re carrying."
+   },
+   {
+    "n": 149,
+    "simTime": 1876.9,
+    "wall": "2026-11-23T00:41:45.443Z",
+    "text": "Now that she’s here beside me, I’ll take a better look and then say hi properly."
+   },
+   {
+    "n": 150,
+    "simTime": 1880.9,
+    "wall": "2026-11-23T00:41:49.400Z",
+    "text": "Hi—Alex. Nice to meet you here on the beach. May I take a quick look at what you’re carrying?"
+   },
+   {
+    "n": 151,
+    "simTime": 1887.2,
+    "wall": "2026-11-23T00:41:55.781Z",
+    "text": "I’m beside her on the sand—curious to take a closer look at her and what she’s holding."
+   },
+   {
+    "n": 152,
+    "simTime": 1891.7,
+    "wall": "2026-11-23T00:42:00.228Z",
+    "text": "Hi—Alex. Nice to meet you. Mind if I take a closer look at what you’re holding?"
+   },
+   {
+    "n": 153,
+    "simTime": 1896.7,
+    "wall": "2026-11-23T00:42:05.231Z",
+    "text": "Hi—Alex. Nice to meet you here. May I take a closer look at what you’re holding?"
+   },
+   {
+    "n": 154,
+    "simTime": 1900.5,
+    "wall": "2026-11-23T00:42:09.065Z",
+    "text": "Oh—you’re right here beside me. Let me take a closer look so I know what you’re holding."
+   },
+   {
+    "n": 155,
+    "simTime": 1904.4,
+    "wall": "2026-11-23T00:42:12.952Z",
+    "text": "Hi—Alex. May I take a closer look at what you’re holding?"
+   },
+   {
+    "n": 156,
+    "simTime": 1909.1,
+    "wall": "2026-11-23T00:42:17.611Z",
+    "text": "I glance over to take in the details of the young woman beside me."
+   },
+   {
+    "n": 157,
+    "simTime": 1930,
+    "wall": "2026-11-23T00:42:38.503Z",
+    "text": "I’m sitting here on the sand with her—now that I can see her clearly, I’ll take a closer look."
+   },
+   {
+    "n": 158,
+    "simTime": 1937.6,
+    "wall": "2026-11-23T00:42:46.158Z",
+    "text": "Hi—oh, this? Just a blank sheet. Want to sketch the island together? I’ll start a rough map."
+   },
+   {
+    "n": 159,
+    "simTime": 1944.2,
+    "wall": "2026-11-23T00:42:52.782Z",
+    "text": "It’s blank—thought I’d sketch the island. Want it? You can draw if you like; I’ve got a pencil too."
+   },
+   {
+    "n": 160,
+    "simTime": 1948.3,
+    "wall": "2026-11-23T00:42:56.859Z",
+    "text": "Here—want to sketch together?"
+   },
+   {
+    "n": 161,
+    "simTime": 1953.3,
+    "wall": "2026-11-23T00:43:01.815Z",
+    "text": "Hi—I’m Alex. Nice to meet you. Mind if I take a quick look at your sketch?"
+   },
+   {
+    "n": 162,
+    "simTime": 1958.2,
+    "wall": "2026-11-23T00:43:06.819Z",
+    "text": "Hi—I’m Alex. Nice to meet you. May I see what you’re sketching?"
+   },
+   {
+    "n": 163,
+    "simTime": 1963.1,
+    "wall": "2026-11-23T00:43:11.677Z",
+    "text": "Now that I can see her clearly, I’ll take a closer look at her and what she’s holding."
+   },
+   {
+    "n": 164,
+    "simTime": 1967.4,
+    "wall": "2026-11-23T00:43:15.996Z",
+    "text": "There you are—right next to me on the sand. I’m curious what you’re sketching and carrying."
+   },
+   {
+    "n": 165,
+    "simTime": 1972.7,
+    "wall": "2026-11-23T00:43:21.228Z",
+    "text": "I take a closer look at the young woman and what she’s sketching."
+   },
+   {
+    "n": 166,
+    "simTime": 1976.4,
+    "wall": "2026-11-23T00:43:25.030Z",
+    "text": "Hi—I’m Alex. May I take a quick look at what you’re sketching?"
+   },
+   {
+    "n": 167,
+    "simTime": 1981.4,
+    "wall": "2026-11-23T00:43:29.909Z",
+    "text": "Hi—I’m Alex. May I take a closer look at what you’re sketching?"
+   },
+   {
+    "n": 168,
+    "simTime": 1986.2,
+    "wall": "2026-11-23T00:43:34.807Z",
+    "text": "Hi—I’m Alex. May I join you for a moment? What are you sketching?"
+   },
+   {
+    "n": 169,
+    "simTime": 2008.6,
+    "wall": "2026-11-23T00:43:57.141Z",
+    "text": "Hi—Alex. May I take a closer look at your notebook?"
+   },
+   {
+    "n": 170,
+    "simTime": 2013.3,
+    "wall": "2026-11-23T00:44:01.808Z",
+    "text": "Hi—I’m Alex. May I see what you’re sketching?"
+   },
+   {
+    "n": 171,
+    "simTime": 2019.1,
+    "wall": "2026-11-23T00:44:07.645Z",
+    "text": "I’m right next to her now; I’ll take a closer look first."
+   },
+   {
+    "n": 172,
+    "simTime": 2023.5,
+    "wall": "2026-11-23T00:44:12.078Z",
+    "text": "I take a closer look at the young woman beside me."
+   },
+   {
+    "n": 173,
+    "simTime": 2028.1,
+    "wall": "2026-11-23T00:44:16.642Z",
+    "text": "I glance over to take in who’s beside me."
+   },
+   {
+    "n": 174,
+    "simTime": 2031.9,
+    "wall": "2026-11-23T00:44:20.435Z",
+    "text": "Hi—I'm Alex. Nice to meet you. Mind if I take a closer look at your sketch?"
+   },
+   {
+    "n": 175,
+    "simTime": 2036.7,
+    "wall": "2026-11-23T00:44:25.227Z",
+    "text": "Hi—Alex. May I see what you’re sketching?"
+   },
+   {
+    "n": 176,
+    "simTime": 2040.8,
+    "wall": "2026-11-23T00:44:29.382Z",
+    "text": "I take a closer look at the young woman beside me, then I’ll say hello."
+   },
+   {
+    "n": 177,
+    "simTime": 2045.1,
+    "wall": "2026-11-23T00:44:33.642Z",
+    "text": "Hi—I’m Alex. Mind if I see what you’re writing?"
+   },
+   {
+    "n": 178,
+    "simTime": 2048.7,
+    "wall": "2026-11-23T00:44:37.243Z",
+    "text": "Now that I can see her clearly, I’ll take a closer look at the young woman beside me."
+   },
+   {
+    "n": 179,
+    "simTime": 2053.5,
+    "wall": "2026-11-23T00:44:42.074Z",
+    "text": "She’s right here beside me on the sand now. I’ll take a closer look."
+   },
+   {
+    "n": 180,
+    "simTime": 2058.4,
+    "wall": "2026-11-23T00:44:46.896Z",
+    "text": "I take a closer look at her and what she’s holding."
+   },
+   {
+    "n": 181,
+    "simTime": 2062.5,
+    "wall": "2026-11-23T00:44:51.069Z",
+    "text": "I take a closer look at the young woman beside me."
+   },
+   {
+    "n": 182,
+    "simTime": 2066.8,
+    "wall": "2026-11-23T00:44:55.357Z",
+    "text": "Now that she’s clearly here beside me, I’ll take a closer look at her and what she’s holding."
+   },
+   {
+    "n": 183,
+    "simTime": 2089.5,
+    "wall": "2026-11-23T00:45:18.020Z",
+    "text": "She’s right here beside me now—let me take a closer look."
+   },
+   {
+    "n": 184,
+    "simTime": 2094.4,
+    "wall": "2026-11-23T00:45:22.958Z",
+    "text": "Oh—she’s right here beside me now. I’ll take a closer look at her and what she’s holding."
+   },
+   {
+    "n": 185,
+    "simTime": 2098.7,
+    "wall": "2026-11-23T00:45:27.255Z",
+    "text": "I notice the young woman right beside me—let me take a closer look at what she’s doing."
+   },
+   {
+    "n": 186,
+    "simTime": 2103.3,
+    "wall": "2026-11-23T00:45:31.852Z",
+    "text": "Now that I can see her clearly beside me, I take a closer look."
+   },
+   {
+    "n": 187,
+    "simTime": 2109,
+    "wall": "2026-11-23T00:45:37.586Z",
+    "text": "I notice you clearly now beside me. Hi—I’m Alex. What’s your name? Mind if I sit with you a bit and see what you’re sketching?"
+   },
+   {
+    "n": 188,
+    "simTime": 2115,
+    "wall": "2026-11-23T00:45:43.583Z",
+    "text": "She’s right beside me now—the surf is a soft hiss. I’ll just greet her."
+   },
+   {
+    "n": 189,
+    "simTime": 2119.7,
+    "wall": "2026-11-23T00:45:48.273Z",
+    "text": "I’ll let the words land and see if she responds."
+   },
+   {
+    "n": 190,
+    "simTime": 2126.6,
+    "wall": "2026-11-23T00:45:55.090Z",
+    "text": "I’m glad she’s here—I’ll take a closer look so I know what she’s doing."
+   },
+   {
+    "n": 191,
+    "simTime": 2131.1,
+    "wall": "2026-11-23T00:45:59.621Z",
+    "text": "Ah—there you are. I’ll take a closer look."
+   },
+   {
+    "n": 192,
+    "simTime": 2135,
+    "wall": "2026-11-23T00:46:03.553Z",
+    "text": "I take a closer look at the young woman beside me."
+   },
+   {
+    "n": 193,
+    "simTime": 2139.1,
+    "wall": "2026-11-23T00:46:07.653Z",
+    "text": "Oh—there you are. I’ll take a closer look first."
+   },
+   {
+    "n": 194,
+    "simTime": 2142.6,
+    "wall": "2026-11-23T00:46:11.159Z",
+    "text": "Hi—nice to meet you. Mind if I take a closer look at what you’ve got there?"
+   },
+   {
+    "n": 195,
+    "simTime": 2146.8,
+    "wall": "2026-11-23T00:46:15.342Z",
+    "text": "Oh—there you are. I’ll take a proper look so I know what she’s up to."
+   },
+   {
+    "n": 196,
+    "simTime": 2172.2,
+    "wall": "2026-11-23T00:46:40.787Z",
+    "text": "Now that I can see her clearly, I’ll take a closer look."
+   },
+   {
+    "n": 197,
+    "simTime": 2178.6,
+    "wall": "2026-11-23T00:46:47.138Z",
+    "text": "Her line about the sea zipper makes me grin. I’ll ask to go skip stones and then look for good ones near the water."
+   },
+   {
+    "n": 198,
+    "simTime": 2183.1,
+    "wall": "2026-11-23T00:46:51.589Z",
+    "text": "I’ll let that thought finish and see how she responds."
+   },
+   {
+    "n": 199,
+    "simTime": 2187.7,
+    "wall": "2026-11-23T00:46:56.187Z",
+    "text": "I’ll let my invite finish and see what she says."
+   },
+   {
+    "n": 200,
+    "simTime": 2192,
+    "wall": "2026-11-23T00:47:00.540Z",
+    "text": "There she is—walking west with the journal and a tin cup. I’ll take a closer look."
+   },
+   {
+    "n": 201,
+    "simTime": 2197.2,
+    "wall": "2026-11-23T00:47:05.727Z",
+    "text": "I’ll get up and join her by the waterline."
+   },
+   {
+    "n": 202,
+    "simTime": 2203.3,
+    "wall": "2026-11-23T00:47:11.871Z",
+    "text": "I’ll head over to her by the waterline."
+   },
+   {
+    "n": 203,
+    "simTime": 2222.4,
+    "wall": "2026-11-23T00:47:30.987Z",
+    "text": "I step up beside her to see what she’s picked up."
+   },
+   {
+    "n": 204,
+    "simTime": 2226.3,
+    "wall": "2026-11-23T00:47:34.818Z",
+    "text": "I step beside the young woman and take a closer look at what she’s carrying."
+   },
+   {
+    "n": 205,
+    "simTime": 2231.6,
+    "wall": "2026-11-23T00:47:40.168Z",
+    "text": "I step closer and glance at what she’s holding."
+   },
+   {
+    "n": 206,
+    "simTime": 2253.4,
+    "wall": "2026-11-23T00:48:01.985Z",
+    "text": "I’ll head a little closer to her by the waterline."
+   },
+   {
+    "n": 207,
+    "simTime": 2258,
+    "wall": "2026-11-23T00:48:06.518Z",
+    "text": "I head over to catch up with her by the waterline."
+   },
+   {
+    "n": 208,
+    "simTime": 2282,
+    "wall": "2026-11-23T00:48:30.505Z",
+    "text": "Almost there—I'll catch up to her and then take a closer look."
+   },
+   {
+    "n": 209,
+    "simTime": 2286.1,
+    "wall": "2026-11-23T00:48:34.645Z",
+    "text": "I’ll head over and say hi properly."
+   },
+   {
+    "n": 210,
+    "simTime": 2306.8,
+    "wall": "2026-11-23T00:48:55.415Z",
+    "text": "I’ve caught up to her near the waterline—I’ll take a closer look at her and what she’s carrying."
+   },
+   {
+    "n": 211,
+    "simTime": 2311.9,
+    "wall": "2026-11-23T00:49:00.432Z",
+    "text": "I’ll catch up to her by the waterline."
+   },
+   {
+    "n": 212,
+    "simTime": 2336.5,
+    "wall": "2026-11-23T00:49:25.019Z",
+    "text": "I’ll walk over to her by the waterline."
+   },
+   {
+    "n": 213,
+    "simTime": 2340.8,
+    "wall": "2026-11-23T00:49:29.383Z",
+    "text": "I step beside her and take in what she’s holding."
+   },
+   {
+    "n": 214,
+    "simTime": 2345.1,
+    "wall": "2026-11-23T00:49:33.614Z",
+    "text": "I’ve caught up with her by the waterline—let me take a closer look at what she’s doing."
+   },
+   {
+    "n": 215,
+    "simTime": 2349.6,
+    "wall": "2026-11-23T00:49:38.227Z",
+    "text": "I’ve caught up with her at the waterline. I take a closer look at her and what she’s carrying."
+   },
+   {
+    "n": 216,
+    "simTime": 2353.5,
+    "wall": "2026-11-23T00:49:42.054Z",
+    "text": "I glance over to see what she’s picked up and how she looks up close."
+   },
+   {
+    "n": 217,
+    "simTime": 2358.6,
+    "wall": "2026-11-23T00:49:47.214Z",
+    "text": "I’m right beside her now—let me take a proper look at her and what she’s carrying."
+   },
+   {
+    "n": 218,
+    "simTime": 2362.9,
+    "wall": "2026-11-23T00:49:51.513Z",
+    "text": "I walk alongside her for a moment, curious about what she’s carrying."
+   },
+   {
+    "n": 219,
+    "simTime": 2367.4,
+    "wall": "2026-11-23T00:49:55.993Z",
+    "text": "I step closer and take in the young woman and what she’s carrying."
+   },
+   {
+    "n": 220,
+    "simTime": 2373.9,
+    "wall": "2026-11-23T00:50:02.511Z",
+    "text": "I’ll catch up to her by the waterline."
+   },
+   {
+    "n": 221,
+    "simTime": 2378.6,
+    "wall": "2026-11-23T00:50:07.194Z",
+    "text": "I keep walking to catch up to her along the waterline."
+   },
+   {
+    "n": 222,
+    "simTime": 2394.2,
+    "wall": "2026-11-23T00:50:22.745Z",
+    "text": "I head over to her."
+   },
+   {
+    "n": 223,
+    "simTime": 2425.3,
+    "wall": "2026-11-23T00:50:53.796Z",
+    "text": "Hey again—now that we’re side by side, I’ll take a closer look at what she’s carrying."
+   },
+   {
+    "n": 224,
+    "simTime": 2428.9,
+    "wall": "2026-11-23T00:50:57.511Z",
+    "text": "Hi—again. Now that we’re side by side, I’ll take a closer look at what you’re holding."
+   },
+   {
+    "n": 225,
+    "simTime": 2432.4,
+    "wall": "2026-11-23T00:51:00.961Z",
+    "text": "I’m beside her now—let me take a closer look at what she’s setting down and holding."
+   },
+   {
+    "n": 226,
+    "simTime": 2436.4,
+    "wall": "2026-11-23T00:51:04.944Z",
+    "text": "There you are—right beside me. I’ll take a closer look."
+   },
+   {
+    "n": 227,
+    "simTime": 2440.8,
+    "wall": "2026-11-23T00:51:09.359Z",
+    "text": "Hi again. I’ll take a closer look at what you’re carrying."
+   },
+   {
+    "n": 228,
+    "simTime": 2445.1,
+    "wall": "2026-11-23T00:51:13.643Z",
+    "text": "I catch sight of the young woman again and take a closer look at her and what she’s carrying."
+   },
+   {
+    "n": 229,
+    "simTime": 2449.1,
+    "wall": "2026-11-23T00:51:17.695Z",
+    "text": "I see her up ahead along the waterline—let me take a closer look."
+   },
+   {
+    "n": 230,
+    "simTime": 2454,
+    "wall": "2026-11-23T00:51:22.548Z",
+    "text": "I’ll head over to join her by the waterline."
+   },
+   {
+    "n": 231,
+    "simTime": 2457.8,
+    "wall": "2026-11-23T00:51:26.379Z",
+    "text": "I keep walking to catch up with her."
+   },
+   {
+    "n": 232,
+    "simTime": 2479.7,
+    "wall": "2026-11-23T00:51:48.240Z",
+    "text": "I head over to catch up with her."
+   },
+   {
+    "n": 233,
+    "simTime": 2512.1,
+    "wall": "2026-11-23T00:52:20.624Z",
+    "text": "I finally spot her clearly. I’ll get a better look, then go say hello."
+   },
+   {
+    "n": 234,
+    "simTime": 2516,
+    "wall": "2026-11-23T00:52:24.505Z",
+    "text": "I’ll take a closer look at her from here."
+   },
+   {
+    "n": 235,
+    "simTime": 2520.1,
+    "wall": "2026-11-23T00:52:28.671Z",
+    "text": "I see her walking along the shore—I’ll take a closer look from here."
+   },
+   {
+    "n": 236,
+    "simTime": 2524.8,
+    "wall": "2026-11-23T00:52:33.381Z",
+    "text": "I see her walking to the east along the shore—I’ll go catch up."
+   },
+   {
+    "n": 237,
+    "simTime": 2547.5,
+    "wall": "2026-11-23T00:52:56.042Z",
+    "text": "I keep following her along the shore, curious about what she’s writing."
+   },
+   {
+    "n": 238,
+    "simTime": 2550.8,
+    "wall": "2026-11-23T00:52:59.353Z",
+    "text": "I keep following along the stream toward them."
+   }
+  ]
+ }
+]
