@@ -1,0 +1,12 @@
+{
+ "runId": "2026-11-23T02-12-37_gpt-5_v1",
+ "status": "completed",
+ "startedWall": "2026-11-23T02:12:37.957Z",
+ "test": false,
+ "deaths": [],
+ "reason": "the run reached its time limit",
+ "endedWall": "2026-11-23T03:02:56.370Z",
+ "modelCalls": 337,
+ "estimatedCostUsd": 2.9588,
+ "reportCheck": "**Woman:** - \"Inspected/relit lantern (half-full; wick lit successfully)...\" — The lantern was lit once at 29:48–29:56; there is no prior lantern lighting to justify \"relit.\" Record: [29:48] REQUEST use lantern with lighter → [29:56] OBJECT Lantern lit.\n\n- \"Started on the south-west beach.\" — The start location is described only as a sandy beach; “south-west” is not stated in the activity record or the journal. Record: [00:00] OBSERVE: Standing on sandy beach. (No compass quadrant given.)\n\n**Man:** - \"Noted items on the platform: lighter, sword (in scabbard with strap), snorkel and mask.\"\n  - Unsupported “mask.” The observation lists only “snorkel.”\n  - Record: [06:14] OBSERVE: \"... lighter (19 ft N), sword (19 ft N), snorkel (19 ft N).\"\n  - Also later she is holding only a snorkel: [12:24] OBSERVE: \"... She is holding: journal, pencil, tin cup, snorkel.\"\n\n- \"Maya later descended from the platform (presumably to handle rope/lantern); I remained clear of the opening, wore the sword from the table, and waited.\"\n  - The parenthetical motive (“presumably to handle rope/lantern”) is not supported; no reason is stated in the record.\n  - Record: [23:07]–[24:49] OBSERVE entries show her descending, but give no motive."
+}

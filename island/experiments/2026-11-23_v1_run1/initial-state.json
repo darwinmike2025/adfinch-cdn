@@ -1,0 +1,778 @@
+{
+ "format": "watchable-island-state",
+ "version": "1.0.0",
+ "simTime": 0,
+ "speed": 1,
+ "paused": false,
+ "run": {
+  "active": false,
+  "ended": false,
+  "startSim": null,
+  "endSim": null,
+  "durationSec": 1800
+ },
+ "rng": 20261122,
+ "animals": [],
+ "startAt": "beach",
+ "objects": {
+  "journal": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.6,
+   "state": {},
+   "reach": 5.5,
+   "id": "journal",
+   "name": "journal",
+   "burnable": true,
+   "desc": "A small notebook with a cloth cover.",
+   "loc": {
+    "t": "carried",
+    "by": "a"
+   },
+   "ownedBy": "a"
+  },
+  "pencil": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.05,
+   "state": {},
+   "reach": 5.5,
+   "id": "pencil",
+   "name": "pencil",
+   "burnable": true,
+   "desc": "A sharpened wooden pencil.",
+   "loc": {
+    "t": "carried",
+    "by": "a"
+   },
+   "ownedBy": "a"
+  },
+  "boat": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 13,
+   "id": "boat",
+   "name": "rowboat",
+   "desc": "A weathered wooden rowboat pulled up onto the sand.",
+   "closeDesc": "The hull is dry and sound. The boat is open on top, so anything inside is visible.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 6
+   },
+   "loc": {
+    "t": "ground",
+    "x": 260,
+    "y": 705
+   },
+   "viewRange": 400
+  },
+  "oar": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 5,
+   "state": {},
+   "reach": 5.5,
+   "id": "oar",
+   "name": "oar",
+   "awkward": true,
+   "burnable": true,
+   "desc": "A long wooden oar.",
+   "loc": {
+    "t": "in",
+    "id": "boat"
+   }
+  },
+  "rope": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 4,
+   "state": {},
+   "reach": 5.5,
+   "id": "rope",
+   "name": "coil of rope",
+   "burnable": true,
+   "desc": "About 30 feet of hemp rope, coiled on the sand.",
+   "loc": {
+    "t": "ground",
+    "x": 400,
+    "y": 720
+   }
+  },
+  "crate": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "crate",
+   "name": "wooden crate",
+   "desc": "A sturdy wooden crate with a hinged lid, sitting on the beach.",
+   "container": {
+    "open": false,
+    "openable": true,
+    "locked": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 455,
+    "y": 725
+   },
+   "viewRange": 250
+  },
+  "wheelbarrow": {
+   "kind": "item",
+   "size": "large",
+   "weight": 25,
+   "state": {},
+   "reach": 6,
+   "id": "wheelbarrow",
+   "name": "wheelbarrow",
+   "awkward": true,
+   "desc": "A rusty metal wheelbarrow with a wooden handle. Pick it up to push it; things inside come along.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 205,
+    "y": 522
+   }
+  },
+  "mirror": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6,
+   "id": "mirror",
+   "name": "standing mirror",
+   "desc": "A round mirror in a wooden frame, standing against a tree.",
+   "closeDesc": "The glass is clean.",
+   "loc": {
+    "t": "ground",
+    "x": 160,
+    "y": 455
+   },
+   "viewRange": 120
+  },
+  "picnic_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "picnic_table",
+   "name": "driftwood table",
+   "surface": true,
+   "desc": "A rough table built from driftwood.",
+   "loc": {
+    "t": "ground",
+    "x": 361,
+    "y": 640
+   },
+   "viewRange": 200
+  },
+  "paper": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 5.5,
+   "id": "paper",
+   "name": "sheet of paper",
+   "burnable": true,
+   "desc": "A weathered sheet of paper on the table.",
+   "readable": null,
+   "loc": {
+    "t": "on",
+    "id": "picnic_table"
+   }
+  },
+  "stepladder": {
+   "kind": "item",
+   "size": "large",
+   "weight": 14,
+   "state": {},
+   "reach": 5.5,
+   "id": "stepladder",
+   "name": "stepladder",
+   "awkward": true,
+   "desc": "A small wooden A-frame stepladder, about 6 ft tall.",
+   "loc": {
+    "t": "ground",
+    "x": 575,
+    "y": 520
+   }
+  },
+  "ball": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 0.4,
+   "state": {},
+   "reach": 5.5,
+   "id": "ball",
+   "name": "red ball",
+   "desc": "A bright red rubber ball.",
+   "loc": {
+    "t": "ground",
+    "x": 582,
+    "y": 610
+   }
+  },
+  "blanket": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 2,
+   "state": {
+    "spread": true
+   },
+   "reach": 5.5,
+   "id": "blanket",
+   "name": "blue blanket",
+   "burnable": true,
+   "desc": "A blue cotton blanket.",
+   "loc": {
+    "t": "ground",
+    "x": 645,
+    "y": 615
+   }
+  },
+  "blocks": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 3,
+   "state": {
+    "stacked": true
+   },
+   "reach": 5.5,
+   "id": "blocks",
+   "name": "wooden blocks",
+   "burnable": true,
+   "desc": "A handful of plain wooden cubes.",
+   "loc": {
+    "t": "ground",
+    "x": 735,
+    "y": 612
+   }
+  },
+  "driftwood_1": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 7,
+   "state": {},
+   "reach": 5.5,
+   "id": "driftwood_1",
+   "name": "driftwood log",
+   "burnable": true,
+   "fuel": true,
+   "desc": "A bleached, dry piece of driftwood about 3 ft long.",
+   "loc": {
+    "t": "ground",
+    "x": 190,
+    "y": 660
+   }
+  },
+  "driftwood_2": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 6,
+   "state": {},
+   "reach": 5.5,
+   "id": "driftwood_2",
+   "name": "driftwood log",
+   "burnable": true,
+   "fuel": true,
+   "desc": "A bleached, dry piece of driftwood about 3 ft long.",
+   "loc": {
+    "t": "ground",
+    "x": 330,
+    "y": 745
+   }
+  },
+  "stone_1": {
+   "kind": "item",
+   "size": "small",
+   "weight": 1,
+   "state": {},
+   "reach": 5.5,
+   "id": "stone_1",
+   "name": "smooth stone",
+   "desc": "A smooth, palm-sized grey stone.",
+   "loc": {
+    "t": "ground",
+    "x": 215,
+    "y": 700
+   }
+  },
+  "stone_2": {
+   "kind": "item",
+   "size": "small",
+   "weight": 1.2,
+   "state": {},
+   "reach": 5.5,
+   "id": "stone_2",
+   "name": "smooth stone",
+   "desc": "A smooth, palm-sized speckled stone.",
+   "loc": {
+    "t": "ground",
+    "x": 590,
+    "y": 752
+   }
+  },
+  "cabin": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "cabin",
+   "name": "cabin",
+   "bothSides": true,
+   "desc": "A small log cabin with a single door on its south side.",
+   "closeDesc": "Inside: a table, a narrow bed, and a stone fireplace under the chimney.",
+   "loc": {
+    "t": "ground",
+    "x": 265,
+    "y": 410
+   },
+   "viewRange": 450
+  },
+  "cabin_door": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "open": false
+   },
+   "reach": 8,
+   "id": "cabin_door",
+   "name": "cabin door",
+   "bothSides": true,
+   "door": true,
+   "desc": "A plank door with an iron latch.",
+   "loc": {
+    "t": "ground",
+    "x": 267.5,
+    "y": 425
+   },
+   "viewRange": 300
+  },
+  "bed": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "bed",
+   "name": "narrow bed",
+   "surface": true,
+   "desc": "A narrow wooden bed with a straw mattress and a wool blanket, neatly made.",
+   "loc": {
+    "t": "ground",
+    "x": 252.5,
+    "y": 417.5
+   },
+   "viewRange": 60
+  },
+  "fireplace": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "lit": false
+   },
+   "reach": 6.5,
+   "id": "fireplace",
+   "name": "stone fireplace",
+   "desc": "A small stone fireplace with a chimney. The hearth is swept and empty.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 277.5,
+    "y": 402.5
+   },
+   "viewRange": 60
+  },
+  "cabin_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "cabin_table",
+   "name": "cabin table",
+   "surface": true,
+   "desc": "A rough wooden table.",
+   "loc": {
+    "t": "ground",
+    "x": 252.5,
+    "y": 402.5
+   },
+   "viewRange": 60
+  },
+  "lantern": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 3,
+   "state": {
+    "lit": false,
+    "broken": false
+   },
+   "reach": 5.5,
+   "id": "lantern",
+   "name": "oil lantern",
+   "fragile": true,
+   "desc": "A glass oil lantern, half full of oil.",
+   "loc": {
+    "t": "on",
+    "id": "cabin_table"
+   }
+  },
+  "tin_cup": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.4,
+   "state": {
+    "full": false
+   },
+   "reach": 5.5,
+   "id": "tin_cup",
+   "name": "tin cup",
+   "desc": "A dented tin cup.",
+   "loc": {
+    "t": "in",
+    "id": "crate"
+   }
+  },
+  "chest": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "chest",
+   "name": "wooden chest",
+   "desc": "A heavy wooden chest with a lid, sitting outside beside the cabin door.",
+   "container": {
+    "open": false,
+    "openable": true,
+    "locked": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 302.5,
+    "y": 432.5
+   },
+   "viewRange": 150
+  },
+  "fire_pit": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "lit": false,
+    "burnLeft": 0
+   },
+   "reach": 6,
+   "id": "fire_pit",
+   "name": "fire pit",
+   "desc": "A ring of blackened stones around old ashes.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 3,
+    "fuelOnly": false
+   },
+   "loc": {
+    "t": "ground",
+    "x": 286,
+    "y": 570
+   },
+   "viewRange": 90
+  },
+  "bell": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 7,
+   "id": "bell",
+   "name": "bronze bell",
+   "desc": "A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.",
+   "closeDesc": "A rope hangs from the clapper. It looks like it would be loud.",
+   "loc": {
+    "t": "ground",
+    "x": 845,
+    "y": 310
+   },
+   "viewRange": 250
+  },
+  "stone_circle": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "stone_circle",
+   "name": "stone circle",
+   "desc": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.",
+   "loc": {
+    "t": "ground",
+    "x": 800,
+    "y": 420.01
+   },
+   "viewRange": 450
+  },
+  "bridge": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "bridge",
+   "name": "wooden bridge",
+   "desc": "An arched plank footbridge with handrails over the stream.",
+   "loc": {
+    "t": "ground",
+    "x": 430,
+    "y": 505
+   },
+   "viewRange": 250
+  },
+  "ladder": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 4,
+   "id": "ladder",
+   "name": "tall metal ladder",
+   "desc": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+   "closeDesc": "The rails are bolted into the concrete. The rungs are dry and solid. You cannot see what is on the platform from down here.",
+   "loc": {
+    "t": "ground",
+    "x": 690,
+    "y": 549
+   },
+   "viewRange": 2000
+  },
+  "platform": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 99,
+   "id": "platform",
+   "name": "platform",
+   "surface": true,
+   "platformLevel": true,
+   "desc": "A steel platform with a railing at the top of the tower.",
+   "loc": {
+    "t": "platform"
+   },
+   "viewRange": 2000
+  },
+  "platform_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 99,
+   "id": "platform_table",
+   "name": "platform table",
+   "surface": true,
+   "platformLevel": true,
+   "desc": "A small wooden table fixed to the platform.",
+   "loc": {
+    "t": "platform"
+   },
+   "viewRange": 0
+  },
+  "lighter": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.1,
+   "state": {},
+   "reach": 5.5,
+   "id": "lighter",
+   "name": "lighter",
+   "desc": "A metal flip-top lighter.",
+   "loc": {
+    "t": "on",
+    "id": "platform_table"
+   }
+  },
+  "sword": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 5,
+   "state": {},
+   "reach": 5.5,
+   "id": "sword",
+   "name": "sword",
+   "awkward": true,
+   "wearable": true,
+   "desc": "A steel sword in a leather scabbard with a shoulder strap.",
+   "loc": {
+    "t": "on",
+    "id": "platform_table"
+   }
+  },
+  "snorkel": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.3,
+   "state": {},
+   "reach": 5.5,
+   "id": "snorkel",
+   "name": "snorkel",
+   "wearable": true,
+   "desc": "A snorkel with an attached dive mask.",
+   "loc": {
+    "t": "on",
+    "id": "platform_table"
+   }
+  },
+  "journal_2": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.6,
+   "state": {},
+   "reach": 5.5,
+   "id": "journal_2",
+   "name": "journal",
+   "burnable": true,
+   "desc": "A small notebook with a cloth cover.",
+   "loc": {
+    "t": "carried",
+    "by": "b"
+   },
+   "ownedBy": "b"
+  },
+  "pencil_2": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.05,
+   "state": {},
+   "reach": 5.5,
+   "id": "pencil_2",
+   "name": "pencil",
+   "burnable": true,
+   "desc": "A sharpened wooden pencil.",
+   "loc": {
+    "t": "carried",
+    "by": "b"
+   },
+   "ownedBy": "b"
+  }
+ },
+ "sounds": [],
+ "nextActionId": 1,
+ "nextSeq": 2,
+ "party": [
+  {
+   "id": "a",
+   "label": "Woman",
+   "sex": "female",
+   "age": 20,
+   "startAt": "beach",
+   "journalId": "journal",
+   "pencilId": "pencil",
+   "notices": [],
+   "agent": {
+    "id": "a",
+    "health": 100,
+    "dead": false,
+    "x": 268,
+    "y": 714,
+    "level": "ground",
+    "ladderFt": 0,
+    "pose": "standing",
+    "facing": 0,
+    "stepDist": 0,
+    "underwaterView": null,
+    "trail": []
+   },
+   "seen": {
+    "boat": 0,
+    "oar": 0,
+    "crate": 0,
+    "picnic_table": 0,
+    "driftwood_2": 0,
+    "cabin": 0,
+    "cabin_door": 0,
+    "ladder": 0,
+    "platform": 0,
+    "feature:pond": 0,
+    "feature:stream": 0,
+    "feature:hill": 0,
+    "feature:ocean": 0,
+    "feature:beach": 0,
+    "feature:forest": 0,
+    "feature:cliffs": 0
+   },
+   "journal": {
+    "entries": []
+   },
+   "reflections": [],
+   "action": null,
+   "history": []
+  },
+  {
+   "id": "b",
+   "label": "Man",
+   "sex": "male",
+   "age": 20,
+   "startAt": "hilltop",
+   "journalId": "journal_2",
+   "pencilId": "pencil_2",
+   "notices": [],
+   "agent": {
+    "id": "b",
+    "health": 100,
+    "dead": false,
+    "x": 522,
+    "y": 182,
+    "level": "ground",
+    "ladderFt": 0,
+    "pose": "standing",
+    "facing": 0,
+    "stepDist": 0,
+    "underwaterView": null,
+    "trail": []
+   },
+   "seen": {
+    "cabin": 0,
+    "stone_circle": 0,
+    "ladder": 0,
+    "platform": 0,
+    "feature:pond": 0,
+    "feature:stream": 0,
+    "feature:hill": 0,
+    "feature:ocean": 0,
+    "feature:beach": 0,
+    "feature:forest": 0,
+    "feature:cliffs": 0
+   },
+   "journal": {
+    "entries": []
+   },
+   "reflections": [],
+   "action": null,
+   "history": []
+  }
+ ],
+ "cur": 0,
+ "protocol": "v1"
+}

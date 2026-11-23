@@ -1,0 +1,1980 @@
+[
+ {
+  "person": "Woman",
+  "reflections": [
+   {
+    "n": 1,
+    "simTime": 2.7,
+    "wall": "2026-11-23T02:12:40.723Z",
+    "text": "I’m on a sandy beach beside a weathered rowboat. I’ll take a better look around to get my bearings."
+   },
+   {
+    "n": 2,
+    "simTime": 8.5,
+    "wall": "2026-11-23T02:12:46.445Z",
+    "text": "The little cluster of things is inviting. I’ll check the rowboat first."
+   },
+   {
+    "n": 3,
+    "simTime": 16.6,
+    "wall": "2026-11-23T02:12:54.607Z",
+    "text": "There’s a crate down the beach with a hinged lid—that’s tempting. I’ll go check it out."
+   },
+   {
+    "n": 4,
+    "simTime": 48.6,
+    "wall": "2026-11-23T02:13:26.558Z",
+    "text": "I’ll keep heading to the crate. Noting that tall ladder inland and a small cabin past the bridge—I might check those later."
+   },
+   {
+    "n": 5,
+    "simTime": 74.1,
+    "wall": "2026-11-23T02:13:52.094Z",
+    "text": "Let’s see what’s inside this crate."
+   },
+   {
+    "n": 6,
+    "simTime": 79.3,
+    "wall": "2026-11-23T02:13:57.253Z",
+    "text": "A tin cup could be handy—for water, for sounds, whatever. I’ll take it."
+   },
+   {
+    "n": 7,
+    "simTime": 84,
+    "wall": "2026-11-23T02:14:02.008Z",
+    "text": "I’ll grab that coil of rope—seems useful."
+   },
+   {
+    "n": 8,
+    "simTime": 100.9,
+    "wall": "2026-11-23T02:14:18.897Z",
+    "text": "I’ll take the rope with me."
+   },
+   {
+    "n": 9,
+    "simTime": 106.1,
+    "wall": "2026-11-23T02:14:24.121Z",
+    "text": "I’ll head up to the wooden bridge and see what the stream and crossing look like."
+   },
+   {
+    "n": 10,
+    "simTime": 111.2,
+    "wall": "2026-11-23T02:14:29.208Z",
+    "text": "I notice someone walking near the ladder in the distance. I’ll keep to the bridge for now."
+   },
+   {
+    "n": 11,
+    "simTime": 140.9,
+    "wall": "2026-11-23T02:14:58.867Z",
+    "text": "I’ll keep on toward the bridge and take a look at the stream from there. Noting that someone’s climbing the tower, a couple feet up."
+   },
+   {
+    "n": 12,
+    "simTime": 166.2,
+    "wall": "2026-11-23T02:15:24.173Z",
+    "text": "I’ll pause on the bridge and take a closer look at the stream below."
+   },
+   {
+    "n": 13,
+    "simTime": 174.3,
+    "wall": "2026-11-23T02:15:32.335Z",
+    "text": "I’ll head over to the cabin and check that chest by the door."
+   },
+   {
+    "n": 14,
+    "simTime": 205.8,
+    "wall": "2026-11-23T02:16:03.787Z",
+    "text": "Almost there to the chest—curious what’s inside."
+   },
+   {
+    "n": 15,
+    "simTime": 215.3,
+    "wall": "2026-11-23T02:16:13.318Z",
+    "text": "Let’s see what’s in this chest."
+   },
+   {
+    "n": 16,
+    "simTime": 220.6,
+    "wall": "2026-11-23T02:16:18.555Z",
+    "text": "Empty chest. I’ll check the cabin—curious if the door’s open."
+   },
+   {
+    "n": 17,
+    "simTime": 233.4,
+    "wall": "2026-11-23T02:16:31.370Z",
+    "text": "I’ll try the latch and see if the cabin door opens."
+   },
+   {
+    "n": 18,
+    "simTime": 238.2,
+    "wall": "2026-11-23T02:16:36.183Z",
+    "text": "I’ll step inside and take a closer look at the lantern on the table."
+   },
+   {
+    "n": 19,
+    "simTime": 249.5,
+    "wall": "2026-11-23T02:16:47.435Z",
+    "text": "This lantern looks promising—let me check it closely for a wick and whether it’s ready to light."
+   },
+   {
+    "n": 20,
+    "simTime": 257.9,
+    "wall": "2026-11-23T02:16:55.884Z",
+    "text": "I’ll take the lantern with me in case I need light later."
+   },
+   {
+    "n": 21,
+    "simTime": 263.7,
+    "wall": "2026-11-23T02:17:01.600Z",
+    "text": "I’ll check the fireplace for any tinder, matches, or tools."
+   },
+   {
+    "n": 22,
+    "simTime": 271.8,
+    "wall": "2026-11-23T02:17:09.831Z",
+    "text": "I’ll move closer to the fireplace to check it properly."
+   },
+   {
+    "n": 23,
+    "simTime": 279.6,
+    "wall": "2026-11-23T02:17:17.563Z",
+    "text": "Now that I’m right here, I’ll check the fireplace for any tools, ash, or hidden nook—maybe a matchbox on a mantle."
+   },
+   {
+    "n": 24,
+    "simTime": 288.2,
+    "wall": "2026-11-23T02:17:26.144Z",
+    "text": "The fireplace’s clean. I’ll check the bed—maybe there’s something tucked in or underneath."
+   },
+   {
+    "n": 25,
+    "simTime": 295.5,
+    "wall": "2026-11-23T02:17:33.499Z",
+    "text": "I’ll check the bed—look under the blanket and mattress, and underneath the frame for anything tucked away."
+   },
+   {
+    "n": 26,
+    "simTime": 304.2,
+    "wall": "2026-11-23T02:17:42.231Z",
+    "text": "I’ll go back to the table and see if there are any drawers or small items I missed."
+   },
+   {
+    "n": 27,
+    "simTime": 310.2,
+    "wall": "2026-11-23T02:17:48.194Z",
+    "text": "Nothing else here. I’ll head over to the tall ladder and see what’s at the top."
+   },
+   {
+    "n": 28,
+    "simTime": 317.3,
+    "wall": "2026-11-23T02:17:55.267Z",
+    "text": "I’ll keep on toward the ladder and see what the view is like from there."
+   },
+   {
+    "n": 29,
+    "simTime": 348.1,
+    "wall": "2026-11-23T02:18:26.081Z",
+    "text": "I’ll keep heading to the ladder. I see someone already high up—about 88 feet. I might call up when I’m closer."
+   },
+   {
+    "n": 30,
+    "simTime": 378.3,
+    "wall": "2026-11-23T02:18:56.230Z",
+    "text": "I’ll keep heading to the ladder. Once I’m there, I’ll set down the lantern and rope so I can climb, and call up to the person on the platform."
+   },
+   {
+    "n": 31,
+    "simTime": 385,
+    "wall": "2026-11-23T02:19:02.964Z",
+    "text": "I call back while I’m on my way."
+   },
+   {
+    "n": 32,
+    "simTime": 394.6,
+    "wall": "2026-11-23T02:19:12.513Z",
+    "text": "I’ll head over to the ladder and talk from closer by."
+   },
+   {
+    "n": 33,
+    "simTime": 399.8,
+    "wall": "2026-11-23T02:19:17.780Z",
+    "text": "I’ll keep walking and answer from closer up."
+   },
+   {
+    "n": 34,
+    "simTime": 409.4,
+    "wall": "2026-11-23T02:19:27.367Z",
+    "text": "I’m a visitor—just arrived from the beach. I’ve got a rope and a lantern with me. Is the ladder sturdy all the way up? What’s your name?"
+   },
+   {
+    "n": 35,
+    "simTime": 414.6,
+    "wall": "2026-11-23T02:19:32.592Z",
+    "text": "I’ll keep going to the ladder, then set my things down and call up from the base before climbing."
+   },
+   {
+    "n": 36,
+    "simTime": 424.8,
+    "wall": "2026-11-23T02:19:42.807Z",
+    "text": "Thanks! I’ll be right there—going to set down a rope and lantern at the base before climbing. I’m a visitor; what’s your name?"
+   },
+   {
+    "n": 37,
+    "simTime": 429.3,
+    "wall": "2026-11-23T02:19:47.326Z",
+    "text": "On my way—thanks for the heads-up. I’ll set my lantern and rope down at the base before climbing. What’s your name?"
+   },
+   {
+    "n": 38,
+    "simTime": 434.4,
+    "wall": "2026-11-23T02:19:52.359Z",
+    "text": "Almost there—I’ll set the lantern and rope down at the base and climb up. What’s your name?"
+   },
+   {
+    "n": 39,
+    "simTime": 442.4,
+    "wall": "2026-11-23T02:20:00.357Z",
+    "text": "Almost there. I’ll set my lantern and rope down at the base and then call up before climbing."
+   },
+   {
+    "n": 40,
+    "simTime": 451.9,
+    "wall": "2026-11-23T02:20:09.879Z",
+    "text": "At the base of the tower now. I’ll set my things down so I can climb."
+   },
+   {
+    "n": 41,
+    "simTime": 454.4,
+    "wall": "2026-11-23T02:20:12.424Z",
+    "text": "Setting the lantern down here, then I’ll set down the rope and climb up."
+   },
+   {
+    "n": 42,
+    "simTime": 457.2,
+    "wall": "2026-11-23T02:20:15.194Z",
+    "text": "Setting the rope down here. I’ll climb up next. Also—what’s your name?"
+   },
+   {
+    "n": 43,
+    "simTime": 462.1,
+    "wall": "2026-11-23T02:20:20.061Z",
+    "text": "I’m going to climb up now—what’s your name? I’ll take it slow."
+   },
+   {
+    "n": 44,
+    "simTime": 469.4,
+    "wall": "2026-11-23T02:20:27.390Z",
+    "text": "I’ll keep climbing steadily—hands free. My name’s Maya. Once I’m up, we can use the rope to haul the lantern and cup."
+   },
+   {
+    "n": 45,
+    "simTime": 471.8,
+    "wall": "2026-11-23T02:20:29.708Z",
+    "text": "I’m Maya. I’ll keep climbing—hands free."
+   },
+   {
+    "n": 46,
+    "simTime": 496.3,
+    "wall": "2026-11-23T02:20:54.292Z",
+    "text": "Thanks, Alex—I’m Maya. Journal and pencil are in my pocket; my hands are free. I’ll keep climbing steadily."
+   },
+   {
+    "n": 47,
+    "simTime": 498.6,
+    "wall": "2026-11-23T02:20:56.578Z",
+    "text": "Thanks, Alex—I’m Maya. Hands free; continuing up."
+   },
+   {
+    "n": 48,
+    "simTime": 525.8,
+    "wall": "2026-11-23T02:21:23.771Z",
+    "text": "Steady and slow—I’ll keep climbing up to the platform."
+   },
+   {
+    "n": 49,
+    "simTime": 558.7,
+    "wall": "2026-11-23T02:21:56.686Z",
+    "text": "Steady and slow—continuing up. Thanks for waiting, Alex."
+   },
+   {
+    "n": 50,
+    "simTime": 588.2,
+    "wall": "2026-11-23T02:22:26.139Z",
+    "text": "Continuing up—steady."
+   },
+   {
+    "n": 51,
+    "simTime": 618.8,
+    "wall": "2026-11-23T02:22:56.788Z",
+    "text": "Continuing up, Alex—hands free. I’ll step onto the platform slowly when I reach you."
+   },
+   {
+    "n": 52,
+    "simTime": 639.4,
+    "wall": "2026-11-23T02:23:17.337Z",
+    "text": "I’m good solo—thanks. I’ll step left onto the platform when I reach you."
+   },
+   {
+    "n": 53,
+    "simTime": 669.5,
+    "wall": "2026-11-23T02:23:47.402Z",
+    "text": "Almost there—stepping left onto the platform when I reach it. Still good solo."
+   },
+   {
+    "n": 54,
+    "simTime": 671.5,
+    "wall": "2026-11-23T02:23:49.500Z",
+    "text": "Continuing up—stepping left onto the platform at the top. I’m good solo."
+   },
+   {
+    "n": 55,
+    "simTime": 702.4,
+    "wall": "2026-11-23T02:24:20.389Z",
+    "text": "Almost there—stepping left onto the platform, solo."
+   },
+   {
+    "n": 56,
+    "simTime": 708.4,
+    "wall": "2026-11-23T02:24:26.383Z",
+    "text": "I step onto the platform and take in the view—feels airy up here."
+   },
+   {
+    "n": 57,
+    "simTime": 725.2,
+    "wall": "2026-11-23T02:24:43.119Z",
+    "text": "Nice to meet you, Alex. I’ll take a look at what’s on the table first, then we can haul up the lantern with the rope below."
+   },
+   {
+    "n": 58,
+    "simTime": 738.2,
+    "wall": "2026-11-23T02:24:56.168Z",
+    "text": "Nice to meet you properly, Alex. From up here, what have you noticed—anything interesting toward the bell or the stone circle? I left a rope and lantern at the base; I can climb down a couple of rungs to grab the rope end and pass it up so we can haul the lantern—does that work for you? Mind if I borrow the snorkel-mask for later?"
+   },
+   {
+    "n": 59,
+    "simTime": 743.9,
+    "wall": "2026-11-23T02:25:01.864Z",
+    "text": "Grabbing the snorkel—thanks. We can haul the lantern later; for now, what have you noticed from up here—anything unusual by the bell or stone circle?"
+   },
+   {
+    "n": 60,
+    "simTime": 750.6,
+    "wall": "2026-11-23T02:25:08.514Z",
+    "text": "The platform feels steady and the view is wide—nice to pause here."
+   },
+   {
+    "n": 61,
+    "simTime": 752.6,
+    "wall": "2026-11-23T02:25:10.565Z",
+    "text": "I’ll let that finish and then we can decide about hauling the lantern."
+   },
+   {
+    "n": 62,
+    "simTime": 764.6,
+    "wall": "2026-11-23T02:25:22.589Z",
+    "text": "I’ll let Alex handle tying the rope to the lantern below, and I’ll clear my hands up here."
+   },
+   {
+    "n": 63,
+    "simTime": 773.4,
+    "wall": "2026-11-23T02:25:31.331Z",
+    "text": "Sounds good—if you don’t mind, could you pop down and tie the rope to the lantern? I’ll haul from here. I’ll set my cup on the table and keep the rail clear."
+   },
+   {
+    "n": 64,
+    "simTime": 781.4,
+    "wall": "2026-11-23T02:25:39.352Z",
+    "text": "Alex, if you don’t mind, could you pop down, tie the rope to the lantern handle—something secure like a bowline—and bring the other end back up? I’ll be ready to haul from here and mind the edge of the platform."
+   },
+   {
+    "n": 65,
+    "simTime": 801.2,
+    "wall": "2026-11-23T02:25:59.204Z",
+    "text": "I’ll wait at the rail ready to haul—call up when the rope’s tied to the lantern. Meanwhile I’ll take a better look around from up here."
+   },
+   {
+    "n": 66,
+    "simTime": 808.8,
+    "wall": "2026-11-23T02:26:06.784Z",
+    "text": "Thanks, Alex. Yes—please pop down and tie the rope to the lantern handle; I’ll haul from up here and mind the rail. The snorkel’s from the table—I’ll borrow it. Feel free to test the lighter."
+   },
+   {
+    "n": 67,
+    "simTime": 813.3,
+    "wall": "2026-11-23T02:26:11.252Z",
+    "text": "Yes, please pop down and tie the rope securely to the lantern handle. I’ll stay at the rail and haul when you call up. Feel free to test the lighter first if you want. Anything interesting you’ve noticed from up here—toward the bell or stone circle?"
+   },
+   {
+    "n": 68,
+    "simTime": 819.6,
+    "wall": "2026-11-23T02:26:17.571Z",
+    "text": "Copy—I'll keep a good stance at the rail and be ready to take the rope when you bring it up."
+   },
+   {
+    "n": 69,
+    "simTime": 830.4,
+    "wall": "2026-11-23T02:26:28.347Z",
+    "text": "Standing by at the rail—ready when you bring the rope up."
+   },
+   {
+    "n": 70,
+    "simTime": 836.8,
+    "wall": "2026-11-23T02:26:34.781Z",
+    "text": "Standing by at the rail—while you climb down, I’ll quickly test the lighter."
+   },
+   {
+    "n": 71,
+    "simTime": 844,
+    "wall": "2026-11-23T02:26:41.912Z",
+    "text": "I’ll stay by the rail and test the lighter while you tie the lantern—careful on the ladder."
+   },
+   {
+    "n": 72,
+    "simTime": 849.3,
+    "wall": "2026-11-23T02:26:47.235Z",
+    "text": "Holding the rail—I’ll let the lighter test finish and be ready to take the rope when Alex returns."
+   },
+   {
+    "n": 73,
+    "simTime": 853.1,
+    "wall": "2026-11-23T02:26:51.066Z",
+    "text": "I stand at the rail, lighter back in my pocket, ready to take the rope when Alex returns."
+   },
+   {
+    "n": 74,
+    "simTime": 885.3,
+    "wall": "2026-11-23T02:27:23.279Z",
+    "text": "Standing by at the rail—good stance, ready to take the rope when you’re back up."
+   },
+   {
+    "n": 75,
+    "simTime": 901.4,
+    "wall": "2026-11-23T02:27:39.345Z",
+    "text": "I’ll hold the rail and stand by at the ladder—ready to take the rope when you’re back up."
+   },
+   {
+    "n": 76,
+    "simTime": 939.9,
+    "wall": "2026-11-23T02:28:17.900Z",
+    "text": "Standing by at the rail—watching you descend. I’ll be ready to take the rope when you’re back up."
+   },
+   {
+    "n": 77,
+    "simTime": 966,
+    "wall": "2026-11-23T02:28:43.968Z",
+    "text": "I keep a steady stance by the rail, staying clear of the ladder, and take a closer look toward the bell while I wait for Alex to bring the rope up."
+   },
+   {
+    "n": 78,
+    "simTime": 976.5,
+    "wall": "2026-11-23T02:28:54.408Z",
+    "text": "I’ll stay clear of the ladder—taking a quick look at the sword while I wait. Ready to take the rope when you’re back up."
+   },
+   {
+    "n": 79,
+    "simTime": 986.4,
+    "wall": "2026-11-23T02:29:04.350Z",
+    "text": "I’ll stand by the ladder opening and be ready to take the rope when you’re back up."
+   },
+   {
+    "n": 80,
+    "simTime": 1019.5,
+    "wall": "2026-11-23T02:29:37.475Z",
+    "text": "Steady—one at a time on the ladder. I’ve got the rail; call up when you’ve got the rope tied."
+   },
+   {
+    "n": 81,
+    "simTime": 1030.7,
+    "wall": "2026-11-23T02:29:48.735Z",
+    "text": "I’ve got the rail—ready to take the free end when you bring it up."
+   },
+   {
+    "n": 82,
+    "simTime": 1056.6,
+    "wall": "2026-11-23T02:30:14.592Z",
+    "text": "Perfect timing—mind passing me the free end? I’ll haul the lantern up steady."
+   },
+   {
+    "n": 83,
+    "simTime": 1077.5,
+    "wall": "2026-11-23T02:30:35.493Z",
+    "text": "Got it—hauling steady. I’ll secure the lantern up here."
+   },
+   {
+    "n": 84,
+    "simTime": 1086.2,
+    "wall": "2026-11-23T02:30:44.199Z",
+    "text": "Hauling steady—bringing it up over the rail now."
+   },
+   {
+    "n": 85,
+    "simTime": 1092,
+    "wall": "2026-11-23T02:30:49.918Z",
+    "text": "Copy—standing clear of the top. When you’re ready, can you hand me the lantern? I’ll set it on the table so you can grab the rope."
+   },
+   {
+    "n": 86,
+    "simTime": 1110,
+    "wall": "2026-11-23T02:31:07.921Z",
+    "text": "Nice climb—hand me the lantern and I’ll set it on the table. If you’re up for it, could you pop back down to fetch the rope? I’ll stay clear of the ladder."
+   },
+   {
+    "n": 87,
+    "simTime": 1114.3,
+    "wall": "2026-11-23T02:31:12.200Z",
+    "text": "I’ll keep clear and finish taking the lantern to the table."
+   },
+   {
+    "n": 88,
+    "simTime": 1123.4,
+    "wall": "2026-11-23T02:31:21.384Z",
+    "text": "Lantern’s on the table. Safe to descend for the rope? I’ll stay clear of the ladder and keep an eye out—take your time."
+   },
+   {
+    "n": 89,
+    "simTime": 1156.6,
+    "wall": "2026-11-23T02:31:54.518Z",
+    "text": "You’re clear at the top—I’m back from the opening. Take your time."
+   },
+   {
+    "n": 90,
+    "simTime": 1177.6,
+    "wall": "2026-11-23T02:32:15.561Z",
+    "text": "You’re clear at the top—step left to the open space by the rail. I’ll give you room. After you catch your breath, want me to head down to grab the rope, or do we leave it for later?"
+   },
+   {
+    "n": 91,
+    "simTime": 1197.9,
+    "wall": "2026-11-23T02:32:35.896Z",
+    "text": "Take your time on the ladder, Alex—I’ll stay clear. I’m going to jot a quick note while you come up."
+   },
+   {
+    "n": 92,
+    "simTime": 1231,
+    "wall": "2026-11-23T02:33:08.980Z",
+    "text": "I’ll keep writing while you climb—steady on the ladder, I’m clear of the opening."
+   },
+   {
+    "n": 93,
+    "simTime": 1261.1,
+    "wall": "2026-11-23T02:33:39.049Z",
+    "text": "I’ll keep writing—steady on the ladder; I’m clear of the opening."
+   },
+   {
+    "n": 94,
+    "simTime": 1290.9,
+    "wall": "2026-11-23T02:34:08.942Z",
+    "text": "Almost done noting things—still clear of the ladder while you climb."
+   },
+   {
+    "n": 95,
+    "simTime": 1321.3,
+    "wall": "2026-11-23T02:34:39.291Z",
+    "text": "Finishing my notes—still clear of the ladder. Climb steady; I’m good here."
+   },
+   {
+    "n": 96,
+    "simTime": 1351.9,
+    "wall": "2026-11-23T02:35:09.872Z",
+    "text": "Welcome back up, Alex. I’ll stay clear of the opening. I’m just checking what’s on the table—did you notice anything new below?"
+   },
+   {
+    "n": 97,
+    "simTime": 1364.7,
+    "wall": "2026-11-23T02:35:22.678Z",
+    "text": "Looks like the rope’s still below—no rush. Want to go check the bell next? We can leave everything here for now. I’ll head down first—one at a time on the ladder. I’ll call clear when I’m off the bottom."
+   },
+   {
+    "n": 98,
+    "simTime": 1390.1,
+    "wall": "2026-11-23T02:35:48.091Z",
+    "text": "Continuing down—one at a time. The lighter works; you can test it when I’m off the ladder. After I’m down, want to head toward the bell?"
+   },
+   {
+    "n": 99,
+    "simTime": 1418.7,
+    "wall": "2026-11-23T02:36:16.722Z",
+    "text": "Copy—I’ll keep descending, grab the rope, and call up before passing you the free end to haul. You can test the lighter once I’m off the ladder."
+   },
+   {
+    "n": 100,
+    "simTime": 1421,
+    "wall": "2026-11-23T02:36:19.007Z",
+    "text": "Continuing down—three points on the ladder. I’ll grab the rope and call up before passing the free end."
+   },
+   {
+    "n": 101,
+    "simTime": 1438.8,
+    "wall": "2026-11-23T02:36:36.712Z",
+    "text": "Continuing down—will grab the rope and call up before passing the free end."
+   },
+   {
+    "n": 102,
+    "simTime": 1468.3,
+    "wall": "2026-11-23T02:37:06.292Z",
+    "text": "Continuing down—almost halfway. I’ll grab the rope and call up before passing the free end."
+   },
+   {
+    "n": 103,
+    "simTime": 1499.4,
+    "wall": "2026-11-23T02:37:37.306Z",
+    "text": "Continuing down—I'll grab the rope and call up before passing the free end. You can test the lighter once I’m off the ladder."
+   },
+   {
+    "n": 104,
+    "simTime": 1528.5,
+    "wall": "2026-11-23T02:38:06.445Z",
+    "text": "Still descending—three points on the ladder. I’ll grab the rope and call up before passing the free end."
+   },
+   {
+    "n": 105,
+    "simTime": 1562.8,
+    "wall": "2026-11-23T02:38:40.721Z",
+    "text": "Almost down—stand by. I’ll grab the rope and pass an end up for you to haul, then we can decide about the lantern."
+   },
+   {
+    "n": 106,
+    "simTime": 1580.2,
+    "wall": "2026-11-23T02:38:58.200Z",
+    "text": "I’m down. The rope’s only about thirty feet—won’t reach the platform. I’ll bring the rope and lantern with me toward the bell. You can test the lighter when we meet up again."
+   },
+   {
+    "n": 107,
+    "simTime": 1587.8,
+    "wall": "2026-11-23T02:39:05.764Z",
+    "text": "I’ve got the rope—and I see the lantern down here. I’m picking it up now. I’ll head toward the bell via the stone circle. Meet me there when you’re ready? We can test the lighter together later."
+   },
+   {
+    "n": 108,
+    "simTime": 1594,
+    "wall": "2026-11-23T02:39:11.981Z",
+    "text": "I’m heading toward the stone circle with the rope and lantern. When you’re ready, meet me there—we can try the bell after. I’ve got the lighter with me; we’ll test it together down here."
+   },
+   {
+    "n": 109,
+    "simTime": 1623,
+    "wall": "2026-11-23T02:39:41.001Z",
+    "text": "On my way to the stone circle with the rope and lantern—meet me there when you’re ready, Alex."
+   },
+   {
+    "n": 110,
+    "simTime": 1639,
+    "wall": "2026-11-23T02:39:57.049Z",
+    "text": "Almost there—stone circle ahead. I’ll take a closer look when I reach it."
+   },
+   {
+    "n": 111,
+    "simTime": 1643.4,
+    "wall": "2026-11-23T02:40:01.379Z",
+    "text": "At the stone circle now—taking a closer look at the fit of the stones, the center, and any markings or gaps."
+   },
+   {
+    "n": 112,
+    "simTime": 1656,
+    "wall": "2026-11-23T02:40:13.968Z",
+    "text": "The circle looks simple—just fitted stones with grass in the middle. I’ll go check the bell next."
+   },
+   {
+    "n": 113,
+    "simTime": 1658.3,
+    "wall": "2026-11-23T02:40:16.311Z",
+    "text": "Heading to the bell now—meet me there when you can."
+   },
+   {
+    "n": 114,
+    "simTime": 1671.1,
+    "wall": "2026-11-23T02:40:29.059Z",
+    "text": "I’m heading to the bell now—no need to bring anything. Meet me there if you want, or stay up top—your call."
+   },
+   {
+    "n": 115,
+    "simTime": 1673,
+    "wall": "2026-11-23T02:40:30.999Z",
+    "text": "Heading to the bell now with the lantern and rope."
+   },
+   {
+    "n": 116,
+    "simTime": 1682,
+    "wall": "2026-11-23T02:40:39.978Z",
+    "text": "Almost to the bell. I’ll set the rope and lantern down there, inspect the bell and clapper, then try a gentle ring."
+   },
+   {
+    "n": 117,
+    "simTime": 1696.8,
+    "wall": "2026-11-23T02:40:54.764Z",
+    "text": "Copy, Alex—see you at the bell. I’ll set my things down and take a look when I arrive."
+   },
+   {
+    "n": 118,
+    "simTime": 1699.5,
+    "wall": "2026-11-23T02:40:57.445Z",
+    "text": "Almost there—closing the last few yards to the bell. I’ll set the rope and lantern down when I arrive and take a look."
+   },
+   {
+    "n": 119,
+    "simTime": 1709.3,
+    "wall": "2026-11-23T02:41:07.328Z",
+    "text": "I’ll set these down, take a closer look at the bell and clapper, then give the rope a gentle test ring."
+   },
+   {
+    "n": 120,
+    "simTime": 1715.3,
+    "wall": "2026-11-23T02:41:13.345Z",
+    "text": "I’m taking a close look at the bell and its rope and clapper, then I’ll try a very gentle test ring—just a tap."
+   },
+   {
+    "n": 121,
+    "simTime": 1718.5,
+    "wall": "2026-11-23T02:41:16.406Z",
+    "text": "Looking for any markings, wear on the clapper, or notes on the frame—then a light test ring."
+   },
+   {
+    "n": 122,
+    "simTime": 1725.7,
+    "wall": "2026-11-23T02:41:23.693Z",
+    "text": "I’ll warn Alex before I try it."
+   },
+   {
+    "n": 123,
+    "simTime": 1738.4,
+    "wall": "2026-11-23T02:41:36.390Z",
+    "text": "I’ll set the lantern down, step a little to the side of the bell, and then try a very gentle pull on the rope—just enough for a light tap."
+   },
+   {
+    "n": 124,
+    "simTime": 1743.9,
+    "wall": "2026-11-23T02:41:41.885Z",
+    "text": "Giving the rope a gentle pull—just a tap to test the bell."
+   },
+   {
+    "n": 125,
+    "simTime": 1753.4,
+    "wall": "2026-11-23T02:41:51.446Z",
+    "text": "Loud, as expected. I’ll listen a moment and watch for any response while Alex heads this way."
+   },
+   {
+    "n": 126,
+    "simTime": 1767.5,
+    "wall": "2026-11-23T02:42:05.458Z",
+    "text": "I’ll finish scanning the area and wait for any response."
+   },
+   {
+    "n": 127,
+    "simTime": 1773.5,
+    "wall": "2026-11-23T02:42:11.506Z",
+    "text": "That bell carries. I’ll gather my things and wait here for you, Alex—by the bell."
+   },
+   {
+    "n": 128,
+    "simTime": 1779.7,
+    "wall": "2026-11-23T02:42:17.657Z",
+    "text": "I’m checking the lantern—if it has fuel and a wick, I’ll try a quick light with the lighter."
+   },
+   {
+    "n": 129,
+    "simTime": 1782.1,
+    "wall": "2026-11-23T02:42:20.056Z",
+    "text": "Checking fuel level and wick condition—if it looks safe, I’ll light it with the lighter."
+   },
+   {
+    "n": 130,
+    "simTime": 1788.2,
+    "wall": "2026-11-23T02:42:26.187Z",
+    "text": "Lantern’s half full—I'll try lighting it briefly with the lighter, then snuff it."
+   },
+   {
+    "n": 131,
+    "simTime": 1800.4,
+    "wall": "2026-11-23T02:42:38.311Z",
+    "text": "Lantern’s lit—I’ll turn the wick low and set it by the frame, then grab the rope and wait for you here."
+   },
+   {
+    "n": 132,
+    "simTime": 1806.8,
+    "wall": "2026-11-23T02:42:44.821Z",
+    "text": "Lantern’s set. I’ll keep the rope with me and wait a little back from the cliff for you, Alex."
+   },
+   {
+    "n": 133,
+    "simTime": 1813.3,
+    "wall": "2026-11-23T02:42:51.323Z",
+    "text": "I’ll hang here by the bell—sitting a little back from the cliff with the rope handy while you make your way down."
+   },
+   {
+    "n": 134,
+    "simTime": 1821.7,
+    "wall": "2026-11-23T02:42:59.650Z",
+    "text": "I’ll wait here by the bell—lantern’s set low. Alex, take your time; I’m a little back from the edge watching the surf."
+   },
+   {
+    "n": 135,
+    "simTime": 1854.2,
+    "wall": "2026-11-23T02:43:32.153Z",
+    "text": "I can see you about thirty-five feet from the ground—take your time. I’m seated by the bell with the lantern set low."
+   },
+   {
+    "n": 136,
+    "simTime": 1871.7,
+    "wall": "2026-11-23T02:43:49.638Z",
+    "text": "I’ll jot a quick note while you finish the climb—keeping an eye your way."
+   },
+   {
+    "n": 137,
+    "simTime": 1918.8,
+    "wall": "2026-11-23T02:44:36.793Z",
+    "text": "I’ll keep writing—keeping half an eye on Alex and the lantern."
+   },
+   {
+    "n": 138,
+    "simTime": 1948.6,
+    "wall": "2026-11-23T02:45:06.529Z",
+    "text": "Still writing—keeping an ear out and an eye on the lantern and the path from the tower."
+   },
+   {
+    "n": 139,
+    "simTime": 1994.3,
+    "wall": "2026-11-23T02:45:52.255Z",
+    "text": "Pausing the notes—I’ll stand and wave you over, Alex. I’m just back from the edge by the bell."
+   },
+   {
+    "n": 140,
+    "simTime": 2001.9,
+    "wall": "2026-11-23T02:45:59.800Z",
+    "text": "I stand a bit back from the edge, rope in hand, and give Alex a wave to guide him in."
+   },
+   {
+    "n": 141,
+    "simTime": 2004.2,
+    "wall": "2026-11-23T02:46:02.149Z",
+    "text": "I stay a couple of paces from the cliff edge, rope in hand, watching Alex approach."
+   },
+   {
+    "n": 142,
+    "simTime": 2018.9,
+    "wall": "2026-11-23T02:46:16.803Z",
+    "text": "Hey, Alex—nice timing. Bell’s plenty loud; didn’t hear any special echo. Up for checking the chest and crate by the shore next? I’ll snuff the lantern to save oil."
+   },
+   {
+    "n": 143,
+    "simTime": 2025.9,
+    "wall": "2026-11-23T02:46:23.829Z",
+    "text": "Hey, perfect. Want to check the chest and crate by the shore next? I’ll carry the rope—could you carry the lantern? Also, do you know the nearest safe path down from here?"
+   },
+   {
+    "n": 144,
+    "simTime": 2035.4,
+    "wall": "2026-11-23T02:46:33.428Z",
+    "text": "Let’s skirt south along the headland to find a safe way down to the beach—aiming for the chest and crate. I’ll keep a few paces from the cliff. Walk with me?"
+   },
+   {
+    "n": 145,
+    "simTime": 2043.5,
+    "wall": "2026-11-23T02:46:41.491Z",
+    "text": "Yes, please take the lantern—I’ll keep the rope. Lead on the way you came down."
+   },
+   {
+    "n": 146,
+    "simTime": 2070,
+    "wall": "2026-11-23T02:47:07.948Z",
+    "text": "All good—I’ll keep the lantern and rope for now. I’m heading south along the headland toward a safe way down; meet me en route and we can hand off then."
+   },
+   {
+    "n": 147,
+    "simTime": 2073.8,
+    "wall": "2026-11-23T02:47:11.791Z",
+    "text": "I’m at the south edge of the headland by the forest—looking for a safe path down toward the beach. Alex, head this way and we’ll descend together."
+   },
+   {
+    "n": 148,
+    "simTime": 2076,
+    "wall": "2026-11-23T02:47:13.990Z",
+    "text": "Scanning for any footpath or gentler slope toward the beach—especially along the forest edge."
+   },
+   {
+    "n": 149,
+    "simTime": 2081.8,
+    "wall": "2026-11-23T02:47:19.776Z",
+    "text": "Heading toward the beach at an easy pace so you can catch up, Alex."
+   },
+   {
+    "n": 150,
+    "simTime": 2087.8,
+    "wall": "2026-11-23T02:47:25.763Z",
+    "text": "I’ll keep an easy pace so you can catch up, Alex—staying a few paces from the cliff with the lantern steady."
+   },
+   {
+    "n": 151,
+    "simTime": 2096.9,
+    "wall": "2026-11-23T02:47:34.822Z",
+    "text": "Skirting the forest edge and scanning for a gentle descent. Alex, I’ll pause at the first safe path down so you can catch up."
+   },
+   {
+    "n": 152,
+    "simTime": 2126,
+    "wall": "2026-11-23T02:48:04.034Z",
+    "text": "Continuing toward the beach—I’ll pause when I see a safe descent so you can catch up, Alex."
+   },
+   {
+    "n": 153,
+    "simTime": 2156.4,
+    "wall": "2026-11-23T02:48:34.444Z",
+    "text": "I’ll keep heading toward the beach—I’ll pause near the first safe descent so you can catch up, Alex."
+   },
+   {
+    "n": 154,
+    "simTime": 2187.9,
+    "wall": "2026-11-23T02:49:05.941Z",
+    "text": "Almost at the beach—I see the crate to the west. I’ll stop at the sand and wait for you, Alex."
+   },
+   {
+    "n": 155,
+    "simTime": 2191.1,
+    "wall": "2026-11-23T02:49:09.112Z",
+    "text": "I’m heading to the crate—meet me there, Alex. I’ll set the lantern down before opening it."
+   },
+   {
+    "n": 156,
+    "simTime": 2223.5,
+    "wall": "2026-11-23T02:49:41.488Z",
+    "text": "Almost to the crate—I’ll set the lantern down on the sand and take a look at the lid when I get there."
+   },
+   {
+    "n": 157,
+    "simTime": 2234.9,
+    "wall": "2026-11-23T02:49:52.857Z",
+    "text": "At the crate—I'll set the lit lantern on the sand and take a closer look at the crate and the sand around it."
+   },
+   {
+    "n": 158,
+    "simTime": 2240.9,
+    "wall": "2026-11-23T02:49:58.826Z",
+    "text": "The crate’s already open—I'll check its interior, hinges, and underneath for markings or compartments, and scan the sand around it for footprints or anything buried."
+   },
+   {
+    "n": 159,
+    "simTime": 2248.5,
+    "wall": "2026-11-23T02:50:06.475Z",
+    "text": "Checking for any false bottom, markings, or sand scooped underneath—then I’ll try lifting the crate to see if it’s fixed."
+   },
+   {
+    "n": 160,
+    "simTime": 2256.8,
+    "wall": "2026-11-23T02:50:14.822Z",
+    "text": "Crate’s empty. I’ll do a quick sweep in the sand around it, then let’s head to the rowboat—there might be the chest over there."
+   },
+   {
+    "n": 161,
+    "simTime": 2276.3,
+    "wall": "2026-11-23T02:50:34.334Z",
+    "text": "Crate’s empty. Let’s head to the rowboat—there might be a chest there. I’ll grab the lantern; walk with me?"
+   },
+   {
+    "n": 162,
+    "simTime": 2300.5,
+    "wall": "2026-11-23T02:50:58.521Z",
+    "text": "Let’s check the rowboat for that chest. Can you carry the lantern? I’ll keep the rope."
+   },
+   {
+    "n": 163,
+    "simTime": 2305,
+    "wall": "2026-11-23T02:51:02.926Z",
+    "text": "Let’s check the rowboat for that chest. I’ll bring the rope—you’ve got the light."
+   },
+   {
+    "n": 164,
+    "simTime": 2337.5,
+    "wall": "2026-11-23T02:51:35.434Z",
+    "text": "Almost there—once we reach the rowboat, let’s check inside, under the benches, and beneath the hull for the chest or anything tucked away."
+   },
+   {
+    "n": 165,
+    "simTime": 2383.5,
+    "wall": "2026-11-23T02:52:21.438Z",
+    "text": "I’ll check the rowboat closely—inside, under the thwarts, and along the seams—for any chest or tucked items."
+   },
+   {
+    "n": 166,
+    "simTime": 2392.9,
+    "wall": "2026-11-23T02:52:30.854Z",
+    "text": "No chest in the boat—just an oar. Let’s try the cabin next. Keep the lantern; I’ll head for the door."
+   },
+   {
+    "n": 167,
+    "simTime": 2413.1,
+    "wall": "2026-11-23T02:52:51.049Z",
+    "text": "Heading to the cabin door—meet me there. If it’s latched, I’ll try it and wait for you with the rope ready."
+   },
+   {
+    "n": 168,
+    "simTime": 2440.6,
+    "wall": "2026-11-23T02:53:18.631Z",
+    "text": "I see the chest by the cabin door—I’ll keep heading there and wait for you before opening it."
+   },
+   {
+    "n": 169,
+    "simTime": 2463.8,
+    "wall": "2026-11-23T02:53:41.779Z",
+    "text": "Almost at the cabin door. I’ll try the latch gently. Alex, I’m here by the chest when you catch up."
+   },
+   {
+    "n": 170,
+    "simTime": 2467,
+    "wall": "2026-11-23T02:53:44.958Z",
+    "text": "Door’s open. I’m going to the chest—Alex, meet me there."
+   },
+   {
+    "n": 171,
+    "simTime": 2478.1,
+    "wall": "2026-11-23T02:53:56.098Z",
+    "text": "I’m at the chest by the cabin—looks open. I’ll check it closely, then try the cabin door."
+   },
+   {
+    "n": 172,
+    "simTime": 2487.5,
+    "wall": "2026-11-23T02:54:05.458Z",
+    "text": "Chest’s empty. I’m heading to the cabin door to take a look inside. Alex, I’m by the cabin—join me when you’re close."
+   },
+   {
+    "n": 173,
+    "simTime": 2498.2,
+    "wall": "2026-11-23T02:54:16.162Z",
+    "text": "I’ll step inside the cabin and take a look around—starting at the table."
+   },
+   {
+    "n": 174,
+    "simTime": 2512.8,
+    "wall": "2026-11-23T02:54:30.804Z",
+    "text": "I’ll check the table closely for drawers, markings, or anything tucked underneath."
+   },
+   {
+    "n": 175,
+    "simTime": 2542.4,
+    "wall": "2026-11-23T02:55:00.408Z",
+    "text": "I’ll check the fireplace for anything—soot marks, tucked items, or a flue lever."
+   },
+   {
+    "n": 176,
+    "simTime": 2553.3,
+    "wall": "2026-11-23T02:55:11.276Z",
+    "text": "I’ll move closer to the fireplace for a proper look—checking the hearth, sides, and inside the chimney for a lever or markings."
+   },
+   {
+    "n": 177,
+    "simTime": 2561.8,
+    "wall": "2026-11-23T02:55:19.834Z",
+    "text": "Up close now—checking the hearth, stones, and flue for any lever, soot patterns, or tucked items."
+   },
+   {
+    "n": 178,
+    "simTime": 2571.6,
+    "wall": "2026-11-23T02:55:29.576Z",
+    "text": "Fireplace is clean. I’ll check the bed—under the blanket and mattress."
+   },
+   {
+    "n": 179,
+    "simTime": 2581.1,
+    "wall": "2026-11-23T02:55:39.102Z",
+    "text": "Checking the bed—lifting the blanket and feeling under the straw mattress for anything hidden."
+   },
+   {
+    "n": 180,
+    "simTime": 2591.6,
+    "wall": "2026-11-23T02:55:49.558Z",
+    "text": "Cabin’s clear. I’m going to check that standing mirror to the west—meeting you back here after."
+   },
+   {
+    "n": 181,
+    "simTime": 2597,
+    "wall": "2026-11-23T02:55:54.955Z",
+    "text": "Heading to the standing mirror—meet me there, Alex. I’ll take a close look at the frame and reflection."
+   },
+   {
+    "n": 182,
+    "simTime": 2599.1,
+    "wall": "2026-11-23T02:55:57.091Z",
+    "text": "Still heading to the mirror—I’ll check the frame, backing, and reflection when I get there."
+   },
+   {
+    "n": 183,
+    "simTime": 2630.2,
+    "wall": "2026-11-23T02:56:28.154Z",
+    "text": "Here we are—let’s see what this mirror shows up close."
+   },
+   {
+    "n": 184,
+    "simTime": 2641.7,
+    "wall": "2026-11-23T02:56:39.659Z",
+    "text": "Mirror looks normal from the front. I’ll check that wheelbarrow quickly before time runs short."
+   },
+   {
+    "n": 185,
+    "simTime": 2666.8,
+    "wall": "2026-11-23T02:57:04.786Z",
+    "text": "Quick look at the wheelbarrow before time runs out."
+   },
+   {
+    "n": 186,
+    "simTime": 2677,
+    "wall": "2026-11-23T02:57:15.035Z",
+    "text": "Time’s nearly up. I’ll jot a quick note in my journal here by the wheelbarrow."
+   }
+  ]
+ },
+ {
+  "person": "Man",
+  "reflections": [
+   {
+    "n": 1,
+    "simTime": 5,
+    "wall": "2026-11-23T02:12:42.959Z",
+    "text": "I’m on open rocky ground with ocean not far to the north. The steel tower with the ladder and a high platform catches my curiosity—I wonder what the view is like up there. I’ll get a closer look first."
+   },
+   {
+    "n": 2,
+    "simTime": 37.2,
+    "wall": "2026-11-23T02:13:15.227Z",
+    "text": "I notice the stream to my west and a small pond south as I walk. I’m curious what the platform overlooks—maybe the cliffs and ocean. I’ll keep heading to the ladder."
+   },
+   {
+    "n": 3,
+    "simTime": 67.3,
+    "wall": "2026-11-23T02:13:45.275Z",
+    "text": "I’ll keep on toward the ladder and see what’s up there."
+   },
+   {
+    "n": 4,
+    "simTime": 96.9,
+    "wall": "2026-11-23T02:14:14.942Z",
+    "text": "Almost there. I’ll keep going to the ladder."
+   },
+   {
+    "n": 5,
+    "simTime": 110.8,
+    "wall": "2026-11-23T02:14:28.759Z",
+    "text": "I spot someone off to the southwest, but I’ll keep going to the ladder for the view."
+   },
+   {
+    "n": 6,
+    "simTime": 133.9,
+    "wall": "2026-11-23T02:14:51.872Z",
+    "text": "The ladder looks solid. I’d like to see the island from the platform—and maybe what’s up there—so I’ll climb."
+   },
+   {
+    "n": 7,
+    "simTime": 166,
+    "wall": "2026-11-23T02:15:24.037Z",
+    "text": "I’ll keep climbing for the view from the top."
+   },
+   {
+    "n": 8,
+    "simTime": 195.7,
+    "wall": "2026-11-23T02:15:53.701Z",
+    "text": "I’ll keep climbing to reach the platform and get the view."
+   },
+   {
+    "n": 9,
+    "simTime": 207.4,
+    "wall": "2026-11-23T02:16:05.418Z",
+    "text": "The view’s already opening up. I’ll keep climbing to reach the platform."
+   },
+   {
+    "n": 10,
+    "simTime": 237.7,
+    "wall": "2026-11-23T02:16:35.603Z",
+    "text": "I’ll keep climbing to reach the platform and take in the view."
+   },
+   {
+    "n": 11,
+    "simTime": 267.5,
+    "wall": "2026-11-23T02:17:05.466Z",
+    "text": "Halfway up. I’ll continue to the platform."
+   },
+   {
+    "n": 12,
+    "simTime": 299.1,
+    "wall": "2026-11-23T02:17:36.998Z",
+    "text": "I’ll keep climbing to reach the platform and see what’s up there."
+   },
+   {
+    "n": 13,
+    "simTime": 317.5,
+    "wall": "2026-11-23T02:17:55.433Z",
+    "text": "I’ll keep climbing to reach the platform and get the full view."
+   },
+   {
+    "n": 14,
+    "simTime": 348.3,
+    "wall": "2026-11-23T02:18:26.217Z",
+    "text": "I can see the table on the platform—looks like a lighter, a sword with a strap, and a snorkel and mask. I’ll keep climbing to reach them and take in the view."
+   },
+   {
+    "n": 15,
+    "simTime": 377.9,
+    "wall": "2026-11-23T02:18:55.830Z",
+    "text": "From up here I can see most of the island. The table has a lighter, a sword with a strap, and a snorkel and mask. I notice someone to the west—curious who they are. I’ll call out and see if they respond."
+   },
+   {
+    "n": 16,
+    "simTime": 383.9,
+    "wall": "2026-11-23T02:19:01.846Z",
+    "text": "From up here the layout of the island is clear—the bell on the headland, a bridge over the stream, a cabin with a chest outside, and someone walking near the west side. On the table, I’m curious about the sword first."
+   },
+   {
+    "n": 17,
+    "simTime": 392.4,
+    "wall": "2026-11-23T02:19:10.360Z",
+    "text": "The person’s shouting carries up here—I’ll try to connect."
+   },
+   {
+    "n": 18,
+    "simTime": 394.9,
+    "wall": "2026-11-23T02:19:12.879Z",
+    "text": "I hear her—sounds friendly. I’ll finish the shout I started, then answer her questions."
+   },
+   {
+    "n": 19,
+    "simTime": 399.6,
+    "wall": "2026-11-23T02:19:17.565Z",
+    "text": "She sounds close enough to hear clearly. I’ll call back to reassure her and mention the items up here."
+   },
+   {
+    "n": 20,
+    "simTime": 409.2,
+    "wall": "2026-11-23T02:19:27.211Z",
+    "text": "I’ll finish calling down to her so she’s got the info before she starts climbing."
+   },
+   {
+    "n": 21,
+    "simTime": 427.4,
+    "wall": "2026-11-23T02:19:45.350Z",
+    "text": "I’ll let her know I’ll wait and keep the top clear."
+   },
+   {
+    "n": 22,
+    "simTime": 429.9,
+    "wall": "2026-11-23T02:19:47.895Z",
+    "text": "I’ll let that call carry and give her space to climb."
+   },
+   {
+    "n": 23,
+    "simTime": 433.3,
+    "wall": "2026-11-23T02:19:51.246Z",
+    "text": "I’ll wait and keep the top clear while she comes over."
+   },
+   {
+    "n": 24,
+    "simTime": 444.5,
+    "wall": "2026-11-23T02:20:02.544Z",
+    "text": "She’s almost here. From up top I can help her get her gear up safely."
+   },
+   {
+    "n": 25,
+    "simTime": 470.2,
+    "wall": "2026-11-23T02:20:28.222Z",
+    "text": "She’s just starting up the ladder—better to keep her hands free. I’ll talk to her calmly and be ready near the top."
+   },
+   {
+    "n": 26,
+    "simTime": 497.9,
+    "wall": "2026-11-23T02:20:55.839Z",
+    "text": "You’re doing great. When you reach the top, step left onto the platform—there’s space. I won’t touch you unless you want a hand; just say if you do."
+   },
+   {
+    "n": 27,
+    "simTime": 530.4,
+    "wall": "2026-11-23T02:21:28.355Z",
+    "text": "Looking good—nice and steady. There’s plenty of room to your left at the top with the railing. If you want, I can take the cup as soon as you’re close—just say when."
+   },
+   {
+    "n": 28,
+    "simTime": 561.1,
+    "wall": "2026-11-23T02:21:59.057Z",
+    "text": "I’ll give you space and keep the top clear—take your time. Let me know if you want a hand when you step off."
+   },
+   {
+    "n": 29,
+    "simTime": 595.7,
+    "wall": "2026-11-23T02:22:33.673Z",
+    "text": "She’s about halfway up and steady. I’ll just stay clear and keep waiting at the top."
+   },
+   {
+    "n": 30,
+    "simTime": 624.7,
+    "wall": "2026-11-23T02:23:02.719Z",
+    "text": "She’s most of the way up now. I’ll keep the top clear and talk her in."
+   },
+   {
+    "n": 31,
+    "simTime": 641.7,
+    "wall": "2026-11-23T02:23:19.601Z",
+    "text": "I step back from the top of the ladder to keep the landing clear and wait for her to reach the platform."
+   },
+   {
+    "n": 32,
+    "simTime": 674,
+    "wall": "2026-11-23T02:23:51.987Z",
+    "text": "I’ll keep the landing clear and wait while you come up—steady as you are."
+   },
+   {
+    "n": 33,
+    "simTime": 691.9,
+    "wall": "2026-11-23T02:24:09.886Z",
+    "text": "She’s just below the platform now—almost here. I’ll talk her in and be ready to steady if she asks."
+   },
+   {
+    "n": 34,
+    "simTime": 714.9,
+    "wall": "2026-11-23T02:24:32.897Z",
+    "text": "She made it—nice."
+   },
+   {
+    "n": 35,
+    "simTime": 725.1,
+    "wall": "2026-11-23T02:24:43.097Z",
+    "text": "I’ll let my words finish and then answer her."
+   },
+   {
+    "n": 36,
+    "simTime": 749.1,
+    "wall": "2026-11-23T02:25:07.073Z",
+    "text": "Nice to meet you, Maya. Yep—check the table. After, I can pop down and tie on your lantern and rope so we can haul them up, unless you’d rather leave them below."
+   },
+   {
+    "n": 37,
+    "simTime": 766.2,
+    "wall": "2026-11-23T02:25:24.185Z",
+    "text": "Maya, sounds good. We can haul your lantern and rope up—one of us can pop down, tie them on, and the other can pull from up here. I’m happy to go down if you want to stay with the railing. Want to do that now, or check the view and table first? Also, is that snorkel yours now from the table, or did you bring it? Mind if I take a quick look at the lighter to see if it works?"
+   },
+   {
+    "n": 38,
+    "simTime": 798.3,
+    "wall": "2026-11-23T02:25:56.283Z",
+    "text": "I’ll finish what I’m saying, then check the lighter and hear what Maya prefers about hauling the gear."
+   },
+   {
+    "n": 39,
+    "simTime": 802.8,
+    "wall": "2026-11-23T02:26:00.780Z",
+    "text": "I’ll confirm and then head down to tie the bowline."
+   },
+   {
+    "n": 40,
+    "simTime": 820.1,
+    "wall": "2026-11-23T02:26:18.019Z",
+    "text": "Heading down now—I’ll call up when the rope’s tied on."
+   },
+   {
+    "n": 41,
+    "simTime": 829.7,
+    "wall": "2026-11-23T02:26:27.684Z",
+    "text": "I keep descending carefully, planning to tie a bowline to the lantern handle and bring the free end back up to Maya."
+   },
+   {
+    "n": 42,
+    "simTime": 859.3,
+    "wall": "2026-11-23T02:26:57.293Z",
+    "text": "Steady on the rungs—continuing down. I’ll shout up when the rope’s secured to the lantern."
+   },
+   {
+    "n": 43,
+    "simTime": 889.4,
+    "wall": "2026-11-23T02:27:27.364Z",
+    "text": "Continuing down steadily—I’ll tie the bowline to the lantern handle when I reach the bottom and call up to Maya before we haul."
+   },
+   {
+    "n": 44,
+    "simTime": 920.1,
+    "wall": "2026-11-23T02:27:58.108Z",
+    "text": "Continuing down—will call up when the rope’s on the lantern."
+   },
+   {
+    "n": 45,
+    "simTime": 949.7,
+    "wall": "2026-11-23T02:28:27.730Z",
+    "text": "Continuing down—back in a moment with the rope."
+   },
+   {
+    "n": 46,
+    "simTime": 979.3,
+    "wall": "2026-11-23T02:28:57.302Z",
+    "text": "Almost down—will tie the bowline to your lantern in a moment."
+   },
+   {
+    "n": 47,
+    "simTime": 1010.9,
+    "wall": "2026-11-23T02:29:28.890Z",
+    "text": "Almost down—I'll tie the bowline to the lantern handle and call up when it’s ready."
+   },
+   {
+    "n": 48,
+    "simTime": 1034.8,
+    "wall": "2026-11-23T02:29:52.806Z",
+    "text": "I’m at the base. I’ll tie your rope to the lantern now."
+   },
+   {
+    "n": 49,
+    "simTime": 1042.3,
+    "wall": "2026-11-23T02:30:00.346Z",
+    "text": "I’ll tie the rope to the lantern with a bowline, then bring the free end up for you to haul."
+   },
+   {
+    "n": 50,
+    "simTime": 1055.5,
+    "wall": "2026-11-23T02:30:13.454Z",
+    "text": "I’ll try actually fastening the rope to the lantern using the island’s rules, then call up to Maya."
+   },
+   {
+    "n": 51,
+    "simTime": 1062.7,
+    "wall": "2026-11-23T02:30:20.690Z",
+    "text": "The island won’t let me tie the rope to the lantern. I’ll carry the lantern up carefully first, then I can come back for the rope. One at a time on the ladder."
+   },
+   {
+    "n": 52,
+    "simTime": 1090.3,
+    "wall": "2026-11-23T02:30:48.294Z",
+    "text": "Maya, the rope won’t attach by the island’s rules. I’ll set the rope here and carefully bring the lantern up now. Please stand clear of the ladder opening while I climb."
+   },
+   {
+    "n": 53,
+    "simTime": 1096.9,
+    "wall": "2026-11-23T02:30:54.823Z",
+    "text": "I’ll bring the lantern up by hand since the rope won’t attach here. One at a time on the ladder—please stand back from the opening."
+   },
+   {
+    "n": 54,
+    "simTime": 1100.1,
+    "wall": "2026-11-23T02:30:58.035Z",
+    "text": "I’ll sling the lantern so I have both hands free, then climb up."
+   },
+   {
+    "n": 55,
+    "simTime": 1106.6,
+    "wall": "2026-11-23T02:31:04.607Z",
+    "text": "I’ll set the lantern down so I can climb and regroup with Maya up top."
+   },
+   {
+    "n": 56,
+    "simTime": 1109.2,
+    "wall": "2026-11-23T02:31:07.118Z",
+    "text": "Setting the lantern down; then I’ll climb up."
+   },
+   {
+    "n": 57,
+    "simTime": 1114.9,
+    "wall": "2026-11-23T02:31:12.851Z",
+    "text": "Lantern’s down here for now. I’ll climb up empty-handed so we can figure out another way to hoist it safely."
+   },
+   {
+    "n": 58,
+    "simTime": 1122.8,
+    "wall": "2026-11-23T02:31:20.800Z",
+    "text": "Got it—thanks for catching the lantern. I’ll keep climbing; please stay clear of the opening."
+   },
+   {
+    "n": 59,
+    "simTime": 1141.2,
+    "wall": "2026-11-23T02:31:39.151Z",
+    "text": "Thanks, Maya—continuing up. Please keep clear of the opening."
+   },
+   {
+    "n": 60,
+    "simTime": 1152.5,
+    "wall": "2026-11-23T02:31:50.482Z",
+    "text": "Continuing up—thanks for keeping clear. I’ll be up shortly and we can sort the lantern and rope then."
+   },
+   {
+    "n": 61,
+    "simTime": 1181.8,
+    "wall": "2026-11-23T02:32:19.763Z",
+    "text": "Continuing up—steady rhythm, three points on at all times."
+   },
+   {
+    "n": 62,
+    "simTime": 1242.1,
+    "wall": "2026-11-23T02:33:20.063Z",
+    "text": "Continuing up—almost there. Please keep clear of the opening."
+   },
+   {
+    "n": 63,
+    "simTime": 1279.7,
+    "wall": "2026-11-23T02:33:57.645Z",
+    "text": "Continuing up—almost there. Please keep clear of the opening."
+   },
+   {
+    "n": 64,
+    "simTime": 1309.4,
+    "wall": "2026-11-23T02:34:27.388Z",
+    "text": "Almost up—coming through the opening in a moment. Please keep clear."
+   },
+   {
+    "n": 65,
+    "simTime": 1349.1,
+    "wall": "2026-11-23T02:35:07.049Z",
+    "text": "Almost up—stepping onto the platform to the left. Please keep clear of the opening."
+   },
+   {
+    "n": 66,
+    "simTime": 1363.4,
+    "wall": "2026-11-23T02:35:21.309Z",
+    "text": "Nice teamwork—thanks for getting the lantern up. I don’t think the island will let us tie the rope, so we can leave it below for now unless you want me to climb back down later to fetch it. Also, could I take a quick look at the lighter to test it? If you’d rather hang onto it, no worries."
+   },
+   {
+    "n": 67,
+    "simTime": 1392.4,
+    "wall": "2026-11-23T02:35:50.403Z",
+    "text": "Maya, are you heading down for the rope? I’ll stay clear of the opening. If you pass the free end up, I can haul from here. One at a time on the ladder—take your time."
+   },
+   {
+    "n": 68,
+    "simTime": 1419.9,
+    "wall": "2026-11-23T02:36:17.889Z",
+    "text": "I’ll give you space on the ladder, Maya—one at a time. I’m stepping back from the opening and taking a quick look around up here."
+   },
+   {
+    "n": 69,
+    "simTime": 1428.7,
+    "wall": "2026-11-23T02:36:26.673Z",
+    "text": "I’ll give you space on the ladder—taking a breath and watching the view."
+   },
+   {
+    "n": 70,
+    "simTime": 1492.2,
+    "wall": "2026-11-23T02:37:30.102Z",
+    "text": "You’re good, Maya—I’m well clear of the opening. Take your time."
+   },
+   {
+    "n": 71,
+    "simTime": 1502.6,
+    "wall": "2026-11-23T02:37:40.553Z",
+    "text": "Staying well back from the ladder—taking a look at the sword on the table."
+   },
+   {
+    "n": 72,
+    "simTime": 1509.1,
+    "wall": "2026-11-23T02:37:47.001Z",
+    "text": "I’ll stay clear of the opening while you head down, Maya—nice and steady."
+   },
+   {
+    "n": 73,
+    "simTime": 1519.6,
+    "wall": "2026-11-23T02:37:57.576Z",
+    "text": "I’m well clear of the opening—nice and steady, three points on. Call out if you want a spot at the top or anything moved."
+   },
+   {
+    "n": 74,
+    "simTime": 1526.5,
+    "wall": "2026-11-23T02:38:04.487Z",
+    "text": "I’m well clear of the opening—take your time, nice and steady."
+   },
+   {
+    "n": 75,
+    "simTime": 1559.7,
+    "wall": "2026-11-23T02:38:37.651Z",
+    "text": "You’re good, Maya—steady. I’m well clear of the opening."
+   },
+   {
+    "n": 76,
+    "simTime": 1575.7,
+    "wall": "2026-11-23T02:38:53.648Z",
+    "text": "You’re clear, Maya—I’m well back from the opening. Nice and easy."
+   },
+   {
+    "n": 77,
+    "simTime": 1609.6,
+    "wall": "2026-11-23T02:39:27.526Z",
+    "text": "I’ll finish this minute, then stand and check in about the rope."
+   },
+   {
+    "n": 78,
+    "simTime": 1625.7,
+    "wall": "2026-11-23T02:39:43.688Z",
+    "text": "I can see you moving out there—finishing this minute, then I’ll stand and check in."
+   },
+   {
+    "n": 79,
+    "simTime": 1640.5,
+    "wall": "2026-11-23T02:39:58.446Z",
+    "text": "From up here I can see someone moving on the NE side—probably Maya. I’ll check in with a shout."
+   },
+   {
+    "n": 80,
+    "simTime": 1653.9,
+    "wall": "2026-11-23T02:40:11.822Z",
+    "text": "From up here I can see someone by the stone circle—probably you, Maya."
+   },
+   {
+    "n": 81,
+    "simTime": 1672.5,
+    "wall": "2026-11-23T02:40:30.462Z",
+    "text": "From the platform I call over to the figure near the stone circle."
+   },
+   {
+    "n": 82,
+    "simTime": 1677.1,
+    "wall": "2026-11-23T02:40:35.091Z",
+    "text": "Heard you—she’s good and heading to the bell. I’ll head down to meet her."
+   },
+   {
+    "n": 83,
+    "simTime": 1697.8,
+    "wall": "2026-11-23T02:40:55.793Z",
+    "text": "Heading down to meet you at the bell, Maya—one at a time on the ladder."
+   },
+   {
+    "n": 84,
+    "simTime": 1702.4,
+    "wall": "2026-11-23T02:41:00.376Z",
+    "text": "Heading down to meet you at the bell."
+   },
+   {
+    "n": 85,
+    "simTime": 1704.1,
+    "wall": "2026-11-23T02:41:02.071Z",
+    "text": "Descending now—three points on, steady."
+   },
+   {
+    "n": 86,
+    "simTime": 1734.7,
+    "wall": "2026-11-23T02:41:32.693Z",
+    "text": "On my way down—see you at the bell."
+   },
+   {
+    "n": 87,
+    "simTime": 1739.7,
+    "wall": "2026-11-23T02:41:37.724Z",
+    "text": "I hear her—at this distance I should be fine. Hands stay on the ladder; continuing down."
+   },
+   {
+    "n": 88,
+    "simTime": 1752.6,
+    "wall": "2026-11-23T02:41:50.625Z",
+    "text": "Heard the bell—loud but fine from here. Continuing down, three points on."
+   },
+   {
+    "n": 89,
+    "simTime": 1769.3,
+    "wall": "2026-11-23T02:42:07.255Z",
+    "text": "Steady on the rungs—continuing down to meet Maya at the bell."
+   },
+   {
+    "n": 90,
+    "simTime": 1781.5,
+    "wall": "2026-11-23T02:42:19.455Z",
+    "text": "Continuing down—three points on, steady."
+   },
+   {
+    "n": 91,
+    "simTime": 1812.5,
+    "wall": "2026-11-23T02:42:50.459Z",
+    "text": "Continuing down—see you at the bell."
+   },
+   {
+    "n": 92,
+    "simTime": 1843.1,
+    "wall": "2026-11-23T02:43:21.141Z",
+    "text": "Continuing down—see you at the bell."
+   },
+   {
+    "n": 93,
+    "simTime": 1873.4,
+    "wall": "2026-11-23T02:43:51.387Z",
+    "text": "Continuing down—see you at the bell, Maya."
+   },
+   {
+    "n": 94,
+    "simTime": 1918,
+    "wall": "2026-11-23T02:44:35.975Z",
+    "text": "Almost down—finishing the descent."
+   },
+   {
+    "n": 95,
+    "simTime": 1937.5,
+    "wall": "2026-11-23T02:44:55.418Z",
+    "text": "Heading your way—walking NE to meet you by the bell."
+   },
+   {
+    "n": 96,
+    "simTime": 1971.8,
+    "wall": "2026-11-23T02:45:29.704Z",
+    "text": "On my way to the bell—looks like Maya’s writing in her notebook."
+   },
+   {
+    "n": 97,
+    "simTime": 1992.7,
+    "wall": "2026-11-23T02:45:50.697Z",
+    "text": "On my way over—see you at the bell shortly."
+   },
+   {
+    "n": 98,
+    "simTime": 2002.8,
+    "wall": "2026-11-23T02:46:00.801Z",
+    "text": "Almost there—heading up to you and the bell, Maya."
+   },
+   {
+    "n": 99,
+    "simTime": 2017.8,
+    "wall": "2026-11-23T02:46:15.735Z",
+    "text": "Almost to Maya; I’ll finish the walk and then suggest we check the chest and crate by the shore first, then head toward the bridge and cabin."
+   },
+   {
+    "n": 100,
+    "simTime": 2022.3,
+    "wall": "2026-11-23T02:46:20.239Z",
+    "text": "I’m with Maya by the bell now. I’ll answer her and offer to carry the lantern, then we can head to the shore."
+   },
+   {
+    "n": 101,
+    "simTime": 2044.5,
+    "wall": "2026-11-23T02:46:42.413Z",
+    "text": "Chest and crate by the shore sounds good. I can carry the lantern and rope if you like—you keep the lighter. Did you spot a safe way down to the shore from here, or should we head around and look for a path? I’m ready to follow your lead."
+   },
+   {
+    "n": 102,
+    "simTime": 2046.7,
+    "wall": "2026-11-23T02:46:44.697Z",
+    "text": "Scanning for a safe way down to the shore near the bell and cliffs."
+   },
+   {
+    "n": 103,
+    "simTime": 2066.6,
+    "wall": "2026-11-23T02:47:04.634Z",
+    "text": "I don’t see an easy way straight down here—looks cliffy. Let’s link up and head south along the edge to find a gentler way to the shore; we can circle until we spot a safe path."
+   },
+   {
+    "n": 104,
+    "simTime": 2070.1,
+    "wall": "2026-11-23T02:47:08.083Z",
+    "text": "On my way to you—then let’s skirt south along the cliff until we find a safe way down."
+   },
+   {
+    "n": 105,
+    "simTime": 2086.9,
+    "wall": "2026-11-23T02:47:24.893Z",
+    "text": "On my way to you—then we’ll follow the edge to look for a safe path down."
+   },
+   {
+    "n": 106,
+    "simTime": 2095.8,
+    "wall": "2026-11-23T02:47:33.759Z",
+    "text": "Coming to you—then let’s follow the cliff south to scout a safe way down to the shore."
+   },
+   {
+    "n": 107,
+    "simTime": 2101.2,
+    "wall": "2026-11-23T02:47:39.108Z",
+    "text": "Let’s head SW toward the beach to reach the shore—safer than the cliffs. I can take point or follow you—your call. I’m coming up to you now."
+   },
+   {
+    "n": 108,
+    "simTime": 2124.1,
+    "wall": "2026-11-23T02:48:02.007Z",
+    "text": "I see you, Maya—I’ll catch up and we can take the south way down toward the beach, keeping clear of the cliffs."
+   },
+   {
+    "n": 109,
+    "simTime": 2152.7,
+    "wall": "2026-11-23T02:48:30.642Z",
+    "text": "Coming up to you, Maya—let’s head for the shore to check the chest and crate. I’ll keep an eye on footing and tide."
+   },
+   {
+    "n": 110,
+    "simTime": 2184.6,
+    "wall": "2026-11-23T02:49:02.563Z",
+    "text": "Heading to you, Maya—then let’s check that crate on the beach. Did you see a separate chest nearby?"
+   },
+   {
+    "n": 111,
+    "simTime": 2225.1,
+    "wall": "2026-11-23T02:49:43.059Z",
+    "text": "Maya, heading to the crate on the beach—let’s check it together. I’ll mind the lid and watch for anything inside."
+   },
+   {
+    "n": 112,
+    "simTime": 2249.7,
+    "wall": "2026-11-23T02:50:07.609Z",
+    "text": "Almost to the crate—wading the stream rocks, then onto the sand. I’ll have us open the lid carefully and stand to the side."
+   },
+   {
+    "n": 113,
+    "simTime": 2268.4,
+    "wall": "2026-11-23T02:50:26.339Z",
+    "text": "Hey, Maya—crate’s already open. Did you check it yet? I’ll take a closer look for hidden compartments, then we can hunt for that chest—maybe near the rowboat or the driftwood table. Let’s keep the lantern sheltered from the wind."
+   },
+   {
+    "n": 114,
+    "simTime": 2275.3,
+    "wall": "2026-11-23T02:50:33.253Z",
+    "text": "Good idea checking the sand. I’ll finish inspecting the hinges, lid, and base for hidden panels or markings."
+   },
+   {
+    "n": 115,
+    "simTime": 2278.5,
+    "wall": "2026-11-23T02:50:36.537Z",
+    "text": "Crate’s empty—nice sweep around it. Let’s check the rowboat next, then the driftwood table for that chest. I’ll carry the lantern; you hang onto the rope and lighter."
+   },
+   {
+    "n": 116,
+    "simTime": 2305,
+    "wall": "2026-11-23T02:51:03.003Z",
+    "text": "Crate’s empty. Let’s check the rowboat next, then the driftwood table. Want me to take the rope so you can keep the lantern steady? I’ll head to the boat—watch the softer sand near the waterline."
+   },
+   {
+    "n": 117,
+    "simTime": 2307.7,
+    "wall": "2026-11-23T02:51:05.668Z",
+    "text": "Thanks for the lantern—I’ve got it. Heading to the rowboat; once there I’ll check inside and under the thwarts. Then we can swing by the driftwood table for that chest."
+   },
+   {
+    "n": 118,
+    "simTime": 2335.1,
+    "wall": "2026-11-23T02:51:33.099Z",
+    "text": "Almost to the boat. I’ll check inside and under the thwarts; could you scan along the gunwales and under the hull edge? I’ll keep the lantern low and out of the wind."
+   },
+   {
+    "n": 119,
+    "simTime": 2386.9,
+    "wall": "2026-11-23T02:52:24.848Z",
+    "text": "I’ll set the lantern in the boat to light the interior, then inspect inside and under the thwarts."
+   },
+   {
+    "n": 120,
+    "simTime": 2392.4,
+    "wall": "2026-11-23T02:52:30.366Z",
+    "text": "I’ll give the boat a closer look—inside, under the thwarts, seams, and bilge. Maya, could you scan along the shoreline for any chest while I do? Then we’ll head to the driftwood table."
+   },
+   {
+    "n": 121,
+    "simTime": 2401.8,
+    "wall": "2026-11-23T02:52:39.700Z",
+    "text": "Boat’s clear. Maya, let’s check the driftwood table for that chest. I’ll grab the lantern and head there—come with me?"
+   },
+   {
+    "n": 122,
+    "simTime": 2406.9,
+    "wall": "2026-11-23T02:52:44.803Z",
+    "text": "I’ve got the lantern—heading to the driftwood table to look for the chest. Come with me, Maya?"
+   },
+   {
+    "n": 123,
+    "simTime": 2413.1,
+    "wall": "2026-11-23T02:52:51.093Z",
+    "text": "Heading to the driftwood table—I’ll set the lantern on it and scan under and around for a chest or stash."
+   },
+   {
+    "n": 124,
+    "simTime": 2461.1,
+    "wall": "2026-11-23T02:53:39.112Z",
+    "text": "I’ll check the note on the table, then we can head for the bridge and cabin."
+   },
+   {
+    "n": 125,
+    "simTime": 2466.1,
+    "wall": "2026-11-23T02:53:44.129Z",
+    "text": "This sheet looks blank—I'll set the lantern here and take a closer look for impressions or watermarks. After that, let’s head to the bridge and cabin."
+   },
+   {
+    "n": 126,
+    "simTime": 2470,
+    "wall": "2026-11-23T02:53:47.918Z",
+    "text": "Setting the lantern down, then I’ll examine the paper at an angle for impressions or a watermark."
+   },
+   {
+    "n": 127,
+    "simTime": 2474.1,
+    "wall": "2026-11-23T02:53:52.035Z",
+    "text": "I’ll angle the lantern and take a close look at the paper for impressions or a watermark."
+   },
+   {
+    "n": 128,
+    "simTime": 2484.1,
+    "wall": "2026-11-23T02:54:02.076Z",
+    "text": "I’ll hold the paper a safe distance over the lantern’s warmth to see if any hidden ink develops. If nothing shows, I might try a very light pencil rubbing for indentations. After this, let’s head toward the bridge and cabin and say hi to the person up there."
+   },
+   {
+    "n": 129,
+    "simTime": 2489.2,
+    "wall": "2026-11-23T02:54:07.147Z",
+    "text": "I’ll try to reveal any indentations: hold the paper at a shallow angle to the lantern’s light and make a very light side-of-pencil shading pass to see if letters emerge. If nothing shows, I’ll take the lantern and head toward the bridge and cabin to say hello to the person there."
+   },
+   {
+    "n": 130,
+    "simTime": 2511.5,
+    "wall": "2026-11-23T02:54:29.494Z",
+    "text": "Blank paper stays here. I’ll grab the lantern and head toward the bridge to say hello to whoever’s nearby."
+   },
+   {
+    "n": 131,
+    "simTime": 2518.2,
+    "wall": "2026-11-23T02:54:36.180Z",
+    "text": "I’ll head over the bridge toward the cabin and see if anyone’s around. Lantern in hand, steady pace."
+   },
+   {
+    "n": 132,
+    "simTime": 2550.8,
+    "wall": "2026-11-23T02:55:08.711Z",
+    "text": "Crossing to the bridge—lantern low, listening for anyone nearby. Maya, I’m heading toward the cabin after the bridge; call out if you want to link up."
+   },
+   {
+    "n": 133,
+    "simTime": 2563.1,
+    "wall": "2026-11-23T02:55:21.125Z",
+    "text": "Crossing toward the cabin—let’s check that chest by the door. I’ll keep the lantern steady and see if it opens."
+   },
+   {
+    "n": 134,
+    "simTime": 2596.6,
+    "wall": "2026-11-23T02:55:54.601Z",
+    "text": "Almost there. I’ll try the lid gently—if it’s locked, I’ll check for a latch or hasp; if it opens, I’ll lift it slowly and stand to the side."
+   },
+   {
+    "n": 135,
+    "simTime": 2598.5,
+    "wall": "2026-11-23T02:55:56.545Z",
+    "text": "Nearly there—lantern low. Maya, join me by the chest if you like."
+   },
+   {
+    "n": 136,
+    "simTime": 2626.6,
+    "wall": "2026-11-23T02:56:24.603Z",
+    "text": "Chest’s open and empty. I’m heading to the cabin door—I'll try the latch. Maya, I’m by the door if you want to join."
+   },
+   {
+    "n": 137,
+    "simTime": 2640.1,
+    "wall": "2026-11-23T02:56:38.071Z",
+    "text": "Door’s open—I’ll step inside. I’ll set the lantern on the table and take a quick look around."
+   },
+   {
+    "n": 138,
+    "simTime": 2651.2,
+    "wall": "2026-11-23T02:56:49.247Z",
+    "text": "Inside the cabin now—I’ll set the lantern on the table for light, then check the fireplace."
+   },
+   {
+    "n": 139,
+    "simTime": 2656.8,
+    "wall": "2026-11-23T02:56:54.804Z",
+    "text": "Lantern’s on the table. I’ll quickly check the fireplace for any tools, ash, or hidden compartments, then the bed if there’s time."
+   },
+   {
+    "n": 140,
+    "simTime": 2664.8,
+    "wall": "2026-11-23T02:57:02.772Z",
+    "text": "I’ll step closer to the fireplace for a detailed look."
+   },
+   {
+    "n": 141,
+    "simTime": 2672.8,
+    "wall": "2026-11-23T02:57:10.771Z",
+    "text": "Up close now—I’ll check the hearth, sides, and chimney throat for soot, tools, or any loose stones or niches."
+   },
+   {
+    "n": 142,
+    "simTime": 2681.1,
+    "wall": "2026-11-23T02:57:19.133Z",
+    "text": "Fireplace is clear. I’ll quickly check the bed—looking under the blanket and mattress seam if there’s time."
+   }
+  ]
+ }
+]
