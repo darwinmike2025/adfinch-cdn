@@ -7,5 +7,6 @@
  "reason": "the run reached its time limit",
  "endedWall": "2026-11-24T05:30:03.753Z",
  "modelCalls": 238,
- "estimatedCostUsd": 2.4178
+ "estimatedCostUsd": 2.5808,
+ "reportCheck": "**Woman:** not checked\n\n**Man:** None. All statements in the report are supported by the activity record or journal."
 }
