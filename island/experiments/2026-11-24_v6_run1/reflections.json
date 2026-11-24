@@ -1,0 +1,1278 @@
+[
+ {
+  "person": "Woman",
+  "reflections": [
+   {
+    "n": 1,
+    "simTime": 9.1,
+    "wall": "2026-11-24T04:52:52.461Z",
+    "text": "Sand under my feet, dry and warm. A rowboat is pulled up just ahead of me, and the water is close behind. I don't remember how I got here. I'll look at the boat first."
+   },
+   {
+    "n": 2,
+    "simTime": 23.9,
+    "wall": "2026-11-24T04:53:07.326Z",
+    "text": "The boat is sound, one oar inside, nothing else. Water is only a short walk behind me. I want to see how the shore looks before I go inland toward that cabin."
+   },
+   {
+    "n": 3,
+    "simTime": 34,
+    "wall": "2026-11-24T04:53:17.412Z",
+    "text": "The water is right at my feet, quiet, no wind worth mentioning. I want a closer look before I decide whether to stay on the sand or head for the cabin."
+   },
+   {
+    "n": 4,
+    "simTime": 47.3,
+    "wall": "2026-11-24T04:53:30.720Z",
+    "text": "Too far to swim, and I don't want to. The cabin is the only thing that looks like someone might have lived here. I'm going to walk to it."
+   },
+   {
+    "n": 5,
+    "simTime": 97.8,
+    "wall": "2026-11-24T04:54:21.257Z",
+    "text": "Grass now, and a fire pit ahead of the cabin. Someone built things here. I'll keep going."
+   },
+   {
+    "n": 6,
+    "simTime": 132.7,
+    "wall": "2026-11-24T04:54:56.052Z",
+    "text": "A chest by the door, and a mirror against a tree off to the left. I'll get to the cabin first."
+   },
+   {
+    "n": 7,
+    "simTime": 149.3,
+    "wall": "2026-11-24T04:55:12.635Z",
+    "text": "The door is latched, not locked as far as I can tell. If someone is inside I should say so, but I want to see the place. I'll open it."
+   },
+   {
+    "n": 8,
+    "simTime": 159,
+    "wall": "2026-11-24T04:55:22.353Z",
+    "text": "Empty, from what I can see. A bed made up, a cold hearth, a lantern on the table. Nobody home. I'm going in."
+   },
+   {
+    "n": 9,
+    "simTime": 170,
+    "wall": "2026-11-24T04:55:33.337Z",
+    "text": "The room is small and tidy. The lantern is half full, so someone used this place, or meant to. I'll look at it before I touch anything else."
+   },
+   {
+    "n": 10,
+    "simTime": 198.4,
+    "wall": "2026-11-24T04:56:01.783Z",
+    "text": "Half full of oil, and the hearth is swept. This wasn't abandoned in a hurry. The bed is the only thing I haven't looked at up close."
+   },
+   {
+    "n": 11,
+    "simTime": 212.2,
+    "wall": "2026-11-24T04:56:15.619Z",
+    "text": "The blanket is pulled tight, like someone expected to come back. I'll look closer before I sit on it."
+   },
+   {
+    "n": 12,
+    "simTime": 225.3,
+    "wall": "2026-11-24T04:56:28.697Z",
+    "text": "Nothing under the blanket, nothing in the hearth. If anyone left a trace, it's more likely in that chest by the door than in here."
+   },
+   {
+    "n": 13,
+    "simTime": 238,
+    "wall": "2026-11-24T04:56:41.400Z",
+    "text": "There's someone on the ladder, halfway up the tower. I wasn't alone. I don't want to startle them from the ground, so I'll call out before I go any closer."
+   },
+   {
+    "n": 14,
+    "simTime": 248.3,
+    "wall": "2026-11-24T04:56:51.705Z",
+    "text": "No answer. They're still climbing, and they may not have heard me. I'm not going to stand here and watch. I'll go to the tower."
+   },
+   {
+    "n": 15,
+    "simTime": 281.3,
+    "wall": "2026-11-24T04:57:24.699Z",
+    "text": "They're higher now, still climbing, still not answering. The stream is just ahead. I'll keep going."
+   },
+   {
+    "n": 16,
+    "simTime": 312.7,
+    "wall": "2026-11-24T04:57:56.113Z",
+    "text": "Still climbing, almost at the top, and still no answer. The forest is right beside me now. I'll stay on the grass and close the distance."
+   },
+   {
+    "n": 17,
+    "simTime": 325.7,
+    "wall": "2026-11-24T04:58:09.077Z",
+    "text": "A young man, about my age, still climbing and still silent. There's a stepladder on the grass nearby, which is odd next to a hundred-foot tower. I'll get to the base first."
+   },
+   {
+    "n": 18,
+    "simTime": 351,
+    "wall": "2026-11-24T04:58:34.477Z",
+    "text": "Close enough now to see he's about my age, nearly at the platform. I'll finish the walk and try again from the base."
+   },
+   {
+    "n": 19,
+    "simTime": 367.5,
+    "wall": "2026-11-24T04:58:50.877Z",
+    "text": "He's almost at the top, and he still hasn't looked down. Close enough now that he should hear a normal voice. I'll try that before I climb after him."
+   },
+   {
+    "n": 20,
+    "simTime": 373.9,
+    "wall": "2026-11-24T04:58:57.247Z",
+    "text": "Still nothing. He's nearly at the platform, and whatever is up there is why he climbed. I'm going up after him."
+   },
+   {
+    "n": 21,
+    "simTime": 402.3,
+    "wall": "2026-11-24T04:59:25.673Z",
+    "text": "He heard me. He's only looking, and he says he'll be back down in a minute. I still want the view for myself, so I'll keep climbing."
+   },
+   {
+    "n": 22,
+    "simTime": 428.3,
+    "wall": "2026-11-24T04:59:51.736Z",
+    "text": "A lighter, a sword, and a snorkel. Strange set of things. I don't want him bringing any of it down — I want to see the platform myself, and I don't want us passing on the ladder."
+   },
+   {
+    "n": 23,
+    "simTime": 433.4,
+    "wall": "2026-11-24T04:59:56.821Z",
+    "text": "He should have heard that. The rungs are solid under my hands. I'll keep going up."
+   },
+   {
+    "n": 24,
+    "simTime": 444.6,
+    "wall": "2026-11-24T05:00:07.966Z",
+    "text": "Marco. He has a name, and he's waiting at the top instead of coming down. I already told him I'm coming up. I'll answer him properly when I get there."
+   },
+   {
+    "n": 25,
+    "simTime": 450.6,
+    "wall": "2026-11-24T05:00:13.974Z",
+    "text": "Still a long way up. The rungs are steady, and he's waiting. I'll keep climbing."
+   },
+   {
+    "n": 26,
+    "simTime": 482.1,
+    "wall": "2026-11-24T05:00:45.522Z",
+    "text": "Halfway isn't even close yet. The ground is far enough that I don't want to look down. I'll just keep my hands on the rungs."
+   },
+   {
+    "n": 27,
+    "simTime": 500.9,
+    "wall": "2026-11-24T05:01:04.322Z",
+    "text": "Halfway up, more or less. My arms are fine. I'll keep going."
+   },
+   {
+    "n": 28,
+    "simTime": 531.6,
+    "wall": "2026-11-24T05:01:34.980Z",
+    "text": "Past the halfway mark. The island looks smaller already, but I still can't see what's on the platform. Almost there."
+   },
+   {
+    "n": 29,
+    "simTime": 559.8,
+    "wall": "2026-11-24T05:02:03.182Z",
+    "text": "Three quarters of the way. The ocean is on one side, the cabin a small thing on the other. I'll finish the climb."
+   },
+   {
+    "n": 30,
+    "simTime": 589.6,
+    "wall": "2026-11-24T05:02:32.973Z",
+    "text": "Almost at the railing. I can see the table now — lighter, sword, snorkel, just as he said. A few more rungs."
+   },
+   {
+    "n": 31,
+    "simTime": 619.9,
+    "wall": "2026-11-24T05:03:03.271Z",
+    "text": "One more step and I'm on the platform. I'll see him face to face before I touch anything."
+   },
+   {
+    "n": 32,
+    "simTime": 627,
+    "wall": "2026-11-24T05:03:10.335Z",
+    "text": "The whole island is laid out below us — cabin, beach, pond, that stone circle, the bell on the headland. And he's right here, waiting. I should answer him before I touch anything on the table."
+   },
+   {
+    "n": 33,
+    "simTime": 639,
+    "wall": "2026-11-24T05:03:22.349Z",
+    "text": "He hasn't answered yet. I'll give him a moment before I start poking at the table."
+   },
+   {
+    "n": 34,
+    "simTime": 659.9,
+    "wall": "2026-11-24T05:03:43.237Z",
+    "text": "Fifteen seconds and nothing. He's standing right here with his own journal, and he answered from the ladder. Maybe he didn't hear me over the wind, or maybe he doesn't want to say. I'll look at him before I walk to the table."
+   },
+   {
+    "n": 35,
+    "simTime": 668.2,
+    "wall": "2026-11-24T05:03:51.547Z",
+    "text": "He still hasn't said anything else. The table is across the platform — lighter, sword, snorkel. I'll go look at them myself."
+   },
+   {
+    "n": 36,
+    "simTime": 676.6,
+    "wall": "2026-11-24T05:03:59.965Z",
+    "text": "I can't walk across the platform — the ladder wants me to go down first. The table is still marked as within reach, so I'll look at it from here."
+   },
+   {
+    "n": 37,
+    "simTime": 680.4,
+    "wall": "2026-11-24T05:04:03.863Z",
+    "text": "Ten or eleven minutes. So he got here a little before I did, or around the same time. The bell, the lighter, the sword, the snorkel — none of it means anything to me yet. I'll finish looking at the table, then answer him."
+   },
+   {
+    "n": 38,
+    "simTime": 689.7,
+    "wall": "2026-11-24T05:04:13.114Z",
+    "text": "None of those things mean anything to me. A lighter, a sword, and a snorkel on a table a hundred feet up — they look placed, not left. I'll tell him that, and that I only just got here."
+   },
+   {
+    "n": 39,
+    "simTime": 712.9,
+    "wall": "2026-11-24T05:04:36.261Z",
+    "text": "He's talking over me a little — nice to meet you, how long, anything I was looking for, then the bell. I'll finish what I started saying."
+   },
+   {
+    "n": 40,
+    "simTime": 721.3,
+    "wall": "2026-11-24T05:04:44.711Z",
+    "text": "He wants the bell next. I do too — I heard it, or thought I did, from the cabin. I don't need anything on the table. I'll tell him that and stay a minute for the view."
+   },
+   {
+    "n": 41,
+    "simTime": 742.2,
+    "wall": "2026-11-24T05:05:05.588Z",
+    "text": "I said a minute. From up here the island is small enough to hold in one look — cabin to the west, bell on the headland, the stone circle nearer, forest behind us, ocean on the other side. I'll take that minute and actually look."
+   },
+   {
+    "n": 42,
+    "simTime": 757,
+    "wall": "2026-11-24T05:05:20.370Z",
+    "text": "I said a minute. The wind is steady up here, and the bell is a small dark shape on the headland. I'll stand with that before we climb down."
+   },
+   {
+    "n": 43,
+    "simTime": 764.7,
+    "wall": "2026-11-24T05:05:28.182Z",
+    "text": "He's already started down. I'll give him a head start so we're not on the same rungs, then follow."
+   },
+   {
+    "n": 44,
+    "simTime": 783,
+    "wall": "2026-11-24T05:05:46.423Z",
+    "text": "He's a little below me now, still on the ladder. I'll finish this minute so he has room, then follow."
+   },
+   {
+    "n": 45,
+    "simTime": 804.9,
+    "wall": "2026-11-24T05:06:08.295Z",
+    "text": "He's far enough down that I won't be on his heels. Time to follow."
+   },
+   {
+    "n": 46,
+    "simTime": 839.9,
+    "wall": "2026-11-24T05:06:43.308Z",
+    "text": "The rungs are cold under my hands. He's below me, still climbing. I'll keep my eyes on the ladder and not the drop."
+   },
+   {
+    "n": 47,
+    "simTime": 867.5,
+    "wall": "2026-11-24T05:07:10.923Z",
+    "text": "Still a long way down. He's below me and moving. I'll keep my hands on the rungs and let the climb finish."
+   },
+   {
+    "n": 48,
+    "simTime": 897.4,
+    "wall": "2026-11-24T05:07:40.828Z",
+    "text": "Halfway. The ground looks closer than it is. He's still below me, moving. I'll keep going."
+   },
+   {
+    "n": 49,
+    "simTime": 931,
+    "wall": "2026-11-24T05:08:14.387Z",
+    "text": "The ground is closer now. He's almost down. I'll keep my hands on the rungs."
+   },
+   {
+    "n": 50,
+    "simTime": 961.1,
+    "wall": "2026-11-24T05:08:44.450Z",
+    "text": "He's at the bottom. A little further and I'm down too."
+   },
+   {
+    "n": 51,
+    "simTime": 995.4,
+    "wall": "2026-11-24T05:09:18.765Z",
+    "text": "Almost down. He's waiting, and he wants the cliff edge toward the bell. That matches what I saw from up there."
+   },
+   {
+    "n": 52,
+    "simTime": 1019.6,
+    "wall": "2026-11-24T05:09:43.074Z",
+    "text": "Down. The grass feels ordinary after the steel. He's right here, ready to walk the cliff edge toward the bell. I'll go with him."
+   },
+   {
+    "n": 53,
+    "simTime": 1036.1,
+    "wall": "2026-11-24T05:09:59.525Z",
+    "text": "The cliffs are about a hundred and eighty feet southeast. I'll start that way and stop well short of the edge."
+   },
+   {
+    "n": 54,
+    "simTime": 1052.1,
+    "wall": "2026-11-24T05:10:15.499Z",
+    "text": "He's not coming southeast. He's walking northeast, toward the stone circle and the headland where I actually saw the bell. I'll turn and go with him."
+   },
+   {
+    "n": 55,
+    "simTime": 1084.5,
+    "wall": "2026-11-24T05:10:47.917Z",
+    "text": "He got ahead of me. He's at the stone circle, looking at something. The bell is just beyond, on the headland. I'll catch up."
+   },
+   {
+    "n": 56,
+    "simTime": 1114.2,
+    "wall": "2026-11-24T05:11:17.685Z",
+    "text": "He walked past the circle without stopping. I'm right at it — a low ring of fitted stones, grass in the middle, cliffs just beyond. I'll look at it for a moment, then catch him before the bell."
+   },
+   {
+    "n": 57,
+    "simTime": 1126.8,
+    "wall": "2026-11-24T05:11:30.229Z",
+    "text": "Just stones and grass. Nothing written, nothing in the middle. He's already well ahead, toward the bell. I'll follow."
+   },
+   {
+    "n": 58,
+    "simTime": 1143.1,
+    "wall": "2026-11-24T05:11:46.471Z",
+    "text": "He's at the bell already, asking if he should ring it. I want to see it before it moves. I'll tell him to wait."
+   },
+   {
+    "n": 59,
+    "simTime": 1151.6,
+    "wall": "2026-11-24T05:11:54.970Z",
+    "text": "He hasn't rung it. Sixty feet. I'll get there before I decide anything about the sound."
+   },
+   {
+    "n": 60,
+    "simTime": 1166.7,
+    "wall": "2026-11-24T05:12:10.087Z",
+    "text": "Almost there. He's standing by it, waiting. I'll look before anyone pulls anything."
+   },
+   {
+    "n": 61,
+    "simTime": 1173,
+    "wall": "2026-11-24T05:12:16.466Z",
+    "text": "It's a real bell, bronze, on a wooden frame, with a rope on the clapper. The cliffs are right there. I'll look at it before anyone pulls the rope."
+   },
+   {
+    "n": 62,
+    "simTime": 1189.4,
+    "wall": "2026-11-24T05:12:32.831Z",
+    "text": "It's just a bell and a rope. Loud, if the look of it is honest. I came up here to hear it. I'll tell him I'm going to pull it once."
+   },
+   {
+    "n": 63,
+    "simTime": 1201.5,
+    "wall": "2026-11-24T05:12:44.907Z",
+    "text": "He wants to pull it together, or let me do it. I'll finish what I was saying, then answer him."
+   },
+   {
+    "n": 64,
+    "simTime": 1213.3,
+    "wall": "2026-11-24T05:12:56.697Z",
+    "text": "He wants to pull it together. I'll let him count and take the rope on three."
+   },
+   {
+    "n": 65,
+    "simTime": 1218.8,
+    "wall": "2026-11-24T05:13:02.179Z",
+    "text": "Too late for a count. It already rang, loud, right beside me. I want to know if he pulled it."
+   },
+   {
+    "n": 66,
+    "simTime": 1226.9,
+    "wall": "2026-11-24T05:13:10.308Z",
+    "text": "It was loud, right in my chest. I didn't pull the rope. He's a few steps off now, with his journal out. I'll give him a second to answer."
+   },
+   {
+    "n": 67,
+    "simTime": 1231.9,
+    "wall": "2026-11-24T05:13:15.358Z",
+    "text": "Still no answer. The bell is quiet again. I'll give him the rest of the moment."
+   },
+   {
+    "n": 68,
+    "simTime": 1243.2,
+    "wall": "2026-11-24T05:13:26.595Z",
+    "text": "He's talking, but I haven't caught the words yet. One more second."
+   },
+   {
+    "n": 69,
+    "simTime": 1248.1,
+    "wall": "2026-11-24T05:13:31.494Z",
+    "text": "He says he didn't pull it. The rope may have slipped. I still want to feel it in my own hand, once."
+   },
+   {
+    "n": 70,
+    "simTime": 1260.2,
+    "wall": "2026-11-24T05:13:43.550Z",
+    "text": "He's right beside me now. I asked him to count. I'll give him a few seconds, then pull the rope either way."
+   },
+   {
+    "n": 71,
+    "simTime": 1271.2,
+    "wall": "2026-11-24T05:13:54.666Z",
+    "text": "He didn't count. I said I'd pull it either way. Once, then I'll listen."
+   },
+   {
+    "n": 72,
+    "simTime": 1273.2,
+    "wall": "2026-11-24T05:13:56.624Z",
+    "text": "He counted after all. The rope is in my hand. I'll finish the pull."
+   },
+   {
+    "n": 73,
+    "simTime": 1274.7,
+    "wall": "2026-11-24T05:13:58.142Z",
+    "text": "Three. The rope is moving. I'll hear what I came for."
+   },
+   {
+    "n": 74,
+    "simTime": 1284.7,
+    "wall": "2026-11-24T05:14:08.081Z",
+    "text": "That was the sound I came for. Louder than the one I thought I heard by the cabin. I'll tell him, then listen."
+   },
+   {
+    "n": 75,
+    "simTime": 1297.2,
+    "wall": "2026-11-24T05:14:20.611Z",
+    "text": "Nothing yet but the last of the ring in my ears. I'll stay quiet and listen, the way I said I would."
+   },
+   {
+    "n": 76,
+    "simTime": 1309.2,
+    "wall": "2026-11-24T05:14:32.624Z",
+    "text": "Still nothing answering. The grass, the cliffs, him standing here with his journal. I'll keep listening."
+   },
+   {
+    "n": 77,
+    "simTime": 1340.2,
+    "wall": "2026-11-24T05:15:03.572Z",
+    "text": "Forty seconds and nothing has answered. I'll finish the minute I said I'd give it."
+   },
+   {
+    "n": 78,
+    "simTime": 1371.4,
+    "wall": "2026-11-24T05:15:34.752Z",
+    "text": "A full minute and nothing answered. He's already walking south, toward the stones. I'll write the bell down before I follow, while it's still in my ears."
+   },
+   {
+    "n": 79,
+    "simTime": 1375.8,
+    "wall": "2026-11-24T05:15:39.231Z",
+    "text": "The pencil is moving. He's well ahead of me now, south toward the stones. The note can finish. I have time to catch the circle after."
+   },
+   {
+    "n": 80,
+    "simTime": 1404.5,
+    "wall": "2026-11-24T05:16:07.906Z",
+    "text": "Still writing. He's at the stones already, doing something I can't see from here. The note is half done. I'll finish it."
+   },
+   {
+    "n": 81,
+    "simTime": 1414.9,
+    "wall": "2026-11-24T05:16:18.247Z",
+    "text": "He's walking the ring, feeling the stones. My note isn't finished. I'll let the pencil catch up, then go see what he found."
+   },
+   {
+    "n": 82,
+    "simTime": 1444.3,
+    "wall": "2026-11-24T05:16:47.703Z",
+    "text": "He's writing now too, at the ring. My page is almost done. I'll finish it, then walk down to the stones."
+   },
+   {
+    "n": 83,
+    "simTime": 1474.4,
+    "wall": "2026-11-24T05:17:17.753Z",
+    "text": "Almost done. Ten more seconds and the page is closed."
+   },
+   {
+    "n": 84,
+    "simTime": 1485.2,
+    "wall": "2026-11-24T05:17:28.584Z",
+    "text": "The page is done. He's still at the ring, writing. I'll walk down and see the stones for myself."
+   },
+   {
+    "n": 85,
+    "simTime": 1503.9,
+    "wall": "2026-11-24T05:17:47.307Z",
+    "text": "Halfway. The ring is low, just grass in the middle. He's still writing beside it. I'll keep walking."
+   },
+   {
+    "n": 86,
+    "simTime": 1520.2,
+    "wall": "2026-11-24T05:18:03.616Z",
+    "text": "I'm at the ring. He's writing right beside me and hasn't looked up. The stones are low, fitted, grass in the middle. I'll look at them before I interrupt him."
+   },
+   {
+    "n": 87,
+    "simTime": 1538.8,
+    "wall": "2026-11-24T05:18:22.183Z",
+    "text": "Just a low ring and grass. He's still writing beside me. I'll ask what he found before I start feeling the stones myself."
+   },
+   {
+    "n": 88,
+    "simTime": 1546.7,
+    "wall": "2026-11-24T05:18:30.067Z",
+    "text": "He hasn't looked up. I'll give him a moment to finish the line, then I'll feel the stones myself if he doesn't answer."
+   },
+   {
+    "n": 89,
+    "simTime": 1566.5,
+    "wall": "2026-11-24T05:18:49.912Z",
+    "text": "He says the stones are blank. I still want my hand on one before I leave them. Then the forest edge, if he's going."
+   },
+   {
+    "n": 90,
+    "simTime": 1577.1,
+    "wall": "2026-11-24T05:19:00.483Z",
+    "text": "He's already walking toward the trees. I'll touch the stone first, the way I said I would, then follow."
+   },
+   {
+    "n": 91,
+    "simTime": 1585.8,
+    "wall": "2026-11-24T05:19:09.233Z",
+    "text": "Almost done with the stone. He's at the trees already, saying he's going just inside. I'll finish this, then follow."
+   },
+   {
+    "n": 92,
+    "simTime": 1602.1,
+    "wall": "2026-11-24T05:19:25.524Z",
+    "text": "The stone didn't tell me anything the island would count. He already said the same. I told him I'd come to the trees. He's just inside the edge. I'll catch up."
+   },
+   {
+    "n": 93,
+    "simTime": 1604,
+    "wall": "2026-11-24T05:19:27.400Z",
+    "text": "He's just ahead, at the tree line. Ten seconds. I'll keep walking."
+   },
+   {
+    "n": 94,
+    "simTime": 1613.8,
+    "wall": "2026-11-24T05:19:37.198Z",
+    "text": "Almost to him. The trees are just north of us. I'll finish the walk."
+   },
+   {
+    "n": 95,
+    "simTime": 1619.3,
+    "wall": "2026-11-24T05:19:42.711Z",
+    "text": "I'm at the tree line and he's a little west of me, still walking. I'll look into the trees before I go in."
+   },
+   {
+    "n": 96,
+    "simTime": 1628.8,
+    "wall": "2026-11-24T05:19:52.262Z",
+    "text": "The trees are seven feet north. He's standing sixty feet west, not inside from here. I'll step in a little and see what the forest actually is."
+   },
+   {
+    "n": 97,
+    "simTime": 1632.4,
+    "wall": "2026-11-24T05:19:55.859Z",
+    "text": "That barely moved me. The trees are still four feet north. I'll walk to the forest itself."
+   },
+   {
+    "n": 98,
+    "simTime": 1638.6,
+    "wall": "2026-11-24T05:20:02.026Z",
+    "text": "The forest is four feet in front of me and the walk stopped at the grass. I'll try stepping north again. If it won't take me, I'll go find him."
+   },
+   {
+    "n": 99,
+    "simTime": 1643.5,
+    "wall": "2026-11-24T05:20:06.866Z",
+    "text": "Something solid is in the trees. I can't step in. He's walking west along the edge. I'll tell him, then come along the grass."
+   },
+   {
+    "n": 100,
+    "simTime": 1654.1,
+    "wall": "2026-11-24T05:20:17.440Z",
+    "text": "He's a hundred and twenty feet west and still walking. I said I'd come along the edge. I'll go."
+   },
+   {
+    "n": 101,
+    "simTime": 1675.7,
+    "wall": "2026-11-24T05:20:39.142Z",
+    "text": "He's at the pond, not the trees. Murky water, he says, and he's looking for tracks. I'll finish the walk and meet him there."
+   },
+   {
+    "n": 102,
+    "simTime": 1694.7,
+    "wall": "2026-11-24T05:20:58.147Z",
+    "text": "I'm at the pond. The water is murky and he's right here, still looking. I'll look at the shoreline myself."
+   },
+   {
+    "n": 103,
+    "simTime": 1707.4,
+    "wall": "2026-11-24T05:21:10.834Z",
+    "text": "The water is murky and he's right beside me, still looking at the mud. I want to know if the shore gave him anything before I decide what the last minute is for."
+   },
+   {
+    "n": 104,
+    "simTime": 1710.8,
+    "wall": "2026-11-24T05:21:14.200Z",
+    "text": "He answered before I finished. No tracks. I'll let the question land, then tell him what the trees did."
+   },
+   {
+    "n": 105,
+    "simTime": 1721.2,
+    "wall": "2026-11-24T05:21:24.600Z",
+    "text": "He thinks I found something. I didn't. The water is just murky, and the trees were solid. I'll tell him that plainly."
+   },
+   {
+    "n": 106,
+    "simTime": 1728,
+    "wall": "2026-11-24T05:21:31.357Z",
+    "text": "He's already walking south. I'll finish what I was saying."
+   },
+   {
+    "n": 107,
+    "simTime": 1759.2,
+    "wall": "2026-11-24T05:22:02.638Z",
+    "text": "He's walking off toward the bridge. I have less than a minute. I carried this journal the whole time and haven't written in it. I'll put down what I actually found."
+   },
+   {
+    "n": 108,
+    "simTime": 1775.5,
+    "wall": "2026-11-24T05:22:18.926Z",
+    "text": "That note is too long. There's half a minute left and it won't finish. I'll write less, so something actually gets down."
+   },
+   {
+    "n": 109,
+    "simTime": 1778.9,
+    "wall": "2026-11-24T05:22:22.247Z",
+    "text": "The first line stopped at the tower. This one is short enough. I'll let it finish."
+   }
+  ]
+ },
+ {
+  "person": "Man",
+  "reflections": [
+   {
+    "n": 1,
+    "simTime": 3.1,
+    "wall": "2026-11-24T04:52:46.490Z",
+    "text": "I start by taking in the view from here on the hilltop."
+   },
+   {
+    "n": 2,
+    "simTime": 10.4,
+    "wall": "2026-11-24T04:52:53.873Z",
+    "text": "That ladder and platform are calling to me. I want the higher view."
+   },
+   {
+    "n": 3,
+    "simTime": 43.7,
+    "wall": "2026-11-24T04:53:27.059Z",
+    "text": "Grass underfoot now—nice change from the rocks. I’ll keep on toward the ladder."
+   },
+   {
+    "n": 4,
+    "simTime": 72.6,
+    "wall": "2026-11-24T04:53:56.002Z",
+    "text": "I’ll keep going toward the ladder."
+   },
+   {
+    "n": 5,
+    "simTime": 102.8,
+    "wall": "2026-11-24T04:54:26.275Z",
+    "text": "Almost there. I want that view."
+   },
+   {
+    "n": 6,
+    "simTime": 132.8,
+    "wall": "2026-11-24T04:54:56.136Z",
+    "text": "Letting the walk finish; nearly there."
+   },
+   {
+    "n": 7,
+    "simTime": 139.5,
+    "wall": "2026-11-24T04:55:02.884Z",
+    "text": "Time to go up and see what’s on that platform."
+   },
+   {
+    "n": 8,
+    "simTime": 171.6,
+    "wall": "2026-11-24T04:55:35.005Z",
+    "text": "I’ll keep climbing—curious what’s up there and what the view’s like."
+   },
+   {
+    "n": 9,
+    "simTime": 201.7,
+    "wall": "2026-11-24T04:56:05.039Z",
+    "text": "Steady pace. I’ll keep climbing."
+   },
+   {
+    "n": 10,
+    "simTime": 231.7,
+    "wall": "2026-11-24T04:56:35.082Z",
+    "text": "I’ll keep climbing."
+   },
+   {
+    "n": 11,
+    "simTime": 234.8,
+    "wall": "2026-11-24T04:56:38.147Z",
+    "text": "I spot someone by the cabin—interesting. I’ll keep climbing and get the full view from the top."
+   },
+   {
+    "n": 12,
+    "simTime": 248.1,
+    "wall": "2026-11-24T04:56:51.450Z",
+    "text": "Someone called from by the cabin—sounds like a woman. I’ll keep climbing and check in from the top."
+   },
+   {
+    "n": 13,
+    "simTime": 277.2,
+    "wall": "2026-11-24T04:57:20.561Z",
+    "text": "I’ll finish the climb, then call back from the platform."
+   },
+   {
+    "n": 14,
+    "simTime": 303.8,
+    "wall": "2026-11-24T04:57:47.241Z",
+    "text": "I’ll keep climbing to the platform and then call down."
+   },
+   {
+    "n": 15,
+    "simTime": 325,
+    "wall": "2026-11-24T04:58:08.345Z",
+    "text": "Continuing up to the platform."
+   },
+   {
+    "n": 16,
+    "simTime": 350.4,
+    "wall": "2026-11-24T04:58:33.813Z",
+    "text": "Holding on and continuing up to the platform."
+   },
+   {
+    "n": 17,
+    "simTime": 354.2,
+    "wall": "2026-11-24T04:58:37.676Z",
+    "text": "Almost there—I’ll finish the climb, then say hello from the top."
+   },
+   {
+    "n": 18,
+    "simTime": 390.8,
+    "wall": "2026-11-24T04:59:14.227Z",
+    "text": "I steady myself on the rungs and call back a quick reply."
+   },
+   {
+    "n": 19,
+    "simTime": 406,
+    "wall": "2026-11-24T04:59:29.429Z",
+    "text": "From up here, the whole island feels like a model—tempting to catalog everything, but I’m more curious about the person climbing up."
+   },
+   {
+    "n": 20,
+    "simTime": 411.8,
+    "wall": "2026-11-24T04:59:35.223Z",
+    "text": "She’s close—funny to be chatting mid-ladder. I’ll finish what I was saying."
+   },
+   {
+    "n": 21,
+    "simTime": 427.2,
+    "wall": "2026-11-24T04:59:50.566Z",
+    "text": "She made it up close—curious who she is. I’ll invite her up and ask what she wants."
+   },
+   {
+    "n": 22,
+    "simTime": 434.5,
+    "wall": "2026-11-24T04:59:57.867Z",
+    "text": "She’s coming up—cool. I’ll let my invite finish and give her space on the ladder."
+   },
+   {
+    "n": 23,
+    "simTime": 442.2,
+    "wall": "2026-11-24T05:00:05.590Z",
+    "text": "Alright—leaving everything where it is. I’ll give you room to come up."
+   },
+   {
+    "n": 24,
+    "simTime": 472.9,
+    "wall": "2026-11-24T05:00:36.247Z",
+    "text": "Got it—leaving everything. Wind’s a bit stronger up here on the last rungs. You’re good."
+   },
+   {
+    "n": 25,
+    "simTime": 516.2,
+    "wall": "2026-11-24T05:01:19.554Z",
+    "text": "While she climbs, I’ll jot a quick note about the view and the plan to check the bell after."
+   },
+   {
+    "n": 26,
+    "simTime": 554.5,
+    "wall": "2026-11-24T05:01:57.921Z",
+    "text": "I’ll keep scribbling while she climbs—no rush."
+   },
+   {
+    "n": 27,
+    "simTime": 580.1,
+    "wall": "2026-11-24T05:02:23.455Z",
+    "text": "I’ll keep writing while you come up."
+   },
+   {
+    "n": 28,
+    "simTime": 610.8,
+    "wall": "2026-11-24T05:02:54.181Z",
+    "text": "I’ll finish the note while you come up."
+   },
+   {
+    "n": 29,
+    "simTime": 647.3,
+    "wall": "2026-11-24T05:03:30.651Z",
+    "text": "I close the journal mid-sentence and turn to her."
+   },
+   {
+    "n": 30,
+    "simTime": 668.7,
+    "wall": "2026-11-24T05:03:52.088Z",
+    "text": "Letting that finish, then I’ll hear what Mara says back."
+   },
+   {
+    "n": 31,
+    "simTime": 676.7,
+    "wall": "2026-11-24T05:04:00.100Z",
+    "text": "I wait for your answer and take a moment to really look at you—trying to read your face after the climb."
+   },
+   {
+    "n": 32,
+    "simTime": 690.3,
+    "wall": "2026-11-24T05:04:13.682Z",
+    "text": "I rest a forearm on the railing, giving her space, curious what she’ll say."
+   },
+   {
+    "n": 33,
+    "simTime": 718,
+    "wall": "2026-11-24T05:04:41.399Z",
+    "text": "Let’s catch our breath a minute—then I can go first down the ladder toward the bell if you want."
+   },
+   {
+    "n": 34,
+    "simTime": 723.9,
+    "wall": "2026-11-24T05:04:47.349Z",
+    "text": "Same here—woke with the journal and pencil. Let’s leave the table as is. Want to head to the bell in a minute? I can go first down the ladder, unless you want more time up here."
+   },
+   {
+    "n": 35,
+    "simTime": 730.3,
+    "wall": "2026-11-24T05:04:53.713Z",
+    "text": "Alright—let’s go ring the bell. I’ll head down first unless you’d rather lead. Ready?"
+   },
+   {
+    "n": 36,
+    "simTime": 739.7,
+    "wall": "2026-11-24T05:05:03.045Z",
+    "text": "Bell’s been tugging at me since I spotted it."
+   },
+   {
+    "n": 37,
+    "simTime": 743.5,
+    "wall": "2026-11-24T05:05:06.910Z",
+    "text": "If she heard a bell earlier, I’m even more curious what it does."
+   },
+   {
+    "n": 38,
+    "simTime": 747.5,
+    "wall": "2026-11-24T05:05:10.868Z",
+    "text": "I let my words carry on the wind and get ready to climb down toward the bell."
+   },
+   {
+    "n": 39,
+    "simTime": 752.8,
+    "wall": "2026-11-24T05:05:16.224Z",
+    "text": "I’ll head down first—see you at the bottom."
+   },
+   {
+    "n": 40,
+    "simTime": 768.6,
+    "wall": "2026-11-24T05:05:31.948Z",
+    "text": "Steady now—one rung at a time. I’ll wait for you at the bottom, Mara."
+   },
+   {
+    "n": 41,
+    "simTime": 797.6,
+    "wall": "2026-11-24T05:06:01.025Z",
+    "text": "One rung at a time. The bell’s gleaming in the corner of my eye."
+   },
+   {
+    "n": 42,
+    "simTime": 828.2,
+    "wall": "2026-11-24T05:06:31.592Z",
+    "text": "Easy does it. Bell after this."
+   },
+   {
+    "n": 43,
+    "simTime": 857.5,
+    "wall": "2026-11-24T05:07:00.890Z",
+    "text": "Halfway down. Careful hands, steady feet. Bell soon."
+   },
+   {
+    "n": 44,
+    "simTime": 918.4,
+    "wall": "2026-11-24T05:08:01.821Z",
+    "text": "Almost there. I’ll wait at the base, then we can head for the bell."
+   },
+   {
+    "n": 45,
+    "simTime": 948.3,
+    "wall": "2026-11-24T05:08:31.688Z",
+    "text": "Last few rungs. I’ll hop off and wait for you here."
+   },
+   {
+    "n": 46,
+    "simTime": 967.9,
+    "wall": "2026-11-24T05:08:51.334Z",
+    "text": "I’m down—take your time. I’ll have a quick look for the path to the bell."
+   },
+   {
+    "n": 47,
+    "simTime": 979.9,
+    "wall": "2026-11-24T05:09:03.307Z",
+    "text": "From down here I can’t see the bell, but the cliffs SE feel like the direction."
+   },
+   {
+    "n": 48,
+    "simTime": 998.2,
+    "wall": "2026-11-24T05:09:21.622Z",
+    "text": "I’ll wait right here while you finish—just scanning for a path toward the cliffs and bell."
+   },
+   {
+    "n": 49,
+    "simTime": 1013.2,
+    "wall": "2026-11-24T05:09:36.584Z",
+    "text": "Cliffs drop straight into the surf—no way down here. Once you’re down, let’s skirt the edge east-northeast toward the headland and the bell."
+   },
+   {
+    "n": 50,
+    "simTime": 1028.4,
+    "wall": "2026-11-24T05:09:51.794Z",
+    "text": "She’s down. Let’s go NE toward that stone ring by the cliffs, then angle toward the headland and the bell—keeping a safe buffer from the edge."
+   },
+   {
+    "n": 51,
+    "simTime": 1032.7,
+    "wall": "2026-11-24T05:09:56.057Z",
+    "text": "Heading northeast toward the stone ring with Mara, keeping clear of the cliff edge."
+   },
+   {
+    "n": 52,
+    "simTime": 1047.9,
+    "wall": "2026-11-24T05:10:11.265Z",
+    "text": "There’s the stone ring ahead—let’s pass it on the inland side, then cut toward the headland and the bell."
+   },
+   {
+    "n": 53,
+    "simTime": 1049.8,
+    "wall": "2026-11-24T05:10:13.197Z",
+    "text": "Stone ring ahead—then on toward the bell."
+   },
+   {
+    "n": 54,
+    "simTime": 1060.5,
+    "wall": "2026-11-24T05:10:23.873Z",
+    "text": "I thought I heard a faint voice back there. Let’s keep moving toward the bell—stone circle first."
+   },
+   {
+    "n": 55,
+    "simTime": 1079.5,
+    "wall": "2026-11-24T05:10:42.890Z",
+    "text": "Stopping a second to look at this stone ring—then I’ll head toward the bell. I’m just ahead, Mara."
+   },
+   {
+    "n": 56,
+    "simTime": 1090.5,
+    "wall": "2026-11-24T05:10:53.853Z",
+    "text": "Low ring, just grass inside. I’m going to the bell—meet me there?"
+   },
+   {
+    "n": 57,
+    "simTime": 1129.8,
+    "wall": "2026-11-24T05:11:33.131Z",
+    "text": "Made it to the bell. I’ll check in with Mara before I ring it."
+   },
+   {
+    "n": 58,
+    "simTime": 1139.4,
+    "wall": "2026-11-24T05:11:42.753Z",
+    "text": "I’ll give her a moment to answer while I size up the headland and the drop."
+   },
+   {
+    "n": 59,
+    "simTime": 1155.3,
+    "wall": "2026-11-24T05:11:58.693Z",
+    "text": "I’m going to ring it once, Mara!"
+   },
+   {
+    "n": 60,
+    "simTime": 1161.1,
+    "wall": "2026-11-24T05:12:04.477Z",
+    "text": "Got it! Stopping—I'll wait till you can see it. We can ring it together if you like."
+   },
+   {
+    "n": 61,
+    "simTime": 1166.2,
+    "wall": "2026-11-24T05:12:09.596Z",
+    "text": "I’ll wait for you here—then we can ring it together."
+   },
+   {
+    "n": 62,
+    "simTime": 1193.5,
+    "wall": "2026-11-24T05:12:36.932Z",
+    "text": "She made it. I want to share the moment."
+   },
+   {
+    "n": 63,
+    "simTime": 1205,
+    "wall": "2026-11-24T05:12:48.462Z",
+    "text": "Let’s pull it together. One... two... three."
+   },
+   {
+    "n": 64,
+    "simTime": 1213.5,
+    "wall": "2026-11-24T05:12:56.918Z",
+    "text": "Your pull—got it. I’ll step back a bit."
+   },
+   {
+    "n": 65,
+    "simTime": 1222.7,
+    "wall": "2026-11-24T05:13:06.142Z",
+    "text": "Whoa—that was loud. Sorry, I thought we were pulling together. Let’s pause a sec and listen—see if anything answers."
+   },
+   {
+    "n": 66,
+    "simTime": 1231.3,
+    "wall": "2026-11-24T05:13:14.644Z",
+    "text": "I didn’t pull it—I’d stepped back. Maybe the rope slipped when you had it? If you still want to try again, I’ll count and you pull on three. Otherwise we can just listen a moment."
+   },
+   {
+    "n": 67,
+    "simTime": 1235.2,
+    "wall": "2026-11-24T05:13:18.613Z",
+    "text": "I’ll finish telling her that and see what she prefers."
+   },
+   {
+    "n": 68,
+    "simTime": 1238.7,
+    "wall": "2026-11-24T05:13:22.094Z",
+    "text": "Let me finish, then I’ll listen for her reply."
+   },
+   {
+    "n": 69,
+    "simTime": 1247.4,
+    "wall": "2026-11-24T05:13:30.792Z",
+    "text": "I’ll come stand by you—ready when you are."
+   },
+   {
+    "n": 70,
+    "simTime": 1256.4,
+    "wall": "2026-11-24T05:13:39.828Z",
+    "text": "Coming over."
+   },
+   {
+    "n": 71,
+    "simTime": 1263.2,
+    "wall": "2026-11-24T05:13:46.631Z",
+    "text": "Okay—ready? One... two... three!"
+   },
+   {
+    "n": 72,
+    "simTime": 1268.5,
+    "wall": "2026-11-24T05:13:51.924Z",
+    "text": "On three—one... two... three!"
+   },
+   {
+    "n": 73,
+    "simTime": 1274.3,
+    "wall": "2026-11-24T05:13:57.689Z",
+    "text": "Ready for it—listening."
+   },
+   {
+    "n": 74,
+    "simTime": 1283.2,
+    "wall": "2026-11-24T05:14:06.556Z",
+    "text": "There it is—keeping quiet to listen for any echo or answer."
+   },
+   {
+    "n": 75,
+    "simTime": 1286.9,
+    "wall": "2026-11-24T05:14:10.336Z",
+    "text": "Let’s give it a few seconds—listening."
+   },
+   {
+    "n": 76,
+    "simTime": 1302.7,
+    "wall": "2026-11-24T05:14:26.148Z",
+    "text": "I’ll stay quiet and listen with her."
+   },
+   {
+    "n": 77,
+    "simTime": 1330.3,
+    "wall": "2026-11-24T05:14:53.721Z",
+    "text": "I’ll take a closer look at the bell."
+   },
+   {
+    "n": 78,
+    "simTime": 1341.4,
+    "wall": "2026-11-24T05:15:04.790Z",
+    "text": "Looks like a straightforward bell and frame—nothing hidden. I’m curious about that stone ring to the south. I’m going to go take a look—come if you want."
+   },
+   {
+    "n": 79,
+    "simTime": 1363.6,
+    "wall": "2026-11-24T05:15:26.947Z",
+    "text": "I keep toward the stone circle, glancing back to see if she’s coming."
+   },
+   {
+    "n": 80,
+    "simTime": 1376.6,
+    "wall": "2026-11-24T05:15:40.014Z",
+    "text": "Low ring, grass center—curious. I’ll take a closer look."
+   },
+   {
+    "n": 81,
+    "simTime": 1393.6,
+    "wall": "2026-11-24T05:15:56.995Z",
+    "text": "I’m going to circle it and feel the stones, then step into the middle and listen."
+   },
+   {
+    "n": 82,
+    "simTime": 1420.8,
+    "wall": "2026-11-24T05:16:24.136Z",
+    "text": "I’ll jot a quick note, then check the trees to the north."
+   },
+   {
+    "n": 83,
+    "simTime": 1462.3,
+    "wall": "2026-11-24T05:17:05.733Z",
+    "text": "I’ll finish this note, then head to the forest edge."
+   },
+   {
+    "n": 84,
+    "simTime": 1535.9,
+    "wall": "2026-11-24T05:18:19.349Z",
+    "text": "I’ll finish the note, then ask Mara if she wants to check the forest edge."
+   },
+   {
+    "n": 85,
+    "simTime": 1547,
+    "wall": "2026-11-24T05:18:30.419Z",
+    "text": "I pause the note to answer her."
+   },
+   {
+    "n": 86,
+    "simTime": 1561.7,
+    "wall": "2026-11-24T05:18:45.148Z",
+    "text": "Yeah—let’s check the trees to the north."
+   },
+   {
+    "n": 87,
+    "simTime": 1576.1,
+    "wall": "2026-11-24T05:18:59.477Z",
+    "text": "At the forest edge—I’ll see what’s here and maybe peek in."
+   },
+   {
+    "n": 88,
+    "simTime": 1584.9,
+    "wall": "2026-11-24T05:19:08.255Z",
+    "text": "I’m stepping just inside the trees to listen a moment."
+   },
+   {
+    "n": 89,
+    "simTime": 1588.1,
+    "wall": "2026-11-24T05:19:11.515Z",
+    "text": "I’ll keep going a step and see what’s in the way."
+   },
+   {
+    "n": 90,
+    "simTime": 1590.8,
+    "wall": "2026-11-24T05:19:14.177Z",
+    "text": "Thick right at the edge. I’ll see if there’s a gap or path."
+   },
+   {
+    "n": 91,
+    "simTime": 1605.4,
+    "wall": "2026-11-24T05:19:28.740Z",
+    "text": "Trees are tight here—I'll skirt west along the edge and look for a gap. Meet me if you want, or call out if you spot a way in."
+   },
+   {
+    "n": 92,
+    "simTime": 1607.3,
+    "wall": "2026-11-24T05:19:30.685Z",
+    "text": "Skirting west along the edge, watching for a break in the trees."
+   },
+   {
+    "n": 93,
+    "simTime": 1623.4,
+    "wall": "2026-11-24T05:19:46.844Z",
+    "text": "I slow up by the pond side and scan the treeline for any break or game trail."
+   },
+   {
+    "n": 94,
+    "simTime": 1632.5,
+    "wall": "2026-11-24T05:19:55.978Z",
+    "text": "Forest looks tight here. I’ll try the pond edge—might be tracks or a game trail."
+   },
+   {
+    "n": 95,
+    "simTime": 1658.8,
+    "wall": "2026-11-24T05:20:22.262Z",
+    "text": "Murky little pond—might be a trail here. I’ll check the shoreline for tracks or a gap toward the forest."
+   },
+   {
+    "n": 96,
+    "simTime": 1701.9,
+    "wall": "2026-11-24T05:21:05.346Z",
+    "text": "What are you looking at? I didn’t find any clear tracks—just murky edges. See something I missed?"
+   },
+   {
+    "n": 97,
+    "simTime": 1713.3,
+    "wall": "2026-11-24T05:21:16.758Z",
+    "text": "I’ll wait a moment and watch the water with you."
+   },
+   {
+    "n": 98,
+    "simTime": 1719.7,
+    "wall": "2026-11-24T05:21:23.048Z",
+    "text": "No clear tracks, just soft edges, and I hit that same invisible wall in the trees. Let’s try the bridge and follow the stream—might be an easier path."
+   },
+   {
+    "n": 99,
+    "simTime": 1749.7,
+    "wall": "2026-11-24T05:21:53.044Z",
+    "text": "I’ll keep to the bridge—meet you there if you want."
+   },
+   {
+    "n": 100,
+    "simTime": 1765.6,
+    "wall": "2026-11-24T05:22:08.947Z",
+    "text": "Heading to the bridge—see you there."
+   },
+   {
+    "n": 101,
+    "simTime": 1769.5,
+    "wall": "2026-11-24T05:22:12.838Z",
+    "text": "I can see the bridge ahead and Mara back by the pond, writing. I’ll keep on to the bridge."
+   },
+   {
+    "n": 102,
+    "simTime": 1796.4,
+    "wall": "2026-11-24T05:22:39.757Z",
+    "text": "At the bridge now—peeking over to see how the stream runs and if there’s a clear bank-side path."
+   }
+  ]
+ }
+]
