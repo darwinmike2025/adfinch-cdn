@@ -37,7 +37,7 @@ const opts = {
 };
 // A frozen protocol (controller/protocols/<v>.json) fixes every setting for comparable runs.
 const PROTO = arg('protocol', null) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'protocols', arg('protocol') + '.json'), 'utf8')) : null;
-if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, models: PROTO.models || null, gold: !!PROTO.gold, coinCounts: !!PROTO.coinCounts, speed: 1 });
+if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, models: PROTO.models || null, gold: !!PROTO.gold, coinCounts: !!PROTO.coinCounts, extraIntro: PROTO.extraIntro || null, blockTrim: !!PROTO.blockTrim, speed: 1 });
 if (PROTO && PROTO.models && flag('swap-models')) opts.models = PROTO.models.slice().reverse(); // alternate which person each model plays
 if (PROTO && arg('test-minutes', null)) opts.minutes = +arg('test-minutes'); // TEST ONLY: shorter run under a protocol (labelled TEST)
 if (PROTO && arg('test-speed', null)) opts.speed = +arg('test-speed');
@@ -125,7 +125,7 @@ async function listOpenAIModels() {
   const agents = party ? party.map(p => ({ who: p.id, label: p.label, identity: { sex: p.sex, age: p.age }, phrase: p.phrase, startAt: p.startAt }))
     : [{ who: null, label: 'Agent', identity: null, phrase: startPhrase, startAt: opts.startAt }];
   for (const [i, ag] of agents.entries()) {
-    ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes, opts.menu || null, { count: !!opts.coinCounts }); ag.history = []; ag.slug = ag.label.toLowerCase();
+    ag.sys = P.systemPrompt(ag.phrase, ag.identity, opts.minutes, opts.menu || null, { count: !!opts.coinCounts, intro: opts.extraIntro }); ag.history = []; ag.slug = ag.label.toLowerCase();
     // each person can run on a different model (the other person is never told which)
     ag.model = provName !== 'mock' && opts.models && opts.models[i] ? opts.models[i] : choice.model;
     ag.provider = ag.model === choice.model ? provider : makeProvider({ provider: provName, model: ag.model, reasoning: opts.reasoning, timeoutMs: opts.timeoutSec * 1000 });
@@ -141,8 +141,8 @@ async function listOpenAIModels() {
     observationMode: obsMode, aerialImage: obsMode === 'aerial' ? path.basename(AERIAL) : null,
     durationMinutes: opts.minutes, timeSpeed: opts.speed, checkinSeconds: opts.checkin, modelTimeoutSeconds: opts.timeoutSec,
     spendingLimitUsd: choice.maxCostUsd, maxModelCalls: opts.maxCalls, historyTurnsKept: opts.historyTurns,
-    startingIsland: startInfo, introduction: P.introFor(agents[0].phrase, agents[0].identity, opts.minutes), startingPlace: agents[0].startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: SCHEMA, protocol: PROTO || null, lettersRemoved: !!opts.noLetters, video: !!choice.video,
-    people: party ? agents.map(a => ({ id: a.who, label: a.label, sex: a.identity.sex, age: a.identity.age, startingPlace: a.startAt, introduction: P.introFor(a.phrase, a.identity, opts.minutes), systemPrompt: a.sys, toldAboutOthers: false, model: a.model, modelLabel: a.provider.label })) : null,
+    startingIsland: startInfo, introduction: P.introFor(agents[0].phrase, agents[0].identity, opts.minutes, opts.extraIntro), startingPlace: agents[0].startAt, predator: opts.predator ? 'jaguar (hungry; the agent is not told)' : null, worldSeed: opts.seed, systemPrompt: sys, responseSchema: SCHEMA, protocol: PROTO || null, lettersRemoved: !!opts.noLetters, video: !!choice.video,
+    people: party ? agents.map(a => ({ id: a.who, label: a.label, sex: a.identity.sex, age: a.identity.age, startingPlace: a.startAt, introduction: P.introFor(a.phrase, a.identity, opts.minutes, opts.extraIntro), systemPrompt: a.sys, toldAboutOthers: false, model: a.model, modelLabel: a.provider.label })) : null,
     credentials: provName === 'mock' ? 'none' : 'OPENAI_API_KEY environment variable (value never recorded)', startedWall: status.startedWall,
   };
   W('config.json', config);
@@ -180,8 +180,10 @@ async function listOpenAIModels() {
     const lastUser = history.map(h => h.role).lastIndexOf('user');
     let items = history.map((h, i) => ({ h, i }));
     const pinned = items.length ? [items[0]] : [];
-    if (items.length > opts.historyTurns * 2 + 1) {
-      const kept = items.slice(-opts.historyTurns * 2), dropped = items.slice(1, items.length - kept.length);
+    let cutAt = items.length - opts.historyTurns * 2;
+    if (opts.blockTrim) { if (ag.cut == null) ag.cut = 1; if (items.length - ag.cut > opts.historyTurns * 2) ag.cut = items.length - Math.round(opts.historyTurns / 2) * 2; cutAt = ag.cut; }
+    if (cutAt > 1) {
+      const kept = items.slice(cutAt), dropped = items.slice(1, items.length - kept.length);
       // what this person heard, felt and said out loud is never lost when older turns are trimmed
       const mem = [];
       for (const { h } of dropped) {

@@ -98,17 +98,18 @@ const ACTION_TYPES = ACTIONS.map(a => a[0]);
 
 // Optional body description, added as its own short paragraph after the first one (the experimenter's text is unchanged).
 function bodyLine(identity) { if (!identity) return ''; return `Your body is that of a ${identity.age}-year-old ${identity.sex === 'female' ? 'woman' : 'man'}.`; }
-function introFor(phrase, identity, minutes) {
+function introFor(phrase, identity, minutes, extraIntro) {
   let t = INTRODUCTION.replace('{START}', phrase || 'beside a boat');
   if (minutes && minutes !== 30) t = t.replace('You have 30 minutes here.', `You have ${minutes} minutes here.`);
   if (!identity) return t;
-  const i = t.indexOf('\n\n'); return t.slice(0, i) + '\n\n' + bodyLine(identity) + t.slice(i);
+  const i = t.indexOf('\n\n'); return t.slice(0, i) + '\n\n' + bodyLine(identity) + (extraIntro ? '\n\n' + extraIntro : '') + t.slice(i);
 }
 const COUNT_ACTIONS = ['pick_up', 'put_down', 'drop', 'give'];
 function systemPrompt(phrase, identity, minutes, menu, extra) {
+  const extraIntro = extra && extra.intro;
   const withCount = !!(extra && extra.count);
   const lines = ACTIONS.filter(([t]) => menu ? menu.includes(t) : (identity || t !== 'give') && t !== 'do').map(([t, p, d]) => [t, withCount && COUNT_ACTIONS.includes(t) ? p + ', optional count' : p, withCount && COUNT_ACTIONS.includes(t) ? d + ' Use count for how many, when there are many of something.' : d]).map(([t, p, d]) => `- ${t}${p ? ' (' + p + ')' : ''}: ${d}`).join('\n');
-  return `${introFor(phrase, identity, minutes)}
+  return `${introFor(phrase, identity, minutes, extraIntro)}
 
 ---
 Technical reference (how to operate the environment)
