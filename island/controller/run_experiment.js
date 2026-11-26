@@ -37,7 +37,7 @@ const opts = {
 };
 // A frozen protocol (controller/protocols/<v>.json) fixes every setting for comparable runs.
 const PROTO = arg('protocol', null) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'protocols', arg('protocol') + '.json'), 'utf8')) : null;
-if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, models: PROTO.models || null, gold: !!PROTO.gold, coinCounts: !!PROTO.coinCounts, extraIntro: PROTO.extraIntro || null, blockTrim: !!PROTO.blockTrim, speed: 1 });
+if (PROTO) Object.assign(opts, { model: PROTO.model, reasoning: PROTO.reasoning, minutes: PROTO.minutes, pair: !!PROTO.pair, obsMode: PROTO.observationMode, predator: !!PROTO.predator, seed: PROTO.worldSeed, checkin: PROTO.checkinSeconds, historyTurns: PROTO.historyTurns, maxCost: PROTO.maxCostUsd, noLetters: !!PROTO.removeLetters, menu: PROTO.menu, forceRules: !!PROTO.forceRules, models: PROTO.models || null, gold: !!PROTO.gold, coinCounts: !!PROTO.coinCounts, extraIntro: PROTO.extraIntro || null, blockTrim: !!PROTO.blockTrim, naked: !!PROTO.naked, speed: 1 });
 if (PROTO && PROTO.models && flag('swap-models')) opts.models = PROTO.models.slice().reverse(); // alternate which person each model plays
 if (PROTO && arg('test-minutes', null)) opts.minutes = +arg('test-minutes'); // TEST ONLY: shorter run under a protocol (labelled TEST)
 if (PROTO && arg('test-speed', null)) opts.speed = +arg('test-speed');
@@ -107,7 +107,7 @@ async function listOpenAIModels() {
 
   // ---------------- starting island ----------------
   if (opts.pair && opts.predator) throw new Error('--pair and --predator together are not supported.');
-  await isl(([s, at, pr, sd, pair, nl, pv, fr, gd, cc]) => Island.reset({ speed: s, startAt: at, predator: pr, seed: sd, pair, noLetters: nl, protocol: pv, forceRules: fr, gold: gd, coinCounts: cc }), [opts.speed, opts.startAt, opts.predator, opts.seed, !!opts.pair, !!opts.noLetters, PROTO ? PROTO.version : null, !!opts.forceRules, !!opts.gold, !!opts.coinCounts]);
+  await isl(([s, at, pr, sd, pair, nl, pv, fr, gd, cc, nk]) => Island.reset({ speed: s, startAt: at, predator: pr, seed: sd, pair, noLetters: nl, protocol: pv, forceRules: fr, gold: gd, coinCounts: cc, naked: nk }), [opts.speed, opts.startAt, opts.predator, opts.seed, !!opts.pair, !!opts.noLetters, PROTO ? PROTO.version : null, !!opts.forceRules, !!opts.gold, !!opts.coinCounts, !!opts.naked]);
   let startInfo = { type: 'fresh' };
   if (choice.start === 'saved') {
     if (opts.pair) throw new Error('A saved island with two people is not supported yet.');

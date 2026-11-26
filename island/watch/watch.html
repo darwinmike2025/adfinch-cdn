@@ -587,7 +587,8 @@ function normalizeCoins(){const all=Object.values(S.objects);const pile=S.object
     if(isHeld(o)){const by=o.loc.by||null;const tw=all.find(q=>q!==o&&q.coinStack&&q.loc.t!=='destroyed'&&isHeld(q)&&(q.loc.by||null)===by);if(tw){tw.state.count+=o.state.count;o.state.count=0;o.loc={t:'destroyed'};sizeCoins(tw);ch=true;continue}}
     sizeCoins(o)}
   if(ch)markChanged()}
-function handsUsed(){return carried().reduce((n,o)=>n+(o.size==='medium'?1:o.size==='large'?2:0),0)}
+function handsUsed(){return carried().reduce((n,o)=>n+(o.size==='medium'?1:o.size==='large'?2:(S.naked&&o.size==='small'?.5:0)),0)}
+function coveredBy(){return worn().find(o=>o.id==='blanket')||null}
 function pocketsUsed(){return carried().filter(o=>o.size==='small').length}
 function objLevel(o){if(o.platformLevel)return'platform';if(o.loc.t==='carried'||o.loc.t==='worn')return holderOf(o).level;if(o.loc.t==='in'||o.loc.t==='on')return objLevel(O(o.loc.id));return'ground'}
 function objPos(o){if(o.loc.t==='platform'||o.platformLevel)return{x:L.foundation.x,y:L.foundation.y};
@@ -678,6 +679,7 @@ function personActivity(){const a=S.agent,ac=S.action;if(a.dead)return'is lying 
 function personDesc(b,v,close){const o=b.agent,noun=b.sex==='female'?'woman':'man',P=pronoun(b,'subj');const act=withAgent(b.id,personActivity);
   if(v.d>150||(v.fromAbove&&v.d>60))return'A person, too far away to make out clearly. They '+act.replace(/^is /,'are ').replace(/ (her|his) /,' their ')+'.';
   let t='A young '+noun+', about '+b.age+'. '+P+' '+act+'.';
+  if(S.naked&&!o.dead){const cov=withAgent(b.id,coveredBy);t+=cov?' '+P+' has a blue blanket wrapped around '+pronoun(b,'obj')+'.':' '+P+' is naked.'}
   if(v.d<=(close?70:40)&&!o.dead){const hold=withAgent(b.id,()=>({c:carried().map(displayName),w:worn().map(x=>x.name)}));if(hold.c.length)t+=' '+P+' is holding: '+hold.c.join(', ')+'.';if(hold.w.length)t+=' '+P+' is wearing: '+hold.w.join(', ')+'.';
     const h=o.health==null?100:o.health;if(h<70)t+=' '+P+' looks hurt ('+conditionText(h)+').'}
   return t}
@@ -722,7 +724,7 @@ function getObservation(){
     self:{position:{x:+a.x.toFixed(1),y:+a.y.toFixed(1),unit:'ft',axes:'x east, y south, origin at NW corner of map'},
       groundElevationFt:+gElev.toFixed(1),heightAboveGroundFt:+high.toFixed(1),level:a.level,pose:a.pose==='down'?'on the ground (knocked down)':a.pose,condition:conditionText(a.health==null?100:a.health),indoors:ind,
       underfoot:a.level==='ground'?TNAME[terrainAt(a.x,a.y)]:(a.level==='ladder'?'ladder rungs':'steel platform'),
-      carrying:carried().map(o=>({id:o.id,name:displayName(o),in:o.size==='small'?'pocket':'hand'})),wearing:worn().map(o=>({id:o.id,name:o.name})),
+      carrying:carried().map(o=>({id:o.id,name:displayName(o),in:o.size==='small'&&!S.naked?'pocket':'hand'})),...(S.naked?{clothing:coveredBy()?'the blue blanket, wrapped around you':'nothing; you are naked'}:{}),wearing:worn().map(o=>({id:o.id,name:o.name})),
       handsFree:Math.max(0,2-handsUsed())},
     currentAction:ac?{id:ac.id,type:ac.type,label:ac.label,progress:+(ac.progress||0).toFixed(3),elapsedSec:+ac.elapsed.toFixed(1),estimatedTotalSec:ac.duration!=null?+ac.duration.toFixed(1):null}:null,
     lastActionResult:last?{id:last.id,type:last.type,status:last.status,message:last.result&&last.result.message}:null,
@@ -834,7 +836,7 @@ const ACTIONS={
       if(o.coinPile||o.coinStack){if(o.state.count<=0)return{error:'There are no coins left there.'};const mine=carried().find(c=>c.coinStack);const want=S.coinCounts&&p.count!=null&&+p.count>0?Math.floor(+p.count):null;const take=want?Math.min(want,o.state.count):(o.coinPile||o.state.count>300?Math.min(HANDFUL,o.state.count):o.state.count);const after=(mine?mine.state.count:0)+take;
         const need=after>1500?2:after>300?1:0,used=handsUsed()-(mine?(mine.size==='medium'?1:mine.size==='large'?2:0):0);if(used+need>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small'&&!c.coinStack).map(c=>c.name).join(', ')+').'};
         return{label:want?'Taking '+take+' gold coin'+(take>1?'s':''):'Scooping up gold coins',duration:want?clamp(2+take/150*1.5,2,25):3,data:{coins:o.id,take:want?take:null}}}if((o.loc.t==='in'&&HEARTHS[o.loc.id]&&O(o.loc.id).state.lit)||(isBurning(o)&&!['wood','thinwood'].includes(materialOf(o))))return{error:'It is burning; it is too hot to pick up.'};
-      if(o.size==='small'&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
+      if(o.size==='small'&&!S.naked&&pocketsUsed()>=6)return{error:'Your pockets are full.'};if(S.naked&&o.size==='small'&&!o.coinPile&&!o.coinStack&&handsUsed()+.5>2)return{error:'Your hands are full. You have no pockets ('+carried().map(c=>c.name).join(', ')+').'};if(o.size!=='small'&&handsUsed()+(o.size==='large'?2:1)>2)return{error:'Your hands are full ('+carried().filter(c=>c.size!=='small').map(c=>c.name).join(', ')+').'};
       return{label:'Picking up the '+o.name,duration:o.loc.t==='underwater'?10:3,data:{id:o.id}}},
     complete(a){if(a.data.coins){const src=O(a.data.coins),ri=reachInfo(src);if(!ri.ok){a.failed=true;a.result={message:ri.reason};return}const take=a.data.take?Math.min(a.data.take,src.state.count):(src.coinPile||src.state.count>300?Math.min(HANDFUL,src.state.count):src.state.count);if(take<=0){a.failed=true;a.result={message:'There are no coins left there.'};return}src.state.count-=take;if(src.coinStack)sizeCoins(src);
         newCoinStack(take,hold('carried'));normalizeCoins();const mine=carried().find(c=>c.coinStack);markChanged();a.result={message:'You '+(a.data.take?'take ':'scoop up ')+take+' gold coin'+(take>1?'s':'')+'. You now carry '+(mine?mine.state.count:take)+' gold coins ('+((w=>w<1?w.toFixed(2):w.toFixed(1))(mine?mine.weight:take*COIN_LB))+' lb).'+(src.coinPile?' About '+Math.round(src.state.count/100)*100+' are left in the '+(O(src.loc.id)||{name:'pile'}).name+'.':'')};logEvent('object','Took '+take+' gold coins (now carrying '+(mine?mine.state.count:take)+').',{take});return}
@@ -930,7 +932,7 @@ const ACTIONS={
   wear:{desc:'Put on a wearable item (snorkel; sword via its shoulder strap). Worn items do not use your hands.',params:{target:'snorkel | sword'},
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!o.wearable)return{error:'You cannot wear that.'};if((o.loc.t==='worn'&&isMine(o)))return{error:'You are already wearing it.'};
       if(!(o.loc.t==='carried'&&isMine(o))){const ri=reachInfo(o);if(!ri.ok)return{error:ri.reason}}if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};return{label:'Putting on the '+o.name,duration:6,data:{id:o.id}}},
-    complete(a){const o=O(a.data.id);const from=locText(o);o.loc=hold('worn');markChanged();a.result={message:'You put on the '+o.name+'.'};logEvent('object','Now wearing '+o.id+' (was '+from+').',{id:o.id})}},
+    complete(a){const o=O(a.data.id);const from=locText(o);o.loc=hold('worn');if(o.id==='blanket')o.state.spread=false;markChanged();a.result={message:o.id==='blanket'?'You wrap the blue blanket around yourself.':'You put on the '+o.name+'.'};logEvent('object','Now wearing '+o.id+' (was '+from+').',{id:o.id})}},
   remove:{desc:'Take off a worn item (it goes into your hands/pocket).',params:{target:'worn item id'},
     validate(p){const r=needTarget(p);if(r.error)return r;const o=r.o;if(!o||!(o.loc.t==='worn'&&isMine(o)))return{error:'You are not wearing that.'};if(S.agent.level==='ladder')return{error:'Not while holding on to the ladder.'};
       if(o.size!=='small'&&handsUsed()>=2)return{error:'Your hands are full.'};return{label:'Taking off the '+o.name,duration:5,data:{id:o.id}}},
@@ -1140,7 +1142,7 @@ function setPaused(p){S.paused=!!p;logEvent('system',p?'Clock paused (testing).'
 /* =====================================================================================
    11. RESET / SAVE / RESTORE / EXPORT
    ===================================================================================== */
-function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.noLetters)for(const id of['folded_paper','letter_cabin','letter_tower'])delete S.objects[id];if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();if(opts.protocol)S.protocol=String(opts.protocol);if(opts.forceRules)S.forceRules=true;if(opts.gold){addCoins();forEachAgent(()=>updateSeen())}if(opts.coinCounts)S.coinCounts=true;LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
+function reset(opts){opts=opts||{};if(UI.replay&&UI.exitReplay)UI.exitReplay();S=freshState(opts.startAt);if(opts.seed)S.rng=opts.seed>>>0;if(opts.predator)spawnJaguar();if(opts.noLetters)for(const id of['folded_paper','letter_cabin','letter_tower'])delete S.objects[id];if(opts.pair)setupParty(Array.isArray(opts.pair)?opts.pair:null);else updateSeen();if(opts.protocol)S.protocol=String(opts.protocol);if(opts.forceRules)S.forceRules=true;if(opts.gold){addCoins();forEachAgent(()=>updateSeen())}if(opts.coinCounts)S.coinCounts=true;if(opts.naked){S.naked=true;if(O('blanket'))O('blanket').wearable=true}LOG=[];if(opts.speed)S.speed=+opts.speed;newRecording();
   logEvent('system','Island reset to its initial state. Version '+VERSION+'. Time speed '+S.speed+'×'+(S.speed===1?' (real time)':' (TEST)')+'.',{version:VERSION,speed:S.speed});
   if(UI.onReset)UI.onReset();return{ok:true}}
 function exportState(){return clone(snapState())}

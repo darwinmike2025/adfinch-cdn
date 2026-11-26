@@ -113,6 +113,14 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.
     out.back = f('a', { type: 'put_down', target: obs('a').self.carrying.find(c => /gold/.test(c.name)).id, onto: 'chest', count: 997 }); out.pile = st().objects.gold_coins.state.count; return out; });
   check('P19. Coins in any amount: 2 go in a pocket, 1000 need a hand, 5 handed over, the rest put back', /take 2 gold coins/.test(r.two) && r.where.in === 'pocket' && /1002 gold coins/.test(r.lot) && r.where2.in === 'hand' && r.bC.join() === 'gold coins (5)' && r.aC.join() === 'gold coins (997)' && r.pile === 3995,
     `${r.two} (${r.where.in}) | ${r.lot} (${r.where2.in}) | ${r.give} | she has ${r.aC}, he has ${r.bC} | ${r.back} | chest now ${r.pile}`);
+  r = await ev(() => { Island.reset({ pair: true, noLetters: true, gold: true, coinCounts: true, naked: true }); Island.startRun({ durationSec: 1800 }); const out = {};
+    out.self = obs('a').self.clothing; out.inHand = obs('a').self.carrying.map(c => c.in).join();
+    Island._debug.place('a', 300, 600); Island._debug.place('b', 330, 600); out.sees = person('b').description;
+    const bl = st().objects.blanket.loc; Island._debug.place('a', bl.x + 2, bl.y); out.pick = f('a', { type: 'pick_up', target: 'blanket' }); out.wrap = f('a', { type: 'wear', target: 'blanket' });
+    Island._debug.place('b', bl.x + 20, bl.y); out.sees2 = person('b').description; out.self2 = obs('a').self.clothing;
+    out.full = (f('a', { type: 'pick_up', target: 'ball' })); return out; });
+  check('P20. Naked start: no clothes, no pockets (things go in hands); the other sees it; the blanket can be wrapped around', r.self === 'nothing; you are naked' && r.inHand === 'hand,hand' && /She is naked/.test(r.sees) && /wrap the blue blanket/.test(r.wrap) && /blue blanket wrapped around her/.test(r.sees2) && /blanket, wrapped/.test(r.self2),
+    `${r.self} | carrying in: ${r.inHand} | he sees: ${r.sees} | ${r.wrap} | then he sees: ${r.sees2}`);
   r = await ev(() => { Island.reset(); return { party: Island.party(), has: 'agent' in st() }; });
   check('P15. A normal reset is still a one-person island', r.party === null && r.has, '');
   check('Z. No page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
