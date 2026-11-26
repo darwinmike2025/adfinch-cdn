@@ -1,0 +1,12 @@
+{
+ "runId": "2026-11-26T05-09-18_gpt-5_v7",
+ "status": "completed",
+ "startedWall": "2026-11-26T05:09:19.002Z",
+ "test": false,
+ "deaths": [],
+ "reason": "the run reached its time limit",
+ "endedWall": "2026-11-26T05:43:17.850Z",
+ "modelCalls": 290,
+ "estimatedCostUsd": 2.76,
+ "reportCheck": "**Woman:** not checked\n\n**Man:** None. All statements in the report are supported by the activity record and journal."
+}

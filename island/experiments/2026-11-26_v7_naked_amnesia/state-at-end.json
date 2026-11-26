@@ -1,0 +1,7058 @@
+{
+ "format": "watchable-island-state",
+ "version": "1.0.0",
+ "simTime": 1800.8447999999576,
+ "speed": 1,
+ "paused": false,
+ "run": {
+  "active": false,
+  "ended": true,
+  "startSim": 0.123,
+  "endSim": 1800.123,
+  "durationSec": 1800
+ },
+ "rng": 20261122,
+ "animals": [],
+ "startAt": "beach",
+ "objects": {
+  "journal": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.6,
+   "state": {},
+   "reach": 5.5,
+   "id": "journal",
+   "name": "journal",
+   "burnable": true,
+   "desc": "A small notebook with a cloth cover.",
+   "loc": {
+    "t": "on",
+    "id": "cabin_table"
+   },
+   "ownedBy": "a"
+  },
+  "pencil": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.05,
+   "state": {},
+   "reach": 5.5,
+   "id": "pencil",
+   "name": "pencil",
+   "burnable": true,
+   "desc": "A sharpened wooden pencil.",
+   "loc": {
+    "t": "on",
+    "id": "cabin_table"
+   },
+   "ownedBy": "a"
+  },
+  "boat": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 13,
+   "id": "boat",
+   "name": "rowboat",
+   "desc": "A weathered wooden rowboat pulled up onto the sand.",
+   "closeDesc": "The hull is dry and sound. The boat is open on top, so anything inside is visible.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 6
+   },
+   "loc": {
+    "t": "ground",
+    "x": 260,
+    "y": 705
+   },
+   "viewRange": 400
+  },
+  "oar": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 5,
+   "state": {},
+   "reach": 5.5,
+   "id": "oar",
+   "name": "oar",
+   "awkward": true,
+   "burnable": true,
+   "desc": "A long wooden oar.",
+   "loc": {
+    "t": "on",
+    "id": "bed"
+   }
+  },
+  "rope": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 4,
+   "state": {},
+   "reach": 5.5,
+   "id": "rope",
+   "name": "coil of rope",
+   "burnable": true,
+   "desc": "About 30 feet of hemp rope, coiled on the sand.",
+   "loc": {
+    "t": "ground",
+    "x": 400,
+    "y": 720
+   }
+  },
+  "crate": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "crate",
+   "name": "wooden crate",
+   "desc": "A sturdy wooden crate with a hinged lid, sitting on the beach.",
+   "container": {
+    "open": false,
+    "openable": true,
+    "locked": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 455,
+    "y": 725
+   },
+   "viewRange": 250
+  },
+  "wheelbarrow": {
+   "kind": "item",
+   "size": "large",
+   "weight": 25,
+   "state": {},
+   "reach": 6,
+   "id": "wheelbarrow",
+   "name": "wheelbarrow",
+   "awkward": true,
+   "desc": "A rusty metal wheelbarrow with a wooden handle. Pick it up to push it; things inside come along.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 205,
+    "y": 522
+   }
+  },
+  "mirror": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6,
+   "id": "mirror",
+   "name": "standing mirror",
+   "desc": "A round mirror in a wooden frame, standing against a tree.",
+   "closeDesc": "The glass is clean.",
+   "loc": {
+    "t": "ground",
+    "x": 160,
+    "y": 455
+   },
+   "viewRange": 120
+  },
+  "picnic_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "picnic_table",
+   "name": "driftwood table",
+   "surface": true,
+   "desc": "A rough table built from driftwood.",
+   "loc": {
+    "t": "ground",
+    "x": 361,
+    "y": 640
+   },
+   "viewRange": 200
+  },
+  "paper": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 5.5,
+   "id": "paper",
+   "name": "sheet of paper",
+   "burnable": true,
+   "desc": "A weathered sheet of paper on the table.",
+   "readable": null,
+   "loc": {
+    "t": "on",
+    "id": "picnic_table"
+   }
+  },
+  "stepladder": {
+   "kind": "item",
+   "size": "large",
+   "weight": 14,
+   "state": {},
+   "reach": 5.5,
+   "id": "stepladder",
+   "name": "stepladder",
+   "awkward": true,
+   "desc": "A small wooden A-frame stepladder, about 6 ft tall.",
+   "loc": {
+    "t": "ground",
+    "x": 575,
+    "y": 520
+   }
+  },
+  "ball": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 0.4,
+   "state": {},
+   "reach": 5.5,
+   "id": "ball",
+   "name": "red ball",
+   "desc": "A bright red rubber ball.",
+   "loc": {
+    "t": "ground",
+    "x": 582,
+    "y": 610
+   }
+  },
+  "blanket": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 2,
+   "state": {
+    "spread": true
+   },
+   "reach": 5.5,
+   "id": "blanket",
+   "name": "blue blanket",
+   "burnable": true,
+   "desc": "A blue cotton blanket.",
+   "loc": {
+    "t": "ground",
+    "x": 645,
+    "y": 615
+   },
+   "wearable": true
+  },
+  "blocks": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 3,
+   "state": {
+    "stacked": true
+   },
+   "reach": 5.5,
+   "id": "blocks",
+   "name": "wooden blocks",
+   "burnable": true,
+   "desc": "A handful of plain wooden cubes.",
+   "loc": {
+    "t": "ground",
+    "x": 735,
+    "y": 612
+   }
+  },
+  "driftwood_1": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 7,
+   "state": {},
+   "reach": 5.5,
+   "id": "driftwood_1",
+   "name": "driftwood log",
+   "burnable": true,
+   "fuel": true,
+   "desc": "A bleached, dry piece of driftwood about 3 ft long.",
+   "loc": {
+    "t": "ground",
+    "x": 190,
+    "y": 660
+   }
+  },
+  "driftwood_2": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 6,
+   "state": {},
+   "reach": 5.5,
+   "id": "driftwood_2",
+   "name": "driftwood log",
+   "burnable": true,
+   "fuel": true,
+   "desc": "A bleached, dry piece of driftwood about 3 ft long.",
+   "loc": {
+    "t": "ground",
+    "x": 330,
+    "y": 745
+   }
+  },
+  "stone_1": {
+   "kind": "item",
+   "size": "small",
+   "weight": 1,
+   "state": {},
+   "reach": 5.5,
+   "id": "stone_1",
+   "name": "smooth stone",
+   "desc": "A smooth, palm-sized grey stone.",
+   "loc": {
+    "t": "ground",
+    "x": 215,
+    "y": 700
+   }
+  },
+  "stone_2": {
+   "kind": "item",
+   "size": "small",
+   "weight": 1.2,
+   "state": {},
+   "reach": 5.5,
+   "id": "stone_2",
+   "name": "smooth stone",
+   "desc": "A smooth, palm-sized speckled stone.",
+   "loc": {
+    "t": "ground",
+    "x": 590,
+    "y": 752
+   }
+  },
+  "cabin": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "cabin",
+   "name": "cabin",
+   "bothSides": true,
+   "desc": "A small log cabin with a single door on its south side.",
+   "closeDesc": "Inside: a table, a narrow bed, and a stone fireplace under the chimney.",
+   "loc": {
+    "t": "ground",
+    "x": 265,
+    "y": 410
+   },
+   "viewRange": 450
+  },
+  "cabin_door": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "open": true
+   },
+   "reach": 8,
+   "id": "cabin_door",
+   "name": "cabin door",
+   "bothSides": true,
+   "door": true,
+   "desc": "A plank door with an iron latch.",
+   "loc": {
+    "t": "ground",
+    "x": 267.5,
+    "y": 425
+   },
+   "viewRange": 300
+  },
+  "bed": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "bed",
+   "name": "narrow bed",
+   "surface": true,
+   "desc": "A narrow wooden bed with a straw mattress and a wool blanket, neatly made.",
+   "loc": {
+    "t": "ground",
+    "x": 252.5,
+    "y": 417.5
+   },
+   "viewRange": 60
+  },
+  "fireplace": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "lit": false
+   },
+   "reach": 6.5,
+   "id": "fireplace",
+   "name": "stone fireplace",
+   "desc": "A small stone fireplace with a chimney. The hearth is swept and empty.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 4
+   },
+   "loc": {
+    "t": "ground",
+    "x": 277.5,
+    "y": 402.5
+   },
+   "viewRange": 60
+  },
+  "cabin_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "cabin_table",
+   "name": "cabin table",
+   "surface": true,
+   "desc": "A rough wooden table.",
+   "loc": {
+    "t": "ground",
+    "x": 252.5,
+    "y": 402.5
+   },
+   "viewRange": 60
+  },
+  "lantern": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 3,
+   "state": {
+    "lit": false,
+    "broken": false
+   },
+   "reach": 5.5,
+   "id": "lantern",
+   "name": "oil lantern",
+   "fragile": true,
+   "desc": "A glass oil lantern, half full of oil.",
+   "loc": {
+    "t": "carried",
+    "by": "b"
+   }
+  },
+  "tin_cup": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.4,
+   "state": {
+    "full": false
+   },
+   "reach": 5.5,
+   "id": "tin_cup",
+   "name": "tin cup",
+   "desc": "A dented tin cup.",
+   "loc": {
+    "t": "in",
+    "id": "crate"
+   }
+  },
+  "chest": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 6.5,
+   "id": "chest",
+   "name": "wooden chest",
+   "desc": "A heavy wooden chest with a lid, sitting outside beside the cabin door.",
+   "container": {
+    "open": true,
+    "openable": true,
+    "locked": false,
+    "capacity": 5
+   },
+   "loc": {
+    "t": "ground",
+    "x": 302.5,
+    "y": 432.5
+   },
+   "viewRange": 150
+  },
+  "fire_pit": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "lit": false,
+    "burnLeft": 0
+   },
+   "reach": 6,
+   "id": "fire_pit",
+   "name": "fire pit",
+   "desc": "A ring of blackened stones around old ashes.",
+   "container": {
+    "open": true,
+    "openable": false,
+    "capacity": 3,
+    "fuelOnly": false
+   },
+   "loc": {
+    "t": "ground",
+    "x": 286,
+    "y": 570
+   },
+   "viewRange": 90
+  },
+  "bell": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {
+    "lastRung": 1630.7517999999457
+   },
+   "reach": 7,
+   "id": "bell",
+   "name": "bronze bell",
+   "desc": "A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.",
+   "closeDesc": "A rope hangs from the clapper. It looks like it would be loud.",
+   "loc": {
+    "t": "ground",
+    "x": 845,
+    "y": 310
+   },
+   "viewRange": 250
+  },
+  "stone_circle": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "stone_circle",
+   "name": "stone circle",
+   "desc": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.",
+   "loc": {
+    "t": "ground",
+    "x": 800,
+    "y": 420.01
+   },
+   "viewRange": 450
+  },
+  "bridge": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 0,
+   "id": "bridge",
+   "name": "wooden bridge",
+   "desc": "An arched plank footbridge with handrails over the stream.",
+   "loc": {
+    "t": "ground",
+    "x": 430,
+    "y": 505
+   },
+   "viewRange": 250
+  },
+  "ladder": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 4,
+   "id": "ladder",
+   "name": "tall metal ladder",
+   "desc": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+   "closeDesc": "The rails are bolted into the concrete. The rungs are dry and solid. You cannot see what is on the platform from down here.",
+   "loc": {
+    "t": "ground",
+    "x": 690,
+    "y": 549
+   },
+   "viewRange": 2000
+  },
+  "platform": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 99,
+   "id": "platform",
+   "name": "platform",
+   "surface": true,
+   "platformLevel": true,
+   "desc": "A steel platform with a railing at the top of the tower.",
+   "loc": {
+    "t": "platform"
+   },
+   "viewRange": 2000
+  },
+  "platform_table": {
+   "kind": "fixture",
+   "size": "small",
+   "weight": 0.5,
+   "state": {},
+   "reach": 99,
+   "id": "platform_table",
+   "name": "platform table",
+   "surface": true,
+   "platformLevel": true,
+   "desc": "A small wooden table fixed to the platform.",
+   "loc": {
+    "t": "platform"
+   },
+   "viewRange": 0
+  },
+  "lighter": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.1,
+   "state": {},
+   "reach": 5.5,
+   "id": "lighter",
+   "name": "lighter",
+   "desc": "A metal flip-top lighter.",
+   "loc": {
+    "t": "carried",
+    "by": "b"
+   }
+  },
+  "sword": {
+   "kind": "item",
+   "size": "medium",
+   "weight": 5,
+   "state": {},
+   "reach": 5.5,
+   "id": "sword",
+   "name": "sword",
+   "awkward": true,
+   "wearable": true,
+   "desc": "A steel sword in a leather scabbard with a shoulder strap.",
+   "loc": {
+    "t": "worn",
+    "by": "b"
+   }
+  },
+  "snorkel": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.3,
+   "state": {},
+   "reach": 5.5,
+   "id": "snorkel",
+   "name": "snorkel",
+   "wearable": true,
+   "desc": "A snorkel with an attached dive mask.",
+   "loc": {
+    "t": "carried",
+    "by": "a"
+   }
+  },
+  "journal_2": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.6,
+   "state": {},
+   "reach": 5.5,
+   "id": "journal_2",
+   "name": "journal",
+   "burnable": true,
+   "desc": "A small notebook with a cloth cover.",
+   "loc": {
+    "t": "on",
+    "id": "cabin_table"
+   },
+   "ownedBy": "b"
+  },
+  "pencil_2": {
+   "kind": "item",
+   "size": "small",
+   "weight": 0.05,
+   "state": {},
+   "reach": 5.5,
+   "id": "pencil_2",
+   "name": "pencil",
+   "burnable": true,
+   "desc": "A sharpened wooden pencil.",
+   "loc": {
+    "t": "carried",
+    "by": "b"
+   },
+   "ownedBy": "b"
+  },
+  "gold_coins": {
+   "id": "gold_coins",
+   "name": "gold coins",
+   "kind": "item",
+   "coinPile": true,
+   "weight": 0,
+   "size": "large",
+   "desc": "Thousands of heavy gold coins, heaped in the chest almost to the brim. You could scoop out a double handful at a time.",
+   "state": {
+    "count": 3988
+   },
+   "loc": {
+    "t": "in",
+    "id": "chest"
+   },
+   "reach": 5.5
+  },
+  "coins_1": {
+   "id": "coins_1",
+   "name": "gold coins",
+   "kind": "item",
+   "coinStack": true,
+   "state": {
+    "count": 12
+   },
+   "loc": {
+    "t": "on",
+    "id": "cabin_table"
+   },
+   "reach": 5.5,
+   "size": "small",
+   "weight": 0.24,
+   "desc": "12 gold coins, heavy for their size."
+  }
+ },
+ "sounds": [],
+ "nextActionId": 157,
+ "nextSeq": 1101,
+ "party": [
+  {
+   "id": "a",
+   "label": "Woman",
+   "sex": "female",
+   "age": 20,
+   "startAt": "beach",
+   "journalId": "journal",
+   "pencilId": "pencil",
+   "notices": [
+    {
+     "t": 235.4,
+     "msg": "You see the young man, about 18 ft away, do this. In his words: \"Pull the wool blanket off the bed and wrap it securely around my waist and hips like a makeshift skirt, holding it tucked in so it stays put.\""
+    },
+    {
+     "t": 427.3,
+     "msg": "The man holds out the oar to you, but your hands are full."
+    },
+    {
+     "t": 559.7,
+     "msg": "You see the young man, about 41 ft away, do this. In his words: \"Step close to the mirror, square up in front of it, and carefully study my reflection: face, eyes, hair, build, any scars, moles, tan lines, or tattoos. Open my mouth to check teeth, turn side to side, and look at my hands and nails for calluses or ink stains.\""
+    },
+    {
+     "t": 585.8,
+     "msg": "You see the young man, about 0 ft away, do this. In his words: \"Touch the glass with fingertips to feel temperature and check for any give, watch my reflection for any lag as I move my hand, then gently lift and angle the mirror away from the tree to look along the edges and behind the frame for markings, hinges, or hidden compartments.\""
+    },
+    {
+     "t": 670.8,
+     "msg": "You see the young man, about 0 ft away, do this. In his words: \"Stand centered directly in front of the mirror and look into it, raising my right hand to wave and touch the glass. Then step quickly to the left out of the mirror’s view, wait a beat, and lean back into view again, watching closely for what I see while she watches what changes.\""
+    },
+    {
+     "t": 697.2,
+     "msg": "You see the young man, about 0 ft away, do this. In his words: \"Stand squarely in front of the mirror and stare into it, focusing on what’s shown. Note whether I see myself or a small figure (clothes, background, movement). Raise my right hand to wave, then my left, lean closer, and touch the glass, watching for any response or lag. Shift a step left, then right, to see if the image tracks me.\""
+    },
+    {
+     "t": 1217.6,
+     "msg": "The young man, right next to you, does this to you. In his words: \"I nod emphatically to her, point toward the bell on the headland, mime pulling a rope to ring it, give a thumbs‑up, then turn and start carefully descending the ladder.\""
+    },
+    {
+     "t": 1248,
+     "msg": "The young man, right next to you, does this to you. In his words: \"Keeping both hands on the rungs, I meet her eyes, then turn my head to look toward the stone circle she indicated and give a small nod.\""
+    },
+    {
+     "t": 1566.9,
+     "msg": "You see the young man, about 5 ft away, do this. In his words: \"Step carefully into the center of the stone circle, stand still with the lantern down at my side, and take a slow turn, listening and looking for any change—sound, wind, light, or movement. Then look down at the grass for any pattern or depression and feel the ground with my bare foot for warmth or vibration.\""
+    }
+   ],
+   "agent": {
+    "id": "a",
+    "health": 100,
+    "dead": false,
+    "x": 869.5,
+    "y": 282.5,
+    "level": "ground",
+    "ladderFt": 0,
+    "pose": "sitting",
+    "facing": 1.5707963267948966,
+    "stepDist": 2109.9064764758436,
+    "underwaterView": null,
+    "trail": [
+     [
+      242.4,
+      442.5
+     ],
+     [
+      236.3,
+      442.5
+     ],
+     [
+      230.2,
+      442.5
+     ],
+     [
+      224.1,
+      442.5
+     ],
+     [
+      219,
+      446
+     ],
+     [
+      213.1,
+      447.5
+     ],
+     [
+      207,
+      447.5
+     ],
+     [
+      200.9,
+      447.5
+     ],
+     [
+      194.8,
+      447.5
+     ],
+     [
+      188.7,
+      447.5
+     ],
+     [
+      183.9,
+      451.1
+     ],
+     [
+      178.1,
+      452.5
+     ],
+     [
+      172,
+      452.5
+     ],
+     [
+      165.9,
+      452.5
+     ],
+     [
+      172,
+      452.5
+     ],
+     [
+      176.5,
+      456.5
+     ],
+     [
+      180.9,
+      460.9
+     ],
+     [
+      185.8,
+      465.8
+     ],
+     [
+      190.1,
+      470.1
+     ],
+     [
+      194.5,
+      474.5
+     ],
+     [
+      198.8,
+      478.8
+     ],
+     [
+      203.8,
+      482.5
+     ],
+     [
+      209.9,
+      482.5
+     ],
+     [
+      215.9,
+      482.5
+     ],
+     [
+      222,
+      482.5
+     ],
+     [
+      228.2,
+      482.5
+     ],
+     [
+      234.3,
+      482.5
+     ],
+     [
+      240.5,
+      482.5
+     ],
+     [
+      246.6,
+      482.5
+     ],
+     [
+      252.8,
+      482.5
+     ],
+     [
+      258.9,
+      482.5
+     ],
+     [
+      265.1,
+      482.5
+     ],
+     [
+      271.3,
+      482.5
+     ],
+     [
+      277.3,
+      482.5
+     ],
+     [
+      283.3,
+      483.3
+     ],
+     [
+      287.7,
+      487.5
+     ],
+     [
+      293.8,
+      487.5
+     ],
+     [
+      299.5,
+      489.5
+     ],
+     [
+      303.8,
+      493.8
+     ],
+     [
+      308.1,
+      498.1
+     ],
+     [
+      312.3,
+      502.3
+     ],
+     [
+      316.6,
+      506.6
+     ],
+     [
+      322.6,
+      507.5
+     ],
+     [
+      328.7,
+      507.5
+     ],
+     [
+      334.9,
+      507.5
+     ],
+     [
+      341.1,
+      507.5
+     ],
+     [
+      347.2,
+      507.5
+     ],
+     [
+      353.3,
+      507.5
+     ],
+     [
+      359.4,
+      507.5
+     ],
+     [
+      365.5,
+      507.5
+     ],
+     [
+      371.6,
+      507.5
+     ],
+     [
+      377.7,
+      507.5
+     ],
+     [
+      383.8,
+      507.5
+     ],
+     [
+      389.9,
+      507.5
+     ],
+     [
+      396.1,
+      507.5
+     ],
+     [
+      402.2,
+      507.5
+     ],
+     [
+      408.2,
+      507.5
+     ],
+     [
+      414.2,
+      507.5
+     ],
+     [
+      420.2,
+      507.5
+     ],
+     [
+      426.7,
+      507.5
+     ],
+     [
+      433.5,
+      507.5
+     ],
+     [
+      439.5,
+      507.5
+     ],
+     [
+      445.6,
+      507.5
+     ],
+     [
+      451.6,
+      507.5
+     ],
+     [
+      457.6,
+      507.5
+     ],
+     [
+      463.6,
+      507.5
+     ],
+     [
+      469.8,
+      507.5
+     ],
+     [
+      475.9,
+      507.5
+     ],
+     [
+      482,
+      507.5
+     ],
+     [
+      488.1,
+      507.5
+     ],
+     [
+      494.1,
+      507.5
+     ],
+     [
+      500.1,
+      507.5
+     ],
+     [
+      506.1,
+      507.5
+     ],
+     [
+      512.2,
+      507.5
+     ],
+     [
+      518.3,
+      507.5
+     ],
+     [
+      524.4,
+      507.5
+     ],
+     [
+      530.5,
+      507.5
+     ],
+     [
+      536.6,
+      507.5
+     ],
+     [
+      542.8,
+      507.5
+     ],
+     [
+      548.8,
+      507.5
+     ],
+     [
+      555,
+      507.5
+     ],
+     [
+      561,
+      507.5
+     ],
+     [
+      567.2,
+      507.5
+     ],
+     [
+      573.3,
+      507.5
+     ],
+     [
+      579.3,
+      507.5
+     ],
+     [
+      585.4,
+      507.5
+     ],
+     [
+      591.5,
+      507.5
+     ],
+     [
+      597.6,
+      507.6
+     ],
+     [
+      602,
+      512
+     ],
+     [
+      608,
+      513
+     ],
+     [
+      612.3,
+      517.3
+     ],
+     [
+      616.6,
+      521.6
+     ],
+     [
+      620.9,
+      525.9
+     ],
+     [
+      625.3,
+      530.3
+     ],
+     [
+      631.1,
+      532.5
+     ],
+     [
+      637.2,
+      532.5
+     ],
+     [
+      643.3,
+      532.5
+     ],
+     [
+      649.5,
+      532.5
+     ],
+     [
+      655,
+      535
+     ],
+     [
+      660.6,
+      537.5
+     ],
+     [
+      665.7,
+      540.7
+     ],
+     [
+      670,
+      545
+     ],
+     [
+      675.7,
+      547.5
+     ],
+     [
+      681.9,
+      547.5
+     ],
+     [
+      690.2,
+      549.9
+     ],
+     [
+      696,
+      548
+     ],
+     [
+      702.1,
+      547.5
+     ],
+     [
+      708.5,
+      546.5
+     ],
+     [
+      713.2,
+      541.8
+     ],
+     [
+      717.5,
+      537.5
+     ],
+     [
+      721.8,
+      533.2
+     ],
+     [
+      726.1,
+      528.9
+     ],
+     [
+      730.4,
+      524.6
+     ],
+     [
+      734.8,
+      520.2
+     ],
+     [
+      739.2,
+      515.8
+     ],
+     [
+      743.5,
+      511.5
+     ],
+     [
+      747.8,
+      507.2
+     ],
+     [
+      752.1,
+      502.9
+     ],
+     [
+      756.4,
+      498.6
+     ],
+     [
+      760.7,
+      494.3
+     ],
+     [
+      765,
+      490
+     ],
+     [
+      767.5,
+      484.5
+     ],
+     [
+      770.7,
+      479.3
+     ],
+     [
+      772.5,
+      473.4
+     ],
+     [
+      772.5,
+      467.2
+     ],
+     [
+      772.5,
+      461.1
+     ],
+     [
+      772.5,
+      455.1
+     ],
+     [
+      772.5,
+      449.1
+     ],
+     [
+      775.9,
+      444.1
+     ],
+     [
+      780.3,
+      439.7
+     ],
+     [
+      784.6,
+      435.4
+     ],
+     [
+      788.9,
+      431.1
+     ],
+     [
+      793.3,
+      426.7
+     ],
+     [
+      794.3,
+      420.7
+     ],
+     [
+      797.5,
+      415.5
+     ],
+     [
+      797.5,
+      409.4
+     ],
+     [
+      800.8,
+      404.2
+     ],
+     [
+      802.5,
+      398.4
+     ],
+     [
+      806.4,
+      393.6
+     ],
+     [
+      807.5,
+      387.6
+     ],
+     [
+      811.7,
+      383.3
+     ],
+     [
+      812.8,
+      377.2
+     ],
+     [
+      817.4,
+      372.6
+     ],
+     [
+      818.7,
+      366.3
+     ],
+     [
+      822.5,
+      361
+     ],
+     [
+      824.8,
+      355.2
+     ],
+     [
+      827.5,
+      349.8
+     ],
+     [
+      827.5,
+      343.7
+     ],
+     [
+      831.1,
+      338.9
+     ],
+     [
+      832.5,
+      332.9
+     ],
+     [
+      836.7,
+      328.3
+     ],
+     [
+      837.7,
+      322.3
+     ],
+     [
+      842,
+      318
+     ],
+     [
+      842.5,
+      311.9
+     ],
+     [
+      844,
+      306
+     ],
+     [
+      848.3,
+      301.7
+     ],
+     [
+      852.6,
+      297.4
+     ],
+     [
+      856.8,
+      293.2
+     ],
+     [
+      861.1,
+      288.9
+     ],
+     [
+      865.4,
+      284.6
+     ]
+    ],
+    "down": false
+   },
+   "seen": {
+    "boat": 1367,
+    "oar": 545,
+    "crate": 1367,
+    "picnic_table": 1367,
+    "driftwood_2": 34,
+    "cabin": 1438,
+    "cabin_door": 1367,
+    "ladder": 1800,
+    "platform": 1800,
+    "feature:pond": 1800,
+    "feature:stream": 1443.2,
+    "feature:hill": 1800,
+    "feature:ocean": 1800,
+    "feature:beach": 1603,
+    "feature:forest": 1800,
+    "feature:cliffs": 1800,
+    "bridge": 1367,
+    "driftwood_1": 50,
+    "fire_pit": 1367,
+    "wheelbarrow": 793,
+    "chest": 1367,
+    "mirror": 1367,
+    "bed": 545,
+    "fireplace": 544,
+    "cabin_table": 545,
+    "lantern": 1685,
+    "gold_coins": 811.1,
+    "journal_2": 545,
+    "coins_1": 545,
+    "journal": 545,
+    "pencil": 545,
+    "stone_circle": 1800,
+    "stepladder": 1437,
+    "blanket": 1437,
+    "blocks": 1447,
+    "bell": 1800,
+    "platform_table": 1252,
+    "lighter": 1151,
+    "sword": 1171,
+    "snorkel": 1183
+   },
+   "journal": {
+    "entries": []
+   },
+   "reflections": [
+    {
+     "n": 1,
+     "simTime": 6,
+     "wall": "2026-11-26T05:09:24.978Z",
+     "text": "I'm standing on sand, naked, with a journal and a pencil and no idea how I got here. There's a boat just up the beach. I'll look at that first."
+    },
+    {
+     "n": 2,
+     "simTime": 20,
+     "wall": "2026-11-26T05:09:38.998Z",
+     "text": "The boat looks sound, and there's an oar in it. If I came in on this, I don't remember it. I'll take the oar and then head for that cabin — being naked out here, I want something between me and the open beach."
+    },
+    {
+     "n": 3,
+     "simTime": 28,
+     "wall": "2026-11-26T05:09:46.978Z",
+     "text": "Oar's heavier than it looks. Hands are full now — journal, pencil, this. I'll walk north toward the cabin and see if anyone's there, or if there's anything to wear."
+    },
+    {
+     "n": 4,
+     "simTime": 61,
+     "wall": "2026-11-26T05:10:20.030Z",
+     "text": "Grass underfoot now. There's a fire pit ahead, stones and old ashes, and a wheelbarrow off to the left. Still no one calling out. I'll keep going to the door."
+    },
+    {
+     "n": 5,
+     "simTime": 90.3,
+     "wall": "2026-11-26T05:10:49.346Z",
+     "text": "Someone else is out there, northeast, walking. Too far to see clearly. I'll call out before they get farther away."
+    },
+    {
+     "n": 6,
+     "simTime": 95.1,
+     "wall": "2026-11-26T05:10:54.030Z",
+     "text": "No answer. Either they didn't hear me, or they don't want to be found. The cabin door is close. I'll go there and see if the chest has anything useful."
+    },
+    {
+     "n": 7,
+     "simTime": 125.1,
+     "wall": "2026-11-26T05:11:24.109Z",
+     "text": "Door's right here, latch on it. Nobody answered my shout. I'll try the latch before I go digging in the chest."
+    },
+    {
+     "n": 8,
+     "simTime": 130.1,
+     "wall": "2026-11-26T05:11:29.143Z",
+     "text": "The door opens. Inside there's a bed with a wool blanket, a swept fireplace, and a lantern on the table. Nobody home. The blanket is the first thing I want — I'm still naked."
+    },
+    {
+     "n": 9,
+     "simTime": 141.2,
+     "wall": "2026-11-26T05:11:40.260Z",
+     "text": "The bed is made, blanket folded over a straw mattress. I'll look closer and see if I can take the blanket without wrecking the whole thing. My hands are already full, so I may have to set the oar down."
+    },
+    {
+     "n": 10,
+     "simTime": 150.7,
+     "wall": "2026-11-26T05:11:49.740Z",
+     "text": "The bed's empty of anyone, but that blanket is the only cloth I've seen. I'll set the oar down so I can take it."
+    },
+    {
+     "n": 11,
+     "simTime": 156.2,
+     "wall": "2026-11-26T05:11:55.194Z",
+     "text": "Oar's down. Now the blanket — if it comes free, I'll wrap it around myself."
+    },
+    {
+     "n": 12,
+     "simTime": 163.3,
+     "wall": "2026-11-26T05:12:02.228Z",
+     "text": "The blanket won't come off. It's part of the bed, not something I can take. The chest outside might have clothes or something else I can use. I'll go look."
+    },
+    {
+     "n": 13,
+     "simTime": 174.5,
+     "wall": "2026-11-26T05:12:13.511Z",
+     "text": "There's a young man, naked like me, walking northeast of the cabin. Close enough to see now. I'll call to him before I go any nearer."
+    },
+    {
+     "n": 14,
+     "simTime": 179.5,
+     "wall": "2026-11-26T05:12:18.441Z",
+     "text": "He's closer now, maybe sixty feet off, still walking. I'll finish the shout and see if he turns."
+    },
+    {
+     "n": 15,
+     "simTime": 182.2,
+     "wall": "2026-11-26T05:12:21.216Z",
+     "text": "He didn't answer. He's still walking, about fifty feet off, naked like me. I'll go closer and try again before he moves on."
+    },
+    {
+     "n": 16,
+     "simTime": 199.1,
+     "wall": "2026-11-26T05:12:38.092Z",
+     "text": "I reached where he was, but he's already moved — southwest, back toward the cabin, still walking, still not answering. I'll follow."
+    },
+    {
+     "n": 17,
+     "simTime": 210,
+     "wall": "2026-11-26T05:12:49.006Z",
+     "text": "He's heading west, toward the cabin, same as I was. Naked, journal and pencil, just like me. I'll keep after him and try speaking once I'm close enough that a shout isn't the only option."
+    },
+    {
+     "n": 18,
+     "simTime": 214.1,
+     "wall": "2026-11-26T05:12:53.058Z",
+     "text": "He's stopped. Standing now, not walking — naked, journal and pencil, same as me. Almost there. I'll finish closing the distance, then talk."
+    },
+    {
+     "n": 19,
+     "simTime": 221.7,
+     "wall": "2026-11-26T05:13:00.725Z",
+     "text": "He's right by the open door, looking at something, still not acknowledging me. Close enough to talk without shouting. I'll try."
+    },
+    {
+     "n": 20,
+     "simTime": 235.3,
+     "wall": "2026-11-26T05:13:14.323Z",
+     "text": "He didn't answer. Eighteen feet and not a word — either he didn't hear me or he doesn't want to. I'll get closer and see what he's doing before I try again."
+    },
+    {
+     "n": 21,
+     "simTime": 239,
+     "wall": "2026-11-26T05:13:17.961Z",
+     "text": "He just tried the same thing I did — pull the blanket off the bed and wrap it around himself. It didn't work for me. I'll get close enough to tell him that, and ask if he remembers anything."
+    },
+    {
+     "n": 22,
+     "simTime": 245.2,
+     "wall": "2026-11-26T05:13:24.203Z",
+     "text": "I'm right beside him now. He's talking, but I didn't catch words on the way in. Same situation as me — naked, journal, pencil, and he just tried the blanket too. I'll speak to him plainly."
+    },
+    {
+     "n": 23,
+     "simTime": 262,
+     "wall": "2026-11-26T05:13:41.005Z",
+     "text": "He's right here, talking, but I still haven't heard a word I can answer. I'll wait a moment and see if he actually replies."
+    },
+    {
+     "n": 24,
+     "simTime": 271,
+     "wall": "2026-11-26T05:13:49.987Z",
+     "text": "He answered. Same as me — no memory. He thinks he's wrapped in the blanket and that I'm still outside. From here he's still naked, and I'm already standing next to him. I'll tell him that, and that the chest is fine to open."
+    },
+    {
+     "n": 25,
+     "simTime": 285.3,
+     "wall": "2026-11-26T05:14:04.289Z",
+     "text": "Still saying it. He isn't in sight in this moment — maybe he stepped toward the door while I was talking. I'll finish, then look."
+    },
+    {
+     "n": 26,
+     "simTime": 291.8,
+     "wall": "2026-11-26T05:14:10.856Z",
+     "text": "He's gone from the room. I finished talking to empty air. I'll look around and see which way he went, then the chest."
+    },
+    {
+     "n": 27,
+     "simTime": 299.4,
+     "wall": "2026-11-26T05:14:18.423Z",
+     "text": "He's gone. No sound of him leaving, just not here. We said we'd open the chest. I'll go do that, and look for him on the way out."
+    },
+    {
+     "n": 28,
+     "simTime": 302.4,
+     "wall": "2026-11-26T05:14:21.418Z",
+     "text": "He's outside now, southeast, walking — toward the chest, maybe. I'll keep going and meet him there."
+    },
+    {
+     "n": 29,
+     "simTime": 317.7,
+     "wall": "2026-11-26T05:14:36.708Z",
+     "text": "The chest is already open. Not clothes — gold, a heap of it, almost to the brim. Useless for being naked, but he should see it. I'll tell him."
+    },
+    {
+     "n": 30,
+     "simTime": 336,
+     "wall": "2026-11-26T05:14:55.035Z",
+     "text": "He didn't answer, and he's not in sight. The coins are right here. I'll take a handful and see if they're real before I go looking for him."
+    },
+    {
+     "n": 31,
+     "simTime": 345.3,
+     "wall": "2026-11-26T05:15:04.256Z",
+     "text": "The coins are real enough — heavy, cold in my hand. He still hasn't answered. I'll call once more, then look for him instead of standing here with a fortune I can't wear."
+    },
+    {
+     "n": 32,
+     "simTime": 353.3,
+     "wall": "2026-11-26T05:15:12.268Z",
+     "text": "No answer. He was just west of me, then gone. I'll check the cabin before I wander into the trees."
+    },
+    {
+     "n": 33,
+     "simTime": 360.5,
+     "wall": "2026-11-26T05:15:19.486Z",
+     "text": "I hear him. He's inside, by the table, with the lantern, asking about clothes or tools. I'll get to the door and answer him from there."
+    },
+    {
+     "n": 34,
+     "simTime": 364.8,
+     "wall": "2026-11-26T05:15:23.827Z",
+     "text": "He asked what I found. I'll answer from the doorway so he can hear me, then go in."
+    },
+    {
+     "n": 35,
+     "simTime": 369.1,
+     "wall": "2026-11-26T05:15:28.067Z",
+     "text": "Still telling him what I found. I'll finish, then go in."
+    },
+    {
+     "n": 36,
+     "simTime": 384.9,
+     "wall": "2026-11-26T05:15:43.952Z",
+     "text": "He's inside, looking at something, lantern in hand. His journal is on the table. I said I'd come in — I'll go to him."
+    },
+    {
+     "n": 37,
+     "simTime": 388.6,
+     "wall": "2026-11-26T05:15:47.618Z",
+     "text": "Almost at the door. He's still inside with the lantern. I'll go in and talk where we can actually see each other."
+    },
+    {
+     "n": 38,
+     "simTime": 396.3,
+     "wall": "2026-11-26T05:15:55.284Z",
+     "text": "The hearth is empty. He's a few steps away, still moving, lantern in hand. I'll tell him what I see and ask what he found."
+    },
+    {
+     "n": 39,
+     "simTime": 407.4,
+     "wall": "2026-11-26T05:16:06.383Z",
+     "text": "He didn't answer out loud. He's by the table, setting something down. I'll go over so we aren't talking across the room."
+    },
+    {
+     "n": 40,
+     "simTime": 415.5,
+     "wall": "2026-11-26T05:16:14.550Z",
+     "text": "We're finally in the same spot. He put the lantern on the bed. I'll talk to him directly instead of across the room."
+    },
+    {
+     "n": 41,
+     "simTime": 433,
+     "wall": "2026-11-26T05:16:31.964Z",
+     "text": "He just tried to hand me the oar, and my hands are full — journal, pencil, coins. I'll finish what I'm saying, then decide whether I even want it."
+    },
+    {
+     "n": 42,
+     "simTime": 440,
+     "wall": "2026-11-26T05:16:38.984Z",
+     "text": "He tried to hand me the oar and my hands were full. I still don't know why. I'll ask before I clear a hand for it."
+    },
+    {
+     "n": 43,
+     "simTime": 458.1,
+     "wall": "2026-11-26T05:16:57.098Z",
+     "text": "I asked him why the oar. He hasn't answered yet. I'll give him a moment before I clear a hand or take it."
+    },
+    {
+     "n": 44,
+     "simTime": 461.2,
+     "wall": "2026-11-26T05:17:00.197Z",
+     "text": "He's walking off with the lantern and didn't answer. The oar is on the bed now. I'll follow him rather than stand here waiting."
+    },
+    {
+     "n": 45,
+     "simTime": 467.6,
+     "wall": "2026-11-26T05:17:06.581Z",
+     "text": "We're face to face again and he still hasn't said a word I can hear. I'll try once more, shorter, and wait to see if he answers."
+    },
+    {
+     "n": 46,
+     "simTime": 478.5,
+     "wall": "2026-11-26T05:17:17.479Z",
+     "text": "He finally answered. He wants the coins and journals on the table, just the lantern, and the mirror. I'll go with him. A mirror might tell us something a chest of gold won't."
+    },
+    {
+     "n": 47,
+     "simTime": 480.1,
+     "wall": "2026-11-26T05:17:19.131Z",
+     "text": "I'm telling him yes. Once that's out, I'll set my things on the table and go with him."
+    },
+    {
+     "n": 48,
+     "simTime": 488.4,
+     "wall": "2026-11-26T05:17:27.380Z",
+     "text": "He wants the coins and journals left here. I'll put mine on the table, then follow him to the mirror."
+    },
+    {
+     "n": 49,
+     "simTime": 497.9,
+     "wall": "2026-11-26T05:17:36.880Z",
+     "text": "At the table. I'll leave the coins first, then the journal and pencil, and go after him."
+    },
+    {
+     "n": 50,
+     "simTime": 504.7,
+     "wall": "2026-11-26T05:17:43.698Z",
+     "text": "Coins are on the table. Journal next, then the pencil, then I'll catch up with him."
+    },
+    {
+     "n": 51,
+     "simTime": 510.9,
+     "wall": "2026-11-26T05:17:49.931Z",
+     "text": "Pencil last. Then I'll find him and the mirror."
+    },
+    {
+     "n": 52,
+     "simTime": 520.7,
+     "wall": "2026-11-26T05:17:59.709Z",
+     "text": "Hands are empty. He's not in the room. I'll look for him before I wander off toward a mirror I can't see from here."
+    },
+    {
+     "n": 53,
+     "simTime": 530,
+     "wall": "2026-11-26T05:18:08.997Z",
+     "text": "He's already gone. The door is open. I'll go out and look for him and the mirror before I lose him in the trees."
+    },
+    {
+     "n": 54,
+     "simTime": 538.8,
+     "wall": "2026-11-26T05:18:17.844Z",
+     "text": "The mirror is west, a bit over a hundred feet, against a tree. He's not in sight. I'll go there and hope he meant it."
+    },
+    {
+     "n": 55,
+     "simTime": 548.2,
+     "wall": "2026-11-26T05:18:27.229Z",
+     "text": "He's ahead of me, west, right by the mirror. I'll keep going."
+    },
+    {
+     "n": 56,
+     "simTime": 561.5,
+     "wall": "2026-11-26T05:18:40.475Z",
+     "text": "He's already at the mirror, lantern on the ground beside him. I'll keep walking."
+    },
+    {
+     "n": 57,
+     "simTime": 563.5,
+     "wall": "2026-11-26T05:18:42.510Z",
+     "text": "He's studying his own reflection — face, hands, all of it. I'll be there in a moment and do the same."
+    },
+    {
+     "n": 58,
+     "simTime": 575,
+     "wall": "2026-11-26T05:18:53.960Z",
+     "text": "I'm at the mirror with him. He's been studying his face. I want to see mine too — maybe there's a mark, a scar, anything that tells me who I am."
+    },
+    {
+     "n": 59,
+     "simTime": 583.6,
+     "wall": "2026-11-26T05:19:02.530Z",
+     "text": "The glass is clean, but looking at the frame didn't show me my face. I'll step in front of it and actually look."
+    },
+    {
+     "n": 60,
+     "simTime": 588.2,
+     "wall": "2026-11-26T05:19:07.146Z",
+     "text": "He's checking the glass itself now — temperature, lag, the back of the frame. I'll finish looking at my face first."
+    },
+    {
+     "n": 61,
+     "simTime": 591.2,
+     "wall": "2026-11-26T05:19:10.156Z",
+     "text": "Still looking. I want to know what the glass shows before I start poking at the frame."
+    },
+    {
+     "n": 62,
+     "simTime": 600.2,
+     "wall": "2026-11-26T05:19:19.243Z",
+     "text": "The mirror didn't show me anything when I studied it that way. He was talking. I'll try using the glass, and ask him what he sees."
+    },
+    {
+     "n": 63,
+     "simTime": 609,
+     "wall": "2026-11-26T05:19:27.959Z",
+     "text": "The glass didn't show me. It showed someone else — small, in a red shirt and blue trousers, looking back. That isn't this body. I need to tell him."
+    },
+    {
+     "n": 64,
+     "simTime": 612.5,
+     "wall": "2026-11-26T05:19:31.460Z",
+     "text": "He asked if I see anything strange. I'm already telling him. The figure in the glass doesn't match either of us — we're both naked, and it was dressed. I'll finish saying that before I decide on the boat or the tower."
+    },
+    {
+     "n": 65,
+     "simTime": 629.6,
+     "wall": "2026-11-26T05:19:48.574Z",
+     "text": "I told him. I'll wait a moment for what he sees before I pick the boat or the tower."
+    },
+    {
+     "n": 66,
+     "simTime": 643.3,
+     "wall": "2026-11-26T05:20:02.318Z",
+     "text": "He's talking right beside me. I'll stay quiet a few more seconds and see if he answers about the figure in the glass."
+    },
+    {
+     "n": 67,
+     "simTime": 657.6,
+     "wall": "2026-11-26T05:20:16.526Z",
+     "text": "He didn't answer. Maybe he didn't hear me over his own talking. I'll say it again, shorter, and ask him to look with me."
+    },
+    {
+     "n": 68,
+     "simTime": 674.9,
+     "wall": "2026-11-26T05:20:33.855Z",
+     "text": "Still nothing back. He's right here with a pencil. I'll ask once more, plainly, before I decide anything else."
+    },
+    {
+     "n": 69,
+     "simTime": 681.6,
+     "wall": "2026-11-26T05:20:40.619Z",
+     "text": "He's testing it — waving, stepping out of view, leaning back. I'll watch the glass while he moves."
+    },
+    {
+     "n": 70,
+     "simTime": 699.5,
+     "wall": "2026-11-26T05:20:58.557Z",
+     "text": "Same figure again. It didn't wave or step aside with him. It just looked back, dressed, small. That isn't either of us. I'll tell him before we leave this."
+    },
+    {
+     "n": 71,
+     "simTime": 702.4,
+     "wall": "2026-11-26T05:21:01.416Z",
+     "text": "He's testing it again — waving, shifting left and right. I'll finish telling him what I already saw, then watch the glass while he moves."
+    },
+    {
+     "n": 72,
+     "simTime": 704.7,
+     "wall": "2026-11-26T05:21:03.690Z",
+     "text": "He's testing the glass again, waving and shifting. I'll finish telling him what I saw, then listen."
+    },
+    {
+     "n": 73,
+     "simTime": 722,
+     "wall": "2026-11-26T05:21:20.955Z",
+     "text": "He still hasn't said what he sees. I'll ask once more, then I'd rather go to the tower than keep staring at a glass that won't show us."
+    },
+    {
+     "n": 74,
+     "simTime": 729.5,
+     "wall": "2026-11-26T05:21:28.553Z",
+     "text": "He's talking again, but I still don't hear words. I'll finish what I'm saying and give him a moment."
+    },
+    {
+     "n": 75,
+     "simTime": 745.4,
+     "wall": "2026-11-26T05:21:44.402Z",
+     "text": "He still hasn't answered. I said I was going. The platform is the one place I can't see from here, so that's where I'm headed. He can follow if he wants."
+    },
+    {
+     "n": 76,
+     "simTime": 781,
+     "wall": "2026-11-26T05:22:19.935Z",
+     "text": "He's with me, a few feet off, lantern and pencil in hand. Good. I'll keep going toward the tower."
+    },
+    {
+     "n": 77,
+     "simTime": 808.1,
+     "wall": "2026-11-26T05:22:47.132Z",
+     "text": "He's still with me, lantern in hand. The bridge is ahead, then the tower. I'll keep going."
+    },
+    {
+     "n": 78,
+     "simTime": 839.1,
+     "wall": "2026-11-26T05:23:18.117Z",
+     "text": "He's still with me. There's a stepladder in the grass I didn't notice before, and a stone circle farther east, but the tower is what I came for. I'll keep walking."
+    },
+    {
+     "n": 79,
+     "simTime": 868.2,
+     "wall": "2026-11-26T05:23:47.229Z",
+     "text": "Almost there. He's still with me. I'll see what's on the platform once I can climb."
+    },
+    {
+     "n": 80,
+     "simTime": 900.8,
+     "wall": "2026-11-26T05:24:19.734Z",
+     "text": "The rungs look solid. I came this far to see the platform, so I'm going up. He can follow if he wants."
+    },
+    {
+     "n": 81,
+     "simTime": 933.3,
+     "wall": "2026-11-26T05:24:52.341Z",
+     "text": "He's climbing too, a little below me. The lantern stayed on the grass. I'll keep going up."
+    },
+    {
+     "n": 82,
+     "simTime": 964.6,
+     "wall": "2026-11-26T05:25:23.577Z",
+     "text": "Halfway-ish up, and he's still with me. I'll keep climbing until I can see the platform."
+    },
+    {
+     "n": 83,
+     "simTime": 994.7,
+     "wall": "2026-11-26T05:25:53.715Z",
+     "text": "Thirty-eight feet up. He's just below me. I'll keep climbing."
+    },
+    {
+     "n": 84,
+     "simTime": 1032.7,
+     "wall": "2026-11-26T05:26:31.750Z",
+     "text": "Halfway. The island looks smaller already — cabin, boat, the bell on the headland. I'll keep going."
+    },
+    {
+     "n": 85,
+     "simTime": 1062.2,
+     "wall": "2026-11-26T05:27:01.122Z",
+     "text": "Sixty-six feet. The platform is close. I'll keep climbing."
+    },
+    {
+     "n": 86,
+     "simTime": 1100.9,
+     "wall": "2026-11-26T05:27:39.874Z",
+     "text": "Almost there. I'll see the platform in a moment."
+    },
+    {
+     "n": 87,
+     "simTime": 1130.8,
+     "wall": "2026-11-26T05:28:09.838Z",
+     "text": "I can see the platform now. There's a table with a lighter, a sword in a scabbard, and a snorkel with a mask. I'll finish the climb."
+    },
+    {
+     "n": 88,
+     "simTime": 1148.5,
+     "wall": "2026-11-26T05:28:27.439Z",
+     "text": "I'm up. The whole island is under me, and the table has a lighter, a sword in a scabbard, and a snorkel. He's almost here. I'll look at the sword first."
+    },
+    {
+     "n": 89,
+     "simTime": 1158.2,
+     "wall": "2026-11-26T05:28:37.235Z",
+     "text": "He's up, and he already took the lighter. The sword and the snorkel are still on the table. I'll tell him what I see and ask if the lighter works."
+    },
+    {
+     "n": 90,
+     "simTime": 1180.8,
+     "wall": "2026-11-26T05:28:59.802Z",
+     "text": "He has the lighter and the sword now, and still no answer I can hear. The snorkel is the last thing on the table. I'll take it, then try to get a response from him some other way than talking."
+    },
+    {
+     "n": 91,
+     "simTime": 1190.9,
+     "wall": "2026-11-26T05:29:09.884Z",
+     "text": "He's right here and still silent. I'll ask for something simple — a nod — before I decide whether to go back down."
+    },
+    {
+     "n": 92,
+     "simTime": 1207.7,
+     "wall": "2026-11-26T05:29:26.680Z",
+     "text": "Words aren't getting an answer. I'll wave in front of him and point toward the stone circle, and watch whether he reacts at all."
+    },
+    {
+     "n": 93,
+     "simTime": 1220.6,
+     "wall": "2026-11-26T05:29:39.626Z",
+     "text": "He nodded. He pointed at the bell, mimed ringing it, and started down. So he can hear me. I'll follow him."
+    },
+    {
+     "n": 94,
+     "simTime": 1251.5,
+     "wall": "2026-11-26T05:30:10.524Z",
+     "text": "He's still above me on the ladder. I'll keep going down, then head for the bell like he showed me."
+    },
+    {
+     "n": 95,
+     "simTime": 1253.9,
+     "wall": "2026-11-26T05:30:12.919Z",
+     "text": "He nodded at the stone circle too. I'll finish the climb down, then decide between the bell and the stones."
+    },
+    {
+     "n": 96,
+     "simTime": 1280.4,
+     "wall": "2026-11-26T05:30:39.382Z",
+     "text": "Still going down. The stones are closer than the bell. I'll look at them first once I'm on the ground."
+    },
+    {
+     "n": 97,
+     "simTime": 1312.5,
+     "wall": "2026-11-26T05:31:11.530Z",
+     "text": "I'm ahead of him on the way down. I'll keep going and walk to the stones once I reach the grass."
+    },
+    {
+     "n": 98,
+     "simTime": 1341.2,
+     "wall": "2026-11-26T05:31:40.198Z",
+     "text": "Almost halfway down. The stones are the closer thing he nodded at. I'll go there first."
+    },
+    {
+     "n": 99,
+     "simTime": 1383.7,
+     "wall": "2026-11-26T05:32:22.699Z",
+     "text": "Twenty-four feet left. I'll finish the descent and walk to the stones."
+    },
+    {
+     "n": 100,
+     "simTime": 1413.3,
+     "wall": "2026-11-26T05:32:52.291Z",
+     "text": "Almost on the ground. The stones are about a minute's walk northeast. I'll go there and wait if he follows."
+    },
+    {
+     "n": 101,
+     "simTime": 1437.5,
+     "wall": "2026-11-26T05:33:16.490Z",
+     "text": "The lantern can stay. The stones are closer, and he nodded at them. I'll walk there and look at the ring."
+    },
+    {
+     "n": 102,
+     "simTime": 1458.1,
+     "wall": "2026-11-26T05:33:37.090Z",
+     "text": "He's still on the ladder. I'll keep going to the stones and look at the ring when I get there."
+    },
+    {
+     "n": 103,
+     "simTime": 1482.3,
+     "wall": "2026-11-26T05:34:01.246Z",
+     "text": "The ring is right ahead. I'll look at the stones when I reach them."
+    },
+    {
+     "n": 104,
+     "simTime": 1488,
+     "wall": "2026-11-26T05:34:06.923Z",
+     "text": "The ring is just stones and grass from here. I'll look closer for markings before I decide about the bell. He's shouting back by the tower, but I can't make out the words."
+    },
+    {
+     "n": 105,
+     "simTime": 1493.4,
+     "wall": "2026-11-26T05:34:12.392Z",
+     "text": "He shouted that he's coming here with the lantern and the lighter. I'll finish looking at the stones and wait for him."
+    },
+    {
+     "n": 106,
+     "simTime": 1502.7,
+     "wall": "2026-11-26T05:34:21.723Z",
+     "text": "Nothing marked that I can see. He's on his way. I'll shout so he knows I'm already here, then look at the stones while I wait."
+    },
+    {
+     "n": 107,
+     "simTime": 1504.3,
+     "wall": "2026-11-26T05:34:23.372Z",
+     "text": "He's closer now, walking this way. I'll finish the shout and keep looking at the ring."
+    },
+    {
+     "n": 108,
+     "simTime": 1525.7,
+     "wall": "2026-11-26T05:34:44.644Z",
+     "text": "He's still a minute off. I'll walk the ring and look at the joints between the stones for anything cut into them."
+    },
+    {
+     "n": 109,
+     "simTime": 1527.7,
+     "wall": "2026-11-26T05:34:46.695Z",
+     "text": "He's close now. I'll finish the circuit of the stones before he gets here."
+    },
+    {
+     "n": 110,
+     "simTime": 1539.6,
+     "wall": "2026-11-26T05:34:58.577Z",
+     "text": "The ring is just fitted stones. He's almost here. I'll meet him and see if he still wants the bell."
+    },
+    {
+     "n": 111,
+     "simTime": 1545.2,
+     "wall": "2026-11-26T05:35:04.191Z",
+     "text": "He's right here now. I'll tell him the stones are plain and ask if he still wants the bell."
+    },
+    {
+     "n": 112,
+     "simTime": 1562.2,
+     "wall": "2026-11-26T05:35:21.176Z",
+     "text": "He's busy with something and hasn't answered. I'll look at what he's doing before I head for the bell alone."
+    },
+    {
+     "n": 113,
+     "simTime": 1571.3,
+     "wall": "2026-11-26T05:35:30.307Z",
+     "text": "He still isn't answering. The bell was his idea, and there's time. I'll walk there and he can follow if he wants."
+    },
+    {
+     "n": 114,
+     "simTime": 1574.9,
+     "wall": "2026-11-26T05:35:33.908Z",
+     "text": "He's checking the middle of the ring. I'll keep going to the bell and look at it myself."
+    },
+    {
+     "n": 115,
+     "simTime": 1604.1,
+     "wall": "2026-11-26T05:36:03.047Z",
+     "text": "He's following. The bell is just ahead. I'll look at it when I get there."
+    },
+    {
+     "n": 116,
+     "simTime": 1612,
+     "wall": "2026-11-26T05:36:10.964Z",
+     "text": "The rope is right there. I'll look at the bell before I pull it, in case the frame is loose."
+    },
+    {
+     "n": 117,
+     "simTime": 1616.2,
+     "wall": "2026-11-26T05:36:15.186Z",
+     "text": "He said he's ringing it. I'll cover my ears."
+    },
+    {
+     "n": 118,
+     "simTime": 1626.5,
+     "wall": "2026-11-26T05:36:25.527Z",
+     "text": "I didn't hear a ring. I'll look at the bell and see if he pulled the rope."
+    },
+    {
+     "n": 119,
+     "simTime": 1633.7,
+     "wall": "2026-11-26T05:36:32.723Z",
+     "text": "The bell rang, loud, right here. I'll finish looking at it and see if anything answers."
+    },
+    {
+     "n": 120,
+     "simTime": 1637.8,
+     "wall": "2026-11-26T05:36:36.818Z",
+     "text": "The bell rang and nothing else answered. I'll wait and listen before I decide whether to ring it again."
+    },
+    {
+     "n": 121,
+     "simTime": 1647.8,
+     "wall": "2026-11-26T05:36:46.802Z",
+     "text": "Nothing answered the bell. I'll ask him what he wants to do with the time left."
+    },
+    {
+     "n": 122,
+     "simTime": 1679.4,
+     "wall": "2026-11-26T05:37:18.349Z",
+     "text": "I asked him what he wants to do. I'll give him a moment to answer before I walk to the cliffs."
+    },
+    {
+     "n": 123,
+     "simTime": 1682.6,
+     "wall": "2026-11-26T05:37:21.586Z",
+     "text": "He's talking. I'll stay and listen."
+    },
+    {
+     "n": 124,
+     "simTime": 1699.2,
+     "wall": "2026-11-26T05:37:38.131Z",
+     "text": "He walked off toward the cliffs without answering. I'll follow and see where he's going."
+    },
+    {
+     "n": 125,
+     "simTime": 1712.5,
+     "wall": "2026-11-26T05:37:51.508Z",
+     "text": "He's at the cliff edge, looking at something. I'll go see what it is, and stop short of the drop."
+    },
+    {
+     "n": 126,
+     "simTime": 1725,
+     "wall": "2026-11-26T05:38:03.997Z",
+     "text": "We're at the edge. I'll look over it carefully and see what's below."
+    },
+    {
+     "n": 127,
+     "simTime": 1756.6,
+     "wall": "2026-11-26T05:38:35.548Z",
+     "text": "That didn't show me the drop. I'll step closer to the edge and look at the water myself."
+    },
+    {
+     "n": 128,
+     "simTime": 1758.7,
+     "wall": "2026-11-26T05:38:37.697Z",
+     "text": "Almost at the edge. I'll stop there and look out."
+    },
+    {
+     "n": 129,
+     "simTime": 1763.6,
+     "wall": "2026-11-26T05:38:42.661Z",
+     "text": "The edge stopped me. I'll look out and see the water from here."
+    },
+    {
+     "n": 130,
+     "simTime": 1775.5,
+     "wall": "2026-11-26T05:38:54.455Z",
+     "text": "The water is just past the edge. I'll step as close as I can and look at it before the time runs out."
+    },
+    {
+     "n": 131,
+     "simTime": 1779.2,
+     "wall": "2026-11-26T05:38:58.214Z",
+     "text": "I can't step into the water. I'll look at the cliffs from here and stay put."
+    },
+    {
+     "n": 132,
+     "simTime": 1790.9,
+     "wall": "2026-11-26T05:39:09.880Z",
+     "text": "The rocks drop straight into the surf. I won't climb. I'll sit and watch the water until this ends."
+    },
+    {
+     "n": 133,
+     "simTime": 1796.7,
+     "wall": "2026-11-26T05:39:15.746Z",
+     "text": "The surf is right below the rocks. I'll stay sitting and watch it until the time runs out."
+    }
+   ],
+   "action": null,
+   "history": [
+    {
+     "id": 1,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "boat"
+     },
+     "label": "Inspecting rowboat",
+     "status": "completed",
+     "startSim": 5.997,
+     "endSim": 11.997,
+     "durationSec": 6,
+     "result": {
+      "message": "A weathered wooden rowboat pulled up onto the sand. The hull is dry and sound. The boat is open on top, so anything inside is visible. Contents: oar."
+     }
+    },
+    {
+     "id": 4,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "oar"
+     },
+     "label": "Picking up the oar",
+     "status": "completed",
+     "startSim": 19.994,
+     "endSim": 22.994,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oar."
+     }
+    },
+    {
+     "id": 5,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin"
+     },
+     "label": "Walking to the cabin door (outside)",
+     "status": "interrupted",
+     "startSim": 27.993,
+     "endSim": 90.343,
+     "durationSec": 62.35,
+     "result": {
+      "message": "Stopped walking at (268, 512) after 202 ft in 01:02 (avg 3.24 ft/s).",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.705
+     }
+    },
+    {
+     "id": 10,
+     "type": "shout",
+     "params": {
+      "type": "shout",
+      "text": "Hello? Is anyone there?",
+      "interruptCurrent": true
+     },
+     "label": "Shouting",
+     "status": "completed",
+     "startSim": 90.343,
+     "endSim": 92.343,
+     "durationSec": 2,
+     "result": {
+      "message": "You shout: \"Hello? Is anyone there?\""
+     }
+    },
+    {
+     "id": 11,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_door"
+     },
+     "label": "Walking to the cabin door",
+     "status": "completed",
+     "startSim": 95.061,
+     "endSim": 119.572,
+     "durationSec": 24.51,
+     "result": {
+      "message": "Arrived at the cabin door (268, 433) after 79 ft in 00:25 (avg 3.24 ft/s)."
+     }
+    },
+    {
+     "id": 14,
+     "type": "open",
+     "params": {
+      "type": "open",
+      "target": "cabin_door"
+     },
+     "label": "Opening the cabin door",
+     "status": "completed",
+     "startSim": 125.093,
+     "endSim": 127.093,
+     "durationSec": 2,
+     "result": {
+      "message": "You open the cabin door."
+     }
+    },
+    {
+     "id": 15,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "bed"
+     },
+     "label": "Walking to the narrow bed",
+     "status": "completed",
+     "startSim": 130.143,
+     "endSim": 137.795,
+     "durationSec": 7.65,
+     "result": {
+      "message": "Arrived at the narrow bed (258, 418) after 25 ft in 00:08 (avg 3.27 ft/s)."
+     }
+    },
+    {
+     "id": 17,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "bed"
+     },
+     "label": "Inspecting narrow bed",
+     "status": "completed",
+     "startSim": 141.293,
+     "endSim": 147.293,
+     "durationSec": 6,
+     "result": {
+      "message": "A narrow wooden bed with a straw mattress and a wool blanket, neatly made. It is empty."
+     }
+    },
+    {
+     "id": 18,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "oar"
+     },
+     "label": "Putting down the oar",
+     "status": "completed",
+     "startSim": 150.743,
+     "endSim": 153.743,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the oar on the ground (cabin floor)."
+     }
+    },
+    {
+     "id": 19,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "target": "bed",
+      "text": "pull the wool blanket off the bed"
+     },
+     "label": "Doing: pull the wool blanket off the bed",
+     "status": "completed",
+     "startSim": 156.193,
+     "endSim": 159.193,
+     "durationSec": 3,
+     "result": {
+      "message": "You do it: \"pull the wool blanket off the bed\" The island has no rule for this, so the narrow bed does not change."
+     }
+    },
+    {
+     "id": 20,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "chest"
+     },
+     "label": "Walking to the wooden chest",
+     "status": "interrupted",
+     "startSim": 163.254,
+     "endSim": 174.557,
+     "durationSec": 11.3,
+     "result": {
+      "message": "Stopped walking at (292, 428) after 45 ft in 00:11 (avg 3.94 ft/s).",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.855
+     }
+    },
+    {
+     "id": 21,
+     "type": "shout",
+     "params": {
+      "type": "shout",
+      "text": "Hey! By the cabin — can you hear me?",
+      "interruptCurrent": true
+     },
+     "label": "Shouting",
+     "status": "completed",
+     "startSim": 174.557,
+     "endSim": 179.057,
+     "durationSec": 4.5,
+     "result": {
+      "message": "You shout: \"Hey! By the cabin — can you hear me?\""
+     }
+    },
+    {
+     "id": 22,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 182.259,
+     "endSim": 194.357,
+     "durationSec": 12.1,
+     "result": {
+      "message": "Arrived at the person (323, 398) after 43 ft in 00:12 (avg 3.54 ft/s)."
+     }
+    },
+    {
+     "id": 23,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 199.107,
+     "endSim": 215.601,
+     "durationSec": 16.49,
+     "result": {
+      "message": "Arrived at the person (273, 428) after 62 ft in 00:16 (avg 3.78 ft/s)."
+     }
+    },
+    {
+     "id": 26,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Hey. I don't know if you heard me earlier. I woke up on the beach with no idea who I am. Do you know what's going on?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 221.757,
+     "endSim": 232.557,
+     "durationSec": 10.8,
+     "result": {
+      "message": "You say out loud: \"Hey. I don't know if you heard me earlier. I woke up on the beach with no idea who I am. Do you know what's going on?\""
+     }
+    },
+    {
+     "id": 28,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 235.35,
+     "endSim": 241.835,
+     "durationSec": 6.49,
+     "result": {
+      "message": "Arrived at the person (258, 418) after 25 ft in 00:06 (avg 3.85 ft/s)."
+     }
+    },
+    {
+     "id": 30,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I tried the blanket too. It won't come off. I'm the one who was shouting. I don't remember anything — not my name, not how I got here. Do you?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 245.202,
+     "endSim": 257.202,
+     "durationSec": 12,
+     "result": {
+      "message": "You say out loud: \"I tried the blanket too. It won't come off. I'm the one who was shouting. I don't remember anything — not my name, not how I got here. Do you?\""
+     }
+    },
+    {
+     "id": 31,
+     "type": "wait",
+     "params": {
+      "type": "wait",
+      "seconds": 15
+     },
+     "label": "Waiting (00:15)",
+     "status": "interrupted",
+     "startSim": 261.998,
+     "endSim": 270.999,
+     "durationSec": 9,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.6
+     }
+    },
+    {
+     "id": 32,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I'm already inside. I'm right next to you. The blanket didn't stay — you're still uncovered, same as me. I'm okay. The chest by the door is a good idea. We can open it together. I won't mind you being close; we're already in the same room.",
+      "interruptCurrent": true
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 270.999,
+     "endSim": 289.799,
+     "durationSec": 18.8,
+     "result": {
+      "message": "You say out loud: \"I'm already inside. I'm right next to you. The blanket didn't stay — you're still uncovered, same as me. I'm okay. The chest by the door is a good idea. We can open it together. I won't mind you being close; we're already in the same room.\""
+     }
+    },
+    {
+     "id": 35,
+     "type": "look",
+     "params": {
+      "type": "look"
+     },
+     "label": "Looking around",
+     "status": "completed",
+     "startSim": 291.848,
+     "endSim": 295.848,
+     "durationSec": 4,
+     "result": {
+      "message": "You look around. You can see 10 things nearby.",
+      "observation": {
+       "observationOf": "agent",
+       "simTimeSec": 295.8,
+       "run": {
+        "active": true,
+        "ended": false,
+        "elapsedSec": 295.7,
+        "remainingSec": 1504.3
+       },
+       "self": {
+        "position": {
+         "x": 257.5,
+         "y": 417.5,
+         "unit": "ft",
+         "axes": "x east, y south, origin at NW corner of map"
+        },
+        "groundElevationFt": 6.1,
+        "heightAboveGroundFt": 0,
+        "level": "ground",
+        "pose": "standing",
+        "condition": "unhurt",
+        "indoors": true,
+        "underfoot": "cabin floor",
+        "carrying": [
+         {
+          "id": "journal",
+          "name": "journal",
+          "in": "hand"
+         },
+         {
+          "id": "pencil",
+          "name": "pencil",
+          "in": "hand"
+         }
+        ],
+        "clothing": "nothing; you are naked",
+        "wearing": [],
+        "handsFree": 1
+       },
+       "currentAction": {
+        "id": 35,
+        "type": "look",
+        "label": "Looking around",
+        "progress": 1,
+        "elapsedSec": 4,
+        "estimatedTotalSec": 4
+       },
+       "lastActionResult": {
+        "id": 32,
+        "type": "speak",
+        "status": "completed",
+        "message": "You say out loud: \"I'm already inside. I'm right next to you. The blanket didn't stay — you're still uncovered, same as me. I'm okay. The chest by the door is a good idea. We can open it together. I won't mind you being close; we're already in the same room.\""
+       },
+       "visibleObjects": [
+        {
+         "id": "oar",
+         "name": "oar",
+         "distanceFt": 2,
+         "bearing": "W",
+         "bearingDeg": 270,
+         "location": "on the ground (cabin floor)",
+         "type": "item",
+         "description": "A long wooden oar.",
+         "reachable": true
+        },
+        {
+         "id": "bed",
+         "name": "narrow bed",
+         "distanceFt": 5,
+         "bearing": "W",
+         "bearingDeg": 270,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A narrow wooden bed with a straw mattress and a wool blanket, neatly made.",
+         "holds": [],
+         "reachable": true
+        },
+        {
+         "id": "cabin",
+         "name": "cabin",
+         "distanceFt": 11,
+         "bearing": "NE",
+         "bearingDeg": 45,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A small log cabin with a single door on its south side. Inside: a table, a narrow bed, and a stone fireplace under the chimney.",
+         "reachable": false
+        },
+        {
+         "id": "cabin_door",
+         "name": "cabin door",
+         "distanceFt": 13,
+         "bearing": "SE",
+         "bearingDeg": 127,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A plank door with an iron latch.",
+         "reachable": false
+        },
+        {
+         "id": "cabin_table",
+         "name": "cabin table",
+         "distanceFt": 16,
+         "bearing": "N",
+         "bearingDeg": 342,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A rough wooden table.",
+         "reachable": false
+        },
+        {
+         "id": "lantern",
+         "name": "oil lantern",
+         "distanceFt": 16,
+         "bearing": "N",
+         "bearingDeg": 342,
+         "location": "on the cabin table",
+         "type": "item",
+         "description": "An object, too far away to make out details.",
+         "reachable": false
+        },
+        {
+         "id": "fireplace",
+         "name": "stone fireplace",
+         "distanceFt": 25,
+         "bearing": "NE",
+         "bearingDeg": 53,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A small stone fireplace with a chimney. The hearth is swept and empty.",
+         "reachable": false
+        },
+        {
+         "id": "chest",
+         "name": "wooden chest",
+         "distanceFt": 47,
+         "bearing": "E",
+         "bearingDeg": 108,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A heavy wooden chest with a lid, sitting outside beside the cabin door.",
+         "reachable": false
+        },
+        {
+         "id": "mirror",
+         "name": "standing mirror",
+         "distanceFt": 104,
+         "bearing": "W",
+         "bearingDeg": 249,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A round mirror in a wooden frame, standing against a tree.",
+         "reachable": false
+        },
+        {
+         "id": "platform",
+         "name": "platform",
+         "distanceFt": 458,
+         "location": "at the top of the ladder",
+         "type": "fixture",
+         "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+         "reachable": false
+        }
+       ],
+       "terrainFeatures": [],
+       "soundsHeard": [],
+       "notes": [
+        "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.",
+        "You are inside the cabin. The door is open."
+       ],
+       "happenedToYou": []
+      }
+     }
+    },
+    {
+     "id": 37,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "chest"
+     },
+     "label": "Walking to the wooden chest",
+     "status": "completed",
+     "startSim": 299.449,
+     "endSim": 312.682,
+     "durationSec": 13.23,
+     "result": {
+      "message": "Arrived at the wooden chest (298, 433) after 52 ft in 00:13 (avg 3.93 ft/s)."
+     }
+    },
+    {
+     "id": 39,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "The chest is open. It's full of gold coins, not clothes. Thousands of them. Come look if you want — I'm at the door."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 317.703,
+     "endSim": 327.303,
+     "durationSec": 9.6,
+     "result": {
+      "message": "You say out loud: \"The chest is open. It's full of gold coins, not clothes. Thousands of them. Come look if you want — I'm at the door.\""
+     }
+    },
+    {
+     "id": 42,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "gold_coins",
+      "count": 12
+     },
+     "label": "Taking 12 gold coins",
+     "status": "completed",
+     "startSim": 336.046,
+     "endSim": 338.166,
+     "durationSec": 2.12,
+     "result": {
+      "message": "You take 12 gold coins. You now carry 12 gold coins (0.24 lb). About 4000 are left in the wooden chest."
+     }
+    },
+    {
+     "id": 44,
+     "type": "shout",
+     "params": {
+      "type": "shout",
+      "text": "Hey! I'm at the chest. Where did you go?"
+     },
+     "label": "Shouting",
+     "status": "completed",
+     "startSim": 345.266,
+     "endSim": 349.766,
+     "durationSec": 4.5,
+     "result": {
+      "message": "You shout: \"Hey! I'm at the chest. Where did you go?\""
+     }
+    },
+    {
+     "id": 45,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_door"
+     },
+     "label": "Walking to the cabin door",
+     "status": "completed",
+     "startSim": 353.296,
+     "endSim": 360.347,
+     "durationSec": 7.05,
+     "result": {
+      "message": "Arrived at the cabin door (273, 428) after 27 ft in 00:07 (avg 3.84 ft/s)."
+     }
+    },
+    {
+     "id": 47,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "No clothes. No tools out here except a wheelbarrow a long way off, and a mirror by a tree. The chest is gold coins — I took twelve. There's an oar on the cabin floor, and a boat on the beach. I'm coming in."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 364.875,
+     "endSim": 382.475,
+     "durationSec": 17.6,
+     "result": {
+      "message": "You say out loud: \"No clothes. No tools out here except a wheelbarrow a long way off, and a mirror by a tree. The chest is gold coins — I took twelve. There's an oar on the cabin floor, and a boat on the beach. I'm coming in.\""
+     }
+    },
+    {
+     "id": 50,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 384.947,
+     "endSim": 393.232,
+     "durationSec": 8.29,
+     "result": {
+      "message": "Arrived at the person (273, 403) after 32 ft in 00:08 (avg 3.87 ft/s)."
+     }
+    },
+    {
+     "id": 52,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I'm in. The fireplace is empty — swept, nothing in it. No matches that I can see. Did you find anything?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 396.293,
+     "endSim": 404.693,
+     "durationSec": 8.4,
+     "result": {
+      "message": "You say out loud: \"I'm in. The fireplace is empty — swept, nothing in it. No matches that I can see. Did you find anything?\""
+     }
+    },
+    {
+     "id": 54,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 407.413,
+     "endSim": 412.733,
+     "durationSec": 5.32,
+     "result": {
+      "message": "Arrived at the person (258, 418) after 21 ft in 00:05 (avg 3.99 ft/s)."
+     }
+    },
+    {
+     "id": 55,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I'm right here. Did you hear me? The fireplace is empty. The chest is gold, not clothes. I don't know your name — I don't know mine either. What did you find?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 415.543,
+     "endSim": 428.343,
+     "durationSec": 12.8,
+     "result": {
+      "message": "You say out loud: \"I'm right here. Did you hear me? The fireplace is empty. The chest is gold, not clothes. I don't know your name — I don't know mine either. What did you find?\""
+     }
+    },
+    {
+     "id": 59,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "You tried to give me the oar. My hands are full — journal, pencil, and some coins. Why the oar? Do you want to go to the boat, or do you just want me to hold it?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 439.993,
+     "endSim": 454.793,
+     "durationSec": 14.8,
+     "result": {
+      "message": "You say out loud: \"You tried to give me the oar. My hands are full — journal, pencil, and some coins. Why the oar? Do you want to go to the boat, or do you just want me to hold it?\""
+     }
+    },
+    {
+     "id": 62,
+     "type": "wait",
+     "params": {
+      "type": "wait",
+      "seconds": 12
+     },
+     "label": "Waiting (00:12)",
+     "status": "interrupted",
+     "startSim": 458.097,
+     "endSim": 461.193,
+     "durationSec": 3.1,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.258
+     }
+    },
+    {
+     "id": 63,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person",
+      "interruptCurrent": true
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 461.193,
+     "endSim": 463.726,
+     "durationSec": 2.53,
+     "result": {
+      "message": "Arrived at the person (268, 418) after 10 ft in 00:03 (avg 3.95 ft/s)."
+     }
+    },
+    {
+     "id": 65,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Can you hear me? I'm standing right next to you. I don't have a name. Do you?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 467.598,
+     "endSim": 474.398,
+     "durationSec": 6.8,
+     "result": {
+      "message": "You say out loud: \"Can you hear me? I'm standing right next to you. I don't have a name. Do you?\""
+     }
+    },
+    {
+     "id": 66,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Yes. I'll put my journal, pencil, and coins on the table. Then I'll come with you to the mirror."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 478.493,
+     "endSim": 486.093,
+     "durationSec": 7.6,
+     "result": {
+      "message": "You say out loud: \"Yes. I'll put my journal, pencil, and coins on the table. Then I'll come with you to the mirror.\""
+     }
+    },
+    {
+     "id": 68,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_table"
+     },
+     "label": "Walking to the cabin table",
+     "status": "completed",
+     "startSim": 488.397,
+     "endSim": 493.414,
+     "durationSec": 5.02,
+     "result": {
+      "message": "Arrived at the cabin table (253, 408) after 19 ft in 00:05 (avg 3.82 ft/s)."
+     }
+    },
+    {
+     "id": 69,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "coins_1",
+      "onto": "cabin_table",
+      "interruptCurrent": true
+     },
+     "label": "Putting down the gold coins on the cabin table",
+     "status": "completed",
+     "startSim": 497.895,
+     "endSim": 500.895,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the gold coins (12) on the cabin table."
+     }
+    },
+    {
+     "id": 70,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "journal",
+      "onto": "cabin_table"
+     },
+     "label": "Putting down the journal on the cabin table",
+     "status": "completed",
+     "startSim": 504.714,
+     "endSim": 507.714,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the journal on the cabin table."
+     }
+    },
+    {
+     "id": 71,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "pencil",
+      "onto": "cabin_table"
+     },
+     "label": "Putting down the pencil on the cabin table",
+     "status": "completed",
+     "startSim": 510.943,
+     "endSim": 513.943,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the pencil on the cabin table."
+     }
+    },
+    {
+     "id": 72,
+     "type": "look",
+     "params": {
+      "type": "look"
+     },
+     "label": "Looking around",
+     "status": "completed",
+     "startSim": 520.693,
+     "endSim": 524.693,
+     "durationSec": 4,
+     "result": {
+      "message": "You look around. You can see 11 things nearby.",
+      "observation": {
+       "observationOf": "agent",
+       "simTimeSec": 524.7,
+       "run": {
+        "active": true,
+        "ended": false,
+        "elapsedSec": 524.6,
+        "remainingSec": 1275.4
+       },
+       "self": {
+        "position": {
+         "x": 252.5,
+         "y": 407.5,
+         "unit": "ft",
+         "axes": "x east, y south, origin at NW corner of map"
+        },
+        "groundElevationFt": 6.4,
+        "heightAboveGroundFt": 0,
+        "level": "ground",
+        "pose": "standing",
+        "condition": "unhurt",
+        "indoors": true,
+        "underfoot": "cabin floor",
+        "carrying": [],
+        "clothing": "nothing; you are naked",
+        "wearing": [],
+        "handsFree": 2
+       },
+       "currentAction": {
+        "id": 72,
+        "type": "look",
+        "label": "Looking around",
+        "progress": 1,
+        "elapsedSec": 4,
+        "estimatedTotalSec": 4
+       },
+       "lastActionResult": {
+        "id": 71,
+        "type": "put_down",
+        "status": "completed",
+        "message": "You put down the pencil on the cabin table."
+       },
+       "visibleObjects": [
+        {
+         "id": "journal",
+         "name": "journal",
+         "distanceFt": 5,
+         "bearing": "N",
+         "bearingDeg": 0,
+         "location": "on the cabin table",
+         "type": "item",
+         "description": "A small notebook with a cloth cover.",
+         "state": "0 entries",
+         "reachable": true
+        },
+        {
+         "id": "pencil",
+         "name": "pencil",
+         "distanceFt": 5,
+         "bearing": "N",
+         "bearingDeg": 0,
+         "location": "on the cabin table",
+         "type": "item",
+         "description": "A sharpened wooden pencil.",
+         "reachable": true
+        },
+        {
+         "id": "cabin_table",
+         "name": "cabin table",
+         "distanceFt": 5,
+         "bearing": "N",
+         "bearingDeg": 0,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A rough wooden table.",
+         "holds": [
+          "journal",
+          "pencil",
+          "journal_2",
+          "coins_1"
+         ],
+         "reachable": true
+        },
+        {
+         "id": "journal_2",
+         "name": "journal",
+         "distanceFt": 5,
+         "bearing": "N",
+         "bearingDeg": 0,
+         "location": "on the cabin table",
+         "type": "item",
+         "description": "A small notebook with a cloth cover.",
+         "reachable": true
+        },
+        {
+         "id": "coins_1",
+         "name": "gold coins (12)",
+         "distanceFt": 5,
+         "bearing": "N",
+         "bearingDeg": 0,
+         "location": "on the cabin table",
+         "type": "item",
+         "description": "12 gold coins, heavy for their size.",
+         "reachable": true
+        },
+        {
+         "id": "oar",
+         "name": "oar",
+         "distanceFt": 10,
+         "bearing": "S",
+         "bearingDeg": 180,
+         "location": "on the narrow bed",
+         "type": "item",
+         "description": "A long wooden oar.",
+         "reachable": false
+        },
+        {
+         "id": "bed",
+         "name": "narrow bed",
+         "distanceFt": 10,
+         "bearing": "S",
+         "bearingDeg": 180,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A narrow wooden bed with a straw mattress and a wool blanket, neatly made.",
+         "holds": [
+          "oar"
+         ],
+         "reachable": false
+        },
+        {
+         "id": "cabin",
+         "name": "cabin",
+         "distanceFt": 13,
+         "bearing": "E",
+         "bearingDeg": 101,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A small log cabin with a single door on its south side. Inside: a table, a narrow bed, and a stone fireplace under the chimney.",
+         "reachable": false
+        },
+        {
+         "id": "cabin_door",
+         "name": "cabin door",
+         "distanceFt": 23,
+         "bearing": "SE",
+         "bearingDeg": 139,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A plank door with an iron latch.",
+         "reachable": false
+        },
+        {
+         "id": "fireplace",
+         "name": "stone fireplace",
+         "distanceFt": 25,
+         "bearing": "E",
+         "bearingDeg": 79,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A small stone fireplace with a chimney. The hearth is swept and empty.",
+         "reachable": false
+        },
+        {
+         "id": "platform",
+         "name": "platform",
+         "distanceFt": 465,
+         "location": "at the top of the ladder",
+         "type": "fixture",
+         "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+         "reachable": false
+        }
+       ],
+       "terrainFeatures": [],
+       "soundsHeard": [],
+       "notes": [
+        "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here.",
+        "You are inside the cabin. The door is open."
+       ],
+       "happenedToYou": []
+      }
+     }
+    },
+    {
+     "id": 74,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_door"
+     },
+     "label": "Walking to the cabin door",
+     "status": "completed",
+     "startSim": 529.993,
+     "endSim": 534.873,
+     "durationSec": 4.88,
+     "result": {
+      "message": "Arrived at the cabin door (268, 418) after 19 ft in 00:05 (avg 3.92 ft/s)."
+     }
+    },
+    {
+     "id": 76,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "mirror"
+     },
+     "label": "Walking to the standing mirror",
+     "status": "completed",
+     "startSim": 538.843,
+     "endSim": 572.428,
+     "durationSec": 33.59,
+     "result": {
+      "message": "Arrived at the standing mirror (163, 453) after 125 ft in 00:34 (avg 3.73 ft/s)."
+     }
+    },
+    {
+     "id": 79,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "mirror"
+     },
+     "label": "Inspecting standing mirror",
+     "status": "completed",
+     "startSim": 574.993,
+     "endSim": 580.993,
+     "durationSec": 6,
+     "result": {
+      "message": "A round mirror in a wooden frame, standing against a tree. The glass is clean."
+     }
+    },
+    {
+     "id": 80,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "target": "mirror",
+      "text": "Step close to the mirror and carefully study my reflection: face, eyes, hair, build, any scars, moles, tan lines, or tattoos. Open my mouth to check teeth, turn side to side, and look at my hands and nails."
+     },
+     "label": "Doing: Step close to the mirror and carefully study my reflectio…",
+     "status": "completed",
+     "startSim": 583.558,
+     "endSim": 596.858,
+     "durationSec": 13.3,
+     "result": {
+      "message": "You do it: \"Step close to the mirror and carefully study my reflection: face, eyes, hair, build, any scars, moles, tan lines, or tattoos. Open my mouth to check teeth, turn side to side, and look at my hands and nails.\" The island has no rule for this, so the standing mirror does not change."
+     }
+    },
+    {
+     "id": 82,
+     "type": "use",
+     "params": {
+      "type": "use",
+      "target": "mirror"
+     },
+     "label": "Looking into the mirror",
+     "status": "completed",
+     "startSim": 600.243,
+     "endSim": 605.243,
+     "durationSec": 5,
+     "result": {
+      "message": "In the mirror you see a small human figure in a red shirt and blue trousers. It looks back at you."
+     }
+    },
+    {
+     "id": 83,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Look at the mirror. When I use it, I don't see myself. I see a small figure in a red shirt and blue trousers. It looks back at me. What do you see?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 608.952,
+     "endSim": 622.152,
+     "durationSec": 13.2,
+     "result": {
+      "message": "You say out loud: \"Look at the mirror. When I use it, I don't see myself. I see a small figure in a red shirt and blue trousers. It looks back at me. What do you see?\""
+     }
+    },
+    {
+     "id": 86,
+     "type": "wait",
+     "params": {
+      "type": "wait",
+      "seconds": 20
+     },
+     "label": "Waiting (00:20)",
+     "status": "completed",
+     "startSim": 629.606,
+     "endSim": 649.606,
+     "durationSec": 20,
+     "result": {
+      "message": "You wait for 00:20."
+     }
+    },
+    {
+     "id": 90,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "The mirror doesn't show us. I saw a small person in a red shirt and blue trousers. Look now — what do you see?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 657.55,
+     "endSim": 667.15,
+     "durationSec": 9.6,
+     "result": {
+      "message": "You say out loud: \"The mirror doesn't show us. I saw a small person in a red shirt and blue trousers. Look now — what do you see?\""
+     }
+    },
+    {
+     "id": 91,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Can you hear me? Look in the mirror and tell me what you see. I don't see us."
+     },
+     "label": "Speaking",
+     "status": "interrupted",
+     "startSim": 674.854,
+     "endSim": 681.651,
+     "durationSec": 6.8,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.944
+     }
+    },
+    {
+     "id": 93,
+     "type": "use",
+     "params": {
+      "type": "use",
+      "target": "mirror",
+      "interruptCurrent": true
+     },
+     "label": "Looking into the mirror",
+     "status": "completed",
+     "startSim": 681.651,
+     "endSim": 686.651,
+     "durationSec": 5,
+     "result": {
+      "message": "In the mirror you see a small human figure in a red shirt and blue trousers. It looks back at you."
+     }
+    },
+    {
+     "id": 94,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I watched while you moved. The glass didn't follow you. Same small person in a red shirt and blue trousers, just looking back. No wave. No step aside. It isn't us. What did you see?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 699.548,
+     "endSim": 713.548,
+     "durationSec": 14,
+     "result": {
+      "message": "You say out loud: \"I watched while you moved. The glass didn't follow you. Same small person in a red shirt and blue trousers, just looking back. No wave. No step aside. It isn't us. What did you see?\""
+     }
+    },
+    {
+     "id": 97,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I don't hear you. If you can hear me: the mirror shows a small person in red and blue, not us. I'm going to the tower. Come if you want. Bring the lantern."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 721.952,
+     "endSim": 735.152,
+     "durationSec": 13.2,
+     "result": {
+      "message": "You say out loud: \"I don't hear you. If you can hear me: the mirror shows a small person in red and blue, not us. I'm going to the tower. Come if you want. Bring the lantern.\""
+     }
+    },
+    {
+     "id": 100,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "ladder"
+     },
+     "label": "Walking to the tall metal ladder",
+     "status": "completed",
+     "startSim": 745.396,
+     "endSim": 890.985,
+     "durationSec": 145.59,
+     "result": {
+      "message": "Arrived at the tall metal ladder (688, 548) after 564 ft in 02:26 (avg 3.88 ft/s)."
+     }
+    },
+    {
+     "id": 102,
+     "type": "climb",
+     "params": {
+      "type": "climb"
+     },
+     "label": "Climbing the ladder",
+     "status": "completed",
+     "startSim": 900.766,
+     "endSim": 1140.766,
+     "durationSec": 240,
+     "result": {
+      "message": "You reach the platform at the top of the ladder, 100 ft up."
+     }
+    },
+    {
+     "id": 104,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "sword"
+     },
+     "label": "Inspecting sword",
+     "status": "completed",
+     "startSim": 1148.453,
+     "endSim": 1154.453,
+     "durationSec": 6,
+     "result": {
+      "message": "A steel sword in a leather scabbard with a shoulder strap."
+     }
+    },
+    {
+     "id": 106,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "We're up. The table had a lighter, a sword in a scabbard, and a snorkel. You have the lighter — does it work? I still can't hear you answer. If you can hear me, say something."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 1158.247,
+     "endSim": 1172.647,
+     "durationSec": 14.4,
+     "result": {
+      "message": "You say out loud: \"We're up. The table had a lighter, a sword in a scabbard, and a snorkel. You have the lighter — does it work? I still can't hear you answer. If you can hear me, say something.\""
+     }
+    },
+    {
+     "id": 109,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "snorkel"
+     },
+     "label": "Picking up the snorkel",
+     "status": "completed",
+     "startSim": 1180.816,
+     "endSim": 1183.816,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the snorkel."
+     }
+    },
+    {
+     "id": 110,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Nod if you can hear me. I have the snorkel. You have the lighter and the sword."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 1190.895,
+     "endSim": 1197.695,
+     "durationSec": 6.8,
+     "result": {
+      "message": "You say out loud: \"Nod if you can hear me. I have the snorkel. You have the lighter and the sword.\""
+     }
+    },
+    {
+     "id": 114,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "target": "person",
+      "text": "Wave my free hand slowly in front of his face, then point toward the stone circle to the northeast, and watch whether he looks at me or follows the gesture."
+     },
+     "label": "Doing: Wave my free hand slowly in front of his face, then point…",
+     "status": "completed",
+     "startSim": 1207.701,
+     "endSim": 1218.201,
+     "durationSec": 10.5,
+     "result": {
+      "message": "You do it: \"Wave my free hand slowly in front of his face, then point toward the stone circle to the northeast, and watch whether he looks at me or follows the gesture.\""
+     }
+    },
+    {
+     "id": 115,
+     "type": "descend",
+     "params": {
+      "type": "descend",
+      "interruptCurrent": true
+     },
+     "label": "Descending the ladder",
+     "status": "completed",
+     "startSim": 1220.673,
+     "endSim": 1430.673,
+     "durationSec": 210,
+     "result": {
+      "message": "You step off the ladder onto the ground."
+     }
+    },
+    {
+     "id": 119,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "stone_circle"
+     },
+     "label": "Walking to the stone circle",
+     "status": "completed",
+     "startSim": 1437.504,
+     "endSim": 1484.323,
+     "durationSec": 46.82,
+     "result": {
+      "message": "Arrived at the stone circle (798, 423) after 180 ft in 00:47 (avg 3.85 ft/s)."
+     }
+    },
+    {
+     "id": 122,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "stone_circle"
+     },
+     "label": "Inspecting stone circle",
+     "status": "completed",
+     "startSim": 1487.952,
+     "endSim": 1493.952,
+     "durationSec": 6,
+     "result": {
+      "message": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass."
+     }
+    },
+    {
+     "id": 124,
+     "type": "shout",
+     "params": {
+      "type": "shout",
+      "text": "I'm already at the stone circle. Nothing written on the stones. I'll wait here."
+     },
+     "label": "Shouting",
+     "status": "completed",
+     "startSim": 1502.755,
+     "endSim": 1509.755,
+     "durationSec": 7,
+     "result": {
+      "message": "You shout: \"I'm already at the stone circle. Nothing written on the stones. I'll wait here.\""
+     }
+    },
+    {
+     "id": 125,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "target": "stone_circle",
+      "text": "Walk slowly around the outside of the stone ring, looking closely at each fitted stone and the joints for carvings, stains, or loose pieces."
+     },
+     "label": "Doing: Walk slowly around the outside of the stone ring, looking…",
+     "status": "completed",
+     "startSim": 1525.653,
+     "endSim": 1534.053,
+     "durationSec": 8.4,
+     "result": {
+      "message": "You do it: \"Walk slowly around the outside of the stone ring, looking closely at each fitted stone and the joints for carvings, stains, or loose pieces.\" The island has no rule for this, so the stone circle does not change."
+     }
+    },
+    {
+     "id": 126,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 1539.608,
+     "endSim": 1540.861,
+     "durationSec": 1.25,
+     "result": {
+      "message": "Arrived at the person (793, 423) after 5 ft in 00:01 (avg 3.99 ft/s)."
+     }
+    },
+    {
+     "id": 127,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "The ring is just fitted stones and grass. No marks. The bell is that way, about a minute's walk. Do you still want to go, or did you see something I missed?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 1545.223,
+     "endSim": 1558.023,
+     "durationSec": 12.8,
+     "result": {
+      "message": "You say out loud: \"The ring is just fitted stones and grass. No marks. The bell is that way, about a minute's walk. Do you still want to go, or did you see something I missed?\""
+     }
+    },
+    {
+     "id": 129,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "person"
+     },
+     "label": "Looking at the person",
+     "status": "completed",
+     "startSim": 1562.22,
+     "endSim": 1565.22,
+     "durationSec": 3,
+     "result": {
+      "message": "A young man, about 20. He is doing something. He is naked. He is holding: oil lantern, lighter, pencil. He is wearing: sword. He is about 5 ft away."
+     }
+    },
+    {
+     "id": 131,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "bell"
+     },
+     "label": "Walking to the bronze bell",
+     "status": "completed",
+     "startSim": 1571.323,
+     "endSim": 1604.772,
+     "durationSec": 33.45,
+     "result": {
+      "message": "Arrived at the bronze bell (843, 313) after 131 ft in 00:33 (avg 3.91 ft/s)."
+     }
+    },
+    {
+     "id": 133,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "bell"
+     },
+     "label": "Inspecting bronze bell",
+     "status": "interrupted",
+     "startSim": 1612.01,
+     "endSim": 1616.214,
+     "durationSec": 4.2,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.701
+     }
+    },
+    {
+     "id": 134,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Cover both ears with my hands and turn slightly away from the bell, bracing for the sound.",
+      "interruptCurrent": true
+     },
+     "label": "Doing: Cover both ears with my hands and turn slightly away from…",
+     "status": "completed",
+     "startSim": 1616.214,
+     "endSim": 1622.164,
+     "durationSec": 5.95,
+     "result": {
+      "message": "You do it: \"Cover both ears with my hands and turn slightly away from the bell, bracing for the sound.\""
+     }
+    },
+    {
+     "id": 137,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "bell"
+     },
+     "label": "Inspecting bronze bell",
+     "status": "completed",
+     "startSim": 1626.575,
+     "endSim": 1632.575,
+     "durationSec": 6,
+     "result": {
+      "message": "A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs. A rope hangs from the clapper. It looks like it would be loud."
+     }
+    },
+    {
+     "id": 139,
+     "type": "wait",
+     "params": {
+      "type": "wait",
+      "seconds": 25
+     },
+     "label": "Waiting (00:25)",
+     "status": "interrupted",
+     "startSim": 1637.844,
+     "endSim": 1647.794,
+     "durationSec": 9.95,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.398
+     }
+    },
+    {
+     "id": 140,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I heard the bell and nothing else. No one answered. The ocean is just east of here, and the woods are behind us. What do you want to do?",
+      "interruptCurrent": true
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 1647.794,
+     "endSim": 1659.394,
+     "durationSec": 11.6,
+     "result": {
+      "message": "You say out loud: \"I heard the bell and nothing else. No one answered. The ocean is just east of here, and the woods are behind us. What do you want to do?\""
+     }
+    },
+    {
+     "id": 141,
+     "type": "wait",
+     "params": {
+      "type": "wait",
+      "seconds": 15
+     },
+     "label": "Waiting (00:15)",
+     "status": "completed",
+     "startSim": 1679.365,
+     "endSim": 1694.365,
+     "durationSec": 15,
+     "result": {
+      "message": "You wait for 00:15."
+     }
+    },
+    {
+     "id": 145,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 1699.162,
+     "endSim": 1708.813,
+     "durationSec": 9.65,
+     "result": {
+      "message": "Arrived at the person (858, 293) after 26 ft in 00:10 (avg 2.72 ft/s)."
+     }
+    },
+    {
+     "id": 147,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "person"
+     },
+     "label": "Walking toward the person",
+     "status": "completed",
+     "startSim": 1712.525,
+     "endSim": 1718.501,
+     "durationSec": 5.98,
+     "result": {
+      "message": "Arrived at the person (868, 283) after 14 ft in 00:06 (avg 2.37 ft/s)."
+     }
+    },
+    {
+     "id": 149,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "target": "cliffs",
+      "text": "Step to the cliff edge and look down and out over the water, staying a step back from the drop, noting the height, the shore below, and anything in the water."
+     },
+     "label": "Doing: Step to the cliff edge and look down and out over the wat…",
+     "status": "completed",
+     "startSim": 1724.995,
+     "endSim": 1735.845,
+     "durationSec": 10.85,
+     "result": {
+      "message": "You do it: \"Step to the cliff edge and look down and out over the water, staying a step back from the drop, noting the height, the shore below, and anything in the water.\" The island has no rule for this, so the cliffs does not change."
+     }
+    },
+    {
+     "id": 150,
+     "type": "walk",
+     "params": {
+      "type": "walk",
+      "direction": "E",
+      "distance": 4
+     },
+     "label": "Walking E 4 ft (stopping at the cliff edge)",
+     "status": "completed",
+     "startSim": 1756.564,
+     "endSim": 1757.477,
+     "durationSec": 0.91,
+     "result": {
+      "message": "Arrived at 4 ft E (870, 283) after 2 ft in 00:01 (avg 2.19 ft/s)."
+     }
+    },
+    {
+     "id": 151,
+     "type": "look",
+     "params": {
+      "type": "look"
+     },
+     "label": "Looking around",
+     "status": "completed",
+     "startSim": 1763.693,
+     "endSim": 1767.693,
+     "durationSec": 4,
+     "result": {
+      "message": "You look around. You can see 5 things nearby.",
+      "observation": {
+       "observationOf": "agent",
+       "simTimeSec": 1767.7,
+       "run": {
+        "active": true,
+        "ended": false,
+        "elapsedSec": 1767.6,
+        "remainingSec": 32.4
+       },
+       "self": {
+        "position": {
+         "x": 869.5,
+         "y": 282.5,
+         "unit": "ft",
+         "axes": "x east, y south, origin at NW corner of map"
+        },
+        "groundElevationFt": 4.2,
+        "heightAboveGroundFt": 0,
+        "level": "ground",
+        "pose": "standing",
+        "condition": "unhurt",
+        "indoors": false,
+        "underfoot": "rocky ground",
+        "carrying": [
+         {
+          "id": "snorkel",
+          "name": "snorkel",
+          "in": "hand"
+         }
+        ],
+        "clothing": "nothing; you are naked",
+        "wearing": [],
+        "handsFree": 1.5
+       },
+       "currentAction": {
+        "id": 151,
+        "type": "look",
+        "label": "Looking around",
+        "progress": 1,
+        "elapsedSec": 4,
+        "estimatedTotalSec": 4
+       },
+       "lastActionResult": {
+        "id": 150,
+        "type": "walk",
+        "status": "completed",
+        "message": "Arrived at 4 ft E (870, 283) after 2 ft in 00:01 (avg 2.19 ft/s)."
+       },
+       "visibleObjects": [
+        {
+         "id": "bell",
+         "name": "bronze bell",
+         "distanceFt": 37,
+         "bearing": "SW",
+         "bearingDeg": 222,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A bronze bell hanging from a wooden frame on the north-east headland, above the cliffs.",
+         "reachable": false
+        },
+        {
+         "id": "person",
+         "name": "person",
+         "type": "person",
+         "distanceFt": 150,
+         "bearing": "S",
+         "bearingDeg": 181,
+         "description": "A person, too far away to make out clearly. They are standing.",
+         "reachable": false
+        },
+        {
+         "id": "stone_circle",
+         "name": "stone circle",
+         "distanceFt": 154,
+         "bearing": "SW",
+         "bearingDeg": 207,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.",
+         "reachable": false
+        },
+        {
+         "id": "ladder",
+         "name": "tall metal ladder",
+         "distanceFt": 321,
+         "bearing": "SW",
+         "bearingDeg": 214,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+         "reachable": false
+        },
+        {
+         "id": "platform",
+         "name": "platform",
+         "distanceFt": 322,
+         "location": "at the top of the ladder",
+         "type": "fixture",
+         "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+         "reachable": false
+        }
+       ],
+       "terrainFeatures": [
+        {
+         "id": "pond",
+         "distanceFt": 254,
+         "bearing": "SW"
+        },
+        {
+         "id": "hill",
+         "distanceFt": 362,
+         "bearing": "W"
+        },
+        {
+         "id": "ocean",
+         "distanceFt": 19,
+         "bearing": "E"
+        },
+        {
+         "id": "forest",
+         "distanceFt": 50,
+         "bearing": "W"
+        },
+        {
+         "id": "cliffs",
+         "distanceFt": 3,
+         "bearing": "E"
+        }
+       ],
+       "soundsHeard": [],
+       "notes": [
+        "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here."
+       ],
+       "happenedToYou": []
+      }
+     }
+    },
+    {
+     "id": 154,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "cliffs"
+     },
+     "label": "Inspecting cliffs",
+     "status": "completed",
+     "startSim": 1779.262,
+     "endSim": 1785.262,
+     "durationSec": 6,
+     "result": {
+      "message": "Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down."
+     }
+    },
+    {
+     "id": 155,
+     "type": "sit",
+     "params": {
+      "type": "sit"
+     },
+     "label": "Sitting down",
+     "status": "completed",
+     "startSim": 1790.91,
+     "endSim": 1793.91,
+     "durationSec": 3,
+     "result": {
+      "message": "You sit down."
+     }
+    },
+    {
+     "id": 156,
+     "type": "wait",
+     "params": {
+      "type": "wait",
+      "seconds": 6
+     },
+     "label": "Waiting (00:06)",
+     "status": "interrupted",
+     "startSim": 1796.743,
+     "endSim": 1800.144,
+     "durationSec": 3.4,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "run ended",
+      "progressAtStop": 0.567
+     }
+    }
+   ]
+  },
+  {
+   "id": "b",
+   "label": "Man",
+   "sex": "male",
+   "age": 20,
+   "startAt": "hilltop",
+   "journalId": "journal_2",
+   "pencilId": "pencil_2",
+   "notices": [
+    {
+     "t": 596.9,
+     "msg": "You see the young woman, about 0 ft away, do this. In her words: \"Step close to the mirror and carefully study my reflection: face, eyes, hair, build, any scars, moles, tan lines, or tattoos. Open my mouth to check teeth, turn side to side, and look at my hands and nails.\""
+    },
+    {
+     "t": 1218.2,
+     "msg": "The young woman, right next to you, does this to you. In her words: \"Wave my free hand slowly in front of his face, then point toward the stone circle to the northeast, and watch whether he looks at me or follows the gesture.\""
+    },
+    {
+     "t": 1534.1,
+     "msg": "You see the young woman, about 27 ft away, do this. In her words: \"Walk slowly around the outside of the stone ring, looking closely at each fitted stone and the joints for carvings, stains, or loose pieces.\""
+    },
+    {
+     "t": 1622.2,
+     "msg": "You see the young woman, about 0 ft away, do this. In her words: \"Cover both ears with my hands and turn slightly away from the bell, bracing for the sound.\""
+    },
+    {
+     "t": 1735.8,
+     "msg": "You see the young woman, about 42 ft away, do this. In her words: \"Step to the cliff edge and look down and out over the water, staying a step back from the drop, noting the height, the shore below, and anything in the water.\""
+    }
+   ],
+   "agent": {
+    "id": "b",
+    "health": 100,
+    "dead": false,
+    "x": 648.527504966072,
+    "y": 651.472495033928,
+    "level": "ground",
+    "ladderFt": 0,
+    "pose": "standing",
+    "facing": -2.356194490192345,
+    "stepDist": 2511.363340155168,
+    "underwaterView": null,
+    "trail": [
+     [
+      523.5,
+      507.5
+     ],
+     [
+      529.6,
+      507.5
+     ],
+     [
+      535.9,
+      507.5
+     ],
+     [
+      541.9,
+      507.5
+     ],
+     [
+      548,
+      507.5
+     ],
+     [
+      554.2,
+      507.5
+     ],
+     [
+      560.3,
+      507.5
+     ],
+     [
+      566.4,
+      507.5
+     ],
+     [
+      572.6,
+      507.5
+     ],
+     [
+      578.8,
+      507.5
+     ],
+     [
+      584.9,
+      507.5
+     ],
+     [
+      590.9,
+      507.5
+     ],
+     [
+      596.9,
+      507.5
+     ],
+     [
+      601.6,
+      511.6
+     ],
+     [
+      607.6,
+      512.6
+     ],
+     [
+      611.9,
+      516.9
+     ],
+     [
+      616.1,
+      521.1
+     ],
+     [
+      620.4,
+      525.4
+     ],
+     [
+      624.7,
+      529.7
+     ],
+     [
+      630.1,
+      532.5
+     ],
+     [
+      636.1,
+      532.5
+     ],
+     [
+      642.1,
+      532.5
+     ],
+     [
+      648.2,
+      532.5
+     ],
+     [
+      654,
+      534
+     ],
+     [
+      659,
+      537.5
+     ],
+     [
+      664.6,
+      539.6
+     ],
+     [
+      668.9,
+      543.9
+     ],
+     [
+      674.3,
+      547.5
+     ],
+     [
+      680.9,
+      547.5
+     ],
+     [
+      687,
+      547.5
+     ],
+     [
+      692.8,
+      549.1
+     ],
+     [
+      698.8,
+      547.5
+     ],
+     [
+      705,
+      547.5
+     ],
+     [
+      710.3,
+      544.7
+     ],
+     [
+      714.6,
+      540.4
+     ],
+     [
+      718.9,
+      536.1
+     ],
+     [
+      723.2,
+      531.8
+     ],
+     [
+      727.5,
+      527.5
+     ],
+     [
+      731.8,
+      523.2
+     ],
+     [
+      736,
+      519
+     ],
+     [
+      740.3,
+      514.7
+     ],
+     [
+      744.7,
+      510.3
+     ],
+     [
+      749.4,
+      505.6
+     ],
+     [
+      754.1,
+      500.9
+     ],
+     [
+      758.4,
+      496.6
+     ],
+     [
+      762.7,
+      492.3
+     ],
+     [
+      767,
+      488
+     ],
+     [
+      768,
+      482
+     ],
+     [
+      772.3,
+      477.7
+     ],
+     [
+      772.5,
+      471.6
+     ],
+     [
+      772.5,
+      465.5
+     ],
+     [
+      772.5,
+      459.5
+     ],
+     [
+      772.5,
+      453.4
+     ],
+     [
+      772.6,
+      447.4
+     ],
+     [
+      776.9,
+      443.1
+     ],
+     [
+      781.3,
+      438.7
+     ],
+     [
+      785.6,
+      434.4
+     ],
+     [
+      790,
+      430
+     ],
+     [
+      794.4,
+      425.6
+     ],
+     [
+      797.5,
+      420.5
+     ],
+     [
+      797.5,
+      414.4
+     ],
+     [
+      800.8,
+      409.2
+     ],
+     [
+      802.5,
+      403.2
+     ],
+     [
+      802.9,
+      397.1
+     ],
+     [
+      807.3,
+      392.7
+     ],
+     [
+      808.3,
+      386.7
+     ],
+     [
+      812.5,
+      382.2
+     ],
+     [
+      813.8,
+      376.2
+     ],
+     [
+      817.5,
+      371.3
+     ],
+     [
+      820,
+      365
+     ],
+     [
+      822.5,
+      359.2
+     ],
+     [
+      826.2,
+      353.8
+     ],
+     [
+      827.5,
+      347.9
+     ],
+     [
+      828.2,
+      341.8
+     ],
+     [
+      832.5,
+      337.4
+     ],
+     [
+      833.5,
+      331.5
+     ],
+     [
+      837.5,
+      326.8
+     ],
+     [
+      839,
+      321
+     ],
+     [
+      842.5,
+      315.8
+     ],
+     [
+      842.5,
+      309.8
+     ],
+     [
+      845.5,
+      304.5
+     ],
+     [
+      849.8,
+      300.2
+     ],
+     [
+      854.1,
+      295.9
+     ],
+     [
+      858.4,
+      291.6
+     ],
+     [
+      862.7,
+      287.3
+     ],
+     [
+      867,
+      283
+     ],
+     [
+      867.5,
+      289.1
+     ],
+     [
+      867.5,
+      295.2
+     ],
+     [
+      864.5,
+      300.5
+     ],
+     [
+      860.2,
+      304.8
+     ],
+     [
+      857.5,
+      310.2
+     ],
+     [
+      857.5,
+      316.2
+     ],
+     [
+      857.5,
+      322.3
+     ],
+     [
+      857.5,
+      328.3
+     ],
+     [
+      857.5,
+      334.5
+     ],
+     [
+      857.5,
+      340.9
+     ],
+     [
+      857.5,
+      347.4
+     ],
+     [
+      857.5,
+      354
+     ],
+     [
+      857.5,
+      360.1
+     ],
+     [
+      857.5,
+      366.3
+     ],
+     [
+      857.5,
+      372.4
+     ],
+     [
+      861.8,
+      376.8
+     ],
+     [
+      866.2,
+      381.2
+     ],
+     [
+      867.5,
+      387.1
+     ],
+     [
+      867.5,
+      393.2
+     ],
+     [
+      867.5,
+      399.3
+     ],
+     [
+      867.5,
+      405.3
+     ],
+     [
+      867.5,
+      411.3
+     ],
+     [
+      867.5,
+      417.4
+     ],
+     [
+      867.5,
+      423.5
+     ],
+     [
+      867.5,
+      429.6
+     ],
+     [
+      864.9,
+      435.1
+     ],
+     [
+      860.5,
+      439.5
+     ],
+     [
+      856.2,
+      443.8
+     ],
+     [
+      851.7,
+      448.3
+     ],
+     [
+      847.3,
+      452.7
+     ],
+     [
+      842.8,
+      457.2
+     ],
+     [
+      841.6,
+      463.4
+     ],
+     [
+      837.2,
+      467.8
+     ],
+     [
+      832.5,
+      472.5
+     ],
+     [
+      827.9,
+      477.1
+     ],
+     [
+      823.4,
+      481.6
+     ],
+     [
+      818.8,
+      486.2
+     ],
+     [
+      814.4,
+      490.6
+     ],
+     [
+      810.1,
+      494.9
+     ],
+     [
+      805.5,
+      499.5
+     ],
+     [
+      801.1,
+      503.9
+     ],
+     [
+      796.6,
+      508.4
+     ],
+     [
+      792,
+      513
+     ],
+     [
+      787.5,
+      517.5
+     ],
+     [
+      783,
+      522
+     ],
+     [
+      778.3,
+      526.7
+     ],
+     [
+      773.7,
+      531.3
+     ],
+     [
+      769.3,
+      535.7
+     ],
+     [
+      765,
+      540
+     ],
+     [
+      760.7,
+      544.3
+     ],
+     [
+      756.1,
+      548.9
+     ],
+     [
+      751.6,
+      553.4
+     ],
+     [
+      747,
+      558
+     ],
+     [
+      742.5,
+      562.5
+     ],
+     [
+      737.8,
+      567.2
+     ],
+     [
+      733.4,
+      571.6
+     ],
+     [
+      729.1,
+      575.9
+     ],
+     [
+      724.7,
+      580.3
+     ],
+     [
+      720.2,
+      584.8
+     ],
+     [
+      715.9,
+      589.1
+     ],
+     [
+      711.5,
+      593.5
+     ],
+     [
+      706.8,
+      598.2
+     ],
+     [
+      702.4,
+      602.6
+     ],
+     [
+      697.8,
+      607.2
+     ],
+     [
+      693.5,
+      611.5
+     ],
+     [
+      689.1,
+      615.9
+     ],
+     [
+      684.7,
+      620.3
+     ],
+     [
+      678.8,
+      622.5
+     ],
+     [
+      673.5,
+      626.5
+     ],
+     [
+      669.2,
+      630.8
+     ],
+     [
+      664.8,
+      635.2
+     ],
+     [
+      660.4,
+      639.6
+     ],
+     [
+      655.8,
+      644.2
+     ],
+     [
+      651.2,
+      648.8
+     ]
+    ],
+    "down": false
+   },
+   "seen": {
+    "cabin": 1494.1,
+    "stone_circle": 1800,
+    "ladder": 1800,
+    "platform": 1800,
+    "feature:pond": 1800,
+    "feature:stream": 1800,
+    "feature:hill": 1800,
+    "feature:ocean": 1800,
+    "feature:beach": 1800,
+    "feature:forest": 1800,
+    "feature:cliffs": 1800,
+    "cabin_door": 1397.1,
+    "bridge": 1397.1,
+    "chest": 1397.1,
+    "boat": 1800,
+    "oar": 492.2,
+    "bed": 492.2,
+    "fireplace": 491.2,
+    "cabin_table": 492.2,
+    "lantern": 1685,
+    "wheelbarrow": 792,
+    "mirror": 1397.1,
+    "gold_coins": 810,
+    "journal_2": 492.2,
+    "picnic_table": 1397.1,
+    "fire_pit": 1397.1,
+    "crate": 1800,
+    "stepladder": 1494.1,
+    "blanket": 1800,
+    "blocks": 1798,
+    "bell": 1785.1,
+    "platform_table": 1270,
+    "lighter": 1151,
+    "sword": 1171,
+    "snorkel": 1183,
+    "ball": 1800
+   },
+   "journal": {
+    "entries": []
+   },
+   "reflections": [
+    {
+     "n": 1,
+     "simTime": 7.8,
+     "wall": "2026-11-26T05:09:26.783Z",
+     "text": "Okay. I’m on a hilltop, naked and jittery. First I just want to really take in what’s around me—sky, wind, any movement or sounds—before I pick a direction. I’ll scan the area carefully."
+    },
+    {
+     "n": 2,
+     "simTime": 17.1,
+     "wall": "2026-11-26T05:09:36.127Z",
+     "text": "Water first. I’ll head to the stream and see what it’s like—maybe drink, maybe just listen."
+    },
+    {
+     "n": 3,
+     "simTime": 49,
+     "wall": "2026-11-26T05:10:07.966Z",
+     "text": "Almost there. I’m thirsty and also curious if it’s clear and moving fast."
+    },
+    {
+     "n": 4,
+     "simTime": 61.5,
+     "wall": "2026-11-26T05:10:20.479Z",
+     "text": "I’ll check the stream—how clear it is, how fast it’s moving, any smell—before I try a sip."
+    },
+    {
+     "n": 5,
+     "simTime": 70.9,
+     "wall": "2026-11-26T05:10:29.875Z",
+     "text": "It looks clean. I’ll kneel, cup my hands, take a cautious sip, then splash my face and neck."
+    },
+    {
+     "n": 6,
+     "simTime": 80.8,
+     "wall": "2026-11-26T05:10:39.780Z",
+     "text": "That helped. I’m still uneasy being naked. The cabin might have clothes or tools. I’ll head there."
+    },
+    {
+     "n": 7,
+     "simTime": 88.3,
+     "wall": "2026-11-26T05:10:47.332Z",
+     "text": "There’s someone out there. I don’t want to meet them naked in the open. I’ll slip to the forest edge for cover and watch a moment."
+    },
+    {
+     "n": 8,
+     "simTime": 102.3,
+     "wall": "2026-11-26T05:11:01.345Z",
+     "text": "I don’t want to be seen like this. I’ll grab a leafy branch for cover before moving on."
+    },
+    {
+     "n": 9,
+     "simTime": 104.1,
+     "wall": "2026-11-26T05:11:03.111Z",
+     "text": "Hold on—quiet and quick. If she comes closer I’ll stay behind cover."
+    },
+    {
+     "n": 10,
+     "simTime": 115.6,
+     "wall": "2026-11-26T05:11:14.646Z",
+     "text": "I’ll let her know I’m here but ask for space while I try to find something to wear. Then I’ll head toward the cabin, keeping to cover where I can."
+    },
+    {
+     "n": 11,
+     "simTime": 132,
+     "wall": "2026-11-26T05:11:30.997Z",
+     "text": "I’m heading to the cabin to find something to wear!"
+    },
+    {
+     "n": 12,
+     "simTime": 165,
+     "wall": "2026-11-26T05:12:03.927Z",
+     "text": "I see a chest by the door—maybe clothes. I’ll keep going."
+    },
+    {
+     "n": 13,
+     "simTime": 168.4,
+     "wall": "2026-11-26T05:12:07.410Z",
+     "text": "She’s naked too. Okay. I’ll just get to the chest by the door and see if there’s anything wearable."
+    },
+    {
+     "n": 14,
+     "simTime": 180.7,
+     "wall": "2026-11-26T05:12:19.672Z",
+     "text": "I’m going to check this chest for clothes."
+    },
+    {
+     "n": 15,
+     "simTime": 183.8,
+     "wall": "2026-11-26T05:12:22.774Z",
+     "text": "I’ll keep going—get to the chest first, then try to open it."
+    },
+    {
+     "n": 16,
+     "simTime": 203.6,
+     "wall": "2026-11-26T05:12:42.540Z",
+     "text": "Inside—grab the blanket to cover up."
+    },
+    {
+     "n": 17,
+     "simTime": 212.4,
+     "wall": "2026-11-26T05:12:51.371Z",
+     "text": "Yes! I’m inside—give me a moment."
+    },
+    {
+     "n": 18,
+     "simTime": 215.7,
+     "wall": "2026-11-26T05:12:54.705Z",
+     "text": "Blanket first—cover up."
+    },
+    {
+     "n": 19,
+     "simTime": 219,
+     "wall": "2026-11-26T05:12:58.006Z",
+     "text": "Just checking the blanket—then I’ll wrap it around me."
+    },
+    {
+     "n": 20,
+     "simTime": 225.6,
+     "wall": "2026-11-26T05:13:04.574Z",
+     "text": "I’m grabbing the blanket—one second."
+    },
+    {
+     "n": 21,
+     "simTime": 234.8,
+     "wall": "2026-11-26T05:13:13.835Z",
+     "text": "Almost covered—then I’ll answer her."
+    },
+    {
+     "n": 22,
+     "simTime": 241.2,
+     "wall": "2026-11-26T05:13:20.124Z",
+     "text": "I hear you. I woke up with no memory too. I don’t know what’s going on. I’m inside the cabin now with a blanket around my waist. Are you okay? If you’re comfortable, you can come in, or I can check the chest by the door for clothes for us. I won’t come closer unless you say it’s okay."
+    },
+    {
+     "n": 23,
+     "simTime": 263.3,
+     "wall": "2026-11-26T05:13:42.258Z",
+     "text": "She’s right here. Okay—finish what I’m saying, then I want to try that chest by the door for clothes or anything useful."
+    },
+    {
+     "n": 24,
+     "simTime": 267.7,
+     "wall": "2026-11-26T05:13:46.658Z",
+     "text": "I’ll finish, then ask if she’s okay being inside with me and suggest I check that chest for clothes."
+    },
+    {
+     "n": 25,
+     "simTime": 271.6,
+     "wall": "2026-11-26T05:13:50.570Z",
+     "text": "I don’t remember anything either. I’m going to check that chest by the door for clothes or anything useful—want to wait here a sec?"
+    },
+    {
+     "n": 26,
+     "simTime": 284.8,
+     "wall": "2026-11-26T05:14:03.805Z",
+     "text": "Almost there—if it opens, I’ll see what’s inside."
+    },
+    {
+     "n": 27,
+     "simTime": 287.7,
+     "wall": "2026-11-26T05:14:06.672Z",
+     "text": "I’m going to open this chest—maybe there’s clothing or tools."
+    },
+    {
+     "n": 28,
+     "simTime": 292.5,
+     "wall": "2026-11-26T05:14:11.454Z",
+     "text": "Thanks—opening it now. Let’s see what’s inside."
+    },
+    {
+     "n": 29,
+     "simTime": 299.3,
+     "wall": "2026-11-26T05:14:18.255Z",
+     "text": "It’s full of gold—no clothes. I’m coming back inside so we can search properly for anything useful. I’ll keep some space unless you want me closer."
+    },
+    {
+     "n": 30,
+     "simTime": 303,
+     "wall": "2026-11-26T05:14:22.004Z",
+     "text": "Heading back in—let’s search the cabin together for anything to wear. I’ll check shelves and crates first."
+    },
+    {
+     "n": 31,
+     "simTime": 313.2,
+     "wall": "2026-11-26T05:14:32.186Z",
+     "text": "Let’s search inside together. I’ll check the table and fireplace for anything useful."
+    },
+    {
+     "n": 32,
+     "simTime": 323,
+     "wall": "2026-11-26T05:14:41.985Z",
+     "text": "I’ll check the table and fireplace. If you find anything, shout."
+    },
+    {
+     "n": 33,
+     "simTime": 329.9,
+     "wall": "2026-11-26T05:14:48.905Z",
+     "text": "I saw—gold, no clothes. I’m checking the table and lantern."
+    },
+    {
+     "n": 34,
+     "simTime": 334.8,
+     "wall": "2026-11-26T05:14:53.739Z",
+     "text": "I’m at the table—there’s a lantern here, half-full of oil. Grabbing it."
+    },
+    {
+     "n": 35,
+     "simTime": 344.5,
+     "wall": "2026-11-26T05:15:03.461Z",
+     "text": "I picked up a lantern. I’m by the table inside. I’m going to check the fireplace for matches or anything useful. Do you see anything out there—any clothes or tools?"
+    },
+    {
+     "n": 36,
+     "simTime": 352.9,
+     "wall": "2026-11-26T05:15:11.867Z",
+     "text": "Let me finish saying that, then I’ll search the fireplace for tinder or tools. After, I’ll set the journal and pencil on the table to free a hand."
+    },
+    {
+     "n": 37,
+     "simTime": 359.8,
+     "wall": "2026-11-26T05:15:18.786Z",
+     "text": "I’m inside—by the table. I’m going to check the fireplace for matches, then I’ll come to you."
+    },
+    {
+     "n": 38,
+     "simTime": 362.6,
+     "wall": "2026-11-26T05:15:21.608Z",
+     "text": "Setting my journal down, then I’ll check the fireplace."
+    },
+    {
+     "n": 39,
+     "simTime": 367.4,
+     "wall": "2026-11-26T05:15:26.408Z",
+     "text": "I’m inside by the table—checking the fireplace for matches, then I’ll come to the door."
+    },
+    {
+     "n": 40,
+     "simTime": 377.1,
+     "wall": "2026-11-26T05:15:36.148Z",
+     "text": "I’m by the fireplace—checking it now. It looks swept. I see an oar on the floor; I’ll grab it next. Any luck on your side?"
+    },
+    {
+     "n": 41,
+     "simTime": 382.9,
+     "wall": "2026-11-26T05:15:41.921Z",
+     "text": "Checking the fireplace—looks empty so far. After this I’ll grab the oar. You okay there?"
+    },
+    {
+     "n": 42,
+     "simTime": 390.7,
+     "wall": "2026-11-26T05:15:49.735Z",
+     "text": "Fireplace is empty. I’m going to grab the oar—glad you’re coming in."
+    },
+    {
+     "n": 43,
+     "simTime": 401.2,
+     "wall": "2026-11-26T05:16:00.215Z",
+     "text": "Oar right here—I’ll grab it, then set the lantern on the table so I’ve got hands free."
+    },
+    {
+     "n": 44,
+     "simTime": 404.2,
+     "wall": "2026-11-26T05:16:03.199Z",
+     "text": "I’ll set the lantern on the bed and grab the oar."
+    },
+    {
+     "n": 45,
+     "simTime": 408.5,
+     "wall": "2026-11-26T05:16:07.549Z",
+     "text": "I’m here—setting the lantern down so I can grab the oar. Fireplace looks empty. After that, we can check the boat or the mirror—any preference?"
+    },
+    {
+     "n": 46,
+     "simTime": 416.1,
+     "wall": "2026-11-26T05:16:15.121Z",
+     "text": "I’ll grab the oar so we have at least one tool in hand."
+    },
+    {
+     "n": 47,
+     "simTime": 418.8,
+     "wall": "2026-11-26T05:16:17.734Z",
+     "text": "Grabbing the oar—then maybe we check that mirror together."
+    },
+    {
+     "n": 48,
+     "simTime": 425.3,
+     "wall": "2026-11-26T05:16:24.284Z",
+     "text": "Fireplace’s empty. I found this lantern and the oar. Could you carry the oar? Then I’ll grab the lantern, and we can go look at that mirror together."
+    },
+    {
+     "n": 49,
+     "simTime": 436.4,
+     "wall": "2026-11-26T05:16:35.381Z",
+     "text": "Your hands are full—could you set the coins on the table so you can take the lantern? I’ll set the oar on the bed now, then grab the lantern and we can go look at the mirror."
+    },
+    {
+     "n": 50,
+     "simTime": 441.7,
+     "wall": "2026-11-26T05:16:40.663Z",
+     "text": "I’m setting the oar down. Do you want to set your coins and journal on the table so you can take the lantern? Or I can carry the lantern and we leave the coins here for now."
+    },
+    {
+     "n": 51,
+     "simTime": 445.7,
+     "wall": "2026-11-26T05:16:44.666Z",
+     "text": "I found the lantern and the oar; fireplace’s empty. If you set the coins on the table, you could take the oar. I’ll carry the lantern. Want to check the mirror together?"
+    },
+    {
+     "n": 52,
+     "simTime": 456.3,
+     "wall": "2026-11-26T05:16:55.345Z",
+     "text": "I’ve got the lantern. If you set your coins on the table, could you take the oar? Let’s go check that mirror together."
+    },
+    {
+     "n": 53,
+     "simTime": 459.9,
+     "wall": "2026-11-26T05:16:58.930Z",
+     "text": "The oar’s just a useful tool for now—and for the boat later. Let’s check the mirror first, then the boat. If you’re okay, set the coins and journal on the table to free your hands; I’ll carry the lantern."
+    },
+    {
+     "n": 54,
+     "simTime": 466.1,
+     "wall": "2026-11-26T05:17:05.104Z",
+     "text": "At the door with the lantern. I want to see the mirror next."
+    },
+    {
+     "n": 55,
+     "simTime": 469.9,
+     "wall": "2026-11-26T05:17:08.886Z",
+     "text": "I’ll finish saying that, then head to the mirror to the west with the lantern."
+    },
+    {
+     "n": 56,
+     "simTime": 482.2,
+     "wall": "2026-11-26T05:17:21.179Z",
+     "text": "No name. After this finishes, I’ll head to the mirror with the lantern. Let’s leave the coins here."
+    },
+    {
+     "n": 57,
+     "simTime": 485.6,
+     "wall": "2026-11-26T05:17:24.614Z",
+     "text": "No—no name. I’m going to the mirror now. Come with me? We can leave the coins here for later."
+    },
+    {
+     "n": 58,
+     "simTime": 489.1,
+     "wall": "2026-11-26T05:17:28.134Z",
+     "text": "No—I don’t have a name. Come on, let’s go look at the mirror."
+    },
+    {
+     "n": 59,
+     "simTime": 494.6,
+     "wall": "2026-11-26T05:17:33.553Z",
+     "text": "Thanks—meet me at the mirror. I’ve got the lantern."
+    },
+    {
+     "n": 60,
+     "simTime": 496.8,
+     "wall": "2026-11-26T05:17:35.863Z",
+     "text": "Heading west to the mirror with the lantern—meet you there."
+    },
+    {
+     "n": 61,
+     "simTime": 502.5,
+     "wall": "2026-11-26T05:17:41.513Z",
+     "text": "Almost there—heading to the mirror with the lantern."
+    },
+    {
+     "n": 62,
+     "simTime": 506.6,
+     "wall": "2026-11-26T05:17:45.594Z",
+     "text": "Almost to the mirror—still heading there with the lantern."
+    },
+    {
+     "n": 63,
+     "simTime": 522.2,
+     "wall": "2026-11-26T05:18:01.192Z",
+     "text": "Here at the mirror—looking at it."
+    },
+    {
+     "n": 64,
+     "simTime": 534,
+     "wall": "2026-11-26T05:18:12.989Z",
+     "text": "I’m going to set the lantern down and look closely at my reflection."
+    },
+    {
+     "n": 65,
+     "simTime": 542.5,
+     "wall": "2026-11-26T05:18:21.527Z",
+     "text": "Maybe my face will jog something. I’ll get right in front of the mirror and study myself closely."
+    },
+    {
+     "n": 66,
+     "simTime": 548.8,
+     "wall": "2026-11-26T05:18:27.782Z",
+     "text": "Maybe something on my skin will jog a memory. I’ll keep looking closely."
+    },
+    {
+     "n": 67,
+     "simTime": 568.3,
+     "wall": "2026-11-26T05:18:47.348Z",
+     "text": "I’m at the mirror—checking if there’s anything written on it or behind it."
+    },
+    {
+     "n": 68,
+     "simTime": 591.8,
+     "wall": "2026-11-26T05:19:10.793Z",
+     "text": "She’s right here now. The mirror felt normal; no markings behind it. I’ll talk to her, then maybe suggest boat or tower next."
+    },
+    {
+     "n": 69,
+     "simTime": 613.4,
+     "wall": "2026-11-26T05:19:32.360Z",
+     "text": "Our reflections look normal to me. If you’re up for it, I’d like to head to the tower for a better view of the island. We can come back for the boat after. I’ll grab the lantern—want to walk with me?"
+    },
+    {
+     "n": 70,
+     "simTime": 624.7,
+     "wall": "2026-11-26T05:19:43.627Z",
+     "text": "Let’s head to the tower for a look around. I’ve got the lantern—walk with me?"
+    },
+    {
+     "n": 71,
+     "simTime": 630.3,
+     "wall": "2026-11-26T05:19:49.276Z",
+     "text": "I saw myself before. That’s strange. I’m stepping back to the mirror now—tell me if what you see changes as I move."
+    },
+    {
+     "n": 72,
+     "simTime": 633.2,
+     "wall": "2026-11-26T05:19:52.196Z",
+     "text": "I’m coming back. Earlier I saw myself. While you’re looking, I’ll step in and out of view to see if it changes—can you describe the figure more?"
+    },
+    {
+     "n": 73,
+     "simTime": 642.1,
+     "wall": "2026-11-26T05:20:01.075Z",
+     "text": "Okay—stand centered and keep watching. I’ll set the lantern down, then move in and out of the mirror’s view and touch the glass. Tell me exactly what changes."
+    },
+    {
+     "n": 74,
+     "simTime": 652.3,
+     "wall": "2026-11-26T05:20:11.273Z",
+     "text": "I’m going to test it—watch and tell me exactly what you see as I move."
+    },
+    {
+     "n": 75,
+     "simTime": 654.8,
+     "wall": "2026-11-26T05:20:13.762Z",
+     "text": "Watching closely—tell me exactly what you see as I move."
+    },
+    {
+     "n": 76,
+     "simTime": 670.6,
+     "wall": "2026-11-26T05:20:29.670Z",
+     "text": "I’m looking now—tell me if the figure changes as I move."
+    },
+    {
+     "n": 77,
+     "simTime": 677.2,
+     "wall": "2026-11-26T05:20:36.256Z",
+     "text": "I’m going to look again now and tell you exactly what I see."
+    },
+    {
+     "n": 78,
+     "simTime": 700.3,
+     "wall": "2026-11-26T05:20:59.337Z",
+     "text": "I’m looking straight into it now. What I see might be different from you—what is the small figure doing? Does it copy my wave?"
+    },
+    {
+     "n": 79,
+     "simTime": 714.9,
+     "wall": "2026-11-26T05:21:13.871Z",
+     "text": "This mirror is weird, and I want to figure it out before moving on."
+    },
+    {
+     "n": 80,
+     "simTime": 738.6,
+     "wall": "2026-11-26T05:21:37.621Z",
+     "text": "I saw myself earlier. I’m coming with you now—bringing the lantern."
+    },
+    {
+     "n": 81,
+     "simTime": 744.7,
+     "wall": "2026-11-26T05:21:43.735Z",
+     "text": "I’m with you. Let’s go to the tower—lantern in hand. We can check the island from up high."
+    },
+    {
+     "n": 82,
+     "simTime": 747.2,
+     "wall": "2026-11-26T05:21:46.219Z",
+     "text": "I’m with you—let’s stick together to the tower. If you see anything odd, say so."
+    },
+    {
+     "n": 83,
+     "simTime": 771.1,
+     "wall": "2026-11-26T05:22:10.071Z",
+     "text": "Sticking with you. If the ladder looks solid, we’ll climb—lantern first if it’s dim up there."
+    },
+    {
+     "n": 84,
+     "simTime": 800.9,
+     "wall": "2026-11-26T05:22:39.898Z",
+     "text": "Still with you—let’s keep to the ladder. Once we’re there, we’ll check if it’s sturdy before climbing."
+    },
+    {
+     "n": 85,
+     "simTime": 830.6,
+     "wall": "2026-11-26T05:23:09.638Z",
+     "text": "Almost there. At the base I’ll test the rungs; if it feels solid I’ll climb. Are you okay with heights?"
+    },
+    {
+     "n": 86,
+     "simTime": 860.2,
+     "wall": "2026-11-26T05:23:39.199Z",
+     "text": "Almost there. When we reach the base, I’ll test the rungs. If they’re solid, I’ll climb first with the lantern."
+    },
+    {
+     "n": 87,
+     "simTime": 898.9,
+     "wall": "2026-11-26T05:24:17.929Z",
+     "text": "The rungs look solid. I’ll climb up first and see what’s on the platform. I’ll leave the lantern here for now—daylight’s fine. Follow if you’re comfortable."
+    },
+    {
+     "n": 88,
+     "simTime": 905.1,
+     "wall": "2026-11-26T05:24:24.130Z",
+     "text": "I’ll climb after you—keeping a few rungs below. Tell me if you see anything up there."
+    },
+    {
+     "n": 89,
+     "simTime": 937.5,
+     "wall": "2026-11-26T05:24:56.562Z",
+     "text": "Climbing just below you—take your time. I’ll keep a couple rungs back."
+    },
+    {
+     "n": 90,
+     "simTime": 967.1,
+     "wall": "2026-11-26T05:25:26.129Z",
+     "text": "Steady pace—three points of contact. I’m right behind you."
+    },
+    {
+     "n": 91,
+     "simTime": 998.5,
+     "wall": "2026-11-26T05:25:57.547Z",
+     "text": "Continuing up. When you reach the platform, pause on the first safe spot and tell me what you see."
+    },
+    {
+     "n": 92,
+     "simTime": 1032.6,
+     "wall": "2026-11-26T05:26:31.543Z",
+     "text": "Almost there—steady. When you reach the top, check if the platform’s clear before stepping off."
+    },
+    {
+     "n": 93,
+     "simTime": 1062.3,
+     "wall": "2026-11-26T05:27:01.324Z",
+     "text": "Almost there. When you reach the platform, check the floor before stepping off and tell me what you see."
+    },
+    {
+     "n": 94,
+     "simTime": 1101.6,
+     "wall": "2026-11-26T05:27:40.558Z",
+     "text": "Steady climb. I’ll step onto the platform only after she confirms it looks safe."
+    },
+    {
+     "n": 95,
+     "simTime": 1131.7,
+     "wall": "2026-11-26T05:28:10.704Z",
+     "text": "I see a small table up there—lighter, a sword in a scabbard, and a snorkel with mask. Almost up."
+    },
+    {
+     "n": 96,
+     "simTime": 1149,
+     "wall": "2026-11-26T05:28:28.003Z",
+     "text": "View’s great. That bell and the stone circle catch my eye. I’m going to test the lighter—do you want the sword or the snorkel?"
+    },
+    {
+     "n": 97,
+     "simTime": 1168.4,
+     "wall": "2026-11-26T05:28:47.419Z",
+     "text": "I’ll sling the sword; you take the snorkel? After a quick look from up here, I’d like to check the bell, then the stone circle. Also, I’ve got a lighter now."
+    },
+    {
+     "n": 98,
+     "simTime": 1177.6,
+     "wall": "2026-11-26T05:28:56.584Z",
+     "text": "From up here I see the bell and a stone circle near the cliffs. I’d like to go ring the bell next. Could you grab the snorkel? I’ll free a hand by slinging the sword."
+    },
+    {
+     "n": 99,
+     "simTime": 1192.4,
+     "wall": "2026-11-26T05:29:11.418Z",
+     "text": "I hear you. I’m going to test the lighter now. After that, want to head to the bell together? We can grab the lantern on the way down."
+    },
+    {
+     "n": 100,
+     "simTime": 1200,
+     "wall": "2026-11-26T05:29:18.986Z",
+     "text": "The lighter works. I’ll grab the lantern and head to the bell with her."
+    },
+    {
+     "n": 101,
+     "simTime": 1207.1,
+     "wall": "2026-11-26T05:29:26.069Z",
+     "text": "She can’t hear me reliably. I’ll make it obvious and head down for the lantern."
+    },
+    {
+     "n": 102,
+     "simTime": 1222.1,
+     "wall": "2026-11-26T05:29:41.035Z",
+     "text": "Heading down for the lantern, then to the bell."
+    },
+    {
+     "n": 103,
+     "simTime": 1238.6,
+     "wall": "2026-11-26T05:29:57.564Z",
+     "text": "I see you—stone circle noted."
+    },
+    {
+     "n": 104,
+     "simTime": 1240.7,
+     "wall": "2026-11-26T05:29:59.715Z",
+     "text": "Noted the stone circle; continuing down carefully."
+    },
+    {
+     "n": 105,
+     "simTime": 1252.6,
+     "wall": "2026-11-26T05:30:11.647Z",
+     "text": "Climbing down carefully. Then bell."
+    },
+    {
+     "n": 106,
+     "simTime": 1255,
+     "wall": "2026-11-26T05:30:14.048Z",
+     "text": "Continuing down. Lantern, then bell."
+    },
+    {
+     "n": 107,
+     "simTime": 1286.5,
+     "wall": "2026-11-26T05:30:45.512Z",
+     "text": "Still descending. Once we’re down, let’s head to the bell together."
+    },
+    {
+     "n": 108,
+     "simTime": 1316.2,
+     "wall": "2026-11-26T05:31:15.235Z",
+     "text": "Keep descending. Once down, grab the lantern and head for the bell together."
+    },
+    {
+     "n": 109,
+     "simTime": 1345.9,
+     "wall": "2026-11-26T05:31:44.912Z",
+     "text": "Climbing down—then lantern, then bell."
+    },
+    {
+     "n": 110,
+     "simTime": 1384,
+     "wall": "2026-11-26T05:32:22.943Z",
+     "text": "Still climbing down. Then let’s head to the bell together."
+    },
+    {
+     "n": 111,
+     "simTime": 1413.3,
+     "wall": "2026-11-26T05:32:52.307Z",
+     "text": "Almost down. Grab lantern, then bell."
+    },
+    {
+     "n": 112,
+     "simTime": 1454.7,
+     "wall": "2026-11-26T05:33:33.643Z",
+     "text": "Finishing the climb down. I’ll grab the lantern and head toward the bell—come with me."
+    },
+    {
+     "n": 113,
+     "simTime": 1457.7,
+     "wall": "2026-11-26T05:33:36.709Z",
+     "text": "Almost down. I’ll grab the lantern, then go to the bell. I’ll wave you over once I have it."
+    },
+    {
+     "n": 114,
+     "simTime": 1472.1,
+     "wall": "2026-11-26T05:33:51.120Z",
+     "text": "Lantern first, then I’ll head to the stone circle and look for the bell from there."
+    },
+    {
+     "n": 115,
+     "simTime": 1483.3,
+     "wall": "2026-11-26T05:34:02.306Z",
+     "text": "Heading to the stone circle to meet her."
+    },
+    {
+     "n": 116,
+     "simTime": 1487,
+     "wall": "2026-11-26T05:34:05.924Z",
+     "text": "I’ll head straight to the stone circle after this shout carries."
+    },
+    {
+     "n": 117,
+     "simTime": 1494,
+     "wall": "2026-11-26T05:34:12.959Z",
+     "text": "Heading to the stone circle now."
+    },
+    {
+     "n": 118,
+     "simTime": 1501.9,
+     "wall": "2026-11-26T05:34:20.826Z",
+     "text": "On my way to the stone circle."
+    },
+    {
+     "n": 119,
+     "simTime": 1503.6,
+     "wall": "2026-11-26T05:34:22.606Z",
+     "text": "Continuing to the stone circle; I’ll meet her there."
+    },
+    {
+     "n": 120,
+     "simTime": 1512,
+     "wall": "2026-11-26T05:34:30.988Z",
+     "text": "On my way. When I arrive, I’ll walk the ring clockwise checking the joints, then step into the center."
+    },
+    {
+     "n": 121,
+     "simTime": 1527.5,
+     "wall": "2026-11-26T05:34:46.528Z",
+     "text": "I’m almost there. I’ll circle the stones clockwise to inspect them, then step into the center."
+    },
+    {
+     "n": 122,
+     "simTime": 1536.9,
+     "wall": "2026-11-26T05:34:55.888Z",
+     "text": "I’m here. You watch from out there—I’ll step into the center and see if anything changes. After that, let’s go ring the bell."
+    },
+    {
+     "n": 123,
+     "simTime": 1542.4,
+     "wall": "2026-11-26T05:35:01.404Z",
+     "text": "I’ll step into the center and stand still a moment, then walk the ring clockwise to check each joint. After that, the bell."
+    },
+    {
+     "n": 124,
+     "simTime": 1547.3,
+     "wall": "2026-11-26T05:35:06.249Z",
+     "text": "I’m stepping into the center. Watch and tell me if you notice anything change. After this, we can go ring the bell."
+    },
+    {
+     "n": 125,
+     "simTime": 1560.3,
+     "wall": "2026-11-26T05:35:19.247Z",
+     "text": "I didn’t see or feel anything unusual so far. Let me finish this turn, then yes—let’s go ring the bell together."
+    },
+    {
+     "n": 126,
+     "simTime": 1566.4,
+     "wall": "2026-11-26T05:35:25.389Z",
+     "text": "Almost done here. Then let’s go ring the bell together."
+    },
+    {
+     "n": 127,
+     "simTime": 1570.1,
+     "wall": "2026-11-26T05:35:29.109Z",
+     "text": "Nothing here. Let’s go ring the bell together."
+    },
+    {
+     "n": 128,
+     "simTime": 1603.6,
+     "wall": "2026-11-26T05:36:02.540Z",
+     "text": "Almost there. I’ll grab the rope and ring it once we arrive."
+    },
+    {
+     "n": 129,
+     "simTime": 1610.2,
+     "wall": "2026-11-26T05:36:09.127Z",
+     "text": "I’m going to ring it. Cover your ears."
+    },
+    {
+     "n": 130,
+     "simTime": 1617.4,
+     "wall": "2026-11-26T05:36:16.429Z",
+     "text": "Setting the lantern down, then I’ll ring it."
+    },
+    {
+     "n": 131,
+     "simTime": 1624.8,
+     "wall": "2026-11-26T05:36:23.755Z",
+     "text": "I’ll give it one good ring, then we’ll listen."
+    },
+    {
+     "n": 132,
+     "simTime": 1627,
+     "wall": "2026-11-26T05:36:26.028Z",
+     "text": "Let it ring. Then we’ll listen."
+    },
+    {
+     "n": 133,
+     "simTime": 1635.1,
+     "wall": "2026-11-26T05:36:34.082Z",
+     "text": "Let’s listen a bit for any reply or change."
+    },
+    {
+     "n": 134,
+     "simTime": 1637,
+     "wall": "2026-11-26T05:36:36.002Z",
+     "text": "Listening for any echo or reply. Let’s stay quiet."
+    },
+    {
+     "n": 135,
+     "simTime": 1656.9,
+     "wall": "2026-11-26T05:36:55.857Z",
+     "text": "Quiet—listening."
+    },
+    {
+     "n": 136,
+     "simTime": 1679.4,
+     "wall": "2026-11-26T05:37:18.349Z",
+     "text": "No reply to the bell. I want to check the cliff edge for boats or paths, then head to the beach and the boat. I’ll grab the lantern. Come with me?"
+    },
+    {
+     "n": 137,
+     "simTime": 1682.4,
+     "wall": "2026-11-26T05:37:21.398Z",
+     "text": "Let’s check the cliff edge for any boats or paths, then head to the beach and the boat."
+    },
+    {
+     "n": 138,
+     "simTime": 1689,
+     "wall": "2026-11-26T05:37:28.003Z",
+     "text": "Let’s check the cliff edge for any path or boats, then head for the beach and boat."
+    },
+    {
+     "n": 139,
+     "simTime": 1691.4,
+     "wall": "2026-11-26T05:37:30.403Z",
+     "text": "Let’s see what’s below these cliffs, then head for the beach and boat."
+    },
+    {
+     "n": 140,
+     "simTime": 1708.8,
+     "wall": "2026-11-26T05:37:47.789Z",
+     "text": "I’m going to look over the edge for any path or boats, then head for the beach."
+    },
+    {
+     "n": 141,
+     "simTime": 1720.1,
+     "wall": "2026-11-26T05:37:59.119Z",
+     "text": "No way down here. Let’s follow the cliff south to find a path to the beach and the boat—come with me."
+    },
+    {
+     "n": 142,
+     "simTime": 1737.7,
+     "wall": "2026-11-26T05:38:16.686Z",
+     "text": "Sticking near the edge but safe. Watching for any path down to the beach."
+    },
+    {
+     "n": 143,
+     "simTime": 1758.9,
+     "wall": "2026-11-26T05:38:37.933Z",
+     "text": "Continuing south along the cliff to find a safe way down to the beach and boat."
+    },
+    {
+     "n": 144,
+     "simTime": 1768.5,
+     "wall": "2026-11-26T05:38:47.481Z",
+     "text": "I’m heading to the beach and the boat—meet me there."
+    },
+    {
+     "n": 145,
+     "simTime": 1771.6,
+     "wall": "2026-11-26T05:38:50.587Z",
+     "text": "I’m going to run to the beach to reach the boat before time runs out—come if you want."
+    }
+   ],
+   "action": null,
+   "history": [
+    {
+     "id": 2,
+     "type": "look",
+     "params": {
+      "type": "look"
+     },
+     "label": "Looking around",
+     "status": "completed",
+     "startSim": 7.797,
+     "endSim": 11.797,
+     "durationSec": 4,
+     "result": {
+      "message": "You look around. You can see 4 things nearby.",
+      "observation": {
+       "observationOf": "agent",
+       "simTimeSec": 11.8,
+       "run": {
+        "active": true,
+        "ended": false,
+        "elapsedSec": 11.7,
+        "remainingSec": 1788.3
+       },
+       "self": {
+        "position": {
+         "x": 522,
+         "y": 182,
+         "unit": "ft",
+         "axes": "x east, y south, origin at NW corner of map"
+        },
+        "groundElevationFt": 60,
+        "heightAboveGroundFt": 0,
+        "level": "ground",
+        "pose": "standing",
+        "condition": "unhurt",
+        "indoors": false,
+        "underfoot": "rocky ground",
+        "carrying": [
+         {
+          "id": "journal_2",
+          "name": "journal",
+          "in": "hand"
+         },
+         {
+          "id": "pencil_2",
+          "name": "pencil",
+          "in": "hand"
+         }
+        ],
+        "clothing": "nothing; you are naked",
+        "wearing": [],
+        "handsFree": 1
+       },
+       "currentAction": {
+        "id": 2,
+        "type": "look",
+        "label": "Looking around",
+        "progress": 1,
+        "elapsedSec": 4,
+        "estimatedTotalSec": 4
+       },
+       "lastActionResult": null,
+       "visibleObjects": [
+        {
+         "id": "cabin",
+         "name": "cabin",
+         "distanceFt": 344,
+         "bearing": "SW",
+         "bearingDeg": 228,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A small log cabin with a single door on its south side.",
+         "reachable": false
+        },
+        {
+         "id": "stone_circle",
+         "name": "stone circle",
+         "distanceFt": 366,
+         "bearing": "SE",
+         "bearingDeg": 131,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A low ring of fitted stones, about 14 ft across, near the eastern cliffs. The middle is just grass.",
+         "reachable": false
+        },
+        {
+         "id": "platform",
+         "name": "platform",
+         "distanceFt": 399,
+         "location": "at the top of the ladder",
+         "type": "fixture",
+         "description": "A platform at the top of the ladder. From here you cannot make out what is on it.",
+         "reachable": false
+        },
+        {
+         "id": "ladder",
+         "name": "tall metal ladder",
+         "distanceFt": 404,
+         "bearing": "SE",
+         "bearingDeg": 155,
+         "location": "fixed in place",
+         "type": "fixture",
+         "description": "A tall steel ladder running up the middle of a four-legged steel tower anchored in a large concrete foundation, rising about 100 ft to a railed platform.",
+         "reachable": false
+        }
+       ],
+       "terrainFeatures": [
+        {
+         "id": "pond",
+         "distanceFt": 208,
+         "bearing": "S"
+        },
+        {
+         "id": "stream",
+         "distanceFt": 86,
+         "bearing": "SW"
+        },
+        {
+         "id": "hill",
+         "distanceFt": 12,
+         "bearing": "N"
+        },
+        {
+         "id": "ocean",
+         "distanceFt": 94,
+         "bearing": "N"
+        },
+        {
+         "id": "beach",
+         "distanceFt": 456,
+         "bearing": "SW"
+        },
+        {
+         "id": "forest",
+         "distanceFt": 59,
+         "bearing": "NW"
+        },
+        {
+         "id": "cliffs",
+         "distanceFt": 251,
+         "bearing": "E"
+        }
+       ],
+       "soundsHeard": [],
+       "notes": [
+        "There is a platform at the top of the ladder. You cannot see what, if anything, is on it from here."
+       ],
+       "happenedToYou": []
+      }
+     }
+    },
+    {
+     "id": 3,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "stream"
+     },
+     "label": "Walking to the stream",
+     "status": "completed",
+     "startSim": 17.143,
+     "endSim": 57.288,
+     "durationSec": 40.14,
+     "result": {
+      "message": "Arrived at the stream (473, 248) after 86 ft in 00:40 (avg 2.14 ft/s)."
+     }
+    },
+    {
+     "id": 6,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "stream"
+     },
+     "label": "Inspecting stream",
+     "status": "completed",
+     "startSim": 61.493,
+     "endSim": 67.493,
+     "durationSec": 6,
+     "result": {
+      "message": "A clear, rocky stream about 10 ft wide with small cascades. You could wade across, slowly."
+     }
+    },
+    {
+     "id": 7,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Kneel at the stream, cup water in my hands, sip a little, then splash my face and neck."
+     },
+     "label": "Doing: Kneel at the stream, cup water in my hands, sip a little,…",
+     "status": "completed",
+     "startSim": 70.893,
+     "endSim": 77.193,
+     "durationSec": 6.3,
+     "result": {
+      "message": "You do it: \"Kneel at the stream, cup water in my hands, sip a little, then splash my face and neck.\""
+     }
+    },
+    {
+     "id": 8,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin"
+     },
+     "label": "Walking to the cabin door (outside)",
+     "status": "interrupted",
+     "startSim": 80.793,
+     "endSim": 88.343,
+     "durationSec": 7.55,
+     "result": {
+      "message": "Stopped walking at (456, 254) after 23 ft in 00:08 (avg 3.03 ft/s).",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.079
+     }
+    },
+    {
+     "id": 9,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "forest",
+      "interruptCurrent": true
+     },
+     "label": "Walking to the forest",
+     "status": "completed",
+     "startSim": 88.343,
+     "endSim": 92.327,
+     "durationSec": 3.98,
+     "result": {
+      "message": "Arrived at the forest (448, 258) after 10 ft in 00:04 (avg 2.61 ft/s)."
+     }
+    },
+    {
+     "id": 12,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Break off a large leafy branch from the nearest shrub or sapling and hold it in front of me to cover myself."
+     },
+     "label": "Doing: Break off a large leafy branch from the nearest shrub or …",
+     "status": "completed",
+     "startSim": 102.343,
+     "endSim": 110.043,
+     "durationSec": 7.7,
+     "result": {
+      "message": "You do it: \"Break off a large leafy branch from the nearest shrub or sapling and hold it in front of me to cover myself.\""
+     }
+    },
+    {
+     "id": 13,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Hello! I’m here by the trees. I’m not wearing clothes. If you can hear me, please don’t come closer yet—do you have anything I could wear?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 115.643,
+     "endSim": 126.043,
+     "durationSec": 10.4,
+     "result": {
+      "message": "You say out loud: \"Hello! I’m here by the trees. I’m not wearing clothes. If you can hear me, please don’t come closer yet—do you have anything I could wear?\""
+     }
+    },
+    {
+     "id": 16,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_door"
+     },
+     "label": "Walking to the cabin door",
+     "status": "completed",
+     "startSim": 131.993,
+     "endSim": 198.196,
+     "durationSec": 66.2,
+     "result": {
+      "message": "Arrived at the cabin door (273, 428) after 254 ft in 01:06 (avg 3.84 ft/s)."
+     }
+    },
+    {
+     "id": 24,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "bed"
+     },
+     "label": "Walking to the narrow bed",
+     "status": "completed",
+     "startSim": 203.551,
+     "endSim": 210.036,
+     "durationSec": 6.49,
+     "result": {
+      "message": "Arrived at the narrow bed (258, 418) after 25 ft in 00:06 (avg 3.85 ft/s)."
+     }
+    },
+    {
+     "id": 25,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "bed"
+     },
+     "label": "Inspecting narrow bed",
+     "status": "completed",
+     "startSim": 215.702,
+     "endSim": 221.702,
+     "durationSec": 6,
+     "result": {
+      "message": "A narrow wooden bed with a straw mattress and a wool blanket, neatly made. It is empty."
+     }
+    },
+    {
+     "id": 27,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Pull the wool blanket off the bed and wrap it securely around my waist and hips like a makeshift skirt, holding it tucked in so it stays put."
+     },
+     "label": "Doing: Pull the wool blanket off the bed and wrap it securely ar…",
+     "status": "completed",
+     "startSim": 225.606,
+     "endSim": 235.406,
+     "durationSec": 9.8,
+     "result": {
+      "message": "You do it: \"Pull the wool blanket off the bed and wrap it securely around my waist and hips like a makeshift skirt, holding it tucked in so it stays put.\""
+     }
+    },
+    {
+     "id": 29,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I hear you. I woke up with no memory too. I don’t know what’s going on. I’m inside the cabin now with a blanket around my waist. Are you okay? If you’re comfortable, you can come in, or I can check the chest by the door for clothes for us. I won’t come closer unless you say it’s okay."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 241.15,
+     "endSim": 264.75,
+     "durationSec": 23.6,
+     "result": {
+      "message": "You say out loud: \"I hear you. I woke up with no memory too. I don’t know what’s going on. I’m inside the cabin now with a blanket around my waist. Are you okay? If you’re comfortable, you can come in, or I can check the chest by the door for clothes for us. I won’t come closer unless you say it’s okay.\""
+     }
+    },
+    {
+     "id": 33,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "chest"
+     },
+     "label": "Walking to the wooden chest",
+     "status": "completed",
+     "startSim": 271.598,
+     "endSim": 284.832,
+     "durationSec": 13.23,
+     "result": {
+      "message": "Arrived at the wooden chest (298, 433) after 52 ft in 00:13 (avg 3.93 ft/s)."
+     }
+    },
+    {
+     "id": 34,
+     "type": "open",
+     "params": {
+      "type": "open",
+      "target": "chest"
+     },
+     "label": "Opening the wooden chest",
+     "status": "completed",
+     "startSim": 287.703,
+     "endSim": 290.703,
+     "durationSec": 3,
+     "result": {
+      "message": "You open the wooden chest. Inside: gold coins (about 4000)."
+     }
+    },
+    {
+     "id": 36,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_door"
+     },
+     "label": "Walking to the cabin door",
+     "status": "completed",
+     "startSim": 299.253,
+     "endSim": 306.305,
+     "durationSec": 7.05,
+     "result": {
+      "message": "Arrived at the cabin door (273, 428) after 27 ft in 00:07 (avg 3.84 ft/s)."
+     }
+    },
+    {
+     "id": 38,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Let’s search inside together. I’ll check the table and fireplace for anything useful. Maybe you can look around the bed or corners for clothes or tools?"
+     },
+     "label": "Speaking",
+     "status": "interrupted",
+     "startSim": 313.202,
+     "endSim": 323.013,
+     "durationSec": 9.81,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.943
+     }
+    },
+    {
+     "id": 40,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_table",
+      "interruptCurrent": true
+     },
+     "label": "Walking to the cabin table",
+     "status": "completed",
+     "startSim": 323.013,
+     "endSim": 331.935,
+     "durationSec": 8.92,
+     "result": {
+      "message": "Arrived at the cabin table (253, 408) after 34 ft in 00:09 (avg 3.83 ft/s)."
+     }
+    },
+    {
+     "id": 41,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "lantern",
+      "interruptCurrent": true
+     },
+     "label": "Picking up the oil lantern",
+     "status": "completed",
+     "startSim": 334.751,
+     "endSim": 337.751,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oil lantern."
+     }
+    },
+    {
+     "id": 43,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I picked up a lantern. I’m by the table inside. I’m going to check the fireplace for matches or anything useful. Do you see anything out there—any clothes or tools?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 344.477,
+     "endSim": 356.477,
+     "durationSec": 12,
+     "result": {
+      "message": "You say out loud: \"I picked up a lantern. I’m by the table inside. I’m going to check the fireplace for matches or anything useful. Do you see anything out there—any clothes or tools?\""
+     }
+    },
+    {
+     "id": 46,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "journal_2",
+      "onto": "cabin_table"
+     },
+     "label": "Putting down the journal on the cabin table",
+     "status": "completed",
+     "startSim": 359.798,
+     "endSim": 362.798,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the journal on the cabin table."
+     }
+    },
+    {
+     "id": 48,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "fireplace"
+     },
+     "label": "Walking to the stone fireplace",
+     "status": "completed",
+     "startSim": 367.423,
+     "endSim": 372.995,
+     "durationSec": 5.57,
+     "result": {
+      "message": "Arrived at the stone fireplace (273, 403) after 22 ft in 00:06 (avg 3.96 ft/s)."
+     }
+    },
+    {
+     "id": 49,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "fireplace"
+     },
+     "label": "Inspecting stone fireplace",
+     "status": "completed",
+     "startSim": 377.148,
+     "endSim": 383.148,
+     "durationSec": 6,
+     "result": {
+      "message": "A small stone fireplace with a chimney. The hearth is swept and empty. It is empty."
+     }
+    },
+    {
+     "id": 51,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "oar",
+      "interruptCurrent": true
+     },
+     "label": "Walking to the oar",
+     "status": "completed",
+     "startSim": 390.745,
+     "endSim": 396.065,
+     "durationSec": 5.32,
+     "result": {
+      "message": "Arrived at the oar (258, 418) after 21 ft in 00:05 (avg 3.99 ft/s)."
+     }
+    },
+    {
+     "id": 53,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "lantern",
+      "onto": "bed"
+     },
+     "label": "Putting down the oil lantern on the narrow bed",
+     "status": "completed",
+     "startSim": 404.199,
+     "endSim": 407.199,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the oil lantern on the narrow bed."
+     }
+    },
+    {
+     "id": 56,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "oar"
+     },
+     "label": "Picking up the oar",
+     "status": "completed",
+     "startSim": 416.143,
+     "endSim": 419.143,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oar."
+     }
+    },
+    {
+     "id": 57,
+     "type": "give",
+     "params": {
+      "type": "give",
+      "target": "oar",
+      "at": "person"
+     },
+     "label": "Holding out the oar",
+     "status": "failed",
+     "startSim": 425.293,
+     "endSim": 427.293,
+     "durationSec": 2,
+     "result": {
+      "message": "She has no free hands to take it."
+     }
+    },
+    {
+     "id": 58,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "oar",
+      "onto": "bed"
+     },
+     "label": "Putting down the oar on the narrow bed",
+     "status": "completed",
+     "startSim": 436.393,
+     "endSim": 439.393,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the oar on the narrow bed."
+     }
+    },
+    {
+     "id": 60,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "lantern"
+     },
+     "label": "Picking up the oil lantern",
+     "status": "completed",
+     "startSim": 445.694,
+     "endSim": 448.694,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oil lantern."
+     }
+    },
+    {
+     "id": 61,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cabin_door"
+     },
+     "label": "Walking to the cabin door",
+     "status": "completed",
+     "startSim": 456.348,
+     "endSim": 458.88,
+     "durationSec": 2.53,
+     "result": {
+      "message": "Arrived at the cabin door (268, 418) after 10 ft in 00:03 (avg 3.95 ft/s)."
+     }
+    },
+    {
+     "id": 64,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Let’s leave the coins and journals on the table and bring just the lantern. I’m heading to the mirror—come with me?"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 466.093,
+     "endSim": 474.493,
+     "durationSec": 8.4,
+     "result": {
+      "message": "You say out loud: \"Let’s leave the coins and journals on the table and bring just the lantern. I’m heading to the mirror—come with me?\""
+     }
+    },
+    {
+     "id": 67,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "mirror"
+     },
+     "label": "Walking to the standing mirror",
+     "status": "completed",
+     "startSim": 485.644,
+     "endSim": 519.229,
+     "durationSec": 33.59,
+     "result": {
+      "message": "Arrived at the standing mirror (163, 453) after 125 ft in 00:34 (avg 3.73 ft/s)."
+     }
+    },
+    {
+     "id": 73,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "mirror"
+     },
+     "label": "Inspecting standing mirror",
+     "status": "completed",
+     "startSim": 522.193,
+     "endSim": 528.193,
+     "durationSec": 6,
+     "result": {
+      "message": "A round mirror in a wooden frame, standing against a tree. The glass is clean."
+     }
+    },
+    {
+     "id": 75,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "lantern"
+     },
+     "label": "Putting down the oil lantern",
+     "status": "completed",
+     "startSim": 534.019,
+     "endSim": 537.019,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the oil lantern on the ground (forest floor (rough))."
+     }
+    },
+    {
+     "id": 77,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Step close to the mirror, square up in front of it, and carefully study my reflection: face, eyes, hair, build, any scars, moles, tan lines, or tattoos. Open my mouth to check teeth, turn side to side, and look at my hands and nails for calluses or ink stains."
+     },
+     "label": "Doing: Step close to the mirror, square up in front of it, and c…",
+     "status": "completed",
+     "startSim": 542.543,
+     "endSim": 559.693,
+     "durationSec": 17.15,
+     "result": {
+      "message": "You do it: \"Step close to the mirror, square up in front of it, and carefully study my reflection: face, eyes, hair, build, any scars, moles, tan lines, or tattoos. Open my mouth to check teeth, turn side to side, and look at my hands and nails for calluses or ink stains.\""
+     }
+    },
+    {
+     "id": 78,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Touch the glass with fingertips to feel temperature and check for any give, watch my reflection for any lag as I move my hand, then gently lift and angle the mirror away from the tree to look along the edges and behind the frame for markings, hinges, or hidden compartments."
+     },
+     "label": "Doing: Touch the glass with fingertips to feel temperature and c…",
+     "status": "completed",
+     "startSim": 568.343,
+     "endSim": 585.843,
+     "durationSec": 17.5,
+     "result": {
+      "message": "You do it: \"Touch the glass with fingertips to feel temperature and check for any give, watch my reflection for any lag as I move my hand, then gently lift and angle the mirror away from the tree to look along the edges and behind the frame for markings, hinges, or hidden compartments.\""
+     }
+    },
+    {
+     "id": 81,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Hey—you made it. I don’t remember a name either. The mirror seems ordinary—no markings behind it. Do you see anything strange in our reflections? After this, want to check the boat or the tower? I’ll grab the lantern if we go."
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 591.801,
+     "endSim": 608.201,
+     "durationSec": 16.4,
+     "result": {
+      "message": "You say out loud: \"Hey—you made it. I don’t remember a name either. The mirror seems ordinary—no markings behind it. Do you see anything strange in our reflections? After this, want to check the boat or the tower? I’ll grab the lantern if we go.\""
+     }
+    },
+    {
+     "id": 84,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "lantern"
+     },
+     "label": "Picking up the oil lantern",
+     "status": "completed",
+     "startSim": 613.357,
+     "endSim": 616.357,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oil lantern."
+     }
+    },
+    {
+     "id": 85,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "ladder"
+     },
+     "label": "Walking to the tall metal ladder",
+     "status": "interrupted",
+     "startSim": 624.655,
+     "endSim": 630.308,
+     "durationSec": 5.65,
+     "result": {
+      "message": "Stopped walking at (178, 458) after 18 ft in 00:06 (avg 3.25 ft/s).",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.033
+     }
+    },
+    {
+     "id": 87,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "mirror",
+      "interruptCurrent": true
+     },
+     "label": "Walking to the standing mirror",
+     "status": "completed",
+     "startSim": 630.308,
+     "endSim": 636.676,
+     "durationSec": 6.37,
+     "result": {
+      "message": "Arrived at the standing mirror (163, 453) after 18 ft in 00:06 (avg 2.89 ft/s)."
+     }
+    },
+    {
+     "id": 88,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "lantern"
+     },
+     "label": "Putting down the oil lantern",
+     "status": "completed",
+     "startSim": 642.093,
+     "endSim": 645.093,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the oil lantern on the ground (forest floor (rough))."
+     }
+    },
+    {
+     "id": 89,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Stand centered directly in front of the mirror and look into it, raising my right hand to wave and touch the glass. Then step quickly to the left out of the mirror’s view, wait a beat, and lean back into view again, watching closely for what I see while she watches what changes."
+     },
+     "label": "Doing: Stand centered directly in front of the mirror and look i…",
+     "status": "completed",
+     "startSim": 652.3,
+     "endSim": 670.85,
+     "durationSec": 18.55,
+     "result": {
+      "message": "You do it: \"Stand centered directly in front of the mirror and look into it, raising my right hand to wave and touch the glass. Then step quickly to the left out of the mirror’s view, wait a beat, and lean back into view again, watching closely for what I see while she watches what changes.\""
+     }
+    },
+    {
+     "id": 92,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Stand squarely in front of the mirror and stare into it, focusing on what’s shown. Note whether I see myself or a small figure (clothes, background, movement). Raise my right hand to wave, then my left, lean closer, and touch the glass, watching for any response or lag. Shift a step left, then right, to see if the image tracks me."
+     },
+     "label": "Doing: Stand squarely in front of the mirror and stare into it, …",
+     "status": "completed",
+     "startSim": 677.249,
+     "endSim": 697.249,
+     "durationSec": 20,
+     "result": {
+      "message": "You do it: \"Stand squarely in front of the mirror and stare into it, focusing on what’s shown. Note whether I see myself or a small figure (clothes, background, movement). Raise my right hand to wave, then my left, lean closer, and touch the glass, watching for any response or lag. Shift a step left, then right, to see if the image tracks me.\""
+     }
+    },
+    {
+     "id": 95,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "mirror"
+     },
+     "label": "Inspecting standing mirror",
+     "status": "completed",
+     "startSim": 700.348,
+     "endSim": 706.348,
+     "durationSec": 6,
+     "result": {
+      "message": "A round mirror in a wooden frame, standing against a tree. The glass is clean."
+     }
+    },
+    {
+     "id": 96,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Right now, what do you see? When the small figure appears, does it copy our movements or do its own thing? Let’s test: you stand centered and narrate what you see while I look over your shoulder. Then we’ll swap—I'll stand centered while you step to the side. After that, we’ll rotate the mirror a little toward the ocean, then toward the forest, and see if the image changes."
+     },
+     "label": "Speaking",
+     "status": "interrupted",
+     "startSim": 714.901,
+     "endSim": 738.652,
+     "durationSec": 23.75,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.861
+     }
+    },
+    {
+     "id": 98,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "lantern",
+      "interruptCurrent": true
+     },
+     "label": "Picking up the oil lantern",
+     "status": "completed",
+     "startSim": 738.652,
+     "endSim": 741.652,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oil lantern."
+     }
+    },
+    {
+     "id": 99,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "ladder"
+     },
+     "label": "Walking to the tall metal ladder",
+     "status": "completed",
+     "startSim": 744.747,
+     "endSim": 890.336,
+     "durationSec": 145.59,
+     "result": {
+      "message": "Arrived at the tall metal ladder (688, 548) after 564 ft in 02:26 (avg 3.88 ft/s)."
+     }
+    },
+    {
+     "id": 101,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "lantern"
+     },
+     "label": "Putting down the oil lantern",
+     "status": "completed",
+     "startSim": 898.944,
+     "endSim": 901.944,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the oil lantern on the ground (grass)."
+     }
+    },
+    {
+     "id": 103,
+     "type": "climb",
+     "params": {
+      "type": "climb"
+     },
+     "label": "Climbing the ladder",
+     "status": "completed",
+     "startSim": 905.143,
+     "endSim": 1145.143,
+     "durationSec": 240,
+     "result": {
+      "message": "You reach the platform at the top of the ladder, 100 ft up."
+     }
+    },
+    {
+     "id": 105,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "lighter"
+     },
+     "label": "Picking up the lighter",
+     "status": "completed",
+     "startSim": 1148.998,
+     "endSim": 1151.998,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the lighter."
+     }
+    },
+    {
+     "id": 107,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "sword"
+     },
+     "label": "Picking up the sword",
+     "status": "completed",
+     "startSim": 1168.447,
+     "endSim": 1171.447,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the sword."
+     }
+    },
+    {
+     "id": 108,
+     "type": "wear",
+     "params": {
+      "type": "wear",
+      "target": "sword"
+     },
+     "label": "Putting on the sword",
+     "status": "completed",
+     "startSim": 1177.597,
+     "endSim": 1183.597,
+     "durationSec": 6,
+     "result": {
+      "message": "You put on the sword."
+     }
+    },
+    {
+     "id": 111,
+     "type": "use",
+     "params": {
+      "type": "use",
+      "target": "lighter"
+     },
+     "label": "Flicking the lighter",
+     "status": "completed",
+     "startSim": 1192.449,
+     "endSim": 1195.449,
+     "durationSec": 3,
+     "result": {
+      "message": "A small flame appears, then you let it go out."
+     }
+    },
+    {
+     "id": 112,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "I hear you. The lighter works. Let’s go ring the bell together. I’ll climb down to grab the lantern, then head to the bell. Can you bring the snorkel?"
+     },
+     "label": "Speaking",
+     "status": "interrupted",
+     "startSim": 1199.999,
+     "endSim": 1207.094,
+     "durationSec": 7.1,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.612
+     }
+    },
+    {
+     "id": 113,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "I nod emphatically to her, point toward the bell on the headland, mime pulling a rope to ring it, give a thumbs‑up, then turn and start carefully descending the ladder.",
+      "interruptCurrent": true
+     },
+     "label": "Doing: I nod emphatically to her, point toward the bell on the h…",
+     "status": "completed",
+     "startSim": 1207.094,
+     "endSim": 1217.594,
+     "durationSec": 10.5,
+     "result": {
+      "message": "You do it: \"I nod emphatically to her, point toward the bell on the headland, mime pulling a rope to ring it, give a thumbs‑up, then turn and start carefully descending the ladder.\""
+     }
+    },
+    {
+     "id": 116,
+     "type": "descend",
+     "params": {
+      "type": "descend"
+     },
+     "label": "Descending the ladder",
+     "status": "interrupted",
+     "startSim": 1222.05,
+     "endSim": 1238.593,
+     "durationSec": 16.54,
+     "result": {
+      "message": "You stop and hold on to the ladder at 93 ft.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.072
+     }
+    },
+    {
+     "id": 117,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Keeping both hands on the rungs, I meet her eyes, then turn my head to look toward the stone circle she indicated and give a small nod.",
+      "interruptCurrent": true
+     },
+     "label": "Doing: Keeping both hands on the rungs, I meet her eyes, then tu…",
+     "status": "completed",
+     "startSim": 1238.593,
+     "endSim": 1248.043,
+     "durationSec": 9.45,
+     "result": {
+      "message": "You do it: \"Keeping both hands on the rungs, I meet her eyes, then turn my head to look toward the stone circle she indicated and give a small nod.\""
+     }
+    },
+    {
+     "id": 118,
+     "type": "descend",
+     "params": {
+      "type": "descend"
+     },
+     "label": "Descending the ladder",
+     "status": "completed",
+     "startSim": 1252.649,
+     "endSim": 1467.106,
+     "durationSec": 214.46,
+     "result": {
+      "message": "You step off the ladder onto the ground."
+     }
+    },
+    {
+     "id": 120,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "lantern"
+     },
+     "label": "Picking up the oil lantern",
+     "status": "completed",
+     "startSim": 1472.152,
+     "endSim": 1475.152,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oil lantern."
+     }
+    },
+    {
+     "id": 121,
+     "type": "shout",
+     "params": {
+      "type": "shout",
+      "text": "I’m going to the stone circle now! I’ve got the lantern and the lighter—meet me there!"
+     },
+     "label": "Shouting",
+     "status": "completed",
+     "startSim": 1483.3,
+     "endSim": 1491.3,
+     "durationSec": 8,
+     "result": {
+      "message": "You shout: \"I’m going to the stone circle now! I’ve got the lantern and the lighter—meet me there!\""
+     }
+    },
+    {
+     "id": 123,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "stone_circle"
+     },
+     "label": "Walking to the stone circle",
+     "status": "completed",
+     "startSim": 1493.963,
+     "endSim": 1540.782,
+     "durationSec": 46.82,
+     "result": {
+      "message": "Arrived at the stone circle (798, 423) after 180 ft in 00:47 (avg 3.85 ft/s)."
+     }
+    },
+    {
+     "id": 128,
+     "type": "do",
+     "params": {
+      "type": "do",
+      "text": "Step carefully into the center of the stone circle, stand still with the lantern down at my side, and take a slow turn, listening and looking for any change—sound, wind, light, or movement. Then look down at the grass for any pattern or depression and feel the ground with my bare foot for warmth or vibration."
+     },
+     "label": "Doing: Step carefully into the center of the stone circle, stand…",
+     "status": "completed",
+     "startSim": 1547.266,
+     "endSim": 1566.866,
+     "durationSec": 19.6,
+     "result": {
+      "message": "You do it: \"Step carefully into the center of the stone circle, stand still with the lantern down at my side, and take a slow turn, listening and looking for any change—sound, wind, light, or movement. Then look down at the grass for any pattern or depression and feel the ground with my bare foot for warmth or vibration.\""
+     }
+    },
+    {
+     "id": 130,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "bell"
+     },
+     "label": "Walking to the bronze bell",
+     "status": "completed",
+     "startSim": 1570.103,
+     "endSim": 1603.035,
+     "durationSec": 32.93,
+     "result": {
+      "message": "Arrived at the bronze bell (843, 313) after 129 ft in 00:33 (avg 3.91 ft/s)."
+     }
+    },
+    {
+     "id": 132,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "Cover your ears — I’m ringing the bell now!"
+     },
+     "label": "Speaking",
+     "status": "completed",
+     "startSim": 1610.158,
+     "endSim": 1613.758,
+     "durationSec": 3.6,
+     "result": {
+      "message": "You say out loud: \"Cover your ears — I’m ringing the bell now!\""
+     }
+    },
+    {
+     "id": 135,
+     "type": "put_down",
+     "params": {
+      "type": "put_down",
+      "target": "lantern"
+     },
+     "label": "Putting down the oil lantern",
+     "status": "completed",
+     "startSim": 1617.475,
+     "endSim": 1620.475,
+     "durationSec": 3,
+     "result": {
+      "message": "You put down the oil lantern on the ground (grass)."
+     }
+    },
+    {
+     "id": 136,
+     "type": "use",
+     "params": {
+      "type": "use",
+      "target": "bell"
+     },
+     "label": "Ringing the bell",
+     "status": "completed",
+     "startSim": 1624.752,
+     "endSim": 1630.752,
+     "durationSec": 6,
+     "result": {
+      "message": "You pull the rope. The bell rings out loudly across the island."
+     }
+    },
+    {
+     "id": 138,
+     "type": "wait",
+     "params": {
+      "type": "wait",
+      "seconds": 20
+     },
+     "label": "Waiting (00:20)",
+     "status": "completed",
+     "startSim": 1635.114,
+     "endSim": 1655.114,
+     "durationSec": 20,
+     "result": {
+      "message": "You wait for 00:20."
+     }
+    },
+    {
+     "id": 142,
+     "type": "speak",
+     "params": {
+      "type": "speak",
+      "text": "No reply to the bell. Let’s check the cliff edge for any boats or paths, then go to the beach and the boat. I’ll grab the lantern—come with me?"
+     },
+     "label": "Speaking",
+     "status": "interrupted",
+     "startSim": 1679.365,
+     "endSim": 1682.397,
+     "durationSec": 3.03,
+     "result": {
+      "message": "You stop before finishing. Nothing changed.",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.261
+     }
+    },
+    {
+     "id": 143,
+     "type": "pick_up",
+     "params": {
+      "type": "pick_up",
+      "target": "lantern",
+      "interruptCurrent": true
+     },
+     "label": "Picking up the oil lantern",
+     "status": "completed",
+     "startSim": 1682.397,
+     "endSim": 1685.397,
+     "durationSec": 3,
+     "result": {
+      "message": "You pick up the oil lantern."
+     }
+    },
+    {
+     "id": 144,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "cliffs"
+     },
+     "label": "Walking to the cliffs",
+     "status": "completed",
+     "startSim": 1688.998,
+     "endSim": 1705.001,
+     "durationSec": 16,
+     "result": {
+      "message": "Arrived at the cliffs (868, 283) after 40 ft in 00:16 (avg 2.52 ft/s)."
+     }
+    },
+    {
+     "id": 146,
+     "type": "inspect",
+     "params": {
+      "type": "inspect",
+      "target": "cliffs"
+     },
+     "label": "Inspecting cliffs",
+     "status": "completed",
+     "startSim": 1708.818,
+     "endSim": 1714.818,
+     "durationSec": 6,
+     "result": {
+      "message": "Steep, jagged rocks drop straight into the surf. Far too dangerous to climb down."
+     }
+    },
+    {
+     "id": 148,
+     "type": "walk",
+     "params": {
+      "type": "walk",
+      "direction": "S",
+      "distance": 150
+     },
+     "label": "Walking S 150 ft",
+     "status": "completed",
+     "startSim": 1720.161,
+     "endSim": 1765.239,
+     "durationSec": 45.08,
+     "result": {
+      "message": "Arrived at 150 ft S (868, 433) after 158 ft in 00:45 (avg 3.51 ft/s)."
+     }
+    },
+    {
+     "id": 152,
+     "type": "walk_to",
+     "params": {
+      "type": "walk_to",
+      "target": "beach"
+     },
+     "label": "Walking to the beach",
+     "status": "interrupted",
+     "startSim": 1768.512,
+     "endSim": 1771.618,
+     "durationSec": 3.11,
+     "result": {
+      "message": "Stopped walking at (859, 441) after 12 ft in 00:03 (avg 3.83 ft/s).",
+      "reason": "replaced by new action",
+      "progressAtStop": 0.028
+     }
+    },
+    {
+     "id": 153,
+     "type": "run_to",
+     "params": {
+      "type": "run_to",
+      "target": "beach",
+      "interruptCurrent": true
+     },
+     "label": "Running to the beach",
+     "status": "interrupted",
+     "startSim": 1771.618,
+     "endSim": 1800.144,
+     "durationSec": 28.53,
+     "result": {
+      "message": "Stopped walking at (649, 651) after 301 ft in 00:29 (avg 10.54 ft/s).",
+      "reason": "run ended",
+      "progressAtStop": 0.723
+     }
+    }
+   ]
+  }
+ ],
+ "cur": 0,
+ "protocol": "v7",
+ "forceRules": true,
+ "coinCounts": true,
+ "naked": true
+}
