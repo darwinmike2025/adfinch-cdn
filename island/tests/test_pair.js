@@ -121,6 +121,10 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.
     out.full = (f('a', { type: 'pick_up', target: 'ball' })); return out; });
   check('P20. Naked start: no clothes, no pockets (things go in hands); the other sees it; the blanket can be wrapped around', r.self === 'nothing; you are naked' && r.inHand === 'hand,hand' && /She is naked/.test(r.sees) && /wrap the blue blanket/.test(r.wrap) && /blue blanket wrapped around her/.test(r.sees2) && /blanket, wrapped/.test(r.self2),
     `${r.self} | carrying in: ${r.inHand} | he sees: ${r.sees} | ${r.wrap} | then he sees: ${r.sees2}`);
+  r = await ev(() => { Island.reset({ pair: true, noLetters: true, gold: true, naked: true, fixes: true }); Island.startRun({ durationSec: 1800 }); const out = {};
+    const m = st().objects.mirror.loc; Island._debug.place('a', m.x + 3, m.y); out.mirror = f('a', { type: 'use', target: 'mirror' }); out.bed = st().objects.bed.desc;
+    out.doNoTarget = f('a', { type: 'do', text: 'I try to pull the mirror off its stand.' }); return out; });
+  check('P21. Fixes: the mirror shows whoever looks; the bed has no takeable-sounding blanket; the open action says when nothing changed', /a young woman, about 20\. You are naked/.test(r.mirror) && !/blanket/.test(r.bed) && /nothing about the standing mirror changes/.test(r.doNoTarget), `${r.mirror} | bed: ${r.bed} | ${r.doNoTarget}`);
   r = await ev(() => { Island.reset(); return { party: Island.party(), has: 'agent' in st() }; });
   check('P15. A normal reset is still a one-person island', r.party === null && r.has, '');
   check('Z. No page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
